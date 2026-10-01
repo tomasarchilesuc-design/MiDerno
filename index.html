@@ -263,6 +263,18 @@ tr:last-child td { border-bottom: 0; }
 .drop svg.i { width: 34px; height: 34px; color: var(--accent); }
 .drop b { font: 650 1.15rem var(--f-display); }
 .map-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+.que-vende { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 520px) { .que-vende { grid-template-columns: minmax(0, 1fr); } }
+.qv { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; background: var(--surface); }
+.qv:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.qv input { width: 18px; height: 18px; accent-color: var(--accent); margin-top: 2px; flex: none; }
+.qv b { display: block; } .qv small { color: var(--muted); font-size: .8rem; }
+.entendido { padding: 12px; border-radius: 12px; background: var(--gold-soft); font-size: .9rem; display: flex; flex-direction: column; gap: 4px; }
+.entendido .pill { margin: 2px 2px 0 0; }
+.entendido label { flex-wrap: wrap; }
+.prov-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 6px 12px; max-height: 220px; overflow-y: auto; padding: 10px; border: 1px solid var(--line); border-radius: 10px; }
+.ped-row { display: grid; grid-template-columns: 24px minmax(0, 1fr) 84px; gap: 10px; align-items: center; }
+.prov h3 { overflow-wrap: anywhere; }
 .muted { color: var(--muted); }
 .small { font-size: .85rem; }
 .stack { display: flex; flex-direction: column; gap: 10px; }
@@ -393,7 +405,7 @@ const CONFIG = {
 };
 
 const TABLAS = ['clientes', 'ventas', 'venta_items', 'gastos', 'metas', 'servicios', 'empleados', 'citas',
-  'comisiones', 'productos', 'insumos', 'formulas', 'lotes', 'movimientos_stock', 'eventos'];
+  'comisiones', 'productos', 'insumos', 'formulas', 'lotes', 'movimientos_stock', 'eventos', 'proveedores'];
 
 const MODULOS = {
   servicios: { nombre: 'Servicios y agenda', desc: 'Agenda de horas, equipo, comisiones y recordatorios por WhatsApp' },
@@ -503,6 +515,8 @@ const NubeAdapter = {
     const filas = []; const paso = 1000;
     for (let desde = 0; ; desde += paso) {
       const { data, error } = await this.sb.from(t).select('*').range(desde, desde + paso - 1);
+      // si falta una tabla nueva (no se corrió la actualización), la app sigue funcionando sin ella
+      if (error && (error.code === '42P01' || error.code === 'PGRST205' || /does not exist|could not find the table/i.test(error.message || ''))) { console.warn('Falta la tabla', t); this.faltan = [...new Set([...(this.faltan || []), t])]; return []; }
       if (error) throw error;
       filas.push(...data.map(({ negocio_id, ...r }) => r));
       if (data.length < paso) break;
@@ -572,6 +586,10 @@ const NOMBRES = ['Valentina Pérez', 'Catalina González', 'Josefa Muñoz', 'Ant
   'Javiera Martínez', 'Daniela Sepúlveda', 'Francisca Morales', 'Camila Araya', 'Trinidad Fuentes', 'Florencia Castillo', 'Agustina Espinoza', 'Paula Reyes',
   'Matías Herrera', 'Benjamín Vergara', 'Joaquín Tapia', 'Sofía Cárdenas', 'Ignacia Bravo', 'Rocío Vidal'];
 
+function mkProveedor(t, nombre, tipo, contacto, telefono, que_vende, notas = '') {
+  const p = { id: uid(), nombre, tipo, contacto, telefono, email: '', que_vende, notas }; t.proveedores.push(p); return p;
+}
+function asignar(t, tabla, regex, prov) { t[tabla].filter((x) => regex.test(x.nombre)).forEach((x) => (x.proveedor_id = prov.id)); }
 function baseDemo(id, negocio, modulos) {
   const t = {}; TABLAS.forEach((x) => (t[x] = []));
   return { negocio: { id, moneda: 'CLP', ...negocio }, modulos, t };
@@ -647,6 +665,9 @@ function demoSalon() {
     let f = addDays(H, k); if (new Date(f + 'T12:00:00').getDay() === 0) f = addDays(f, 1);
     t.citas.push({ id: uid(), cliente_id: clientes[7 + k].id, empleado_id: emps[k - 1].id, servicio_id: serv[si].id, fecha: f, hora: h, estado: 'solicitada', venta_id: null, nota: 'Reservó desde la página' });
   });
+  mkProveedor(t, 'Distribuidora Nails Chile', 'proveedor', 'Carolina', '+56 9 6123 4501', 'esmaltes, geles y limas', 'Despacha martes y viernes. Pedido mínimo $30.000');
+  mkProveedor(t, 'Servicio técnico lámparas UV', 'contacto', 'Rodrigo', '+56 9 7444 2210', 'reparación de lámparas y tornos');
+  mkProveedor(t, 'Contadora', 'contacto', 'Marcela Ibáñez', '+56 9 8899 1203', 'impuestos y boletas');
   t.eventos.push({ id: uid(), tipo: 'tarea', titulo: 'Comprar esmaltes de temporada', cliente_id: null, fecha: addDays(H, 2), hora: null, direccion: '', monto: 0, pagado: false, estado: 'pendiente', venta_id: null, nota: 'Distribuidora del centro' });
   return d;
 }
@@ -678,6 +699,10 @@ function demoTienda() {
   }
   // deja dos productos con stock bajo para mostrar alertas
   [prods[3], prods[7]].forEach((p) => { const s = stock.get(p.id); const quitar = Math.max(0, s - (p === prods[3] ? 0 : 3)); if (quitar) t.movimientos_stock.push({ id: uid(), tipo_item: 'producto', item_id: p.id, cantidad: -quitar, motivo: 'ajuste', ref_id: null, fecha: H, nota: 'Traspaso a otra sucursal' }); });
+  const bodega = mkProveedor(t, 'Bodega central Santiago', 'proveedor', 'Felipe', '+56 9 5321 7788', 'equipos y tablets', 'Llega en 48 horas');
+  const mayor = mkProveedor(t, 'Accesorios Mayorista', 'proveedor', 'Daniela', '+56 9 6655 4432', 'cargadores, fundas y audífonos');
+  asignar(t, 'productos', /Smartphone|Tablet|Reloj/, bodega); asignar(t, 'productos', /Cargador|Batería|Funda|Audífonos/, mayor);
+  mkProveedor(t, 'Soporte técnico', 'contacto', 'Ignacio', '+56 9 7001 2299', 'garantías y reparaciones');
   // despachos de ventas online de los próximos días
   const dirs = ['Av. Brasil 845, Rancagua', 'Pasaje Los Aromos 12, Machalí', 'Retiro en tienda', 'Calle Cuevas 330, Rancagua'];
   [[0, '15:00', 0, true], [1, '11:00', 1, true], [1, '17:30', 5, false], [3, '12:00', 2, true]].forEach(([k, h, pi, pag], j) => {
@@ -731,6 +756,11 @@ function demoVelas() {
   // último lote recién hecho (aún en curado) y un insumo bajo para mostrar alertas
   lote(prods[2], 24, addDays(H, -1));
   const esen = sIns.get('esencia'); if (esen > 150) t.movimientos_stock.push({ id: uid(), tipo_item: 'insumo', item_id: ins.esencia.id, cantidad: -(esen - 150), motivo: 'ajuste', ref_id: null, fecha: H, nota: 'Merma por derrame' });
+  const ceras = mkProveedor(t, 'Ceras del Sur', 'proveedor', 'Paulina', '+56 9 6210 3344', 'cera de soya y mechas', 'Envío por Starken, 2 días');
+  const envases = mkProveedor(t, 'Envases Rancagua', 'proveedor', 'Jorge', '+56 9 7712 0098', 'frascos, tapas y cajas');
+  const aromas = mkProveedor(t, 'Aromas Chile', 'proveedor', 'Valeska', '+56 9 5560 7781', 'esencias');
+  const impr = mkProveedor(t, 'Imprenta Express', 'proveedor', 'Tomás', '+56 9 6001 4455', 'etiquetas');
+  asignar(t, 'insumos', /Cera|Mecha/, ceras); asignar(t, 'insumos', /Frasco|Tapa|Caja/, envases); asignar(t, 'insumos', /Esencia/, aromas); asignar(t, 'insumos', /Etiqueta/, impr);
   // pedidos por Instagram para entregar y la feria del fin de semana
   [[1, '18:00', 0, 2, 'Av. Einstein 560, Rancagua'], [2, null, 3, 1, 'Retiro en taller'], [4, '19:00', 1, 3, 'Los Castaños 77, Machalí']].forEach(([k, h, pi, c, dir], j) => {
     const p = prods[pi]; t.eventos.push({ id: uid(), tipo: 'entrega', titulo: `${c}× ${p.nombre}`, cliente_id: clientes[j + 2].id, fecha: addDays(H, k), hora: h, direccion: dir, monto: p.precio_venta * c, pagado: j !== 1, estado: 'pendiente', venta_id: null, nota: '' });
@@ -746,7 +776,7 @@ function demoVelas() {
   return d;
 }
 
-const DEMO_VERSION = 2;
+const DEMO_VERSION = 3;
 const DEMOS = {
   'demo-salon': { crear: demoSalon, tag: 'Servicios', nombre: 'Estudio Lúa', desc: 'Salón de uñas con 3 manicuristas: agenda del día, comisiones y clientas por reactivar.' },
   'demo-tienda': { crear: demoTienda, tag: 'Productos', nombre: 'Punto Móvil', desc: 'Tienda de celulares con meta mensual en millones, stock por equipo y ventas online.' },
@@ -775,6 +805,7 @@ const ICONS = {
   trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
   edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/>',
   out: '<path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10"/>',
+  truck: '<path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>',
   upload: '<path d="M12 15V4M7.5 8.5L12 4l4.5 4.5"/><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/>',
   search: '<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/>',
 };
@@ -791,6 +822,7 @@ const VISTAS = [
   { id: 'equipo', label: 'Equipo', icon: 'team', modulo: 'servicios', grupo: 'Servicios' },
   { id: 'inventario', label: 'Inventario', icon: 'box', modulo: 'inventario', grupo: 'Productos' },
   { id: 'produccion', label: 'Producción', icon: 'flask', modulo: 'produccion', grupo: 'Productos' },
+  { id: 'proveedores', label: 'Proveedores', icon: 'truck', modulo: null },
   { id: 'catalogo', label: 'Catálogo', icon: 'tag', modulo: null },
   { id: 'importar', label: 'Importar Excel', icon: 'upload', modulo: null },
   { id: 'ajustes', label: 'Ajustes', icon: 'gear', modulo: null },
@@ -811,7 +843,7 @@ function shell(contenido) {
   <div class="shell">
     <aside class="side">
       <div class="brand">${MARCA}<b>MiDerno</b></div>
-      <div class="biz"><small>${esc(RUBROS[S.negocio.rubro]?.nombre || 'Negocio')}</small><strong>${esc(S.negocio.nombre)}</strong></div>
+      <div class="biz"><small>${esc(rubroTexto(S.negocio))}</small><strong>${esc(S.negocio.nombre)}</strong></div>
       <nav class="nav">
         ${core.map(link).join('')}
         ${grupos.map((g) => `<div class="nav-label">${g}</div>${visibles.filter((v) => v.grupo === g).map(link).join('')}`).join('')}
@@ -830,7 +862,7 @@ function shell(contenido) {
       ${tab(VISTAS[0])}${tab(VISTAS[2])}
       <a href="#vender" class="sell ${cur === 'vender' ? 'on' : ''}"><span class="plus">${icon('plus')}</span><span>Vender</span></a>
       ${principal && principal.id !== 'clientes' ? tab(principal) : tab(VISTAS[3])}
-      <button data-act="mas" class="${['catalogo', 'importar', 'ajustes', 'equipo', 'produccion', 'clientes'].includes(cur) && cur !== principal?.id ? 'on' : ''}">${icon('more')}<span>Más</span></button>
+      <button data-act="mas" class="${['proveedores', 'catalogo', 'importar', 'ajustes', 'equipo', 'produccion', 'clientes', 'inventario'].includes(cur) && cur !== principal?.id ? 'on' : ''}">${icon('more')}<span>Más</span></button>
     </nav>
   </div>`;
 }
@@ -910,31 +942,8 @@ function vistaBienvenida() {
       }).join('')}</div>
     </section>
     ${locales.length ? `<section><div class="section-title"><h2>Tus negocios en este dispositivo</h2></div>
-      <div class="card list">${locales.map((n) => `<button class="row click" data-act="abrir" data-id="${esc(n.id)}" style="border-left:0;border-right:0;border-bottom:0;background:none;width:100%;text-align:left"><div class="avatar">${esc(iniciales(n.nombre))}</div><div class="grow"><div class="t">${esc(n.nombre)}</div><div class="s">${esc(RUBROS[n.rubro]?.nombre || '')}</div></div>${icon('right')}</button>`).join('')}</div></section>` : ''}
+      <div class="card list">${locales.map((n) => `<button class="row click" data-act="abrir" data-id="${esc(n.id)}" style="border-left:0;border-right:0;border-bottom:0;background:none;width:100%;text-align:left"><div class="avatar">${esc(iniciales(n.nombre))}</div><div class="grow"><div class="t">${esc(n.nombre)}</div><div class="s">${esc(rubroTexto(n))}</div></div>${icon('right')}</button>`).join('')}</div></section>` : ''}
   </div>`;
-}
-
-function formNegocio(modo = 'local') {
-  const conCuenta = modo === 'cuenta'; const soloNube = modo === 'solo-nube';
-  const rubros = Object.entries(RUBROS).map(([k, r], i) => `<label class="rubro"><input type="radio" name="rubro" value="${k}" ${i === 0 ? 'checked' : ''}><span>${r.nombre}</span></label>`).join('');
-  abrirSheet(conCuenta ? 'Crea tu cuenta' : 'Crea tu negocio', `
-    ${conCuenta ? `<div class="form-row">${field('Correo', input('email', '', 'type="email" autocomplete="email" required'))}${field('Contraseña', input('password', '', 'type="password" minlength="6" autocomplete="new-password" required'), 'Mínimo 6 caracteres')}</div>` : ''}
-    ${field('Nombre del negocio', input('nombre', '', 'required placeholder="Ej: Estudio Aurora"'))}
-    <div class="field"><label>¿Qué tipo de negocio es?</label><div class="rubros">${rubros}</div>
-      <span class="hint">Según el tipo activamos las herramientas que corresponden. Puedes cambiarlas después en Ajustes.</span></div>
-    ${conCuenta || soloNube ? '' : '<p class="small muted">Sin cuenta, los datos quedan guardados solo en este navegador.</p>'}`, {
-    submit: async (d) => {
-      if (!d.nombre.trim()) return toast('Escribe el nombre del negocio', true);
-      if (conCuenta) return registrarNube(d);
-      if (soloNube) return crearNegocioNube(d);
-      const id = uid();
-      const data = { negocio: { id, nombre: d.nombre.trim(), rubro: d.rubro, moneda: 'CLP' }, modulos: [...RUBROS[d.rubro].modulos], t: Object.fromEntries(TABLAS.map((x) => [x, []])) };
-      LS.set('miderno:data:' + id, data);
-      LS.set('miderno:negocios', [...(LS.get('miderno:negocios') || []), { id, nombre: data.negocio.nombre, rubro: d.rubro }]);
-      cerrarSheet(); abrirLocal(id); location.hash = 'catalogo';
-      toast('Negocio creado. Agrega lo que vendes o importa tu Excel.');
-    },
-  });
 }
 
 function abrirLocal(id) {
@@ -959,27 +968,13 @@ function formLogin() {
   abrirSheet('Iniciar sesión', `${field('Correo', input('email', '', 'type="email" autocomplete="email" required'))}${field('Contraseña', input('password', '', 'type="password" autocomplete="current-password" required'))}
     <p class="small muted">¿No tienes cuenta? <a href="#" data-act="registro">Crea tu negocio</a></p>`, {
     submit: async (d) => {
-      try { const sb = await cargarSupabase(); const { error } = await sb.auth.signInWithPassword({ email: d.email, password: d.password }); if (error) throw error; cerrarSheet(); await abrirNube(); }
-      catch (e) { toast('No pudimos iniciar sesión: ' + (e.message || e), true); }
+      try { const sb = await cargarSupabase(); const { error } = await sb.auth.signInWithPassword({ email: d.email.trim(), password: d.password }); if (error) throw error; cerrarSheet(); await abrirNube(); }
+      catch (e) {
+        const m = e.message || String(e);
+        toast(/not confirmed/i.test(m) ? 'Falta confirmar tu correo. Toca el enlace que te llegó y vuelve a intentar.' : /invalid login|invalid credentials/i.test(m) ? 'Correo o contraseña incorrectos' : 'No pudimos iniciar sesión: ' + m, true);
+      }
     },
   });
-}
-async function registrarNube(d) {
-  try {
-    const sb = await cargarSupabase();
-    const { data, error } = await sb.auth.signUp({ email: d.email, password: d.password });
-    if (error) throw error;
-    if (!data.session) { cerrarSheet(); return toast('Te enviamos un correo para confirmar la cuenta. Luego inicia sesión.'); }
-    await crearNegocioNube(d);
-  } catch (e) { toast('No pudimos crear la cuenta: ' + (e.message || e), true); }
-}
-async function crearNegocioNube(d) {
-  try {
-    const sb = await cargarSupabase();
-    const { error } = await sb.rpc('crear_negocio', { p_nombre: d.nombre.trim(), p_rubro: d.rubro, p_modulos: RUBROS[d.rubro].modulos });
-    if (error) throw error;
-    cerrarSheet(); await abrirNube(); location.hash = 'catalogo';
-  } catch (e) { toast('No pudimos crear el negocio: ' + (e.message || e), true); }
 }
 async function abrirNube() {
   const sb = await cargarSupabase();
@@ -987,7 +982,12 @@ async function abrirNube() {
   if (!user) return false;
   const { data: u, error } = await sb.from('usuarios').select('negocio_id').eq('id', user.id).maybeSingle();
   if (error) throw error;
-  if (!u) { toast('Tu cuenta aún no tiene un negocio. Créalo para continuar.'); formNegocio('solo-nube'); return false; }
+  if (!u) {
+    const pendiente = LS.get('miderno:pendiente');
+    if (pendiente) { await crearNegocioNube(pendiente); return true; }
+    toast('Tu cuenta aún no tiene un negocio. Créalo para continuar.'); formNegocio('solo-nube'); return false;
+  }
+  if (/access_token|type=signup/.test(location.hash)) history.replaceState(null, '', location.pathname + '#inicio');
   const [{ data: neg }, { data: mods }] = await Promise.all([sb.from('negocios').select('*').eq('id', u.negocio_id).single(), sb.from('negocio_modulos').select('*').eq('negocio_id', u.negocio_id)]);
   const t = {}; for (const x of TABLAS) t[x] = await NubeAdapter.traerTodo(x);
   adapter = NubeAdapter; S.modo = 'nube';
@@ -997,6 +997,128 @@ async function abrirNube() {
 async function salir() {
   if (S.modo === 'nube' && NubeAdapter.sb) await NubeAdapter.sb.auth.signOut();
   S.negocio = null; S.modo = null; LS.del('miderno:ultimo'); history.replaceState(null, '', location.pathname); render();
+}
+
+/* =========================================================
+   Registro: el dueño describe su negocio con sus palabras y
+   MiDerno sugiere qué herramientas encender y con qué empezar.
+   ========================================================= */
+
+const QUE_VENDE = [
+  { k: 'servicios', label: 'Servicios', desc: 'Horas, atenciones, clases' },
+  { k: 'inventario', label: 'Productos', desc: 'Cosas que vendes y su stock' },
+  { k: 'produccion', label: 'Fabrico lo que vendo', desc: 'Recetas, costos y lotes' },
+];
+
+// Palabras que reconocemos y lo que significan para el negocio
+const PERFILES = [
+  { re: /u[ñn]as|manicur|pedicur|nail|esmaltad/, nombre: 'salón de uñas', mods: ['servicios'], servicios: [['Manicure permanente', 60, 15000], ['Esmaltado tradicional', 40, 9000], ['Pedicure spa', 75, 20000], ['Uñas acrílicas', 120, 28000]] },
+  { re: /peluquer|barber|corte de pelo|cabello|tintura|alisado|peinado/, nombre: 'peluquería o barbería', mods: ['servicios'], servicios: [['Corte', 45, 10000], ['Corte y barba', 60, 15000], ['Tintura', 120, 35000], ['Lavado y peinado', 40, 12000]] },
+  { re: /pesta[ñn]|ceja|lifting|depila|estetic|facial|masaje|cosmetolog|\bspa\b/, nombre: 'estética', mods: ['servicios'], servicios: [['Lifting de pestañas', 60, 18000], ['Diseño de cejas', 30, 8000], ['Limpieza facial', 60, 25000], ['Masaje relajante', 60, 25000]] },
+  { re: /tatua|tattoo|piercing/, nombre: 'estudio de tatuajes', mods: ['servicios'], servicios: [['Sesión de tatuaje', 120, 60000], ['Piercing', 30, 15000]] },
+  { re: /clase|taller|curso|profesor|tutor|entrenad|yoga|pilates|personal trainer/, nombre: 'clases o talleres', mods: ['servicios'], servicios: [['Clase individual', 60, 15000], ['Clase grupal', 60, 8000]] },
+  { re: /veterin|mascota|canin|grooming/, nombre: 'cuidado de mascotas', mods: ['servicios'], servicios: [['Baño y corte', 90, 20000], ['Consulta', 30, 15000]] },
+  { re: /psicolog|nutricion|kinesio|terapia|consulta|podolog|dental|abogad|contador|asesor/, nombre: 'consulta profesional', mods: ['servicios'], servicios: [['Consulta', 60, 30000], ['Control', 30, 20000]] },
+  { re: /\bvelas?\b|jab[oó]n|jabones|aromatic|cosm[eé]tica natural|difusor/, nombre: 'productos artesanales', mods: ['inventario', 'produccion'], productos: [['Vela aromática 200 g', 12990], ['Jabón artesanal', 4990]] },
+  { re: /reposter|torta|pasteler|galleta|panader|cocina|comida|empanada|sushi|caf[eé]|helad|chocolat|cupcake|queque/, nombre: 'comida o repostería', mods: ['inventario', 'produccion'], productos: [['Torta mediana', 18000], ['Docena de galletas', 6000]] },
+  { re: /ropa|polera|vestido|zapat|moda|bolso|cartera|accesorio|joya|bisuter/, nombre: 'tienda de ropa y accesorios', mods: ['inventario'], productos: [] },
+  { re: /celular|tecnolog|electr[oó]nic|computador|notebook|audifono|telefon/, nombre: 'tienda de tecnología', mods: ['inventario'], productos: [] },
+  { re: /almac[eé]n|minimarket|bazar|librer|juguet|botiller|ferreter|tienda/, nombre: 'tienda', mods: ['inventario'], productos: [] },
+  { re: /vend[eo]|vendemos|venta de|productos?\b|stock|inventario|cat[aá]logo/, mods: ['inventario'] },
+  { re: /fabric|hago|hacemos|elaboro|elaboramos|produzco|artesan|hecho a mano|a pedido/, mods: ['inventario', 'produccion'] },
+  { re: /hora|agenda|cita|reserva|atiendo|atenci[oó]n|servicio/, mods: ['servicios'] },
+];
+
+function entenderNegocio(texto) {
+  const t = norm(texto); if (!t) return { mods: [], nombres: [], servicios: [], productos: [] };
+  const hits = PERFILES.filter((p) => p.re.test(t));
+  const mods = [...new Set(hits.flatMap((h) => h.mods))];
+  const servicios = hits.flatMap((h) => h.servicios || []).slice(0, 6);
+  const productos = hits.flatMap((h) => h.productos || []).slice(0, 4);
+  // si el texto menciona esmaltes, cremas, etc. junto a "vende", sugerimos ese producto
+  const m = t.match(/vend[eo]\w* (?:tambien )?([a-z ]{3,30})/);
+  if (m && mods.includes('inventario') && !productos.length) { const cosa = m[1].trim().split(' ').slice(0, 3).join(' '); if (cosa) productos.push([cosa.charAt(0).toUpperCase() + cosa.slice(1), 0]); }
+  return { mods, nombres: hits.map((h) => h.nombre).filter(Boolean), servicios, productos };
+}
+const rubroTexto = (n) => { const r = RUBROS[n?.rubro]?.nombre || n?.rubro || ''; return r ? r.charAt(0).toUpperCase() + r.slice(1) : 'Mi negocio'; };
+const appUrl = () => (/^https?:/.test(location.protocol) ? location.origin + location.pathname : '');
+
+function formNegocio(modo = 'local') {
+  const conCuenta = modo === 'cuenta'; const soloNube = modo === 'solo-nube';
+  abrirSheet(conCuenta ? 'Crea tu cuenta' : 'Crea tu negocio', `<div class="form">
+    ${conCuenta ? `<div class="form-row">${field('Correo', input('email', '', 'type="email" autocomplete="email" required'))}${field('Contraseña', input('password', '', 'type="password" minlength="6" autocomplete="new-password" required'), 'Mínimo 6 caracteres')}</div>` : ''}
+    ${field('Nombre del negocio', input('nombre', '', 'required placeholder="Ej: Estudio Aurora" autocomplete="organization"'))}
+    ${field('¿Qué hace tu negocio? Cuéntalo con tus palabras', '<textarea class="in" name="rubro" id="f-rubro" rows="2" placeholder="Ej: Salón de uñas que también vende esmaltes y cremas"></textarea>')}
+    <div class="field"><label>¿Qué vendes? <span class="muted" style="font-weight:400">Puedes marcar más de uno</span></label>
+      <div class="que-vende">${QUE_VENDE.map((q) => `<label class="qv"><input type="checkbox" name="mod" value="${q.k}"><span><b>${q.label}</b><small>${q.desc}</small></span></label>`).join('')}</div></div>
+    <div id="neg-entendido" class="entendido" hidden></div>
+    ${conCuenta || soloNube ? '' : '<p class="small muted">Sin cuenta, los datos quedan guardados solo en este navegador.</p>'}</div>`, {
+    pie: `<div class="sheet-foot"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri" type="submit">${conCuenta ? 'Crear cuenta y entrar' : 'Crear negocio'}</button></div>`,
+    submit: (d) => enviarNegocio(modo, d),
+  });
+  const form = $('#sheet-form'); const tocados = new Set();
+  const actualizar = () => {
+    const e = entenderNegocio($('#f-rubro').value);
+    form.querySelectorAll('input[name=mod]').forEach((c) => { if (!tocados.has(c.value)) c.checked = e.mods.includes(c.value); });
+    if (form.querySelector('input[value=produccion]').checked && !tocados.has('inventario')) form.querySelector('input[value=inventario]').checked = true;
+    const box = $('#neg-entendido'); const sug = [...e.servicios.map((s) => s[0]), ...e.productos.map((p) => p[0])];
+    box.hidden = !e.nombres.length && !sug.length;
+    box.innerHTML = `${e.nombres.length ? `<p>Entendimos: <b>${esc(e.nombres.join(' + '))}</b>.</p>` : ''}${sug.length ? `<label class="hstack" style="margin-top:6px"><input type="checkbox" name="sugeridos" checked style="width:18px;height:18px;accent-color:var(--accent)"> Empezar con: ${sug.map((s) => `<span class="pill">${esc(s)}</span>`).join(' ')}</label><span class="small muted">Después cambias los precios en el catálogo.</span>` : ''}`;
+  };
+  form.addEventListener('input', (ev) => { if (ev.target.id === 'f-rubro') actualizar(); });
+  form.addEventListener('change', (ev) => { if (ev.target.name === 'mod') { tocados.add(ev.target.value); if (ev.target.value === 'produccion' && ev.target.checked) form.querySelector('input[value=inventario]').checked = true; } });
+}
+
+async function enviarNegocio(modo, d) {
+  const form = $('#sheet-form');
+  const modulos = [...form.querySelectorAll('input[name=mod]:checked')].map((c) => c.value);
+  const e = entenderNegocio(d.rubro || '');
+  const neg = { nombre: d.nombre.trim(), rubro: (d.rubro || '').trim() || e.nombres.join(' + ') || 'Mi negocio', modulos, sugeridos: d.sugeridos ? { servicios: e.servicios, productos: e.productos } : null };
+  if (!neg.nombre) return toast('Escribe el nombre del negocio', true);
+  if (modo === 'cuenta') return registrarNube({ ...neg, email: d.email.trim(), password: d.password });
+  if (modo === 'solo-nube') return crearNegocioNube(neg);
+  const id = uid();
+  const data = { negocio: { id, nombre: neg.nombre, rubro: neg.rubro, moneda: 'CLP' }, modulos, t: Object.fromEntries(TABLAS.map((x) => [x, []])) };
+  LS.set('miderno:data:' + id, data);
+  LS.set('miderno:negocios', [...(LS.get('miderno:negocios') || []), { id, nombre: neg.nombre, rubro: neg.rubro }]);
+  cerrarSheet(); abrirLocal(id); sembrarSugeridos(neg.sugeridos); location.hash = 'catalogo';
+  toast('Negocio creado. Revisa tu catálogo o importa tu Excel.');
+}
+function sembrarSugeridos(s) {
+  if (!s) return;
+  if (s.servicios?.length && tiene('servicios')) s.servicios.forEach(([nombre, duracion_min, precio]) => db.insert('servicios', { nombre, duracion_min, precio, activo: true }));
+  if (s.productos?.length && (tiene('inventario') || !tiene('servicios'))) s.productos.forEach(([nombre, precio]) => db.insert('productos', { nombre, sku: '', precio_venta: precio || 0, costo: 0, stock_minimo: 3, activo: true, proveedor_id: null }));
+  render();
+}
+
+/* ---------- registro en la nube ---------- */
+async function registrarNube(d) {
+  try {
+    if (!d.email || (d.password || '').length < 6) return toast('Escribe tu correo y una contraseña de al menos 6 caracteres', true);
+    const sb = await cargarSupabase();
+    const { data, error } = await sb.auth.signUp({ email: d.email, password: d.password, options: { emailRedirectTo: appUrl() || undefined } });
+    if (error) throw error;
+    let session = data.session;
+    if (!session) { const r = await sb.auth.signInWithPassword({ email: d.email, password: d.password }); session = r.data?.session; }
+    const pendiente = { nombre: d.nombre, rubro: d.rubro, modulos: d.modulos, sugeridos: d.sugeridos };
+    if (session) return crearNegocioNube(pendiente);
+    // Supabase pide confirmar el correo: guardamos el negocio y lo creamos al volver
+    LS.set('miderno:pendiente', pendiente);
+    abrirSheet('Revisa tu correo', `<p>Te enviamos un enlace a <b>${esc(d.email)}</b>. Al tocarlo vuelves a MiDerno y tu negocio <b>${esc(d.nombre)}</b> queda creado.</p><p class="small muted">Si no llega en unos minutos, revisa la carpeta de spam.</p>`, { pie: '<div class="sheet-foot"><button type="button" class="btn pri" data-close>Entendido</button></div>' });
+  } catch (e) {
+    const msg = /already registered|already exists/i.test(e.message || '') ? 'Ese correo ya tiene cuenta. Usa “Iniciar sesión”.' : 'No pudimos crear la cuenta: ' + (e.message || e);
+    toast(msg, true);
+  }
+}
+async function crearNegocioNube(d) {
+  try {
+    const sb = await cargarSupabase();
+    const { error } = await sb.rpc('crear_negocio', { p_nombre: d.nombre, p_rubro: d.rubro, p_modulos: d.modulos || [] });
+    if (error) throw error;
+    LS.del('miderno:pendiente');
+    cerrarSheet(); await abrirNube(); sembrarSugeridos(d.sugeridos); location.hash = 'catalogo';
+    toast('¡Listo! Tu negocio quedó creado.');
+  } catch (e) { toast('No pudimos crear el negocio: ' + (e.message || e), true); }
 }
 
 /* =========================================================
@@ -1058,6 +1180,7 @@ function vistaInicio() {
   }
   const reactivar = resumenClientes().filter((r) => r.dias != null && r.dias > DIAS_REACTIVAR && r.dias < 120);
   if (reactivar.length) alertas.push({ sev: 'warn', t: `${reactivar.length} clientes sin volver hace más de ${DIAS_REACTIVAR} días`, s: 'Escríbeles por WhatsApp para que vuelvan', href: 'clientes', act: 'filtro-reactivar' });
+  for (const { p: pv, bajos: bj } of porReponer().provs) alertas.push({ sev: 'warn', t: `Pedir a ${pv.nombre}`, s: `${bj.length} en el mínimo: ${bj.slice(0, 3).map((x) => x.item.nombre).join(', ')}${bj.length > 3 ? '…' : ''}`, href: 'proveedores', act: 'pedido-ir', id: pv.id });
   if (tiene('inventario')) {
     const bajos = db.all('productos').filter((p) => p.activo !== false && stockDe('producto', p.id) <= Number(p.stock_minimo || 0));
     if (bajos.length) alertas.push({ sev: bajos.some((p) => stockDe('producto', p.id) <= 0) ? 'bad' : 'warn', t: `${bajos.length} productos con stock bajo`, s: bajos.slice(0, 3).map((p) => p.nombre).join(', ') + (bajos.length > 3 ? '…' : ''), href: 'inventario' });
@@ -1084,7 +1207,7 @@ function vistaInicio() {
   </div>
   <div class="grid g3">
     <div class="card span2 chart"><div class="card-head"><h2>Ventas y gastos, últimos 6 meses</h2><div class="legend"><span><i style="background:var(--accent)"></i>Ventas</span><span><i style="background:var(--gold)"></i>Gastos</span></div></div>${graficoMeses()}</div>
-    <div class="card"><div class="card-head"><h2>Para hoy</h2></div><div class="stack">${alertas.length ? alertas.map((a) => `<a class="alert-row" href="#${a.href}" ${a.act ? `data-act="${a.act}"` : ''}><span class="sev ${a.sev}"></span><div class="grow"><b>${esc(a.t)}</b><small>${esc(a.s)}</small></div>${icon('right')}</a>`).join('') : '<div class="empty">Todo en orden por ahora.</div>'}</div></div>
+    <div class="card"><div class="card-head"><h2>Para hoy</h2></div><div class="stack">${alertas.length ? alertas.map((a) => `<a class="alert-row" href="#${a.href}" ${a.act ? `data-act="${a.act}"` : ''} ${a.id ? `data-id="${a.id}"` : ''}><span class="sev ${a.sev}"></span><div class="grow"><b>${esc(a.t)}</b><small>${esc(a.s)}</small></div>${icon('right')}</a>`).join('') : '<div class="empty">Todo en orden por ahora.</div>'}</div></div>
   </div>
   <div class="grid g2">
     <div class="card"><div class="card-head"><h2>Caja de hoy</h2><p>${vH.length} ventas</p></div>
@@ -1243,6 +1366,7 @@ function vistaClientes() {
   const q = ui.q.trim().toLowerCase(); if (q) rs = rs.filter((r) => (r.c.nombre + ' ' + (r.c.telefono || '')).toLowerCase().includes(q));
   const estado = (r) => r.dias == null ? '<span class="pill">Sin compras</span>' : r.dias > DIAS_REACTIVAR ? `<span class="pill warn">Hace ${r.dias} días</span>` : `<span class="pill ok">Activa</span>`;
   return `${head('Clientes', `${db.all('clientes').length} registrados`, `<a class="btn" href="#importar">${icon('upload')}Importar</a><button class="btn pri" data-act="cliente">${icon('plus')}Nuevo cliente</button>`)}
+  ${(() => { const n = gruposDuplicados().length; return n ? `<div class="banner"><span>Encontramos ${n} cliente${n > 1 ? 's' : ''} con la ficha repetida (mismo nombre o teléfono).</span><button class="btn sm" data-act="revisar-duplicados">Revisar y unificar</button></div>` : ''; })()}
   <div class="card stack">
     <div class="between"><div class="chips">
       <button class="chip ${ui.f === 'todos' ? 'on' : ''}" data-act="cli-f" data-f="todos">Todos</button>
@@ -1284,9 +1408,16 @@ function formCliente(id, alGuardar) {
     submit: (d) => {
       if (!d.nombre.trim()) return toast('Escribe el nombre', true);
       const row = { nombre: d.nombre.trim(), telefono: d.telefono.trim(), cumpleanos: d.cumpleanos || null, notas: d.notas.trim() };
-      const r = id ? db.update('clientes', id, row) : db.insert('clientes', { ...row, creado_en: hoy() });
-      cerrarSheet(); toast(id ? 'Cliente actualizado' : 'Cliente agregado');
-      alGuardar ? alGuardar(r) : render();
+      const fin = (r, msg) => { cerrarSheet(); toast(msg); alGuardar ? alGuardar(r) : render(); };
+      const guardar = () => fin(id ? db.update('clientes', id, row) : db.insert('clientes', { ...row, creado_en: hoy() }), id ? 'Cliente actualizado' : 'Cliente agregado');
+      const gemelo = buscarGemelo(id, row.nombre, row.telefono);
+      if (!gemelo) return guardar();
+      preguntarUnificar(gemelo, () => {
+        if (id) { db.update('clientes', id, row); unificarClientes(id, gemelo.id); return fin(db.get('clientes', id), 'Fichas unificadas'); }
+        const patch = {}; for (const k of ['telefono', 'cumpleanos', 'notas']) if (row[k] && !gemelo[k]) patch[k] = row[k];
+        if (Object.keys(patch).length) db.update('clientes', gemelo.id, patch);
+        fin(gemelo, `Usamos la ficha que ya existía de ${gemelo.nombre}`);
+      }, guardar);
     },
   });
 }
@@ -1327,11 +1458,12 @@ function formProducto(id) {
     <div class="form-row">${field('Precio de venta', input('precio_venta', p.precio_venta, 'inputmode="numeric" required'), 'Si te dan precio etiqueta, úsalo aquí.')}${field('Costo por unidad', input('costo', p.costo, 'inputmode="numeric"'), receta ? 'Si tiene receta en Producción, el costo se calcula solo.' : 'Lo que te cuesta comprarlo.')}</div>
     <div class="form-row">${field('Código (SKU)', input('sku', p.sku || ''))}${tiene('inventario') ? field('Avisar cuando queden', input('stock_minimo', p.stock_minimo, 'type="number" min="0"'), 'unidades o menos') : ''}</div>
     ${!id && tiene('inventario') ? field('Stock inicial', input('stock_inicial', '', 'type="number" min="0" placeholder="0"')) : ''}
+    ${db.all('proveedores').filter((x) => x.tipo === 'proveedor').length ? field('Proveedor', `<select class="in" name="proveedor_id" id="f-proveedor_id">${opt('', 'Sin proveedor', p.proveedor_id)}${db.all('proveedores').filter((x) => x.tipo === 'proveedor').map((x) => opt(x.id, x.nombre, p.proveedor_id)).join('')}</select>`, 'Para avisarte a quién pedirle cuando quede poco') : ''}
     <label class="hstack"><span class="toggle"><input type="checkbox" name="activo" ${p.activo !== false ? 'checked' : ''}><span></span></span>Disponible para vender</label></div>`, {
     pie: `<div class="sheet-foot" style="justify-content:space-between">${id ? `<button type="button" class="btn danger" data-act="del-producto" data-id="${id}">Eliminar</button>` : '<span></span>'}<div class="hstack"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri">Guardar</button></div></div>`,
     submit: (d) => {
       if (!d.nombre.trim() || num(d.precio_venta) <= 0) return toast('Completa nombre y precio', true);
-      const row = { nombre: d.nombre.trim(), sku: (d.sku || '').trim(), precio_venta: num(d.precio_venta), costo: num(d.costo), stock_minimo: num(d.stock_minimo ?? p.stock_minimo), activo: !!d.activo };
+      const row = { ...(d.proveedor_id !== undefined ? { proveedor_id: d.proveedor_id || null } : {}), nombre: d.nombre.trim(), sku: (d.sku || '').trim(), precio_venta: num(d.precio_venta), costo: num(d.costo), stock_minimo: num(d.stock_minimo ?? p.stock_minimo), activo: !!d.activo };
       const r = id ? db.update('productos', id, row) : db.insert('productos', row);
       if (!id && num(d.stock_inicial) > 0) db.insert('movimientos_stock', { tipo_item: 'producto', item_id: r.id, cantidad: num(d.stock_inicial), motivo: 'compra', ref_id: null, fecha: hoy(), nota: 'Stock inicial' });
       cerrarSheet(); toast('Producto guardado'); render();
@@ -1347,7 +1479,7 @@ function vistaAjustes() {
   <div class="grid g2">
     ${tarjetaReservas()}
     <div class="card"><div class="card-head"><h2>Herramientas activas</h2></div>
-      <p class="small muted" style="margin-bottom:8px">Caja, clientes y catálogo vienen siempre. Activa solo lo que tu negocio necesita y el menú se ajusta solo.</p>
+      <p class="small muted" style="margin-bottom:8px">Caja, clientes, agenda, proveedores y catálogo vienen siempre. Activa solo lo que tu negocio necesita y el menú se ajusta solo.</p>
       ${Object.entries(MODULOS).map(([k, m]) => `<div class="mod-row"><div class="grow"><b>${m.nombre}</b><small>${m.desc}${m.requiere ? ' · Necesita ' + MODULOS[m.requiere].nombre.toLowerCase() : ''}</small></div><label class="toggle" aria-label="${m.nombre}"><input type="checkbox" data-change="modulo" data-m="${k}" ${tiene(k) ? 'checked' : ''}><span></span></label></div>`).join('')}
     </div>
     <div class="card"><div class="card-head"><h2>Meta de ${esc(nombreMes(ym))}</h2></div>
@@ -1355,7 +1487,7 @@ function vistaAjustes() {
     </div>
     <div class="card"><div class="card-head"><h2>Datos del negocio</h2></div>
       <form class="form" id="form-negocio">${field('Nombre', input('nombre', S.negocio.nombre, 'required'))}
-        ${field('Tipo de negocio', `<select class="in" name="rubro" id="f-rubro">${Object.entries(RUBROS).map(([k, r]) => opt(k, r.nombre, S.negocio.rubro)).join('')}</select>`)}
+        ${field('Tu negocio en pocas palabras', `<input class="in" name="rubro" id="f-rubro" value="${esc(rubroTexto(S.negocio))}" placeholder="Ej: Salón de uñas que vende esmaltes">`, 'Las herramientas se encienden o apagan arriba, en Herramientas activas.')}
         ${field('Moneda', `<select class="in" name="moneda" id="f-moneda">${[['CLP', 'Peso chileno'], ['ARS', 'Peso argentino'], ['COP', 'Peso colombiano'], ['MXN', 'Peso mexicano'], ['PEN', 'Sol peruano'], ['USD', 'Dólar']].map(([k, v]) => opt(k, `${v} (${k})`, S.negocio.moneda)).join('')}</select>`)}
         <button class="btn pri">Guardar cambios</button></form>
     </div>
@@ -1393,7 +1525,7 @@ function vistaInventario() {
   <div class="card">
     <div class="card-head"><div class="seg"><button data-act="inv-tab" data-tab="stock" class="${ui.tab === 'stock' ? 'on' : ''}">Stock</button><button data-act="inv-tab" data-tab="movs" class="${ui.tab === 'movs' ? 'on' : ''}">Movimientos</button></div></div>
     <div class="tbl-wrap">${ui.tab === 'stock'
-      ? (filas.length ? `<table><thead><tr><th>Producto</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th class="n">Precio</th><th></th></tr></thead><tbody>${filas.map((f) => { const [e, c] = estado(f); return `<tr><td><b>${esc(f.p.nombre)}</b><div class="small muted">${esc(f.p.sku || '')}</div></td><td class="n"><b>${qtyFmt(f.st)}</b></td><td class="n muted">${qtyFmt(f.p.stock_minimo || 0)}</td><td><span class="pill ${c}">${e}</span></td><td class="n">${money(f.p.precio_venta)}</td><td class="n"><button class="btn sm" data-act="ingreso" data-id="${f.p.id}">+ Ingreso</button></td></tr>`; }).join('')}</tbody></table>` : '<div class="empty">Agrega productos en el catálogo para controlar su stock.</div>')
+      ? (filas.length ? `<table><thead><tr><th>Producto</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th class="n">Precio</th><th></th></tr></thead><tbody>${filas.map((f) => { const [e, c] = estado(f); return `<tr><td><b>${esc(f.p.nombre)}</b><div class="small muted">${esc(f.p.sku || '')}</div></td><td class="n"><b>${qtyFmt(f.st)}</b></td><td class="n muted">${qtyFmt(f.p.stock_minimo || 0)}</td><td><span class="pill ${c}">${e}</span></td><td class="n">${money(f.p.precio_venta)}</td><td class="n" style="white-space:nowrap">${f.p.proveedor_id && f.st <= Number(f.p.stock_minimo || 0) && db.get('proveedores', f.p.proveedor_id) ? `<button class="btn sm" data-act="pedido" data-id="${f.p.proveedor_id}">${icon('chat')}Pedir</button>` : ''}<button class="btn sm" data-act="ingreso" data-id="${f.p.id}">+ Ingreso</button></td></tr>`; }).join('')}</tbody></table>` : '<div class="empty">Agrega productos en el catálogo para controlar su stock.</div>')
       : (movs.length ? `<table><thead><tr><th>Fecha</th><th>Producto</th><th>Motivo</th><th class="n">Cantidad</th><th>Nota</th></tr></thead><tbody>${movs.map((m) => `<tr><td class="num">${fechaCorta(m.fecha)}</td><td>${esc(pmap.get(m.item_id) || '—')}</td><td>${MOTIVOS[m.motivo] || m.motivo}</td><td class="n ${m.cantidad < 0 ? 'down' : 'up'}">${m.cantidad > 0 ? '+' : ''}${qtyFmt(m.cantidad)}</td><td class="muted small">${esc(m.nota || '')}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">Sin movimientos todavía.</div>')}
     </div></div>`;
 }
@@ -1449,7 +1581,7 @@ function vistaProduccion() {
         ${fs.length ? `<button class="btn sm" style="margin-top:10px" data-act="formula" data-id="${p.id}" ${ins.length ? '' : 'disabled'}>${icon('plus')}Agregar insumo</button>` : `<button class="btn sm pri" style="margin-top:10px" data-act="receta" data-id="${p.id}">${icon('plus')}Armar receta</button>`}</div>`;
     }).join('')}</div>` : `<div class="empty">Todavía no hay recetas. Con <b>Nueva receta</b> anotas qué lleva cada producto y MiDerno calcula cuánto te cuesta hacerlo y cuánto ganas.</div>`;
   } else if (ui.tab === 'insumos') {
-    cuerpo = ins.length ? `<div class="tbl-wrap"><table><thead><tr><th>Insumo</th><th class="n">Costo</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th></th></tr></thead><tbody>${ins.map((i) => { const st = stockDe('insumo', i.id); const bajo = st <= Number(i.stock_minimo || 0); return `<tr><td><b>${esc(i.nombre)}</b></td><td class="n">${money(i.costo_unitario)} / ${esc(i.unidad)}</td><td class="n"><b>${qtyFmt(st)}</b> ${esc(i.unidad)}</td><td class="n muted">${qtyFmt(i.stock_minimo || 0)}</td><td>${bajo ? '<span class="pill warn">Reponer</span>' : '<span class="pill ok">OK</span>'}</td><td class="n" style="white-space:nowrap"><button class="btn sm" data-act="compra-insumo" data-id="${i.id}">+ Compra</button><button class="btn sm ghost" data-act="insumo" data-id="${i.id}" aria-label="Editar">${icon('edit')}</button></td></tr>`; }).join('')}</tbody></table></div>` : '<div class="empty">Registra tus materias primas: cera, frascos, esencias, harina…</div>';
+    cuerpo = ins.length ? `<div class="tbl-wrap"><table><thead><tr><th>Insumo</th><th class="n">Costo</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th></th></tr></thead><tbody>${ins.map((i) => { const st = stockDe('insumo', i.id); const bajo = st <= Number(i.stock_minimo || 0); return `<tr><td><b>${esc(i.nombre)}</b></td><td class="n">${money(i.costo_unitario)} / ${esc(i.unidad)}</td><td class="n"><b>${qtyFmt(st)}</b> ${esc(i.unidad)}</td><td class="n muted">${qtyFmt(i.stock_minimo || 0)}</td><td>${bajo ? '<span class="pill warn">Reponer</span>' : '<span class="pill ok">OK</span>'}</td><td class="n" style="white-space:nowrap">${bajo && i.proveedor_id && db.get('proveedores', i.proveedor_id) ? `<button class="btn sm" data-act="pedido" data-id="${i.proveedor_id}">${icon('chat')}Pedir</button>` : ''}<button class="btn sm" data-act="compra-insumo" data-id="${i.id}">+ Compra</button><button class="btn sm ghost" data-act="insumo" data-id="${i.id}" aria-label="Editar">${icon('edit')}</button></td></tr>`; }).join('')}</tbody></table></div>` : '<div class="empty">Registra tus materias primas: cera, frascos, esencias, harina…</div>';
   } else {
     const ls = [...db.all('lotes')].sort((a, b) => b.fecha.localeCompare(a.fecha)).slice(0, 40);
     cuerpo = ls.length ? `<div class="tbl-wrap"><table><thead><tr><th>Fabricado</th><th>Producto</th><th class="n">Unidades</th><th class="n">Costo total</th><th class="n">Costo c/u</th><th>Estado</th></tr></thead><tbody>${ls.map((l) => `<tr><td class="num">${fechaCorta(l.fecha)}</td><td>${esc(db.get('productos', l.producto_id)?.nombre || '—')}</td><td class="n">${qtyFmt(l.cantidad)}</td><td class="n">${money(l.costo_total)}</td><td class="n">${money(l.costo_total / (l.cantidad || 1))}</td><td>${l.listo_desde > H ? `<span class="pill warn">Listo el ${fechaCorta(l.listo_desde)}</span>` : '<span class="pill ok">Listo para vender</span>'}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">Cuando fabriques, registra el lote: descuenta los insumos y suma el producto al stock.</div>';
@@ -1461,13 +1593,14 @@ function vistaProduccion() {
   <div class="card"><div class="card-head"><div class="seg">${[['recetas', 'Recetas y margen'], ['insumos', 'Insumos'], ['lotes', 'Lotes']].map(([k, v]) => `<button data-act="prod-tab" data-tab="${k}" class="${ui.tab === k ? 'on' : ''}">${v}</button>`).join('')}</div>${ui.tab === 'recetas' ? '<p>Costo real por unidad según lo que lleva</p>' : ''}</div>${cuerpo}</div>`;
 }
 function formInsumo(id) {
-  const i = id ? db.get('insumos', id) : { nombre: '', unidad: 'unidad', costo_unitario: '', stock_minimo: 0 };
+  const i = id ? db.get('insumos', id) : { nombre: '', unidad: 'unidad', costo_unitario: '', stock_minimo: 0, proveedor_id: null };
   abrirSheet(id ? 'Editar insumo' : 'Nuevo insumo', `<div class="form">${field('Nombre', input('nombre', i.nombre, 'required placeholder="Ej: Cera de soya"'))}
     <div class="form-row">${field('Unidad', `<select class="in" name="unidad" id="f-unidad">${['unidad', 'kg', 'gr', 'lt', 'ml', 'mt', 'cm'].map((u) => opt(u, u, i.unidad)).join('')}</select>`)}${field('Costo por unidad', input('costo_unitario', i.costo_unitario, 'inputmode="decimal" required'))}</div>
-    <div class="form-row">${field('Avisar cuando queden', input('stock_minimo', i.stock_minimo, 'type="number" min="0" step="any"'))}${!id ? field('Stock inicial', input('stock_inicial', '', 'type="number" min="0" step="any"')) : ''}</div></div>`, {
+    <div class="form-row">${field('Avisar cuando queden', input('stock_minimo', i.stock_minimo, 'type="number" min="0" step="any"'))}${!id ? field('Stock inicial', input('stock_inicial', '', 'type="number" min="0" step="any"')) : ''}</div>
+    ${db.all('proveedores').filter((x) => x.tipo === 'proveedor').length ? field('Proveedor', `<select class="in" name="proveedor_id" id="f-proveedor_id">${opt('', 'Sin proveedor', i.proveedor_id)}${db.all('proveedores').filter((x) => x.tipo === 'proveedor').map((x) => opt(x.id, x.nombre, i.proveedor_id)).join('')}</select>`, 'Para avisarte a quién pedirle cuando quede poco') : ''}</div>`, {
     submit: (d) => {
       if (!d.nombre.trim()) return toast('Escribe el nombre', true);
-      const row = { nombre: d.nombre.trim(), unidad: d.unidad, costo_unitario: Number(String(d.costo_unitario).replace(',', '.')) || 0, stock_minimo: Number(d.stock_minimo) || 0 };
+      const row = { ...(d.proveedor_id !== undefined ? { proveedor_id: d.proveedor_id || null } : {}), nombre: d.nombre.trim(), unidad: d.unidad, costo_unitario: Number(String(d.costo_unitario).replace(',', '.')) || 0, stock_minimo: Number(d.stock_minimo) || 0 };
       const r = id ? db.update('insumos', id, row) : db.insert('insumos', row);
       if (!id && Number(d.stock_inicial) > 0) db.insert('movimientos_stock', { tipo_item: 'insumo', item_id: r.id, cantidad: Number(d.stock_inicial), motivo: 'compra', ref_id: null, fecha: hoy(), nota: 'Stock inicial' });
       cerrarSheet(); toast('Insumo guardado'); render();
@@ -2355,10 +2488,193 @@ function guardarReservas(form) {
 }
 
 /* =========================================================
+   Proveedores y contactos
+   Cada producto o insumo puede tener su proveedor. Cuando algo
+   queda bajo el mínimo, MiDerno arma el pedido y lo deja listo
+   para mandar por WhatsApp.
+   ========================================================= */
+
+const TIPOS_CONTACTO = { proveedor: 'Proveedor', contacto: 'Contacto' };
+
+// Productos e insumos que surte un proveedor, con su stock
+function itemsDeProveedor(provId) {
+  const out = [];
+  for (const p of db.all('productos')) if (p.proveedor_id === provId && p.activo !== false) out.push({ tipo: 'producto', item: p, st: stockDe('producto', p.id), min: Number(p.stock_minimo || 0), unidad: 'un.' });
+  for (const i of db.all('insumos')) if (i.proveedor_id === provId) out.push({ tipo: 'insumo', item: i, st: stockDe('insumo', i.id), min: Number(i.stock_minimo || 0), unidad: i.unidad });
+  return out;
+}
+const bajoMinimo = (x) => x.st <= x.min;
+const sugerido = (x) => Math.max(1, Math.ceil(x.min * 2 - x.st));
+function porReponer() {
+  // proveedores con algo bajo el mínimo, y lo que no tiene proveedor asignado
+  const control = tiene('inventario');
+  const provs = db.all('proveedores').map((p) => ({ p, bajos: itemsDeProveedor(p.id).filter(bajoMinimo) })).filter((x) => x.bajos.length && control);
+  const sinProv = control ? [...db.all('productos').filter((p) => p.activo !== false && !p.proveedor_id && stockDe('producto', p.id) <= Number(p.stock_minimo || 0)),
+    ...(tiene('produccion') ? db.all('insumos').filter((i) => !i.proveedor_id && stockDe('insumo', i.id) <= Number(i.stock_minimo || 0)) : [])] : [];
+  return { provs, sinProv };
+}
+
+/* ---------- vista ---------- */
+function vistaProveedores() {
+  const lista = [...db.all('proveedores')].sort((a, b) => (a.tipo === b.tipo ? a.nombre.localeCompare(b.nombre) : a.tipo === 'proveedor' ? -1 : 1));
+  const { provs, sinProv } = porReponer();
+  const reponer = provs.length || sinProv.length ? `<div class="card stack" style="border-color:var(--warn)"><div class="between"><h2>Para reponer</h2><span class="small muted">Productos e insumos en el mínimo o bajo él</span></div>
+    <div class="list">${provs.map(({ p, bajos }) => `<div class="row" style="flex-wrap:wrap"><div class="avatar">${esc(iniciales(p.nombre))}</div><div class="grow"><div class="t">${esc(p.nombre)}</div><div class="s">${bajos.map((x) => `${x.item.nombre} (quedan ${qtyFmt(x.st)})`).map(esc).join(' · ')}</div></div>
+      <button class="btn sm pri" data-act="pedido" data-id="${p.id}">${icon('chat')}Hacer pedido</button></div>`).join('')}
+    ${sinProv.length ? `<div class="row"><span class="sev warn" style="align-self:stretch"></span><div class="grow"><div class="t">${sinProv.length} sin proveedor asignado</div><div class="s">${sinProv.slice(0, 4).map((x) => esc(x.nombre)).join(' · ')}${sinProv.length > 4 ? '…' : ''}</div></div><span class="small muted">Asígnalos al editar el proveedor</span></div>` : ''}</div></div>` : '';
+  const tarjeta = (c) => {
+    const items = itemsDeProveedor(c.id); const bajos = items.filter(bajoMinimo);
+    return `<div class="card stack prov">
+      <div class="between" style="flex-wrap:nowrap;align-items:flex-start"><div class="hstack" style="flex-wrap:nowrap;min-width:0"><div class="avatar">${esc(iniciales(c.nombre))}</div><div style="min-width:0"><h3>${esc(c.nombre)}</h3><div class="small muted">${esc([c.contacto, c.que_vende].filter(Boolean).join(' · ') || TIPOS_CONTACTO[c.tipo])}</div></div></div>
+        <span class="pill ${c.tipo === 'proveedor' ? 'acc' : ''}">${TIPOS_CONTACTO[c.tipo] || 'Contacto'}</span></div>
+      ${items.length ? `<div class="small">${items.slice(0, 6).map((x) => `<span class="pill ${bajoMinimo(x) ? 'warn' : ''}" style="margin:0 4px 4px 0">${esc(x.item.nombre)}${bajoMinimo(x) ? ' · quedan ' + qtyFmt(x.st) : ''}</span>`).join('')}${items.length > 6 ? `<span class="small muted">y ${items.length - 6} más</span>` : ''}</div>` : ''}
+      ${c.telefono || c.email ? `<div class="small muted num">${esc([c.telefono, c.email].filter(Boolean).join(' · '))}</div>` : ''}
+      ${c.notas ? `<p class="small muted">${esc(c.notas)}</p>` : ''}
+      <div class="hstack">
+        ${c.telefono ? `<a class="btn sm" target="_blank" rel="noopener" href="${waLink(c.telefono, `Hola${c.contacto ? ' ' + primerNombre(c.contacto) : ''}, te escribo de ${S.negocio.nombre}.`)}">${icon('chat')}WhatsApp</a><a class="btn sm" href="tel:${esc(String(c.telefono).replace(/[^\d+]/g, ''))}">Llamar</a>` : ''}
+        ${c.email ? `<a class="btn sm" href="mailto:${esc(c.email)}">Correo</a>` : ''}
+        ${c.tipo === 'proveedor' && items.length ? `<button class="btn sm ${bajos.length ? 'pri' : ''}" data-act="pedido" data-id="${c.id}">Hacer pedido</button>` : ''}
+        <button class="btn sm ghost" data-act="proveedor" data-id="${c.id}" aria-label="Editar">${icon('edit')}</button>
+      </div></div>`;
+  };
+  return `${head('Proveedores y contactos', 'A quién llamar', `<button class="btn pri" data-act="proveedor">${icon('plus')}Nuevo contacto</button>`)}
+  ${reponer}
+  ${lista.length ? `<div class="grid g2">${lista.map(tarjeta).join('')}</div>` : `<div class="card empty">Anota aquí a tus proveedores y contactos clave (el técnico, la contadora, el que te trae los envases). Si les asignas productos o insumos, MiDerno te avisa cuándo pedirles y te deja el mensaje listo.</div>`}`;
+}
+
+function formProveedor(id) {
+  const c = id ? db.get('proveedores', id) : { nombre: '', tipo: 'proveedor', contacto: '', telefono: '', email: '', que_vende: '', notas: '' };
+  const prods = db.all('productos').filter((p) => p.activo !== false); const ins = tiene('produccion') ? db.all('insumos') : [];
+  const check = (tipo, x) => { const otro = x.proveedor_id && x.proveedor_id !== id ? db.get('proveedores', x.proveedor_id)?.nombre : ''; return `<label class="hstack small" style="flex-wrap:nowrap"><input type="checkbox" name="item" value="${tipo}:${x.id}" ${id && x.proveedor_id === id ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--accent);flex:none"><span>${esc(x.nombre)}${otro ? ` <span class="muted">(hoy: ${esc(otro)})</span>` : ''}</span></label>`; };
+  abrirSheet(id ? 'Editar contacto' : 'Nuevo contacto', `<div class="form">
+    <div class="form-row">${field('Nombre o empresa', input('nombre', c.nombre, 'required placeholder="Ej: Distribuidora Nails Chile"'))}${field('Tipo', `<select class="in" name="tipo" id="f-tipo">${Object.entries(TIPOS_CONTACTO).map(([k, v]) => opt(k, v, c.tipo)).join('')}</select>`)}</div>
+    <div class="form-row">${field('Persona de contacto', input('contacto', c.contacto || '', 'placeholder="Ej: Carolina"'))}${field('Qué te vende o hace', input('que_vende', c.que_vende || '', 'placeholder="Ej: esmaltes y geles"'))}</div>
+    <div class="form-row">${field('Teléfono (WhatsApp)', input('telefono', c.telefono || '', 'type="tel" placeholder="+56 9 1234 5678"'))}${field('Correo', input('email', c.email || '', 'type="email"'))}</div>
+    ${field('Notas', input('notas', c.notas || '', 'placeholder="Ej: despacha martes y viernes, pedido mínimo $30.000"'))}
+    ${prods.length || ins.length ? `<div class="field"><label>¿Qué le compras? Te avisaremos cuando haya que pedirle</label><div class="prov-items">${prods.map((p) => check('producto', p)).join('')}${ins.map((i) => check('insumo', i)).join('')}</div></div>` : ''}
+  </div>`, {
+    pie: `<div class="sheet-foot" style="justify-content:space-between">${id ? `<button type="button" class="btn danger" data-act="del-proveedor" data-id="${id}">Eliminar</button>` : '<span></span>'}<div class="hstack"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri">Guardar</button></div></div>`,
+    submit: (d) => {
+      if (!d.nombre.trim()) return toast('Escribe el nombre', true);
+      const row = { nombre: d.nombre.trim(), tipo: d.tipo, contacto: d.contacto.trim(), telefono: d.telefono.trim(), email: d.email.trim(), que_vende: d.que_vende.trim(), notas: d.notas.trim() };
+      const prov = id ? db.update('proveedores', id, row) : db.insert('proveedores', row);
+      const marcados = new Set([...$('#sheet-form').querySelectorAll('input[name=item]:checked')].map((x) => x.value));
+      for (const [t, tabla] of [['producto', 'productos'], ['insumo', 'insumos']]) for (const x of db.all(tabla)) {
+        const k = `${t}:${x.id}`;
+        if (marcados.has(k) && x.proveedor_id !== prov.id) db.update(tabla, x.id, { proveedor_id: prov.id });
+        else if (!marcados.has(k) && x.proveedor_id === prov.id) db.update(tabla, x.id, { proveedor_id: null });
+      }
+      cerrarSheet(); toast('Contacto guardado'); render();
+    },
+  });
+}
+function eliminarProveedor(id) {
+  const c = db.get('proveedores', id);
+  confirmar(`Se eliminará a <b>${esc(c.nombre)}</b>. Los productos que le comprabas quedarán sin proveedor.`, () => {
+    db.all('productos').filter((p) => p.proveedor_id === id).forEach((p) => db.update('productos', p.id, { proveedor_id: null }));
+    db.all('insumos').filter((i) => i.proveedor_id === id).forEach((i) => db.update('insumos', i.id, { proveedor_id: null }));
+    db.remove('proveedores', id); toast('Contacto eliminado'); render();
+  });
+}
+
+/* ---------- pedido rápido ---------- */
+function formPedido(provId) {
+  const c = db.get('proveedores', provId); const items = itemsDeProveedor(provId).sort((a, b) => bajoMinimo(b) - bajoMinimo(a));
+  if (!items.length) return toast('Asígnale productos o insumos a este proveedor para armar pedidos', true);
+  abrirSheet(`Pedido a ${esc(c.nombre)}`, `<div class="form">
+    <p class="small muted">Marcamos lo que está bajo el mínimo y sugerimos cantidades para quedar con el doble del mínimo. Ajusta lo que quieras.</p>
+    <div class="stack" id="ped-items">${items.map((x, i) => `<div class="ped-row">
+      <input type="checkbox" class="ped-on" data-i="${i}" ${bajoMinimo(x) ? 'checked' : ''} aria-label="Incluir ${esc(x.item.nombre)}" style="width:18px;height:18px;accent-color:var(--accent)">
+      <div style="min-width:0"><b class="small">${esc(x.item.nombre)}</b><div class="small muted">quedan ${qtyFmt(x.st)} ${esc(x.unidad)} · mínimo ${qtyFmt(x.min)}</div></div>
+      <input class="in ped-cant" data-i="${i}" inputmode="decimal" value="${sugerido(x)}" aria-label="Cantidad">
+    </div>`).join('')}</div>
+    ${field('Mensaje', '<textarea class="in" id="ped-msg" rows="7"></textarea>', 'Puedes editarlo antes de enviar.')}
+    <label class="hstack"><input type="checkbox" id="ped-agenda" checked style="width:18px;height:18px;accent-color:var(--accent)"> Anotar en la agenda: recibir el pedido el <input type="date" class="in" id="ped-fecha" value="${addDays(hoy(), 3)}" style="width:auto;min-height:34px;padding:4px 8px"></label>
+  </div>`, {
+    pie: `<div class="sheet-foot"><button type="button" class="btn" id="ped-copiar">Copiar mensaje</button>${c.telefono ? `<a class="btn pri" id="ped-enviar" target="_blank" rel="noopener" href="#">${icon('chat')}Enviar por WhatsApp</a>` : '<span class="small muted">Agrega su teléfono para enviarlo por WhatsApp</span>'}</div>`,
+  });
+  const form = $('#sheet-form');
+  const armar = () => {
+    const lineas = items.map((x, i) => ({ x, on: form.querySelector(`.ped-on[data-i="${i}"]`).checked, cant: form.querySelector(`.ped-cant[data-i="${i}"]`).value.trim() })).filter((l) => l.on && l.cant);
+    return `Hola${c.contacto ? ' ' + primerNombre(c.contacto) : ''}, te escribo de ${S.negocio.nombre}. Quiero hacer un pedido:\n${lineas.map((l) => `- ${l.cant} ${l.x.tipo === 'insumo' && l.x.unidad !== 'unidad' ? l.x.unidad + ' de ' : '× '}${l.x.item.nombre}`).join('\n')}\n¿Me confirmas disponibilidad, total y cuándo llega? ¡Gracias!`;
+  };
+  let editado = false; const msg = $('#ped-msg');
+  const actualizar = () => { if (!editado) msg.value = armar(); const a = $('#ped-enviar'); if (a) a.href = waLink(c.telefono, msg.value); };
+  form.addEventListener('input', (e) => { if (e.target === msg) editado = true; actualizar(); });
+  form.addEventListener('change', actualizar);
+  actualizar();
+  const anotar = () => { if ($('#ped-agenda').checked) db.insert('eventos', { tipo: 'tarea', titulo: `Recibir pedido de ${c.nombre}`, cliente_id: null, fecha: $('#ped-fecha').value || addDays(hoy(), 3), hora: null, direccion: '', monto: 0, pagado: false, estado: 'pendiente', venta_id: null, nota: msg.value.split('\n').filter((l) => l.startsWith('- ')).join(' ').slice(0, 300) }); };
+  $('#ped-enviar')?.addEventListener('click', () => { anotar(); setTimeout(() => { cerrarSheet(); toast('Pedido enviado. Quedó anotado en la agenda.'); render(); }, 100); });
+  $('#ped-copiar').addEventListener('click', () => { navigator.clipboard?.writeText(msg.value).then(() => { anotar(); cerrarSheet(); toast('Mensaje copiado'); render(); }, () => { msg.select(); toast('Selecciona el texto y cópialo'); }); });
+}
+
+/* =========================================================
+   Clientes repetidos: si dos fichas tienen el mismo nombre o el
+   mismo teléfono, se pueden unir en una sola con todo su historial.
+   ========================================================= */
+
+const tel8 = (t) => telLimpio(t).slice(-8);
+function buscarGemelo(id, nombre, telefono) {
+  const n = norm(nombre); const t = tel8(telefono);
+  return db.all('clientes').find((c) => c.id !== id && ((n && norm(c.nombre) === n) || (t.length === 8 && tel8(c.telefono) === t)));
+}
+function gruposDuplicados() {
+  const visto = new Set(); const grupos = [];
+  for (const c of db.all('clientes')) {
+    if (visto.has(c.id)) continue;
+    const g = db.all('clientes').filter((x) => x.id === c.id || norm(x.nombre) === norm(c.nombre) || (tel8(c.telefono).length === 8 && tel8(x.telefono) === tel8(c.telefono)));
+    g.forEach((x) => visto.add(x.id));
+    if (g.length > 1) grupos.push(g);
+  }
+  return grupos;
+}
+const comprasDe = (id) => db.all('ventas').filter((v) => v.cliente_id === id).length;
+
+// Mueve todo el historial de "sobra" a "queda" y borra la ficha repetida
+function unificarClientes(quedaId, sobraId) {
+  const queda = db.get('clientes', quedaId); const sobra = db.get('clientes', sobraId); if (!queda || !sobra || quedaId === sobraId) return;
+  db.all('ventas').filter((v) => v.cliente_id === sobraId).forEach((v) => db.update('ventas', v.id, { cliente_id: quedaId }));
+  db.all('citas').filter((c) => c.cliente_id === sobraId).forEach((c) => db.update('citas', c.id, { cliente_id: quedaId }));
+  db.all('eventos').filter((e) => e.cliente_id === sobraId).forEach((e) => db.update('eventos', e.id, { cliente_id: quedaId }));
+  const patch = {};
+  if (!queda.telefono && sobra.telefono) patch.telefono = sobra.telefono;
+  if (!queda.cumpleanos && sobra.cumpleanos) patch.cumpleanos = sobra.cumpleanos;
+  if (sobra.notas && !String(queda.notas || '').includes(sobra.notas)) patch.notas = [queda.notas, sobra.notas].filter(Boolean).join(' · ');
+  if (sobra.creado_en && (!queda.creado_en || sobra.creado_en < queda.creado_en)) patch.creado_en = sobra.creado_en;
+  if (Object.keys(patch).length) db.update('clientes', quedaId, patch);
+  db.remove('clientes', sobraId);
+}
+
+// Pregunta antes de guardar una ficha que se parece a otra
+function preguntarUnificar(gemelo, alUnificar, alSeparar) {
+  const n = comprasDe(gemelo.id);
+  abrirSheet('¿Es la misma persona?', `<p>Ya tienes a <b>${esc(gemelo.nombre)}</b>${gemelo.telefono ? ` (<span class="num">${esc(gemelo.telefono)}</span>)` : ''} con ${n} compra${n === 1 ? '' : 's'}.</p>
+    <p class="small muted">Si unificas, queda una sola ficha con todas sus compras, horas y datos.</p>`, {
+    pie: `<div class="sheet-foot"><button type="button" class="btn" id="dup-no">Son personas distintas</button><button type="button" class="btn pri" id="dup-si">Unificar fichas</button></div>`,
+  });
+  $('#dup-si').onclick = () => { cerrarSheet(); alUnificar(); };
+  $('#dup-no').onclick = () => { cerrarSheet(); alSeparar(); };
+}
+
+function revisarDuplicados() {
+  const grupos = gruposDuplicados();
+  if (!grupos.length) { cerrarSheet(); return toast('No hay fichas repetidas'); }
+  abrirSheet('Fichas repetidas', `<p class="small muted">Tienen el mismo nombre o el mismo teléfono. Al unificar, la ficha con más compras se queda con todo el historial.</p>
+    <div class="list">${grupos.map((g, i) => `<div class="row" style="flex-wrap:wrap"><div class="grow">${g.map((c) => `<div class="t" style="font-weight:500">${esc(c.nombre)} <span class="small muted">${esc(c.telefono || 'sin teléfono')} · ${comprasDe(c.id)} compras</span></div>`).join('')}</div>
+      <button type="button" class="btn sm pri" data-act="unificar-grupo" data-i="${i}">Unificar</button></div>`).join('')}</div>`, { pie: '<div class="sheet-foot"><button type="button" class="btn" data-close>Cerrar</button></div>' });
+}
+function unificarGrupo(i) {
+  const g = gruposDuplicados()[i]; if (!g) return;
+  const [queda, ...resto] = [...g].sort((a, b) => comprasDe(b.id) - comprasDe(a.id) || String(a.creado_en || '').localeCompare(String(b.creado_en || '')));
+  resto.forEach((c) => unificarClientes(queda.id, c.id));
+  toast(`Unificamos ${g.length} fichas de ${queda.nombre}`); render(); revisarDuplicados();
+}
+
+/* =========================================================
    Render, eventos y arranque
    ========================================================= */
 
-const RENDER = { importar: vistaImportar, inicio: vistaInicio, vender: vistaVender, caja: vistaCaja, clientes: vistaClientes, agenda: vistaAgenda, equipo: vistaEquipo, inventario: vistaInventario, produccion: vistaProduccion, catalogo: vistaCatalogo, ajustes: vistaAjustes };
+const RENDER = { proveedores: vistaProveedores, importar: vistaImportar, inicio: vistaInicio, vender: vistaVender, caja: vistaCaja, clientes: vistaClientes, agenda: vistaAgenda, equipo: vistaEquipo, inventario: vistaInventario, produccion: vistaProduccion, catalogo: vistaCatalogo, ajustes: vistaAjustes };
 let _ultimaVista = null;
 function render() {
   const app = $('#app');
@@ -2492,6 +2808,12 @@ const ACCIONES = {
   'compra-insumo': (el) => formCompraInsumo(el.dataset.id),
   lote: () => formLote(),
   receta: (el) => formReceta(el.dataset.id),
+  proveedor: (el) => formProveedor(el.dataset.id),
+  'del-proveedor': (el) => eliminarProveedor(el.dataset.id),
+  pedido: (el) => formPedido(el.dataset.id),
+  'pedido-ir': (el) => { const id = el.dataset.id; setTimeout(() => formPedido(id), 80); },
+  'revisar-duplicados': () => revisarDuplicados(),
+  'unificar-grupo': (el) => unificarGrupo(+el.dataset.i),
   // importar
   'imp-reset': () => { S.imp = null; render(); },
   'imp-go': (el) => { el.disabled = true; el.textContent = 'Importando…'; setTimeout(importarTodo, 30); },
