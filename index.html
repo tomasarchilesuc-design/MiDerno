@@ -254,9 +254,9 @@ tr:last-child td { border-bottom: 0; }
 .sev { width: 8px; align-self: stretch; border-radius: 4px; flex: none; background: var(--muted); }
 .sev.warn { background: var(--warn); } .sev.bad { background: var(--bad); } .sev.ok { background: var(--ok); } .sev.acc { background: var(--accent); }
 
-.rec-row { display: grid; grid-template-columns: minmax(0, 1fr) 110px 38px 34px; gap: 6px; align-items: center; }
-.rec-nuevo { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) 112px 130px; gap: 6px; padding: 8px; border-radius: 10px; background: var(--surface-2); }
-@media (max-width: 480px) { .rec-row { grid-template-columns: minmax(0, 1fr) 84px 34px; } .rec-uni { display: none; } .rec-nuevo { grid-template-columns: minmax(0, 1fr) 1fr; } .rec-nuevo .rec-n-nombre { grid-column: 1 / -1; } }
+.rec-row { display: grid; grid-template-columns: minmax(0, 1fr) 96px 92px 34px; gap: 6px; align-items: center; }
+.rec-nuevo { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) 150px; gap: 6px; padding: 8px; border-radius: 10px; background: var(--surface-2); }
+@media (max-width: 480px) { .rec-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 34px; } .rec-row .rec-ins { grid-column: 1 / -1; } .rec-nuevo { grid-template-columns: minmax(0, 1fr); } }
 .drop { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 34px 20px; min-height: 240px; border: 2px dashed var(--rule); border-radius: var(--r); cursor: pointer;
   background-color: var(--paper); background-image: repeating-linear-gradient(to bottom, transparent 0 31px, color-mix(in srgb, var(--rule) 45%, transparent) 31px 32px); }
 .drop:hover, .drop.over { border-color: var(--accent); }
@@ -284,6 +284,21 @@ tr:last-child td { border-bottom: 0; }
 .bal-row span:first-child { color: var(--muted); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .bal-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 12px; padding-top: 10px; border-top: 2px solid var(--ink); }
 .bal-total b { font: 650 1.35rem var(--f-display); }
+.tel-group { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 6px; }
+.tel-group .tel-pref { padding-inline: 8px; }
+.msg-edit { padding-top: 14px; border-top: 1px solid var(--line); }
+.msg-edit:first-of-type { border-top: 0; padding-top: 0; }
+.var-chip { display: inline-flex; gap: 5px; align-items: baseline; color: var(--accent); }
+.var-chip b { font-weight: 700; } .var-chip b::before { content: "{"; } .var-chip b::after { content: "}"; }
+.var-chip span { color: var(--muted); font-weight: 500; font-size: .74rem; }
+.msg-preview { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; }
+.msg-preview p { white-space: pre-line; font-size: .9rem; margin-top: 2px; }
+.ejemplo-var { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.ejemplo-var > div { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; }
+.ejemplo-var mark { background: var(--hl); color: inherit; padding: 0 2px; border-radius: 3px; }
+@media (max-width: 600px) { .ejemplo-var { grid-template-columns: minmax(0, 1fr); } }
+.prov-nuevo { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 6px; margin-top: 8px; }
+@media (max-width: 520px) { .prov-nuevo { grid-template-columns: minmax(0, 1fr) auto; } .prov-nuevo select { grid-column: 1 / -1; grid-row: 2; } }
 .muted { color: var(--muted); }
 .small { font-size: .85rem; }
 .stack { display: flex; flex-direction: column; gap: 10px; }
@@ -493,7 +508,8 @@ const LocalAdapter = {
   _pend: false,
   // agrupa varias escrituras seguidas (una venta crea varias filas) en un solo guardado
   persistir() {
-    if (this._pend || !S.negocio) return; this._pend = true;
+    if (this._pend || !S.negocio || S.negocio.id.startsWith('demo-')) return; // los ejemplos nunca se guardan
+    this._pend = true;
     const id = S.negocio.id;
     queueMicrotask(() => { this._pend = false; if (S.negocio?.id === id) LS.set('miderno:data:' + id, { negocio: S.negocio, modulos: S.modulos, t: S.t, ...(id.startsWith('demo-') ? { version: DEMO_VERSION } : {}) }); });
   },
@@ -501,7 +517,7 @@ const LocalAdapter = {
   insertMany() { this.persistir(); },
   update() { this.persistir(); },
   remove() { this.persistir(); },
-  guardarNegocio() { this.persistir(); const idx = (LS.get('miderno:negocios') || []).map((n) => n.id === S.negocio.id ? { ...n, nombre: S.negocio.nombre, rubro: S.negocio.rubro } : n); LS.set('miderno:negocios', idx); },
+  guardarNegocio() { this.persistir(); if (S.negocio.id.startsWith('demo-')) return; const idx = (LS.get('miderno:negocios') || []).map((n) => n.id === S.negocio.id ? { ...n, nombre: S.negocio.nombre, rubro: S.negocio.rubro } : n); LS.set('miderno:negocios', idx); },
   guardarModulo() { this.persistir(); },
 };
 
@@ -865,7 +881,7 @@ function shell(contenido) {
     </aside>
     <main class="main"><div class="wrap">
       <div class="mobile-top"><div class="brand">${MARCA}<b>${esc(S.negocio.nombre)}</b></div><a class="btn sm ghost" href="#ajustes" aria-label="Ajustes">${icon('gear')}</a></div>
-      ${S.negocio.id.startsWith('demo-') ? `<div class="banner"><span>Estás viendo un negocio de ejemplo. Los cambios se guardan solo en este dispositivo.</span><button class="btn sm" data-act="salir">Ver otros ejemplos</button></div>` : ''}
+      ${S.negocio.id.startsWith('demo-') ? `<div class="banner"><span>Estás viendo un negocio de ejemplo. Puedes probar todo, pero nada se guarda: al salir o recargar vuelve a como estaba.</span><button class="btn sm" data-act="salir">Ver otros ejemplos</button></div>` : ''}
       ${contenido}
     </div></main>
     <nav class="tabbar">
@@ -909,6 +925,23 @@ function toast(msg, err = false) {
 const formData = (form) => Object.fromEntries(new FormData(form).entries());
 const opt = (v, label, sel) => `<option value="${esc(v)}" ${String(v) === String(sel ?? '') ? 'selected' : ''}>${esc(label)}</option>`;
 const field = (label, inner, hint = '') => `<div class="field"><label>${label}</label>${inner}${hint ? `<span class="hint">${hint}</span>` : ''}</div>`;
+const PREFIJOS = [['+56', 'CL'], ['+54', 'AR'], ['+51', 'PE'], ['+591', 'BO'], ['+57', 'CO'], ['+593', 'EC'], ['+52', 'MX'], ['+598', 'UY'], ['+595', 'PY'], ['+58', 'VE'], ['+55', 'BR'], ['+34', 'ES'], ['+1', 'US']];
+function partirTel(v) {
+  const s = String(v || '').trim(); if (!s) return ['+56', ''];
+  const d = '+' + s.replace(/\D/g, '');
+  if (s.startsWith('+')) { const p = [...PREFIJOS].sort((a, b) => b[0].length - a[0].length).find(([c]) => d.startsWith(c)); if (p) return [p[0], d.slice(p[0].length)]; }
+  if (/^56\d{9}$/.test(d.slice(1))) return ['+56', d.slice(3)];
+  return ['+56', s];
+}
+// Teléfono con prefijo de país: guarda "+56 912345678" en un campo oculto con el nombre pedido
+function telInput(name, val = '', { id = 'f-' + name, req = false, ph = '9 1234 5678' } = {}) {
+  const [pref, numero] = partirTel(val);
+  return `<div class="tel-group"><select class="in tel-pref" aria-label="Prefijo de país">${PREFIJOS.map(([c, p]) => opt(c, `${p} ${c}`, pref)).join('')}</select><input class="in tel-num" id="${id}" type="tel" inputmode="tel" autocomplete="tel-national" value="${esc(numero)}" placeholder="${ph}" ${req ? 'required' : ''}><input type="hidden" name="${name}" value="${esc(val || '')}"></div>`;
+}
+function syncTel(g) { const n = g.querySelector('.tel-num').value.trim(); g.querySelector('input[type=hidden]').value = n ? `${g.querySelector('.tel-pref').value} ${n.replace(/^\+\d+\s*/, '')}` : ''; }
+document.addEventListener('input', (e) => { const g = e.target.closest?.('.tel-group'); if (g) syncTel(g); }, true);
+document.addEventListener('change', (e) => { const g = e.target.closest?.('.tel-group'); if (g) syncTel(g); }, true);
+document.addEventListener('submit', (e) => { e.target.querySelectorAll?.('.tel-group').forEach(syncTel); }, true);
 const input = (name, val = '', attrs = '') => `<input class="in" id="f-${name}" name="${name}" value="${esc(val)}" ${attrs}>`;
 
 // confirmación dentro de la página (los diálogos del navegador no siempre se muestran)
@@ -957,13 +990,12 @@ function vistaBienvenida() {
 }
 
 function abrirLocal(id) {
-  let data = LS.get('miderno:data:' + id);
-  // los ejemplos se regeneran cuando cambian (versión nueva de la app)
-  if (DEMOS[id] && (!data || data.version !== DEMO_VERSION)) { data = { ...DEMOS[id].crear(), version: DEMO_VERSION }; LS.set('miderno:data:' + id, data); }
+  // los ejemplos se arman de cero cada vez y no se guardan en ningún lado
+  let data = DEMOS[id] ? DEMOS[id].crear() : LS.get('miderno:data:' + id);
   if (!data) return toast('No encontramos ese negocio en este dispositivo', true);
   adapter = LocalAdapter; S.modo = 'local';
   S.negocio = data.negocio; S.modulos = data.modulos; S.t = data.t; TABLAS.forEach((x) => (S.t[x] ||= []));
-  _fmt = null; S.cart = null; resetUI(); LS.set('miderno:ultimo', id);
+  _fmt = null; S.cart = null; resetUI(); if (!DEMOS[id]) LS.set('miderno:ultimo', id);
   render();
 }
 
@@ -1421,7 +1453,7 @@ function formCliente(id, alGuardar) {
   const c = id ? db.get('clientes', id) : { nombre: '', telefono: '', cumpleanos: '', notas: '' };
   abrirSheet(id ? 'Editar cliente' : 'Nuevo cliente', `<div class="form">
     ${field('Nombre', input('nombre', c.nombre, 'required autocomplete="off"'))}
-    <div class="form-row">${field('Teléfono (WhatsApp)', input('telefono', c.telefono, 'type="tel" placeholder="+56 9 1234 5678"'))}${field('Cumpleaños', input('cumpleanos', c.cumpleanos || '', 'type="date"'))}</div>
+    <div class="form-row">${field('Teléfono (WhatsApp)', telInput('telefono', c.telefono))}${field('Fecha de nacimiento', input('cumpleanos', c.cumpleanos || '', 'type="date"'), 'Opcional')}</div>
     ${field('Notas', `<textarea class="in" name="notas" id="f-notas" rows="2">${esc(c.notas || '')}</textarea>`)}</div>`, {
     submit: (d) => {
       if (!d.nombre.trim()) return toast('Escribe el nombre', true);
@@ -1515,7 +1547,7 @@ function vistaInventario() {
   <div class="card">
     <div class="card-head"><div class="seg"><button data-act="inv-tab" data-tab="stock" class="${ui.tab === 'stock' ? 'on' : ''}">Stock</button><button data-act="inv-tab" data-tab="movs" class="${ui.tab === 'movs' ? 'on' : ''}">Movimientos</button></div></div>
     <div class="tbl-wrap">${ui.tab === 'stock'
-      ? (filas.length ? `<table><thead><tr><th>Producto</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th>Último movimiento</th><th class="n">Precio</th><th></th></tr></thead><tbody>${filas.map((f) => { const [e, c] = estado(f); return `<tr><td><b>${esc(f.p.nombre)}</b><div class="small muted">${esc(f.p.sku || '')}</div></td><td class="n"><b>${qtyFmt(f.st)}</b></td><td class="n muted">${qtyFmt(f.p.stock_minimo || 0)}</td><td><span class="pill ${c}">${e}</span></td><td class="small">${ultimoMov('producto', f.p.id)}</td><td class="n">${money(f.p.precio_venta)}</td><td class="n" style="white-space:nowrap">${f.p.proveedor_id && f.st <= Number(f.p.stock_minimo || 0) && db.get('proveedores', f.p.proveedor_id) ? `<button class="btn sm" data-act="pedido" data-id="${f.p.proveedor_id}">${icon('chat')}Pedir</button>` : ''}<button class="btn sm" data-act="ingreso" data-id="${f.p.id}">+ Ingreso</button></td></tr>`; }).join('')}</tbody></table>` : '<div class="empty">Agrega productos en el catálogo para controlar su stock.</div>')
+      ? (filas.length ? `<table><thead><tr><th>Producto</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th>Último movimiento</th><th class="n">Cantidad</th><th class="n">Precio</th><th></th></tr></thead><tbody>${filas.map((f) => { const [e, c] = estado(f); return `<tr><td><b>${esc(f.p.nombre)}</b><div class="small muted">${esc(f.p.sku || '')}</div></td><td class="n"><b>${qtyFmt(f.st)}</b></td><td class="n muted">${qtyFmt(f.p.stock_minimo || 0)}</td><td><span class="pill ${c}">${e}</span></td>${celdasMov('producto', f.p.id)}<td class="n">${money(f.p.precio_venta)}</td><td class="n" style="white-space:nowrap">${f.p.proveedor_id && f.st <= Number(f.p.stock_minimo || 0) && db.get('proveedores', f.p.proveedor_id) ? `<button class="btn sm" data-act="pedido" data-id="${f.p.proveedor_id}">${icon('chat')}Pedir</button>` : ''}<button class="btn sm" data-act="ingreso" data-id="${f.p.id}">+ Ingreso</button></td></tr>`; }).join('')}</tbody></table>` : '<div class="empty">Agrega productos en el catálogo para controlar su stock.</div>')
       : (movs.length ? `<table><thead><tr><th>Fecha</th><th>Producto</th><th>Motivo</th><th class="n">Cantidad</th><th>Nota</th></tr></thead><tbody>${movs.map((m) => `<tr><td class="num" style="white-space:nowrap">${fechaConAnio(m.fecha)}</td><td>${esc(pmap.get(m.item_id) || '—')}</td><td>${MOTIVOS[m.motivo] || m.motivo}</td><td class="n ${m.cantidad < 0 ? 'down' : 'up'}">${m.cantidad > 0 ? '+' : ''}${qtyFmt(m.cantidad)}</td><td class="muted small">${esc(m.nota || '')}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">Sin movimientos todavía.</div>')}
     </div></div>`;
 }
@@ -1585,7 +1617,7 @@ function vistaProduccion() {
         ${fs.length ? `<button class="btn sm" style="margin-top:10px" data-act="formula" data-id="${p.id}" ${ins.length ? '' : 'disabled'}>${icon('plus')}Agregar insumo</button>` : `<button class="btn sm pri" style="margin-top:10px" data-act="receta" data-id="${p.id}">${icon('plus')}Armar receta</button>`}</div>`;
     }).join('')}</div>` : `<div class="empty">Todavía no hay recetas. Con <b>Nueva receta</b> anotas qué lleva cada producto y MiDerno calcula cuánto te cuesta hacerlo y cuánto ganas.</div>`;
   } else if (ui.tab === 'insumos') {
-    cuerpo = ins.length ? `<div class="tbl-wrap"><table><thead><tr><th>Insumo</th><th class="n">Costo</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th>Último movimiento</th><th></th></tr></thead><tbody>${ins.map((i) => { const st = stockDe('insumo', i.id); const bajo = st <= Number(i.stock_minimo || 0); return `<tr><td><b>${esc(i.nombre)}</b></td><td class="n">${money(i.costo_unitario)} / ${esc(i.unidad)}</td><td class="n"><b>${qtyFmt(st)}</b> ${esc(i.unidad)}</td><td class="n muted">${qtyFmt(i.stock_minimo || 0)}</td><td>${bajo ? '<span class="pill warn">Reponer</span>' : '<span class="pill ok">OK</span>'}</td><td class="small">${ultimoMov('insumo', i.id)}</td><td class="n" style="white-space:nowrap">${bajo && i.proveedor_id && db.get('proveedores', i.proveedor_id) ? `<button class="btn sm" data-act="pedido" data-id="${i.proveedor_id}">${icon('chat')}Pedir</button>` : ''}<button class="btn sm" data-act="compra-insumo" data-id="${i.id}">+ Compra</button><button class="btn sm ghost" data-act="insumo" data-id="${i.id}" aria-label="Editar">${icon('edit')}</button></td></tr>`; }).join('')}</tbody></table></div>` : '<div class="empty">Registra tus materias primas: cera, frascos, esencias, harina…</div>';
+    cuerpo = ins.length ? `<div class="tbl-wrap"><table><thead><tr><th>Insumo</th><th class="n">Costo</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th>Último movimiento</th><th class="n">Cantidad</th><th></th></tr></thead><tbody>${ins.map((i) => { const st = stockDe('insumo', i.id); const bajo = st <= Number(i.stock_minimo || 0); return `<tr><td><b>${esc(i.nombre)}</b></td><td class="n">${money(i.costo_unitario)} / ${esc(i.unidad)}</td><td class="n"><b>${qtyFmt(st)}</b> ${esc(i.unidad)}</td><td class="n muted">${qtyFmt(i.stock_minimo || 0)}</td><td>${bajo ? '<span class="pill warn">Reponer</span>' : '<span class="pill ok">OK</span>'}</td>${celdasMov('insumo', i.id)}<td class="n" style="white-space:nowrap">${bajo && i.proveedor_id && db.get('proveedores', i.proveedor_id) ? `<button class="btn sm" data-act="pedido" data-id="${i.proveedor_id}">${icon('chat')}Pedir</button>` : ''}<button class="btn sm" data-act="compra-insumo" data-id="${i.id}">+ Compra</button><button class="btn sm ghost" data-act="insumo" data-id="${i.id}" aria-label="Editar">${icon('edit')}</button></td></tr>`; }).join('')}</tbody></table></div>` : '<div class="empty">Registra tus materias primas: cera, frascos, esencias, harina…</div>';
   } else {
     const ls = [...db.all('lotes')].sort((a, b) => b.fecha.localeCompare(a.fecha)).slice(0, 40);
     cuerpo = ls.length ? `<div class="tbl-wrap"><table><thead><tr><th>Fabricado</th><th>Producto</th><th class="n">Unidades</th><th class="n">Costo total</th><th class="n">Costo c/u</th><th>Estado</th></tr></thead><tbody>${ls.map((l) => `<tr><td class="num">${fechaCorta(l.fecha)}</td><td>${esc(db.get('productos', l.producto_id)?.nombre || '—')}</td><td class="n">${qtyFmt(l.cantidad)}</td><td class="n">${money(l.costo_total)}</td><td class="n">${money(l.costo_total / (l.cantidad || 1))}</td><td>${l.listo_desde > H ? `<span class="pill warn">Listo el ${fechaCorta(l.listo_desde)}</span>` : '<span class="pill ok">Listo para vender</span>'}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">Cuando fabriques, registra el lote: descuenta los insumos y suma el producto al stock.</div>';
@@ -1659,81 +1691,108 @@ function formLote() {
 /* ---------- NUEVA RECETA ---------- */
 // Arma la receta de un producto (nuevo o existente) con varios insumos a la vez.
 // Si falta un insumo se puede crear ahí mismo, sin salir del formulario.
+function unidadesPara(base) {
+  // unidades en que se puede escribir la cantidad de un insumo (la suya y las convertibles)
+  const extra = Object.keys(CONVERSIONES).filter((k) => k.startsWith(norm(base) + '>')).map((k) => k.split('>')[1]).filter((u) => u !== 'g' && u !== norm(base));
+  return [base, ...extra];
+}
 function filaReceta(ins) {
   return `<div class="rec-row">
     <select class="in rec-ins" aria-label="Insumo">${opt('', 'Elige un insumo…')}${ins.map((i) => opt(i.id, `${i.nombre} (${money(i.costo_unitario)} / ${i.unidad})`)).join('')}<option value="__nuevo">+ Insumo nuevo…</option></select>
     <input class="in rec-cant" inputmode="decimal" placeholder="Cantidad" aria-label="Cantidad por unidad">
-    <span class="rec-uni muted small"></span>
+    <select class="in rec-uni" aria-label="Unidad de medida">${unidades().map((u) => opt(u, u)).join('')}</select>
     <button type="button" class="btn icon-btn ghost rec-del" aria-label="Quitar fila">${icon('x')}</button>
     <div class="rec-nuevo" hidden>
       <input class="in rec-n-nombre" placeholder="Nombre del insumo" aria-label="Nombre del insumo nuevo">
-      <select class="in rec-n-unidad" aria-label="Unidad">${unidades().map((u) => opt(u, u)).join('')}</select>
       <input class="in rec-n-costo" inputmode="decimal" placeholder="Costo por unidad" aria-label="Costo por unidad de medida">
     </div>
   </div>`;
 }
+// precio sugerido según el margen que se quiere ganar, redondeado como precio de vitrina
+const precioVitrina = (p) => (p >= 10000 ? Math.ceil(p / 1000) * 1000 - 10 : p >= 1000 ? Math.ceil(p / 100) * 100 - 10 : Math.ceil(p / 50) * 50);
 function formReceta(prodId) {
   const sinReceta = db.all('productos').filter((p) => p.activo !== false && !db.all('formulas').some((f) => f.producto_id === p.id));
   const ins = [...db.all('insumos')].sort((a, b) => a.nombre.localeCompare(b.nombre));
   const sel = prodId || (sinReceta[0]?.id ?? '__nuevo');
   abrirSheet('Nueva receta', `<div class="form">
     ${field('¿Para qué producto?', `<select class="in" id="rec-prod">${sinReceta.map((p) => opt(p.id, p.nombre, sel)).join('')}<option value="__nuevo" ${sel === '__nuevo' ? 'selected' : ''}>+ Producto nuevo…</option></select>`)}
-    <div class="form-row" id="rec-prod-nuevo" ${sel === '__nuevo' ? '' : 'hidden'}>${field('Nombre del producto', '<input class="in" id="rec-p-nombre" placeholder="Ej: Vela de coco 200 g">')}${field('Precio de venta', '<input class="in" id="rec-p-precio" inputmode="numeric" placeholder="0">')}</div>
-    <div class="field"><label>¿Qué lleva una unidad?</label><div class="stack" id="rec-filas">${filaReceta(ins)}${filaReceta(ins)}</div>
+    <div id="rec-prod-nuevo" ${sel === '__nuevo' ? '' : 'hidden'}>${field('Nombre del producto', '<input class="in" id="rec-p-nombre" placeholder="Ej: Vela de coco 200 g">')}</div>
+    <div class="field"><label>¿Qué lleva una unidad?</label><span class="hint" style="margin-top:-2px">Elige la medida que te acomode en cada fila: por ejemplo 180 gr aunque compres la cera por kilo.</span>
+      <div class="stack" id="rec-filas">${filaReceta(ins)}${filaReceta(ins)}</div>
       <button type="button" class="btn sm" id="rec-mas" style="align-self:flex-start">${icon('plus')}Agregar otro insumo</button></div>
-    <div class="banner" id="rec-resumen" style="background:var(--accent-soft)">Agrega los insumos para ver el costo.</div>
+    <div class="banner" id="rec-resumen" style="background:var(--accent-soft)">Agrega los insumos para ver cuánto te cuesta hacer una unidad.</div>
+    <div class="field" id="rec-precio-box"><label for="rec-p-precio">Precio de venta</label>
+      <div class="chips" id="rec-sugerencias"></div>
+      <input class="in" id="rec-p-precio" inputmode="numeric" placeholder="Escribe tu precio o elige una sugerencia" value="${sel !== '__nuevo' ? esc(db.get('productos', sel)?.precio_venta || '') : ''}">
+      <span class="hint" id="rec-margen"></span></div>
   </div>`, {
     submit: () => guardarReceta(),
   });
   const form = $('#sheet-form');
-  const precio = () => { const v = $('#rec-prod').value; return v === '__nuevo' ? num($('#rec-p-precio').value) : Number(db.get('productos', v)?.precio_venta || 0); };
+  const ajustarUnidades = (r) => {
+    const id = r.querySelector('.rec-ins').value; const selU = r.querySelector('.rec-uni');
+    if (!id || id === '__nuevo') { if (selU.dataset.base) { selU.innerHTML = unidades().map((u) => opt(u, u)).join(''); delete selU.dataset.base; } return; }
+    const i = db.get('insumos', id); if (selU.dataset.base === i.unidad) return;
+    selU.innerHTML = unidadesPara(i.unidad).map((u) => opt(u, u, i.unidad)).join(''); selU.dataset.base = i.unidad;
+  };
+  const costoFila = (r) => {
+    const id = r.querySelector('.rec-ins').value; const cant = Number(String(r.querySelector('.rec-cant').value).replace(',', '.')) || 0; const u = r.querySelector('.rec-uni').value;
+    if (id === '__nuevo') return cant * (Number(String(r.querySelector('.rec-n-costo').value).replace(',', '.')) || 0);
+    const i = db.get('insumos', id); if (!i) return 0;
+    return cant * (u === i.unidad ? 1 : factorUnidad(u, i.unidad) || 1) * Number(i.costo_unitario || 0);
+  };
   const recalcular = () => {
     let costo = 0;
-    form.querySelectorAll('.rec-row').forEach((r) => {
-      const id = r.querySelector('.rec-ins').value; const cant = Number(String(r.querySelector('.rec-cant').value).replace(',', '.')) || 0;
-      const nuevo = id === '__nuevo'; r.querySelector('.rec-nuevo').hidden = !nuevo;
-      const i = nuevo ? null : db.get('insumos', id);
-      const unidad = nuevo ? r.querySelector('.rec-n-unidad').value : i?.unidad || '';
-      const cu = nuevo ? Number(String(r.querySelector('.rec-n-costo').value).replace(',', '.')) || 0 : Number(i?.costo_unitario || 0);
-      r.querySelector('.rec-uni').textContent = unidad;
-      costo += cant * cu;
-    });
-    const pv = precio(); const res = $('#rec-resumen');
-    res.innerHTML = costo ? `<span>Costo por unidad <b class="num">${money(costo)}</b></span>${pv ? `<span>Ganas <b class="num">${money(pv - costo)}</b> (${Math.round(((pv - costo) / pv) * 100)}%)</span>` : '<span class="muted">Pon un precio para ver el margen</span>'}` : 'Agrega los insumos para ver el costo.';
+    form.querySelectorAll('.rec-row').forEach((r) => { r.querySelector('.rec-nuevo').hidden = r.querySelector('.rec-ins').value !== '__nuevo'; ajustarUnidades(r); costo += costoFila(r); });
+    const res = $('#rec-resumen'); const pv = num($('#rec-p-precio').value);
+    res.innerHTML = costo ? `Hacer una unidad te cuesta <b class="num">${money(costo)}</b>` : 'Agrega los insumos para ver cuánto te cuesta hacer una unidad.';
+    // solo se redibuja si cambió, para no perder el toque sobre un botón
+    const sugHtml = costo ? [50, 60, 70].map((m) => { const p = precioVitrina(costo / (1 - m / 100)); return `<button type="button" class="chip rec-sug" data-p="${p}">Ganar ${m}% → <b class="num">${money(p)}</b></button>`; }).join('') : '';
+    if ($('#rec-sugerencias').dataset.html !== sugHtml) { $('#rec-sugerencias').innerHTML = sugHtml; $('#rec-sugerencias').dataset.html = sugHtml; }
+    $('#rec-sugerencias').querySelectorAll('.rec-sug').forEach((b) => b.classList.toggle('on', Number(b.dataset.p) === pv));
+    $('#rec-margen').innerHTML = costo && pv ? `Con ${money(pv)} ganas <b class="num ${pv - costo < 0 ? 'down' : ''}">${money(pv - costo)}</b> por unidad (${Math.round(((pv - costo) / pv) * 100)}% del precio).` : costo ? 'Elige una sugerencia o escribe tu propio precio.' : '';
   };
   form.addEventListener('input', recalcular);
-  form.addEventListener('change', (e) => { if (e.target.id === 'rec-prod') $('#rec-prod-nuevo').hidden = e.target.value !== '__nuevo'; recalcular(); });
+  form.addEventListener('change', (e) => {
+    if (e.target.id === 'rec-prod') { $('#rec-prod-nuevo').hidden = e.target.value !== '__nuevo'; $('#rec-p-precio').value = e.target.value !== '__nuevo' ? db.get('productos', e.target.value)?.precio_venta || '' : ''; }
+    recalcular();
+  });
   form.addEventListener('click', (e) => {
     if (e.target.closest('#rec-mas')) { $('#rec-filas').insertAdjacentHTML('beforeend', filaReceta(ins)); }
     const del = e.target.closest('.rec-del'); if (del) { if (form.querySelectorAll('.rec-row').length > 1) del.closest('.rec-row').remove(); recalcular(); }
+    const sug = e.target.closest('.rec-sug'); if (sug) { $('#rec-p-precio').value = sug.dataset.p; recalcular(); }
   });
+  recalcular();
 }
 function guardarReceta() {
-  const form = $('#sheet-form'); let prodId = $('#rec-prod').value;
-  if (prodId === '__nuevo') {
-    const nombre = $('#rec-p-nombre').value.trim(); const precio = num($('#rec-p-precio').value);
-    if (!nombre || precio <= 0) return toast('Escribe el nombre y el precio del producto', true);
-  }
+  const form = $('#sheet-form'); let prodId = $('#rec-prod').value; const precio = num($('#rec-p-precio').value);
+  if (prodId === '__nuevo' && !$('#rec-p-nombre').value.trim()) return toast('Escribe el nombre del producto', true);
   const lineas = [];
   for (const r of form.querySelectorAll('.rec-row')) {
-    const id = r.querySelector('.rec-ins').value; const cant = Number(String(r.querySelector('.rec-cant').value).replace(',', '.')) || 0;
+    const id = r.querySelector('.rec-ins').value; const cant = Number(String(r.querySelector('.rec-cant').value).replace(',', '.')) || 0; const u = r.querySelector('.rec-uni').value;
     if (!id && !cant) continue;
     if (!id) return toast('Elige el insumo de cada fila', true);
     if (cant <= 0) return toast('Escribe cuánto lleva de cada insumo', true);
     if (id === '__nuevo') {
       const nombre = r.querySelector('.rec-n-nombre').value.trim(); if (!nombre) return toast('Escribe el nombre del insumo nuevo', true);
-      lineas.push({ nuevo: { nombre, unidad: r.querySelector('.rec-n-unidad').value, costo_unitario: Number(String(r.querySelector('.rec-n-costo').value).replace(',', '.')) || 0, stock_minimo: 0 }, cant });
-    } else lineas.push({ id, cant });
+      lineas.push({ nuevo: { nombre, unidad: u, costo_unitario: Number(String(r.querySelector('.rec-n-costo').value).replace(',', '.')) || 0, stock_minimo: 0 }, cant });
+    } else {
+      // la cantidad se guarda en la unidad del insumo (180 gr de una cera en kg = 0,18 kg)
+      const i = db.get('insumos', id); const f = u === i.unidad ? 1 : factorUnidad(u, i.unidad) || 1;
+      lineas.push({ id, cant: Math.round(cant * f * 10000) / 10000 });
+    }
   }
   if (!lineas.length) return toast('Agrega al menos un insumo', true);
   const ids = lineas.map((l) => l.id).filter(Boolean); if (new Set(ids).size !== ids.length) return toast('Hay un insumo repetido en la receta', true);
-  if (prodId === '__nuevo') prodId = db.insert('productos', { nombre: $('#rec-p-nombre').value.trim(), sku: '', precio_venta: num($('#rec-p-precio').value), costo: 0, stock_minimo: 0, activo: true }).id;
+  if (!(precio > 0)) return toast('Elige una sugerencia o escribe el precio de venta', true);
+  if (prodId === '__nuevo') prodId = db.insert('productos', { nombre: $('#rec-p-nombre').value.trim(), sku: '', precio_venta: precio, costo: 0, stock_minimo: 0, activo: true }).id;
+  else if (Number(db.get('productos', prodId).precio_venta) !== precio) db.update('productos', prodId, { precio_venta: precio });
   for (const l of lineas) {
     const insumoId = l.id || db.insert('insumos', l.nuevo).id;
     db.insert('formulas', { producto_id: prodId, insumo_id: insumoId, cantidad: l.cant });
   }
   const p = db.get('productos', prodId);
-  cerrarSheet(); S.ui.prod.tab = 'recetas'; toast(`Receta guardada: ${p.nombre} cuesta ${money(costoReceta(prodId))} por unidad`); render();
+  cerrarSheet(); S.ui.prod.tab = 'recetas'; toast(`Receta guardada: ${p.nombre} cuesta ${money(costoReceta(prodId))} y se vende a ${money(p.precio_venta)}`); render();
 }
 
 /* ---------- cambio de unidad (kg ↔ gr, lt ↔ ml, mt ↔ cm) ---------- */
@@ -1746,10 +1805,12 @@ function convertirInsumo(id, f) {
 
 const fechaConAnio = (f) => fechaCorta(f) + (String(f).slice(0, 4) !== hoy().slice(0, 4) ? ' ' + String(f).slice(0, 4) : '');
 const MOTIVOS_TXT = { venta: 'venta', compra: 'ingreso', produccion: 'producción', ajuste: 'ajuste', consumo: 'consumo' };
-function ultimoMov(tipo, id) {
-  const ms = db.all('movimientos_stock').filter((m) => m.tipo_item === tipo && m.item_id === id); if (!ms.length) return '<span class="muted">—</span>';
-  const u = ms.reduce((a, b) => (b.fecha > a.fecha ? b : a)); const ing = ms.filter((m) => m.motivo === 'compra' || m.motivo === 'produccion').reduce((a, b) => (!a || b.fecha > a.fecha ? b : a), null);
-  return `${fechaConAnio(u.fecha)} · ${MOTIVOS_TXT[u.motivo] || u.motivo} ${u.cantidad > 0 ? '+' : ''}${qtyFmt(u.cantidad)}${ing && ing !== u ? `<div class="muted">Último ingreso: ${fechaConAnio(ing.fecha)}</div>` : ''}`;
+// dos columnas: cuándo y qué fue el último movimiento, y cuánto entró o salió
+function celdasMov(tipo, id) {
+  const ms = db.all('movimientos_stock').filter((m) => m.tipo_item === tipo && m.item_id === id);
+  if (!ms.length) return '<td class="small muted">—</td><td class="n muted">—</td>';
+  const u = ms.reduce((a, b) => (b.fecha > a.fecha ? b : a)); const unidad = tipo === 'insumo' ? ' ' + (db.get('insumos', id)?.unidad || '') : '';
+  return `<td class="small" style="white-space:nowrap">${fechaConAnio(u.fecha)}<div class="muted">${MOTIVOS_TXT[u.motivo] || u.motivo}</div></td><td class="n num"><b class="${u.cantidad > 0 ? 'up' : 'down'}">${u.cantidad > 0 ? '+' : ''}${qtyFmt(u.cantidad)}</b><span class="small muted">${esc(unidad)}</span></td>`;
 }
 
 /* =========================================================
@@ -1983,14 +2044,15 @@ function vistaEquipo() {
     <p class="small muted" style="margin-top:10px">Con <b>Su app</b>, cada persona ve en su celular sus horas y lo que lleva en el mes. La comisión se calcula sobre cada servicio cobrado. Si cambias el porcentaje de alguien, se recalcula lo que aún no le pagas; lo ya pagado no cambia.</p></div>`;
 }
 function formEmpleado(id) {
-  const e = id ? db.get('empleados', id) : { nombre: '', telefono: '', pct_comision: 40, activo: true };
+  const e = id ? db.get('empleados', id) : { nombre: '', telefono: '', pct_comision: 40, activo: true, fecha_nacimiento: null };
   abrirSheet(id ? 'Editar persona' : 'Agregar persona', `<div class="form">${field('Nombre', input('nombre', e.nombre, 'required'))}
-    <div class="form-row">${field('Comisión (%)', input('pct_comision', e.pct_comision, 'inputmode="decimal"'), 'Porcentaje de cada servicio que atiende')}${field('Teléfono', input('telefono', e.telefono || '', 'type="tel"'))}</div></div>`, {
+    <div class="form-row">${field('Comisión (%)', input('pct_comision', e.pct_comision, 'inputmode="decimal"'), 'Porcentaje de cada servicio que atiende')}${field('Teléfono', telInput('telefono', e.telefono || ''))}</div>
+    <div class="form-row">${field('Fecha de nacimiento', input('fecha_nacimiento', e.fecha_nacimiento || '', 'type="date"'), 'Opcional')}<span></span></div></div>`, {
     pie: `<div class="sheet-foot" style="justify-content:space-between">${id ? `<button type="button" class="btn danger" data-act="del-empleado" data-id="${id}">${icon('trash')}Eliminar</button>` : '<span></span>'}<div class="hstack"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri">Guardar</button></div></div>`,
     submit: (d) => {
       if (!d.nombre.trim()) return toast('Escribe el nombre', true);
       const pct = Math.min(100, Math.max(0, Number(String(d.pct_comision).replace(',', '.')) || 0));
-      const row = { nombre: d.nombre.trim(), telefono: d.telefono.trim(), pct_comision: pct, activo: true };
+      const row = { nombre: d.nombre.trim(), telefono: d.telefono.trim(), pct_comision: pct, activo: true, ...(d.fecha_nacimiento ? { fecha_nacimiento: d.fecha_nacimiento } : e.fecha_nacimiento ? { fecha_nacimiento: null } : {}) };
       if (!id) { db.insert('empleados', row); cerrarSheet(); toast('Persona agregada'); return render(); }
       const antes = Number(e.pct_comision); db.update('empleados', id, row);
       const n = pct !== antes ? recalcularComisiones(id, antes, pct) : 0;
@@ -2065,6 +2127,17 @@ const IMP = {
     cantidad: { label: 'Cantidad', tipo: 'num', syn: ['cantidad', 'cant', 'unidades', 'qty'] },
     cliente: { label: 'Cliente', syn: ['cliente', 'clienta', 'nombre cliente', 'comprador', 'nombre'] },
     metodo_pago: { label: 'Medio de pago', syn: ['medio de pago', 'metodo de pago', 'forma de pago', 'pago', 'medio pago', 'metodo'] },
+  } },
+  caja: { label: 'Caja: ventas y gastos juntos', pistas: ['caja', 'movimiento', 'libro', 'registro', 'flujo', 'cuentas', 'balance', 'contabilidad'], campos: {
+    fecha: { label: 'Fecha', req: true, tipo: 'fecha', syn: ['fecha', 'dia'] },
+    detalle: { label: 'Detalle', syn: ['detalle', 'descripcion', 'concepto', 'glosa', 'item', 'producto', 'servicio'] },
+    ingreso: { label: 'Entró (ventas)', tipo: 'num', syn: ['ingreso', 'ingresos', 'entrada', 'entradas', 'venta', 'ventas', 'cobro', 'cobros', 'haber'] },
+    egreso: { label: 'Salió (gastos)', tipo: 'num', syn: ['egreso', 'egresos', 'salida', 'salidas', 'gasto', 'gastos', 'pagos', 'debe'] },
+    monto: { label: 'Monto (si es una sola columna)', tipo: 'num', syn: ['monto', 'total', 'valor', 'importe', 'cantidad'] },
+    tipo: { label: 'Tipo (venta o gasto)', syn: ['tipo', 'movimiento', 'tipo de movimiento', 'clase', 'naturaleza', 'ingreso egreso'] },
+    categoria: { label: 'Categoría', syn: ['categoria', 'rubro', 'clasificacion'] },
+    metodo_pago: { label: 'Medio de pago', syn: ['medio de pago', 'forma de pago', 'metodo de pago', 'medio pago'] },
+    cliente: { label: 'Cliente', syn: ['cliente', 'clienta'] },
   } },
   gastos: { label: 'Gastos', pistas: ['gasto', 'egreso', 'compras', 'pagos'], campos: {
     fecha: { label: 'Fecha', req: true, tipo: 'fecha', syn: ['fecha', 'dia'] },
@@ -2198,6 +2271,11 @@ function analizarHoja(nombre, filas) {
     let score = total + (reqOk ? 3 : -10) + (pista ? 5 : 0);
     if (tipo === 'ventas' && headers.some((h) => /categoria|proveedor|gasto|egreso/.test(h))) score -= 3;
     if (tipo === 'gastos' && headers.some((h) => /cliente|producto|servicio/.test(h))) score -= 3;
+    if (tipo === 'caja') {
+      // es "caja" si trae columnas de entrada y salida, o monto + tipo, o montos negativos para los gastos
+      const negativos = map.monto >= 0 && datos.some((f) => (parseNumero(f[map.monto]) || 0) < 0);
+      score += (map.ingreso >= 0 && map.egreso >= 0) || (map.tipo >= 0 && map.monto >= 0) || negativos ? 10 : -8;
+    }
     if (score > mejor.total) mejor = { tipo, total: score, map };
   }
   if (mejor.total < 4) mejor.tipo = 'ninguno';
@@ -2213,7 +2291,20 @@ function filaAObjeto(h, fila) {
   if (h.tipo === 'ventas' && h.map.total >= 0 && /unit|^precio$/.test(h.headersN[h.map.total]) && o.cantidad > 0) o.total = o.total * o.cantidad;
   return o;
 }
+// Decide si cada fila de una hoja de caja es venta, gasto o ambas
+function claseCaja(o) {
+  const out = []; const ing = Math.abs(o.ingreso || 0), egr = Math.abs(o.egreso || 0);
+  if (ing > 0) out.push({ clase: 'venta', monto: ing });
+  if (egr > 0) out.push({ clase: 'gasto', monto: egr });
+  if (!out.length && o.monto) {
+    const t = norm(o.tipo);
+    const gasto = /gasto|egreso|salida|compra|pago|retiro|cargo/.test(t) || (!/venta|ingreso|entrada|cobro|abono/.test(t) && o.monto < 0);
+    out.push({ clase: gasto ? 'gasto' : 'venta', monto: Math.abs(o.monto) });
+  }
+  return out;
+}
 function filaValida(tipo, o) {
+  if (tipo === 'caja') return !!o.fecha && claseCaja(o).length > 0;
   return Object.entries(IMP[tipo].campos).every(([f, d]) => !d.req || (d.tipo === 'num' ? o[f] != null && o[f] > 0 : !!o[f]));
 }
 
@@ -2223,6 +2314,7 @@ function vistaImportar() {
   const ejemplos = `<div class="tbl-wrap"><table><thead><tr><th>Si tu hoja tiene columnas como…</th><th>La anotamos en</th></tr></thead><tbody>
     <tr><td>Fecha · Producto · Cantidad · Total · Cliente · Forma de pago</td><td><span class="pill acc">Ventas</span></td></tr>
     <tr><td>Fecha · Monto · Categoría · Detalle o proveedor</td><td><span class="pill acc">Gastos</span></td></tr>
+    <tr><td>Todo junto: Fecha · Detalle · Ingreso · Egreso (o Monto + Tipo, o gastos con signo menos)</td><td><span class="pill acc">Caja: ventas y gastos</span></td></tr>
     <tr><td>Nombre · Teléfono o WhatsApp · Cumpleaños</td><td><span class="pill acc">Clientes</span></td></tr>
     <tr><td>Producto · Precio · Costo · Stock · Código</td><td><span class="pill acc">Productos</span></td></tr>
     <tr><td>Servicio o tratamiento · Precio · Duración</td><td><span class="pill acc">Servicios</span></td></tr>
@@ -2255,12 +2347,12 @@ function vistaImportar() {
     if (h.tipo === 'ninguno') return `<div class="card between"><div><h2>Hoja “${esc(h.nombre)}”</h2><p class="small muted">${h.datos.length} filas · No reconocimos qué contiene. Elige qué es o déjala fuera.</p></div>${tipoSel}</div>`;
     const campos = IMP[h.tipo].campos; const objs = h.datos.map((f) => filaAObjeto(h, f)); const validas = objs.filter((o) => filaValida(h.tipo, o)).length;
     const colOpts = (sel) => opt(-1, '— No usar —', sel) + h.headers.map((t, i) => opt(i, t || `Columna ${i + 1}`, sel)).join('');
-    const fmt = (f, v, o) => { const d = campos[f]; if ((v == null || v === '') && f !== 'categoria') return '<span class="muted">—</span>'; if (d.tipo === 'fecha') return fechaCorta(v) + (v.startsWith('2000-') && h.tipo === 'clientes' ? '' : ' ' + v.slice(0, 4)); if (d.tipo === 'num') return ['precio_venta', 'costo', 'precio', 'costo_unitario', 'total', 'monto'].includes(f) ? money(v) : qtyFmt(v); if (f === 'metodo_pago') return metodoLabel(parseMetodo(v)); if (f === 'categoria') return parseCategoria(v, o.descripcion); return esc(v); };
+    const fmt = (f, v, o) => { const d = campos[f]; if ((v == null || v === '') && f !== 'categoria') return '<span class="muted">—</span>'; if (d.tipo === 'fecha') return fechaCorta(v) + (v.startsWith('2000-') && h.tipo === 'clientes' ? '' : ' ' + v.slice(0, 4)); if (d.tipo === 'num') return ['precio_venta', 'costo', 'precio', 'costo_unitario', 'total', 'monto', 'ingreso', 'egreso'].includes(f) ? money(v) : qtyFmt(v); if (f === 'metodo_pago') return metodoLabel(parseMetodo(v)); if (f === 'categoria') return parseCategoria(v, o.descripcion); return esc(v); };
     const usados = Object.keys(campos).filter((f) => h.map[f] >= 0);
     return `<div class="card stack">
       <div class="between"><div><h2>Hoja “${esc(h.nombre)}”</h2><p class="small muted">${validas} de ${objs.length} filas se pueden importar${objs.length - validas ? ` · ${objs.length - validas} sin ${Object.entries(campos).filter(([, d]) => d.req).map(([, d]) => d.label.toLowerCase()).join(' o ')} se saltan` : ''}</p></div>${tipoSel}</div>
       <div class="map-grid">${Object.entries(campos).map(([f, d]) => `<div class="field"><label>${d.label}${d.req ? ' *' : ''}</label><select class="in" data-change="imp-map" data-h="${hi}" data-f="${f}">${colOpts(h.map[f])}</select></div>`).join('')}</div>
-      ${usados.length ? `<div class="tbl-wrap"><table><thead><tr>${usados.map((f) => `<th>${campos[f].label}</th>`).join('')}<th></th></tr></thead><tbody>${objs.slice(0, 5).map((o) => `<tr>${usados.map((f) => `<td>${fmt(f, o[f], o)}</td>`).join('')}<td>${filaValida(h.tipo, o) ? '<span class="pill ok">OK</span>' : '<span class="pill warn">Se salta</span>'}</td></tr>`).join('')}</tbody></table></div>${objs.length > 5 ? `<p class="small muted">y ${objs.length - 5} filas más</p>` : ''}` : ''}
+      ${usados.length ? `<div class="tbl-wrap"><table><thead><tr>${usados.map((f) => `<th>${campos[f].label}</th>`).join('')}${h.tipo === 'caja' ? '<th>Se anota como</th>' : ''}<th></th></tr></thead><tbody>${objs.slice(0, 5).map((o) => `<tr>${usados.map((f) => `<td>${fmt(f, o[f], o)}</td>`).join('')}${h.tipo === 'caja' ? `<td>${claseCaja(o).map((c) => `<span class="pill ${c.clase === 'venta' ? 'ok' : 'warn'}">${c.clase === 'venta' ? 'Venta' : 'Gasto'} ${money(c.monto)}</span>`).join(' ')}</td>` : ''}<td>${filaValida(h.tipo, o) ? '<span class="pill ok">OK</span>' : '<span class="pill warn">Se salta</span>'}</td></tr>`).join('')}</tbody></table></div>${objs.length > 5 ? `<p class="small muted">y ${objs.length - 5} filas más</p>` : ''}` : ''}
     </div>`;
   }).join('')}
   ${hojas.some((h) => h.tipo === 'ventas') ? '<p class="small muted">Las ventas antiguas se suman a la caja y al historial de cada cliente, pero no descuentan stock. Si vuelves a subir el mismo archivo, las filas repetidas se saltan.</p>' : ''}`;
@@ -2301,7 +2393,7 @@ function importarTodo() {
     if (dif) lotes.movimientos_stock.push({ id: uid(), tipo_item: tipo, item_id: item.id, cantidad: dif, motivo: 'ajuste', ref_id: null, fecha: H, nota: 'Importado desde Excel' });
   };
   // orden: catálogos y clientes primero, después ventas y gastos que los usan
-  const orden = ['clientes', 'servicios', 'productos', 'insumos', 'ventas', 'gastos'];
+  const orden = ['clientes', 'servicios', 'productos', 'insumos', 'ventas', 'gastos', 'caja'];
   const hojas = [...S.imp.hojas].filter((h) => h.tipo !== 'ninguno').sort((a, b) => orden.indexOf(a.tipo) - orden.indexOf(b.tipo));
   for (const h of hojas) {
     const filas = h.datos.map((f) => filaAObjeto(h, f)).filter((o) => filaValida(h.tipo, o));
@@ -2341,6 +2433,27 @@ function importarTodo() {
         cont.ventas++;
       }
       if (filas.some((o) => o.fecha > H)) avisos.push('Algunas ventas tienen fecha futura; revisa que el formato de fecha sea día/mes/año.');
+    }
+    if (h.tipo === 'caja') {
+      const prod = porNombre('productos'); const serv = porNombre('servicios');
+      const firmaV = (fecha, total, nombre, cli) => [fecha, Math.round(total), norm(nombre), cli || ''].join('|');
+      const vEx = new Set(db.all('ventas').map((v) => firmaV(v.fecha, v.total, itemsDeVenta(v.id)[0]?.nombre, v.cliente_id)));
+      const gEx = new Set(db.all('gastos').map((g) => [g.fecha, Math.round(g.monto), norm(g.descripcion)].join('|')));
+      for (const o of filas) for (const c of claseCaja(o)) {
+        if (c.clase === 'venta') {
+          const cli = buscarCliente(o.cliente); const nombre = o.detalle || 'Venta';
+          const f = firmaV(o.fecha, c.monto, nombre, cli?.id); if (vEx.has(f)) { cont.repetidos++; continue; } vEx.add(f);
+          const p = prod.get(norm(o.detalle)); const sv = serv.get(norm(o.detalle));
+          const v = { id: uid(), fecha: o.fecha, cliente_id: cli?.id || null, total: c.monto, metodo_pago: parseMetodo(o.metodo_pago), canal: 'local', nota: 'Importado desde Excel' };
+          lotes.ventas.push(v);
+          lotes.venta_items.push({ id: uid(), venta_id: v.id, tipo_item: p ? 'producto' : sv ? 'servicio' : 'libre', item_id: p?.id || sv?.id || null, nombre: p?.nombre || sv?.nombre || nombre, cantidad: 1, precio_unitario: c.monto, empleado_id: null });
+          cont.ventas++;
+        } else {
+          const k = [o.fecha, Math.round(c.monto), norm(o.detalle)].join('|'); if (gEx.has(k)) { cont.repetidos++; continue; } gEx.add(k);
+          lotes.gastos.push({ id: uid(), fecha: o.fecha, categoria: parseCategoria(o.categoria, o.detalle), monto: c.monto, descripcion: o.detalle || o.categoria || '' });
+          cont.gastos++;
+        }
+      }
     }
     if (h.tipo === 'gastos') {
       const existentes = new Set(db.all('gastos').map((g) => [g.fecha, Math.round(g.monto), norm(g.descripcion)].join('|')));
@@ -2409,7 +2522,8 @@ const ReservaLocal = {
   async reservar(r) {
     const tel = telLimpio(r.telefono);
     let c = db.all('clientes').find((x) => tel && telLimpio(x.telefono).slice(-8) === tel.slice(-8));
-    if (!c) c = db.insert('clientes', { nombre: r.nombre, telefono: r.telefono, cumpleanos: null, notas: '', creado_en: hoy() });
+    if (!c) c = db.insert('clientes', { nombre: r.nombre, telefono: r.telefono, cumpleanos: r.cumple || null, notas: '', creado_en: hoy() });
+    else if (r.cumple && !c.cumpleanos) db.update('clientes', c.id, { cumpleanos: r.cumple });
     db.insert('citas', { cliente_id: c.id, servicio_id: r.servicio_id, empleado_id: r.empleado_id, fecha: r.fecha, hora: r.hora, estado: 'solicitada', venta_id: null, nota: 'Reservó desde la página' + (r.nota ? ': ' + r.nota : '') });
     return { ok: true };
   },
@@ -2419,7 +2533,7 @@ function ReservaNube(slug) {
   return {
     async info() { const d = await rpc('reserva_info', { p_slug: slug }); if (!d) throw new Error('Esta página de reservas no existe o está desactivada'); d.horario = { ...HORARIO_DEF, ...(d.horario || {}) }; return d; },
     async ocupadas(fecha) { return (await rpc('reserva_ocupadas', { p_slug: slug, p_fecha: fecha })) || []; },
-    async reservar(r) { return rpc('reservar', { p_slug: slug, p_servicio: r.servicio_id, p_empleado: r.empleado_id, p_fecha: r.fecha, p_hora: r.hora, p_nombre: r.nombre, p_telefono: r.telefono, p_nota: r.nota || '' }); },
+    async reservar(r) { return rpc('reservar', { p_slug: slug, p_servicio: r.servicio_id, p_empleado: r.empleado_id, p_fecha: r.fecha, p_hora: r.hora, p_nombre: r.nombre, p_telefono: r.telefono, p_nota: r.nota || '', ...(r.cumple ? { p_cumple: r.cumple } : {}) }); },
   };
 }
 
@@ -2474,7 +2588,8 @@ function vistaReserva() {
   }
   if (p.hora) pasos.push(`<section class="card stack"><h2><span class="pub-n">${info.empleados.length > 1 ? 4 : 3}</span>Tus datos</h2>
     <form class="form" id="form-reserva">
-      <div class="form-row">${field('Nombre', `<input class="in" name="nombre" id="r-nombre" required autocomplete="name" value="${esc(p.datos?.nombre || '')}">`)}${field('WhatsApp', `<input class="in" name="telefono" id="r-telefono" type="tel" required autocomplete="tel" placeholder="+56 9 1234 5678" value="${esc(p.datos?.telefono || '')}">`)}</div>
+      <div class="form-row">${field('Nombre', `<input class="in" name="nombre" id="r-nombre" required autocomplete="name" value="${esc(p.datos?.nombre || '')}">`)}${field('WhatsApp', telInput('telefono', p.datos?.telefono || '', { id: 'r-telefono', req: true }))}</div>
+      <div class="form-row">${field('Fecha de nacimiento', `<input class="in" type="date" name="cumple" id="r-cumple" value="${esc(p.datos?.cumple || '')}">`, 'Opcional. Para saludarte en tu cumpleaños.')}<span></span></div>
       ${field('Comentario', '<input class="in" name="nota" id="r-nota" placeholder="Opcional">')}
       <div class="pub-resumen"><span>${esc(p.servicio.nombre)} · ${esc(fechaLarga(p.fecha))}, ${p.hora.hora}</span><b class="num">${fmtP(p.servicio.precio)}</b></div>
       <button class="btn pri block" ${p.enviando ? 'disabled' : ''}>${p.enviando ? 'Enviando…' : 'Reservar hora'}</button>
@@ -2484,13 +2599,13 @@ function vistaReserva() {
 async function pubEnviar(d) {
   const p = S.pub;
   if (!d.nombre.trim() || telLimpio(d.telefono).length < 8) return toast('Escribe tu nombre y un WhatsApp válido', true);
-  p.datos = { nombre: d.nombre.trim(), telefono: d.telefono.trim() }; p.enviando = true; render();
+  p.datos = { nombre: d.nombre.trim(), telefono: d.telefono.trim(), cumple: d.cumple || '' }; p.enviando = true; render();
   try {
     // vuelve a revisar que la hora siga libre justo antes de reservar
     const ocupadas = await p.api.ocupadas(p.fecha);
     const libre = horasLibres({ horario: p.info.horario, fecha: p.fecha, dur: Number(p.servicio.duracion_min || 60), ocupadas, empleados: p.info.empleados, empleadoId: p.empleado || null }).find((h) => h.hora === p.hora.hora);
     if (!libre) { p.enviando = false; p.hora = null; await pubCargarHoras(); return toast('Alguien acaba de tomar esa hora. Elige otra.', true); }
-    await p.api.reservar({ servicio_id: p.servicio.id, empleado_id: libre.empleado_id, fecha: p.fecha, hora: libre.hora, nombre: p.datos.nombre, telefono: p.datos.telefono, nota: d.nota.trim() });
+    await p.api.reservar({ servicio_id: p.servicio.id, empleado_id: libre.empleado_id, fecha: p.fecha, hora: libre.hora, nombre: p.datos.nombre, telefono: p.datos.telefono, cumple: p.datos.cumple || null, nota: d.nota.trim() });
     p.enviado = true;
   } catch (e) { toast('No se pudo reservar: ' + (e.message || e), true); }
   p.enviando = false; window.scrollTo(0, 0); render();
@@ -2509,7 +2624,7 @@ function tarjetaReservas() {
     <form class="form" id="form-reservas">
       <div class="field"><label>Días de atención</label><div class="chips">${DIAS_SEMANA.map(([d, l]) => `<label class="chip ${h.dias.includes(d) ? 'on' : ''}" style="cursor:pointer"><input type="checkbox" name="dia" value="${d}" ${h.dias.includes(d) ? 'checked' : ''} hidden data-change="dia-chip">${l}</label>`).join('')}</div></div>
       <div class="form-row">${field('Abre a las', `<input class="in" type="time" name="desde" id="f-desde" value="${h.desde}" step="900">`)}${field('Cierra a las', `<input class="in" type="time" name="hasta" id="f-hasta" value="${h.hasta}" step="900">`)}</div>
-      <div class="form-row">${field('Mostrar horas cada', `<select class="in" name="intervalo" id="f-intervalo">${[15, 30, 60].map((m) => opt(m, m + ' minutos', h.intervalo)).join('')}</select>`)}${field('WhatsApp del negocio', input('telefono', n.telefono || '', 'type="tel" placeholder="+56 9 1234 5678"'), 'Aparece al cliente después de reservar')}</div>
+      <div class="form-row">${field('Mostrar horas cada', `<select class="in" name="intervalo" id="f-intervalo">${[15, 30, 60].map((m) => opt(m, m + ' minutos', h.intervalo)).join('')}</select>`)}${field('WhatsApp del negocio', telInput('telefono', n.telefono || ''), 'Aparece al cliente después de reservar')}</div>
       ${field('Dirección de tu página', `<div class="hstack" style="flex-wrap:nowrap"><span class="muted small" style="white-space:nowrap">?reservar=</span>${input('slug', n.slug || slugDe(n.nombre), 'pattern="[a-z0-9-]+" placeholder="mi-negocio"')}</div>`, 'Solo minúsculas, números y guiones.')}
       <div class="hstack"><button class="btn pri">Guardar horario</button><button type="button" class="btn" data-act="pub-preview">Ver mi página</button></div>
     </form>
@@ -2591,16 +2706,25 @@ function formProveedor(id) {
   abrirSheet(id ? 'Editar contacto' : 'Nuevo contacto', `<div class="form">
     <div class="form-row">${field('Nombre o empresa', input('nombre', c.nombre, 'required placeholder="Ej: Distribuidora Nails Chile"'))}${field('Tipo', `<select class="in" name="tipo" id="f-tipo">${Object.entries(TIPOS_CONTACTO).map(([k, v]) => opt(k, v, c.tipo)).join('')}</select>`)}</div>
     <div class="form-row">${field('Persona de contacto', input('contacto', c.contacto || '', 'placeholder="Ej: Carolina"'))}${field('Qué te vende o hace', input('que_vende', c.que_vende || '', 'placeholder="Ej: esmaltes y geles"'))}</div>
-    <div class="form-row">${field('Teléfono (WhatsApp)', input('telefono', c.telefono || '', 'type="tel" placeholder="+56 9 1234 5678"'), 'Opcional')}${field('Correo', input('email', c.email || '', 'type="email"'), 'Opcional')}</div>
+    <div class="form-row">${field('Teléfono (WhatsApp)', telInput('telefono', c.telefono || ''), 'Opcional')}${field('Correo', input('email', c.email || '', 'type="email"'), 'Opcional')}</div>
     ${field('Página web o tienda online', input('web', c.web || '', 'type="url" inputmode="url" placeholder="Ej: www.distribuidora.cl"'), 'Si compras directo en su página, anótala aquí.')}
     ${field('Notas', input('notas', c.notas || '', 'placeholder="Ej: despacha martes y viernes, pedido mínimo $30.000"'))}
-    ${prods.length || ins.length ? `<div class="field"><label>¿Qué le compras? Te avisaremos cuando haya que pedirle</label><div class="prov-items">${prods.map((p) => check('producto', p)).join('')}${ins.map((i) => check('insumo', i)).join('')}</div></div>` : ''}
+    <div class="field"><label>¿Qué le compras? Te avisaremos cuando haya que pedirle</label>
+      <div class="prov-items" id="prov-items">${prods.map((p) => check('producto', p)).join('')}${ins.map((i) => check('insumo', i)).join('')}${prods.length || ins.length ? '' : '<span class="small muted" id="prov-vacio">Aún no tienes productos. Agrégalos aquí abajo.</span>'}</div>
+      <div class="prov-nuevo"><input class="in" id="pn-nombre" placeholder="Agregar algo nuevo que le compras"><select class="in" id="pn-tipo" aria-label="Tipo">${opt('producto', 'Producto para vender')}${tiene('produccion') ? opt('insumo', 'Insumo / materia prima') : ''}</select><button type="button" class="btn" id="pn-agregar">${icon('plus')}Agregar</button></div>
+      <span class="hint">Se crea al guardar. Después le pones precio y stock en Catálogo o Producción.</span></div>
   </div>`, {
     pie: `<div class="sheet-foot" style="justify-content:space-between">${id ? `<button type="button" class="btn danger" data-act="del-proveedor" data-id="${id}">Eliminar</button>` : '<span></span>'}<div class="hstack"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri">Guardar</button></div></div>`,
     submit: (d) => {
       if (!d.nombre.trim()) return toast('Escribe el nombre', true);
       const row = { nombre: d.nombre.trim(), tipo: d.tipo, contacto: d.contacto.trim(), telefono: d.telefono.trim(), email: d.email.trim(), web: normWeb(d.web), que_vende: d.que_vende.trim(), notas: d.notas.trim() };
       const prov = id ? db.update('proveedores', id, row) : db.insert('proveedores', row);
+      // lo agregado aquí mismo se crea ahora y queda asignado a este proveedor
+      for (const cb of [...$('#sheet-form').querySelectorAll('input[name=item]:checked')].filter((x) => x.value.startsWith('nuevo|'))) {
+        const [, tipo, nombre] = cb.value.split('|');
+        const n = tipo === 'insumo' ? db.insert('insumos', { nombre, unidad: unidades()[0] || 'unidad', costo_unitario: 0, stock_minimo: 0, proveedor_id: prov.id }) : db.insert('productos', { nombre, sku: '', precio_venta: 0, costo: 0, stock_minimo: 3, activo: true, proveedor_id: prov.id });
+        cb.value = `${tipo}:${n.id}`;
+      }
       const marcados = new Set([...$('#sheet-form').querySelectorAll('input[name=item]:checked')].map((x) => x.value));
       for (const [t, tabla] of [['producto', 'productos'], ['insumo', 'insumos']]) for (const x of db.all(tabla)) {
         const k = `${t}:${x.id}`;
@@ -2611,6 +2735,15 @@ function formProveedor(id) {
     },
   });
 }
+document.addEventListener('click', (e) => {
+  if (e.target.closest('#pn-agregar')) {
+    const nombre = $('#pn-nombre').value.trim(); if (!nombre) return toast('Escribe qué le compras', true);
+    const tipo = $('#pn-tipo').value; $('#prov-vacio')?.remove();
+    $('#prov-items').insertAdjacentHTML('beforeend', `<label class="hstack small" style="flex-wrap:nowrap"><input type="checkbox" name="item" value="nuevo|${tipo}|${esc(nombre.replace(/\|/g, ' '))}" checked style="width:18px;height:18px;accent-color:var(--accent);flex:none"><span>${esc(nombre)} <span class="pill acc">nuevo</span></span></label>`);
+    $('#pn-nombre').value = ''; $('#pn-nombre').focus();
+  }
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.id === 'pn-nombre') { e.preventDefault(); $('#pn-agregar').click(); } });
 function eliminarProveedor(id) {
   const c = db.get('proveedores', id);
   confirmar(`Se eliminará a <b>${esc(c.nombre)}</b>. Los productos que le comprabas quedarán sin proveedor.`, () => {
@@ -2752,6 +2885,9 @@ const AUTO_INFO = {
   confirmar: ['Confirmación al aceptar una reserva', 'Al tocar Confirmar en la agenda, se abre el mensaje de confirmación listo para enviar.'],
   agendar: ['Aviso al agendar una hora', 'Cuando tú agendas una hora, se abre el mensaje para avisarle al cliente.'],
 };
+const VARS_DESC = { nombre: 'nombre del cliente', negocio: 'tu negocio', servicio: 'servicio', fecha: 'día', hora: 'hora', dias: 'días sin venir', abono: 'monto del abono', datos_pago: 'datos para transferir', pedido: 'lo que se entrega', hora_txt: '“cerca de las…”', direccion: 'dirección', contacto: 'persona del proveedor', lista: 'lista del pedido' };
+const VARS_EJEMPLO = { nombre: 'Paula', servicio: 'Manicure permanente', fecha: 'viernes, 9 de octubre', hora: '16:30', dias: '28', abono: '$5.000', datos_pago: 'Cuenta RUT 12.345.678-9, BancoEstado', pedido: '2 velas lavanda', hora_txt: ' cerca de las 16:30', direccion: 'Av. Brasil 845', contacto: 'Carolina', lista: '- 5 × Esmalte rojo\n- 2 × Lima' };
+const llenarEjemplo = (t) => String(t).replace(/\{(\w+)\}/g, (_, x) => (x === 'negocio' ? S.negocio?.nombre || 'Tu negocio' : VARS_EJEMPLO[x] ?? ''));
 const AUTO_DEF = { abono: true, confirmar: true, agendar: false };
 
 const cfg = () => (S.negocio?.config && typeof S.negocio.config === 'object' ? S.negocio.config : {});
@@ -2814,9 +2950,16 @@ function ajustesMensajes() {
   return `${auto.length ? `<div class="card"><div class="card-head"><div><h2>Mensajes automáticos</h2><p>Enciende o apaga cada uno.</p></div></div>
     ${auto.map(([k, [t, d]]) => `<div class="mod-row"><div class="grow"><b>${t}</b><small>${d}</small></div><label class="toggle" aria-label="${t}"><input type="checkbox" data-change="auto" data-k="${k}" ${autoOn(k) ? 'checked' : ''}><span></span></label></div>`).join('')}
     <p class="small muted" style="margin-top:8px">WhatsApp no deja que una app envíe mensajes sola desde tu número sin el servicio pagado de WhatsApp Business. Por eso MiDerno deja el mensaje escrito y tú solo tocas Enviar.</p></div>` : ''}
-  <form class="card stack" id="form-mensajes"><div class="card-head"><div><h2>Textos de WhatsApp</h2><p>Lo que va entre llaves se reemplaza solo, por ejemplo {nombre} por el nombre del cliente.</p></div></div>
-    ${claves.map((k) => { const [t, donde, vars] = MENSAJES_INFO[k]; return `<div class="field"><label for="m-${k}">${t}</label><span class="hint" style="margin-top:-2px">${donde}. Puedes usar: ${vars.split(', ').map((v) => `{${v}}`).join(' ')}</span>
-      <textarea class="in" id="m-${k}" name="${k}" rows="${MENSAJES_DEF[k].length > 140 ? 4 : 2}">${esc(plantilla(k))}</textarea>
+  <div class="card stack ayuda-vars"><h2>¿Cómo personalizo un mensaje?</h2>
+    <p>Escribe el mensaje como tú lo dirías. Las palabras entre llaves son espacios que MiDerno completa solo con los datos de cada cliente.</p>
+    <div class="ejemplo-var"><div><small class="muted">Tú escribes</small><p>Hola <mark>{nombre}</mark>, te espero el <mark>{fecha}</mark> a las <mark>{hora}</mark> para tu <mark>{servicio}</mark></p></div>
+      <div><small class="muted">Tu cliente recibe</small><p>Hola Paula, te espero el viernes, 9 de octubre a las 16:30 para tu Manicure permanente</p></div></div>
+    <p class="small muted">Toca un botón debajo de cada mensaje para insertar el dato donde está el cursor. Si una llave queda mal escrita, por ejemplo {nonbre}, aparece vacía.</p></div>
+  <form class="card stack" id="form-mensajes"><div class="card-head"><h2>Textos de WhatsApp</h2></div>
+    ${claves.map((k) => { const [t, donde, vars] = MENSAJES_INFO[k]; return `<div class="field msg-edit"><label for="m-${k}">${t}</label><span class="hint" style="margin-top:-2px">Se usa en: ${donde}.</span>
+      <textarea class="in" id="m-${k}" name="${k}" rows="${MENSAJES_DEF[k].length > 140 ? 4 : 3}">${esc(plantilla(k))}</textarea>
+      <div class="chips">${vars.split(', ').map((v) => `<button type="button" class="chip var-chip" data-ins="{${v}}" data-target="m-${k}" title="${esc(VARS_DESC[v] || '')}"><b>${v}</b> <span>${esc(VARS_DESC[v] || '')}</span></button>`).join('')}</div>
+      <div class="msg-preview"><small class="muted">Así se verá</small><p id="pv-${k}">${esc(llenarEjemplo(plantilla(k)))}</p></div>
       ${cfg().mensajes?.[k] ? `<button type="button" class="btn sm ghost" style="align-self:flex-start" data-act="msg-reset" data-k="${k}">Volver al texto original</button>` : ''}</div>`; }).join('')}
     <button class="btn pri" style="align-self:flex-start">Guardar mensajes</button></form>`;
 }
@@ -2889,6 +3032,18 @@ function tarjetaBalance(ym) {
     <div class="bal-total"><span>Resultado del mes</span><b class="num ${res < 0 ? 'down' : ''}">${money(res)}</b></div>
     <div class="small muted" style="margin-top:6px">En ${anio}: entró ${money(ingA)}, salió ${money(egrA)}, resultado <b class="num">${money(ingA - egrA)}</b>.</div></div>`;
 }
+
+// insertar variables y vista previa en vivo del editor de mensajes
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('.var-chip'); if (!b) return;
+  const ta = document.getElementById(b.dataset.target); if (!ta) return;
+  const i = ta.selectionStart ?? ta.value.length, j = ta.selectionEnd ?? i; const txt = b.dataset.ins;
+  ta.value = ta.value.slice(0, i) + txt + ta.value.slice(j); ta.focus(); ta.setSelectionRange(i + txt.length, i + txt.length);
+  ta.dispatchEvent(new Event('input', { bubbles: true }));
+});
+document.addEventListener('input', (e) => {
+  if (!e.target.id?.startsWith('m-')) return; const pv = document.getElementById('pv-' + e.target.id.slice(2)); if (pv) pv.textContent = llenarEjemplo(e.target.value);
+});
 
 /* =========================================================
    App para el equipo: cada colaborador ve SU agenda (hora,
@@ -3084,7 +3239,7 @@ const ACCIONES = {
   'del-servicio': (el) => eliminarSeguro('servicios', el.dataset.id, db.all('venta_items').some((i) => i.item_id === el.dataset.id) || db.all('citas').some((c) => c.servicio_id === el.dataset.id), 'El servicio'),
   'del-producto': (el) => eliminarSeguro('productos', el.dataset.id, db.all('venta_items').some((i) => i.item_id === el.dataset.id), 'El producto'),
   // ajustes
-  'reset-demo': () => confirmar('Se borrarán tus cambios y volverán los datos de ejemplo.', () => { LS.del('miderno:data:' + S.negocio.id); abrirLocal(S.negocio.id); toast('Ejemplo restablecido'); }, 'Restablecer'),
+  'reset-demo': () => { abrirLocal(S.negocio.id); toast('Ejemplo restablecido'); },
   'del-negocio': () => confirmar(`Se borrarán <b>todos</b> los datos de ${esc(S.negocio.nombre)} de este dispositivo. No se puede deshacer.`, () => {
     LS.del('miderno:data:' + S.negocio.id); LS.set('miderno:negocios', (LS.get('miderno:negocios') || []).filter((n) => n.id !== S.negocio.id)); salir(); toast('Negocio eliminado'); }),
   // agenda
@@ -3215,6 +3370,9 @@ window.addEventListener('hashchange', () => { cerrarSheet(); if (S.negocio) rend
 // trae los datos guardados con el nombre anterior de la app
 function migrarClaves() {
   try {
+    // los ejemplos ya no se guardan: limpia copias antiguas
+    for (const k of Object.keys(localStorage)) if (/^(miderno|cuadra):data:demo-/.test(k)) localStorage.removeItem(k);
+    if (/^demo-/.test(LS.get('miderno:ultimo') || '')) LS.del('miderno:ultimo');
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
       if (k && k.startsWith('cuadra:')) { const n = 'miderno:' + k.slice(7); if (localStorage.getItem(n) == null) localStorage.setItem(n, localStorage.getItem(k)); }
