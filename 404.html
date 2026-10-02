@@ -3,7 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#111111">
+<meta name="theme-color" content="#0E7C86">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%20aria-hidden%3D%22true%22%3E%3Crect%20class%3D%22lm-bg%22%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%230E7C86%22/%3E%3Cpath%20class%3D%22lm-cinta%22%20d%3D%22M19%202.5h5.6v8.5l-2.8-2.2-2.8%202.2z%22%20fill%3D%22%23FFB547%22/%3E%3Crect%20class%3D%22lm-hoja%22%20x%3D%224.5%22%20y%3D%227%22%20width%3D%2223%22%20height%3D%2221%22%20rx%3D%224%22%20fill%3D%22%23FFF4E2%22/%3E%3Cpath%20class%3D%22lm-cinta%20lm-cinta2%22%20d%3D%22M19%207h5.6v4l-2.8-2.2-2.8%202.2z%22%20fill%3D%22%23FFB547%22/%3E%3Cpath%20class%3D%22lm-m%22%20d%3D%22M17.71%2015.94Q18.50%2014.81%2019.50%2014.10Q20.50%2013.40%2021.42%2013.40Q22.39%2013.40%2022.95%2014.02Q23.52%2014.64%2023.52%2015.81Q23.52%2016.06%2023.46%2016.48Q23.41%2016.89%2022.23%2023.78L23.75%2024.07L23.64%2024.6H20.15L21.35%2017.84Q21.61%2016.44%2021.61%2015.91Q21.61%2015.39%2021.37%2015.07Q21.13%2014.75%2020.60%2014.75Q20.09%2014.75%2019.39%2015.24Q18.68%2015.73%2018.10%2016.49Q17.53%2017.25%2017.41%2017.91L16.26%2024.6H14.34L15.52%2017.84Q15.81%2016.32%2015.81%2015.91Q15.81%2015.39%2015.56%2015.07Q15.30%2014.75%2014.75%2014.75Q14.24%2014.75%2013.50%2015.27Q12.76%2015.79%2012.19%2016.52Q11.62%2017.26%2011.52%2017.91L10.37%2024.6H8.44L10.22%2014.50L8.85%2014.21L8.94%2013.69H12.17L11.84%2015.94Q12.65%2014.79%2013.66%2014.09Q14.67%2013.40%2015.57%2013.40Q16.59%2013.40%2017.15%2014.04Q17.71%2014.68%2017.71%2015.94Z%22%20fill%3D%22%230E7C86%22/%3E%3C/svg%3E">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>MiDerno</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600&display=swap">
@@ -11,6 +14,7 @@
 /* Layout: app shell — sidebar on desktop, bottom tab bar + "Más" sheet on phones. Brand idea: the entrepreneur's notebook — ink blue, highlighter yellow, margin red */
 /* Minimal: white paper, one typeface, ink-black actions; the notebook blue only marks what is active or linked */
 :root {
+  --marca: #0B6870;
   --primary: var(--ink);
   --primary-ink: var(--bg);
   --bg: #FFFFFF;
@@ -46,6 +50,7 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    --marca: #5CC8C9;
     --bg: #0E0E0F; --surface: #0E0E0F; --surface-2: #1A1A1C; --line: #262629;
     --ink: #F1F1F1; --muted: #9B9BA0; --accent: #94ABF7; --accent-ink: #0B1430; --accent-soft: #1A2240;
     --gold: #E6C04F; --gold-soft: #2F2914; --hl: #6E5D12; --margin: #F07A6E; --rule: #2B3446; --paper: #151517;
@@ -504,7 +509,8 @@ th { letter-spacing: .04em; }
 .accion { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 8px; border-radius: 16px; background: var(--surface-2); color: var(--ink); text-decoration: none; font-weight: 600; font-size: .92rem; }
 .accion:hover { opacity: .85; }
 .ac-ico { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--bg); }
-.ac-ico.in { background: var(--primary); color: var(--primary-ink); }
+.ac-ico.ing { background: var(--primary); color: var(--primary-ink); }
+.ac-ico svg.i { display: block; margin: 0; }
 .mov-ico { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); flex: none; }
 .mov-ico svg.i { width: 16px; height: 16px; }
 .mov-ico.in { color: var(--ok); } .mov-ico.out { color: var(--muted); }
@@ -544,21 +550,23 @@ th { letter-spacing: .04em; }
 
 /* ---------- identidad: logo, letras y movimiento ---------- */
 .wordmark { display: inline-flex; align-items: baseline; font: 600 1.32rem/1 var(--f-body); letter-spacing: -.045em; color: var(--ink); }
-.wordmark i { font: italic 400 1.5rem/1 var(--f-serif); letter-spacing: -.01em; margin-right: .04em; display: inline-flex; }
+.wordmark i { font: italic 400 1.5rem/1 var(--f-serif); letter-spacing: -.01em; margin-right: .04em; display: inline-flex; color: var(--marca); }
 .wordmark span { display: inline-block; }
-.logo-anim .lm-bg { transform-box: fill-box; transform-origin: center; animation: lm-pop .7s var(--ease-back) both; }
-.logo-anim .lm-m { stroke-dasharray: 1; stroke-dashoffset: 1; animation: lm-draw .95s .3s cubic-bezier(.65, 0, .35, 1) forwards; }
-.logo-anim .lm-dot { transform-box: fill-box; transform-origin: center; animation: lm-drop .55s 1.1s var(--ease-back) both; }
-.wm-anim span { animation: wm-up .7s calc(.3s + var(--i) * 45ms) var(--ease-out) both; }
-@keyframes lm-pop { 0% { transform: scale(.2) rotate(-14deg); opacity: 0; } 60% { opacity: 1; } 100% { transform: none; } }
-@keyframes lm-draw { to { stroke-dashoffset: 0; } }
-@keyframes lm-drop { 0% { transform: translateY(-14px) scale(.3); opacity: 0; } 100% { transform: none; opacity: 1; } }
+.logo-anim .lm-bg { transform-box: fill-box; transform-origin: 50% 60%; animation: lm-pop .7s var(--ease-back) both; }
+.logo-anim .lm-hoja { transform-box: fill-box; transform-origin: 50% 100%; animation: lm-hoja .6s .2s var(--ease-out) both; }
+.logo-anim .lm-cinta { transform-box: fill-box; transform-origin: 50% 0; animation: lm-cinta .6s .55s var(--ease-back) both; }
+.logo-anim .lm-m { animation: lm-escribe .8s .7s cubic-bezier(.65, 0, .35, 1) both; }
+.wm-anim span { animation: wm-up .7s calc(.35s + var(--i) * 45ms) var(--ease-out) both; }
+@keyframes lm-pop { 0% { transform: scale(.3) rotate(-10deg); opacity: 0; } 60% { opacity: 1; } 100% { transform: none; } }
+@keyframes lm-hoja { from { transform: translateY(40%) scale(.85); opacity: 0; } }
+@keyframes lm-cinta { from { transform: scaleY(0); } }
+@keyframes lm-escribe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 @keyframes wm-up { from { transform: translateY(70%); opacity: 0; filter: blur(5px); } to { transform: none; opacity: 1; filter: none; } }
 
 .hero h1 { font: 400 clamp(2.6rem, 6.4vw, 4.4rem)/1 var(--f-serif); letter-spacing: -.02em; }
 .hero h1 mark { font-style: italic; }
-.res-num { font-family: var(--f-serif); font-weight: 400; letter-spacing: -.02em; font-size: clamp(2.8rem, 8vw, 4rem); }
-.monto-grande { font-family: var(--f-serif); font-weight: 400; font-size: 3rem; }
+.res-num { font-family: var(--f-body); font-weight: 650; letter-spacing: -.045em; font-size: clamp(2.5rem, 7.5vw, 3.5rem); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'ss01' 1; }
+.monto-grande { font-family: var(--f-body); font-weight: 650; font-size: 2.6rem; letter-spacing: -.04em; }
 .hola h1 { letter-spacing: -.03em; }
 .land-top .brand { padding: 0; }
 
@@ -610,12 +618,42 @@ th { letter-spacing: .04em; }
 .ej b { font-size: 1rem; } .ej small { color: var(--muted); font-size: .84rem; line-height: 1.35; }
 .ej .mods { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
 .ej-ini { width: 44px; height: 44px; border-radius: 13px; display: grid; place-items: center; background: var(--surface-2); font: italic 400 1.35rem var(--f-serif); flex: none; }
+
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .22s; }
+/* números que no se salen de las tarjetas */
+.card.kpi { container-type: inline-size; min-width: 0; }
+.kpi .val { font-size: clamp(1rem, 12.5cqi, 1.45rem); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -.03em; }
+.kpi .sub, .kpi .lbl { overflow-wrap: anywhere; }
+td.n, th.n { white-space: nowrap; }
+@media (max-width: 1240px) and (min-width: 821px) { .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* fluidez: todo responde al toque */
+:root { --ease-suave: cubic-bezier(.22, 1, .36, 1); }
+.btn, .accion, .item-btn, .tipo-card, .ej, .swatch, .chip, .row.click, .seg button, .nav a, .tabbar a, .card.click, .link-precio { transition: transform .18s var(--ease-suave), background-color .2s ease, border-color .2s ease, color .2s ease, opacity .2s ease, box-shadow .25s ease; -webkit-tap-highlight-color: transparent; }
+.btn:active, .accion:active, .item-btn:active, .ej:active, .chip:active, .tabbar a:active, .seg button:active, .swatch:active { transform: scale(.955); transition-duration: .08s; }
+@media (hover: hover) { .accion:hover, .item-btn:hover, .ej:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.07); } }
+.wrap.entra > * { animation: entra .5s var(--ease-suave) both; }
+.wrap.entra > :nth-child(2) { animation-delay: .04s; } .wrap.entra > :nth-child(3) { animation-delay: .08s; } .wrap.entra > :nth-child(4) { animation-delay: .12s; } .wrap.entra > :nth-child(n+5) { animation-delay: .16s; }
+.wrap.entra { animation: none; }
+@keyframes entra { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.sheet { animation: sheet-in .45s var(--ease-suave) both; }
+@keyframes sheet-in { from { opacity: 0; transform: translateY(18px) scale(.97); } }
+.scrim.cerrando { animation: desaparece .22s ease forwards; pointer-events: none; }
+.scrim.cerrando .sheet { animation: sheet-out .22s ease forwards; }
+@keyframes desaparece { to { opacity: 0; } }
+@keyframes sheet-out { to { opacity: 0; transform: translateY(14px) scale(.98); } }
+@media (max-width: 600px) { .scrim.cerrando .sheet { animation-name: sheet-baja; } @keyframes sheet-baja { to { transform: translateY(100%); } } }
+.toast.sale { animation: toast-out .25s ease forwards; }
+@keyframes toast-out { to { opacity: 0; transform: translate(-50%, 10px) scale(.96); } }
+.wrap.entra .bar-fina i, .wrap.entra .mini-barra { transform-origin: left; animation: crece .9s .15s var(--ease-suave) both; }
+@keyframes crece { from { transform: scaleX(0); } }
+.res-num { display: inline-block; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; } }
 
 </style>
 </head>
 <body>
-<div id="app"><div class="splash"><div class="brand logo-anim"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="lm-bg" x="1" y="1" width="30" height="30" rx="9" fill="var(--primary)"/><path class="lm-m" pathLength="1" d="M8.5 22.5V14.2c0-2.1 1.4-3.4 3.2-3.4s3.2 1.3 3.2 3.4v6.3M14.9 14.2c0-2.1 1.4-3.4 3.2-3.4s3.2 1.3 3.2 3.4v5.6c0 1.6.9 2.5 2.3 2.5" fill="none" stroke="var(--primary-ink)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle class="lm-dot" cx="24.2" cy="9.6" r="2.1" fill="var(--hl)"/></svg><span class="wordmark wm-anim"><i><span style="--i:0">m</span><span style="--i:1">i</span></i><span style="--i:2">d</span><span style="--i:3">e</span><span style="--i:4">r</span><span style="--i:5">n</span><span style="--i:6">o</span></span></div><span class="splash-bar"></span></div></div>
+<div id="app"><div class="splash"><div class="brand logo-anim"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="lm-bg" width="32" height="32" rx="7" fill="#0E7C86"/><path class="lm-cinta" d="M19 2.5h5.6v8.5l-2.8-2.2-2.8 2.2z" fill="#FFB547"/><rect class="lm-hoja" x="4.5" y="7" width="23" height="21" rx="4" fill="#FFF4E2"/><path class="lm-cinta lm-cinta2" d="M19 7h5.6v4l-2.8-2.2-2.8 2.2z" fill="#FFB547"/><path class="lm-m" d="M17.71 15.94Q18.50 14.81 19.50 14.10Q20.50 13.40 21.42 13.40Q22.39 13.40 22.95 14.02Q23.52 14.64 23.52 15.81Q23.52 16.06 23.46 16.48Q23.41 16.89 22.23 23.78L23.75 24.07L23.64 24.6H20.15L21.35 17.84Q21.61 16.44 21.61 15.91Q21.61 15.39 21.37 15.07Q21.13 14.75 20.60 14.75Q20.09 14.75 19.39 15.24Q18.68 15.73 18.10 16.49Q17.53 17.25 17.41 17.91L16.26 24.6H14.34L15.52 17.84Q15.81 16.32 15.81 15.91Q15.81 15.39 15.56 15.07Q15.30 14.75 14.75 14.75Q14.24 14.75 13.50 15.27Q12.76 15.79 12.19 16.52Q11.62 17.26 11.52 17.91L10.37 24.6H8.44L10.22 14.50L8.85 14.21L8.94 13.69H12.17L11.84 15.94Q12.65 14.79 13.66 14.09Q14.67 13.40 15.57 13.40Q16.59 13.40 17.15 14.04Q17.71 14.68 17.71 15.94Z" fill="#0E7C86"/></svg><span class="wordmark wm-anim"><i><span style="--i:0">m</span><span style="--i:1">i</span></i><span style="--i:2">d</span><span style="--i:3">e</span><span style="--i:4">r</span><span style="--i:5">n</span><span style="--i:6">o</span></span></div><span class="splash-bar"></span></div></div>
 <script>
 "use strict";
 /* =========================================================
@@ -624,7 +662,7 @@ th { letter-spacing: .04em; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '11';
+const VERSION = '13';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -700,7 +738,7 @@ const S = {
   ui: { caja: { mes: null, tab: 'ventas' }, agenda: { fecha: null, emp: 'todos', vista: 'dia' }, clientes: { q: '', f: 'todos' }, inv: { tab: 'stock' }, prod: { tab: 'recetas' }, cat: { tab: null }, equipo: { mes: null }, vender: { q: '' } },
   cart: null,
 };
-function resetUI() { S.imp = null; S.pub = null; S.eq = null; S.ui.registro = { tipo: 'ingreso' }; Object.assign(S.ui, { inicio: null, caja: { mes: null, tab: 'ventas' }, agenda: { fecha: null, emp: 'todos', vista: 'dia' }, clientes: { q: '', f: 'todos' }, inv: { tab: 'stock' }, prod: { tab: 'recetas' }, cat: { tab: null }, equipo: { mes: null }, vender: { q: '' } }); }
+function resetUI() { S.cuentasEq = undefined; S.imp = null; S.pub = null; S.eq = null; S.ui.registro = { tipo: 'ingreso' }; Object.assign(S.ui, { inicio: null, caja: { mes: null, tab: 'ventas' }, agenda: { fecha: null, emp: 'todos', vista: 'dia' }, clientes: { q: '', f: 'todos' }, inv: { tab: 'stock' }, prod: { tab: 'recetas' }, cat: { tab: null }, equipo: { mes: null }, vender: { q: '' } }); }
 const tiene = (m) => !m || S.modulos.includes(m);
 
 /* ---------- adaptadores de datos ---------- */
@@ -741,7 +779,7 @@ const NubeAdapter = {
   async traerTodo(t) {
     const filas = []; const paso = 1000;
     for (let desde = 0; ; desde += paso) {
-      const { data, error } = await this.sb.from(t).select('*').range(desde, desde + paso - 1);
+      const { data, error } = await this.sb.from(t).select('*').order('id').range(desde, desde + paso - 1);
       // si falta una tabla nueva (no se corrió la actualización), la app sigue funcionando sin ella
       if (error && (error.code === '42P01' || error.code === 'PGRST205' || /does not exist|could not find the table/i.test(error.message || ''))) { console.warn('Falta la tabla', t); this.faltan = [...new Set([...(this.faltan || []), t])]; return []; }
       if (error) throw error;
@@ -1018,6 +1056,8 @@ const ICONS = {
   home: '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
   minus: '<path d="M5 12h14"/>',
+  refresh: '<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>',
+  key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/>',
   cash: '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M7 9.5v5M17 9.5v5"/>',
   users: '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.2c2.3.2 3.9 1.8 4.4 4.3"/>',
   cal: '<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
@@ -1037,8 +1077,8 @@ const ICONS = {
   upload: '<path d="M12 15V4M7.5 8.5L12 4l4.5 4.5"/><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/>',
   search: '<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/>',
 };
-// Logo: una "m" escrita de un trazo sobre una tapa de cuaderno, con el punto del lápiz
-const MARCA = `<svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="lm-bg" x="1" y="1" width="30" height="30" rx="9" fill="var(--primary)"/><path class="lm-m" pathLength="1" d="M8.5 22.5V14.2c0-2.1 1.4-3.4 3.2-3.4s3.2 1.3 3.2 3.4v6.3M14.9 14.2c0-2.1 1.4-3.4 3.2-3.4s3.2 1.3 3.2 3.4v5.6c0 1.6.9 2.5 2.3 2.5" fill="none" stroke="var(--primary-ink)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle class="lm-dot" cx="24.2" cy="9.6" r="2.1" fill="var(--hl)"/></svg>`;
+// Logo: una hoja color arena con separador amarillo y la "m" cursiva del nombre, sobre turquesa (colores fijos de marca)
+const MARCA = `<svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="lm-bg" width="32" height="32" rx="7" fill="#0E7C86"/><path class="lm-cinta" d="M19 2.5h5.6v8.5l-2.8-2.2-2.8 2.2z" fill="#FFB547"/><rect class="lm-hoja" x="4.5" y="7" width="23" height="21" rx="4" fill="#FFF4E2"/><path class="lm-cinta lm-cinta2" d="M19 7h5.6v4l-2.8-2.2-2.8 2.2z" fill="#FFB547"/><path class="lm-m" d="M17.71 15.94Q18.50 14.81 19.50 14.10Q20.50 13.40 21.42 13.40Q22.39 13.40 22.95 14.02Q23.52 14.64 23.52 15.81Q23.52 16.06 23.46 16.48Q23.41 16.89 22.23 23.78L23.75 24.07L23.64 24.6H20.15L21.35 17.84Q21.61 16.44 21.61 15.91Q21.61 15.39 21.37 15.07Q21.13 14.75 20.60 14.75Q20.09 14.75 19.39 15.24Q18.68 15.73 18.10 16.49Q17.53 17.25 17.41 17.91L16.26 24.6H14.34L15.52 17.84Q15.81 16.32 15.81 15.91Q15.81 15.39 15.56 15.07Q15.30 14.75 14.75 14.75Q14.24 14.75 13.50 15.27Q12.76 15.79 12.19 16.52Q11.62 17.26 11.52 17.91L10.37 24.6H8.44L10.22 14.50L8.85 14.21L8.94 13.69H12.17L11.84 15.94Q12.65 14.79 13.66 14.09Q14.67 13.40 15.57 13.40Q16.59 13.40 17.15 14.04Q17.71 14.68 17.71 15.94Z" fill="#0E7C86"/></svg>`;
 // Nombre: "mi" en serif cursiva + "derno" en sans; cada letra sube con retraso, como un título animado
 const PALABRA = (anim = false) => `<span class="wordmark${anim ? ' wm-anim' : ''}"><i>${[...'mi'].map((c, k) => `<span style="--i:${k}">${c}</span>`).join('')}</i>${[...'derno'].map((c, k) => `<span style="--i:${k + 2}">${c}</span>`).join('')}</span>`;
 const LOGO = (anim = false) => `<div class="brand${anim ? ' logo-anim' : ''}">${MARCA}${PALABRA(anim)}</div>`;
@@ -1128,7 +1168,7 @@ function menuMas() {
 /* ---------- ventana emergente y avisos ---------- */
 let _onSubmit = null;
 function abrirSheet(titulo, cuerpo, { submit, pie } = {}) {
-  cerrarSheet();
+  cerrarSheet(false);
   _onSubmit = submit || null;
   const el = document.createElement('div');
   el.className = 'scrim'; el.id = 'scrim';
@@ -1141,12 +1181,18 @@ function abrirSheet(titulo, cuerpo, { submit, pie } = {}) {
   el.addEventListener('mousedown', (e) => { if (e.target === el) cerrarSheet(); });
   const first = el.querySelector('input:not([type=hidden]),select,textarea'); if (first && window.innerWidth > 600) first.focus();
 }
-function cerrarSheet() { $('#scrim')?.remove(); _onSubmit = null; }
+function cerrarSheet(animar = true) {
+  const el = $('#scrim'); _onSubmit = null; if (!el) return;
+  // se va con una animación corta; pierde su id al tiro para no confundirse con la próxima ventana
+  el.id = ''; el.querySelectorAll('[id]').forEach((x) => x.removeAttribute('id'));
+  if (!animar || matchMedia('(prefers-reduced-motion: reduce)').matches) return el.remove();
+  el.classList.add('cerrando'); setTimeout(() => el.remove(), 230);
+}
 let _toastT;
 function toast(msg, err = false) {
-  $('#toast')?.remove(); clearTimeout(_toastT);
+  document.querySelectorAll('.toast').forEach((t) => t.remove()); clearTimeout(_toastT);
   const el = document.createElement('div'); el.id = 'toast'; el.className = 'toast' + (err ? ' err' : ''); el.textContent = msg; el.setAttribute('role', 'status');
-  document.body.appendChild(el); _toastT = setTimeout(() => el.remove(), err ? 5000 : 2600);
+  document.body.appendChild(el); _toastT = setTimeout(() => { el.classList.add('sale'); setTimeout(() => el.remove(), 260); }, err ? 5000 : 2600);
 }
 const formData = (form) => Object.fromEntries(new FormData(form).entries());
 const opt = (v, label, sel) => `<option value="${esc(v)}" ${String(v) === String(sel ?? '') ? 'selected' : ''}>${esc(label)}</option>`;
@@ -1711,7 +1757,7 @@ function vistaInventario() {
   <div class="card">
     <div class="card-head"><div class="seg"><button data-act="inv-tab" data-tab="stock" class="${ui.tab === 'stock' ? 'on' : ''}">Stock</button><button data-act="inv-tab" data-tab="movs" class="${ui.tab === 'movs' ? 'on' : ''}">Movimientos</button></div></div>
     <div class="tbl-wrap">${ui.tab === 'stock'
-      ? (filas.length ? `<table><thead><tr><th>Producto</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th>Último movimiento</th><th class="n">Última entrada</th><th class="n">Precio</th><th></th></tr></thead><tbody>${filas.map((f) => { const [e, c] = estado(f); return `<tr><td><b>${esc(f.p.nombre)}</b><div class="small muted">${esc(f.p.sku || '')}</div></td><td class="n"><b>${qtyFmt(f.st)}</b></td><td class="n muted">${qtyFmt(f.p.stock_minimo || 0)}</td><td><span class="pill ${c}">${e}</span></td>${celdasMov('producto', f.p.id)}<td class="n"><button class="link-precio ${Number(f.p.precio_venta) ? '' : 'falta'}" data-act="producto" data-id="${f.p.id}" title="Cambiar precio">${Number(f.p.precio_venta) ? money(f.p.precio_venta) : 'Poner precio'}</button>${Number(f.p.precio_venta) && f.co ? `<div class="small muted">gana ${Math.round(((f.p.precio_venta - f.co) / f.p.precio_venta) * 100)}%</div>` : ''}</td><td class="n" style="white-space:nowrap">${f.p.proveedor_id && f.st <= Number(f.p.stock_minimo || 0) && db.get('proveedores', f.p.proveedor_id) ? `<button class="btn sm" data-act="pedido" data-id="${f.p.proveedor_id}">${icon('chat')}Pedir</button>` : ''}<button class="btn sm" data-act="ingreso" data-id="${f.p.id}">+ Ingreso</button></td></tr>`; }).join('')}</tbody></table>` : '<div class="empty">Agrega productos en el catálogo para controlar su stock.</div>')
+      ? (filas.length ? `<table><thead><tr><th>Producto</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th>Último movimiento</th><th class="n">Última entrada</th><th class="n">Precio</th><th></th></tr></thead><tbody>${filas.map((f) => { const [e, c] = estado(f); return `<tr><td><b>${esc(f.p.nombre)}</b><div class="small muted">${esc(f.p.sku || '')}</div></td><td class="n"><b>${qtyFmt(f.st)}</b></td><td class="n muted">${qtyFmt(f.p.stock_minimo || 0)}</td><td><span class="pill ${c}">${e}</span></td>${celdasMov('producto', f.p.id)}<td class="n"><button class="link-precio ${Number(f.p.precio_venta) ? '' : 'falta'}" data-act="producto" data-id="${f.p.id}" title="Cambiar precio">${Number(f.p.precio_venta) ? money(f.p.precio_venta) : 'Poner precio'}</button>${Number(f.p.precio_venta) && f.co ? `<div class="small muted">gana ${Math.round(((f.p.precio_venta - f.co) / f.p.precio_venta) * 100)}%</div>` : ''}</td><td class="n" style="white-space:nowrap">${f.p.proveedor_id && f.st <= Number(f.p.stock_minimo || 0) && db.get('proveedores', f.p.proveedor_id) ? `<button class="btn sm icon-btn" data-act="pedido" data-id="${f.p.proveedor_id}" title="Pedir al proveedor" aria-label="Pedir al proveedor">${icon('chat')}</button>` : ''}<button class="btn sm icon-btn" data-act="ingreso" data-id="${f.p.id}" title="Ingresar stock" aria-label="Ingresar stock">${icon('plus')}</button></td></tr>`; }).join('')}</tbody></table>` : '<div class="empty">Agrega productos en el catálogo para controlar su stock.</div>')
       : (movs.length ? `<table><thead><tr><th>Fecha</th><th>Producto</th><th>Motivo</th><th class="n">Cantidad</th><th>Nota</th></tr></thead><tbody>${movs.map((m) => `<tr><td class="num" style="white-space:nowrap">${fechaConAnio(m.fecha)}</td><td>${esc(pmap.get(m.item_id) || '—')}</td><td>${MOTIVOS[m.motivo] || m.motivo}</td><td class="n ${m.cantidad < 0 ? 'down' : 'up'}">${m.cantidad > 0 ? '+' : ''}${qtyFmt(m.cantidad)}</td><td class="muted small">${esc(m.nota || '')}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">Sin movimientos todavía.</div>')}
     </div></div>`;
 }
@@ -1755,7 +1801,7 @@ function formIngreso(prodId) {
   const f = $('#sheet-form');
   const calc = () => { const p = db.get('productos', $('#f-producto').value); const cant = Number(String($('#f-cantidad').value).replace(',', '.')) || 0; const tot = num($('#f-total').value); const costo = cant > 0 && tot > 0 ? tot / cant : Number(p?.costo || 0); $('#ing-margen').innerHTML = lineaMargen(num($('#f-pv').value), costo); };
   f.addEventListener('input', calc);
-  f.addEventListener('change', (e) => { if (e.target.id === 'f-producto') { const p = db.get('productos', e.target.value); $('#f-pv').value = p?.precio_venta || ''; } calc(); });
+  f.addEventListener('change', (e) => { if (e.target.id === 'f-producto') { const p = db.get('productos', e.target.value); $('#f-pv').value = p?.precio_venta || ''; formatearMonto($('#f-pv'), false, true); } calc(); });
   calc();
 }function formAjuste() {
   const prods = db.all('productos').filter((p) => p.activo !== false); if (!prods.length) return toast('No hay productos', true);
@@ -1932,7 +1978,7 @@ function formReceta(prodId) {
   form.addEventListener('click', (e) => {
     if (e.target.closest('#rec-mas')) { $('#rec-filas').insertAdjacentHTML('beforeend', filaReceta(ins)); }
     const del = e.target.closest('.rec-del'); if (del) { if (form.querySelectorAll('.rec-row').length > 1) del.closest('.rec-row').remove(); recalcular(); }
-    const sug = e.target.closest('.rec-sug'); if (sug) { $('#rec-p-precio').value = sug.dataset.p; recalcular(); }
+    const sug = e.target.closest('.rec-sug'); if (sug) { $('#rec-p-precio').value = sug.dataset.p; formatearMonto($('#rec-p-precio'), false); recalcular(); }
   });
   recalcular();
 }
@@ -2212,14 +2258,13 @@ function vistaEquipo() {
     <div class="card kpi"><span class="lbl">Comisiones del mes</span><span class="val">${money(totC)}</span><span class="sub">${money(sum(filas, (f) => f.pend))} por pagar</span></div>
     <div class="card kpi"><span class="lbl">Queda para el local</span><span class="val">${money(totV - totC)}</span><span class="sub">${totV ? Math.round(((totV - totC) / totV) * 100) : 0}% de lo atendido</span></div>
   </div>
-  ${todos.some((e) => e.activo !== false) ? `<div class="card stack"><div class="between"><div><h2>App para tu equipo</h2><p class="small muted">Cada persona ve en su celular sus horas (hora, cliente y servicio) y lo que lleva ganado en el mes. No ve la caja ni a los demás.</p></div></div>
-    <div class="list">${todos.filter((e) => e.activo !== false).map((e) => `<div class="row"><div class="avatar">${esc(iniciales(e.nombre))}</div><div class="grow"><div class="t">${esc(e.nombre)}</div><div class="s">${e.codigo_acceso ? `Código pendiente: <b class="num">${esc(e.codigo_acceso)}</b>` : S.modo === 'nube' ? 'Sin acceso todavía' : 'Disponible al conectar la nube'}</div></div><button class="btn sm pri" data-act="acceso" data-id="${e.id}">${S.modo === 'nube' ? 'Crear acceso' : 'Ver su app'}</button></div>`).join('')}</div></div>` : ''}
+  ${tarjetaAccesos(todos)}
   <div class="card"><div class="tbl-wrap">${visibles.length ? `<table><thead><tr><th>Persona</th><th class="n">Comisión</th><th class="n">Atenciones</th><th class="n">Vendido</th><th class="n">Le corresponde</th><th class="n">Por pagar</th><th></th></tr></thead><tbody>${visibles.map((f) => `<tr>
       <td><div class="hstack" style="flex-wrap:nowrap"><div class="avatar">${esc(iniciales(f.e.nombre))}</div><div><b>${esc(f.e.nombre)}</b>${f.e.activo === false ? '<div class="small muted">Ya no está en el equipo</div>' : ''}</div></div></td>
       <td class="n">${qtyFmt(f.e.pct_comision)}%</td><td class="n">${qtyFmt(f.n)}</td><td class="n">${money(f.vendido)}</td><td class="n"><b>${money(f.com)}</b></td>
       <td class="n">${f.pend ? `<span class="pill warn">${money(f.pend)}</span>` : '<span class="pill ok">Al día</span>'}</td>
-      <td class="n" style="white-space:nowrap">${f.pend ? `<button class="btn sm" data-act="pagar-com" data-id="${f.e.id}">Marcar pagado</button>` : ''}${f.e.activo !== false ? `<button class="btn sm" data-act="acceso" data-id="${f.e.id}">Su app</button>` : ''}<button class="btn sm ghost" data-act="empleado" data-id="${f.e.id}" aria-label="Editar o eliminar">${icon('edit')}</button></td></tr>`).join('')}</tbody></table>` : '<div class="empty">Agrega a las personas que atienden para calcular sus comisiones automáticamente.</div>'}</div>
-    <p class="small muted" style="margin-top:10px">Con <b>Su app</b>, cada persona ve en su celular sus horas y lo que lleva en el mes. La comisión se calcula sobre cada servicio cobrado. Si cambias el porcentaje de alguien, se recalcula lo que aún no le pagas; lo ya pagado no cambia.</p></div>`;
+      <td class="n" style="white-space:nowrap">${f.pend ? `<button class="btn sm" data-act="pagar-com" data-id="${f.e.id}">Marcar pagado</button>` : ''}<button class="btn sm ghost" data-act="empleado" data-id="${f.e.id}" aria-label="Editar o eliminar">${icon('edit')}</button></td></tr>`).join('')}</tbody></table>` : '<div class="empty">Agrega a las personas que atienden para calcular sus comisiones automáticamente.</div>'}</div>
+    <p class="small muted" style="margin-top:10px">Arriba, en <b>Accesos del equipo</b>, creas el usuario de cada persona para que vea sus horas y lo que lleva en el mes. La comisión se calcula sobre cada servicio cobrado. Si cambias el porcentaje de alguien, se recalcula lo que aún no le pagas; lo ya pagado no cambia.</p></div>`;
 }
 function formEmpleado(id) {
   const e = id ? db.get('empleados', id) : { nombre: '', telefono: '', pct_comision: 40, activo: true, fecha_nacimiento: null };
@@ -2431,8 +2476,13 @@ function parseMes(v) {
   const anio = y ? (y.length === 2 ? 2000 + Number(y) : Number(y)) : ANIO_IMPORT;
   return `${anio}-${pad(mes)}`;
 }
+// categorías y medios de pago que trae el Excel y que el negocio aún no tiene: se agregan a sus listas
+const IMP_NUEVOS = { cats: new Map(), metodos: new Map() };
 function parseMetodo(v) {
   const s = norm(v);
+  if (!s) return Object.keys(metodos())[0] || 'efectivo';
+  const propio = Object.entries(metodos()).find(([k, l]) => norm(l) === s || norm(k) === s); if (propio) return propio[0];
+  if (/gift|regalo|cupon|voucher/.test(s)) { IMP_NUEVOS.metodos.set('giftcard', 'Giftcard'); return 'giftcard'; }
   if (/transf|deposit/.test(s)) return 'transferencia';
   if (/cred/.test(s)) return 'credito';
   if (/deb|redcompra|tarjeta|pos|tbk|transbank/.test(s)) return 'debito';
@@ -2443,7 +2493,10 @@ function parseCategoria(v, desc) {
   const reglas = [[/arriendo|alquiler|renta/, 'Arriendo'], [/sueldo|remunera|honorario|comision/, 'Sueldos'], [/luz|agua|internet|gas|telefon|plan|electric/, 'Servicios básicos'],
     [/publicidad|anuncio|ads|instagram|facebook|meta|marketing/, 'Publicidad'], [/envio|despacho|starken|chilexpress|bluexpress|correos|flete/, 'Envíos'],
     [/insumo|material|materia prima|esmalte|cera|frasco|esencia/, 'Insumos'], [/mercaderia|compra|stock|proveedor/, 'Mercadería']];
-  const exacta = catGastos().find((c) => norm(c) === norm(v)); if (exacta) return exacta;
+  const exacta = catGastos().find((c) => norm(c) === norm(v)) || [...IMP_NUEVOS.cats.values()].find((c) => norm(c) === norm(v)); if (exacta) return exacta;
+  // si la planilla trae su propia categoría ("Útiles de Aseo"), se respeta y se agrega a la lista del negocio
+  const propia = String(v || '').trim();
+  if (propia && propia.length <= 40 && !/^(egreso|gasto|gastos|salida|otro|otros)$/.test(norm(propia))) { const r = reglas.find(([re]) => re.test(norm(propia))); if (r && catGastos().includes(r[1])) return r[1]; IMP_NUEVOS.cats.set(norm(propia), propia); return propia; }
   return (reglas.find(([re]) => re.test(s)) || [null, 'Otros'])[1];
 }
 
@@ -2488,6 +2541,15 @@ function analizarHoja(nombre, filas) {
   }
   if (mejor.total < 4) mejor.tipo = 'ninguno';
   const hoja = { nombre, headers: (filas[hr] || []).map((h) => String(h ?? '').trim()), headersN: headers, datos, tipo: mejor.tipo, map: mejor.tipo === 'ninguno' ? {} : mejor.map };
+  // planillas con varios negocios o locales en una columna: se elige cuál importar
+  const nc = headers.findIndex((x) => /^(negocio|local|sucursal|tienda|empresa|marca|unidad de negocio)$/.test(x));
+  if (nc >= 0) {
+    const vals = [...new Set(datos.map((f) => String(f[nc] ?? '').trim()).filter(Boolean))];
+    if (vals.length > 1) {
+      const mio = norm(S.negocio?.nombre || ''); const propios = vals.filter((v) => { const n = norm(v); return mio && (n.includes(mio.split(' ')[0]) || mio.includes(n.split(' ')[0])); });
+      hoja.negCol = nc; hoja.negocios = vals; hoja.negSel = propios.length ? propios : [...vals];
+    }
+  }
   // si una hoja de "ventas" o "gastos" en realidad trae de los dos, se trata como caja (todo junto)
   if (['ventas', 'gastos'].includes(hoja.tipo) && datos.length >= 3) {
     const clases = datos.map((f) => filaAObjeto(hoja, f)).filter((o) => filaValida(hoja.tipo, o)).flatMap((o) => claseFila(hoja.tipo, o).map((c) => c.clase));
@@ -2539,6 +2601,8 @@ function claseCaja(o) {
   const out = []; const ing = Math.abs(o.ingreso || 0), egr = Math.abs(o.egreso || 0);
   if (ing > 0) out.push({ clase: 'venta', monto: ing });
   if (egr > 0) out.push({ clase: 'gasto', monto: egr });
+  // una atención pagada con giftcard viene con monto 0: igual cuenta como visita de la clienta
+  if (!out.length && o.monto === 0 && o.cliente && /venta|ingreso|servicio/.test(norm(o.tipo + ' ' + (o.categoria || '')))) out.push({ clase: 'venta', monto: 0 });
   if (!out.length && o.monto) {
     const t = norm(o.tipo); let gasto;
     if (/gasto|egreso|salida|compra|pago|retiro|cargo/.test(t)) gasto = true;
@@ -2550,6 +2614,8 @@ function claseCaja(o) {
   }
   return out;
 }
+// filas de la hoja, solo de los negocios elegidos si la planilla trae varios
+const datosDe = (h) => (h.negocios ? h.datos.filter((f) => h.negSel.includes(String(f[h.negCol] ?? '').trim())) : h.datos);
 function filaValida(tipo, o) {
   if (tipo === 'resumen') return !!o.mes && (o.ingresos || o.gastos || o.balance);
   if (tipo === 'caja') return !!o.fecha && claseCaja(o).length > 0;
@@ -2587,7 +2653,7 @@ function vistaImportar() {
     <div class="card stack"><h2>Esto quedó anotado en tu cuaderno</h2>
       <div class="list">${r.lineas.map((l) => `<div class="row"><span class="sev ok" style="align-self:center;height:22px"></span><div class="grow"><div class="t">${esc(l)}</div></div></div>`).join('')}</div>
       ${r.avisos.length ? `<div class="banner">${r.avisos.map(esc).join('<br>')}</div>` : ''}
-      ${r.cmp?.length ? `<h2 style="margin-top:6px">Tu resumen vs. MiDerno</h2><p class="small muted">Comparamos los totales de tu pestaña de resumen con lo que quedó registrado.</p>
+      ${r.cmp?.length ? `<h2 style="margin-top:6px">Tu resumen vs. MiDerno</h2><p class="small muted">Comparamos los totales de tu pestaña de resumen con la suma del detalle. Si un mes dice "Revisar", tu resumen y tus filas no suman lo mismo en el Excel.</p>
         <div class="tbl-wrap"><table><thead><tr><th>Mes</th><th class="n">Ingresos</th><th class="n">Gastos</th><th class="n">Balance</th><th></th></tr></thead><tbody>${r.cmp.map((c) => `<tr><td>${esc(nombreMes(c.mes))}</td>
           <td class="n">${money(c.ingM)}${c.ing != null && Math.round(c.ing) !== Math.round(c.ingM) ? `<div class="small muted">Excel: ${money(c.ing)}</div>` : ''}</td>
           <td class="n">${money(c.gasM)}${c.gas != null && Math.round(c.gas) !== Math.round(c.gasM) ? `<div class="small muted">Excel: ${money(c.gas)}</div>` : ''}</td>
@@ -2595,17 +2661,18 @@ function vistaImportar() {
           <td>${c.ok ? '<span class="pill ok">Cuadra</span>' : '<span class="pill warn">Revisar</span>'}</td></tr>`).join('')}</tbody></table></div>` : ''}
       <div class="hstack"><a class="btn pri" href="#inicio">Ver mi resumen</a><button class="btn" data-act="imp-reset">Importar otro archivo</button></div></div>`;
   }
-  const hojas = imp.hojas; const total = sum(hojas.filter((h) => h.tipo !== 'ninguno'), (h) => h.datos.filter((f) => filaValida(h.tipo, filaAObjeto(h, f))).length);
+  const hojas = imp.hojas; const total = sum(hojas.filter((h) => h.tipo !== 'ninguno'), (h) => datosDe(h).filter((f) => filaValida(h.tipo, filaAObjeto(h, f))).length);
   return `${head('Revisa antes de importar', esc(imp.archivo), `<button class="btn" data-act="imp-reset">Cambiar archivo</button><button class="btn pri" data-act="imp-go" ${total ? '' : 'disabled'}>Importar ${total} registros</button>`)}
   ${hojas.map((h, hi) => {
     const tipoSel = `<select class="in" style="width:auto;min-height:36px" data-change="imp-tipo" data-h="${hi}" aria-label="Qué contiene la hoja">${opt('ninguno', 'No importar esta hoja', h.tipo)}${Object.entries(IMP).map(([k, t]) => opt(k, t.label, h.tipo)).join('')}</select>`;
     if (h.tipo === 'ninguno') return `<div class="card between"><div><h2>Hoja “${esc(h.nombre)}”</h2><p class="small muted">${h.datos.length} filas · No reconocimos qué contiene. Elige qué es o déjala fuera.</p></div>${tipoSel}</div>`;
-    const campos = IMP[h.tipo].campos; const objs = h.datos.map((f) => filaAObjeto(h, f)); const validas = objs.filter((o) => filaValida(h.tipo, o)).length;
+    const campos = IMP[h.tipo].campos; const objs = datosDe(h).map((f) => filaAObjeto(h, f)); const validas = objs.filter((o) => filaValida(h.tipo, o)).length;
     const colOpts = (sel) => opt(-1, '— No usar —', sel) + h.headers.map((t, i) => opt(i, t || `Columna ${i + 1}`, sel)).join('');
     const fmt = (f, v, o) => { const d = campos[f]; if ((v == null || v === '') && f !== 'categoria') return '<span class="muted">—</span>'; if (d.tipo === 'mes') return esc(nombreMes(v)); if (d.tipo === 'fecha') return fechaCorta(v) + (v.startsWith('2000-') && h.tipo === 'clientes' ? '' : ' ' + v.slice(0, 4)); if (d.tipo === 'num') return ['precio_venta', 'costo', 'precio', 'costo_unitario', 'total', 'monto', 'ingreso', 'egreso', 'ingresos', 'gastos', 'balance'].includes(f) ? money(v) : qtyFmt(v); if (f === 'metodo_pago') return metodoLabel(parseMetodo(v)); if (f === 'categoria') return parseCategoria(v, o.descripcion); return esc(v); };
     const usados = Object.keys(campos).filter((f) => h.map[f] >= 0);
     return `<div class="card stack">
       <div class="between"><div><h2>Hoja “${esc(h.nombre)}”</h2><p class="small muted">${validas} de ${objs.length} filas se pueden importar${objs.length - validas ? ` · ${objs.length - validas} sin ${Object.entries(campos).filter(([, d]) => d.req).map(([, d]) => d.label.toLowerCase()).join(' o ')} se saltan` : ''}</p></div>${tipoSel}</div>
+      ${h.negocios ? `<div class="field"><label>Esta hoja trae varios negocios. ¿Cuáles importamos?</label><div class="chips">${h.negocios.map((n) => `<button type="button" class="chip ${h.negSel.includes(n) ? 'on' : ''}" data-act="imp-neg" data-h="${hi}" data-v="${esc(n)}">${esc(n)} <span class="muted">${h.datos.filter((f) => String(f[h.negCol] ?? '').trim() === n).length}</span></button>`).join('')}</div></div>` : ''}
       <div class="map-grid">${Object.entries(campos).map(([f, d]) => `<div class="field"><label>${d.label}${d.req ? ' *' : ''}</label><select class="in" data-change="imp-map" data-h="${hi}" data-f="${f}">${colOpts(h.map[f])}</select></div>`).join('')}</div>
       ${usados.length ? `<div class="tbl-wrap"><table><thead><tr>${usados.map((f) => `<th>${campos[f].label}</th>`).join('')}${['caja', 'ventas', 'gastos'].includes(h.tipo) ? '<th>Se anota como</th>' : ''}<th></th></tr></thead><tbody>${objs.slice(0, 5).map((o) => `<tr>${usados.map((f) => `<td>${fmt(f, o[f], o)}</td>`).join('')}${['caja', 'ventas', 'gastos'].includes(h.tipo) ? `<td>${claseFila(h.tipo, o).map((c) => `<span class="pill ${c.clase === 'venta' ? 'ok' : 'warn'}">${c.clase === 'venta' ? 'Ingreso' : 'Gasto'} ${money(c.monto)}</span>`).join(' ')}</td>` : ''}<td>${filaValida(h.tipo, o) ? '<span class="pill ok">OK</span>' : '<span class="pill warn">Se salta</span>'}</td></tr>`).join('')}</tbody></table></div>${objs.length > 5 ? `<p class="small muted">y ${objs.length - 5} filas más</p>` : ''}` : ''}
     </div>`;
@@ -2655,21 +2722,27 @@ function importarTodo() {
     if (dif) lotes.movimientos_stock.push({ id: uid(), tipo_item: tipo, item_id: item.id, cantidad: dif, motivo: 'ajuste', ref_id: null, fecha: H, nota: 'Importado desde Excel' });
   };
   const firmaV = (fecha, total, nombre, cli) => [fecha, Math.round(total), norm(nombre), cli || ''].join('|');
-  const vEx = new Set(db.all('ventas').map((v) => firmaV(v.fecha, v.total, itemsDeVenta(v.id)[0]?.nombre, v.cliente_id)));
-  const gEx = new Set(db.all('gastos').map((g) => [g.fecha, Math.round(g.monto), norm(g.descripcion)].join('|')));
+  // repetidos: se cuentan las veces que ya existe cada fila, así dos atenciones iguales el mismo día no se pierden,
+  // pero si subes el mismo archivo dos veces no se duplica nada
+  const contar = (arr) => arr.reduce((m, k) => m.set(k, (m.get(k) || 0) + 1), new Map());
+  const vEx = contar(db.all('ventas').map((v) => firmaV(v.fecha, v.total, itemsDeVenta(v.id)[0]?.nombre, v.cliente_id)));
+  const gEx = contar(db.all('gastos').map((g) => [g.fecha, Math.round(g.monto), norm(g.descripcion)].join('|')));
+  const vVistos = new Map(), gVistos = new Map();
+  const repetida = (ex, vistos, k) => { const n = vistos.get(k) || 0; vistos.set(k, n + 1); return n < (ex.get(k) || 0); };
+  IMP_NUEVOS.cats.clear(); IMP_NUEVOS.metodos.clear();
   const registrarIngreso = (o, det, monto, cant) => {
     const item = buscarEnCatalogo(det);
     // en servicios el ingreso va con su cliente: de la columna Cliente o, si no hay, del mismo detalle ("Manicure Paula Rojas")
     const nombreCli = o.cliente || clienteEnDetalle(det, item);
     const cli = buscarCliente(nombreCli); const nombre = item?.x.nombre || det || 'Venta';
-    const f = firmaV(o.fecha, monto, nombre, cli?.id); if (vEx.has(f)) { cont.repetidos++; return; } vEx.add(f);
-    const v = { id: uid(), fecha: o.fecha, cliente_id: cli?.id || null, total: monto, metodo_pago: parseMetodo(o.metodo_pago), canal: 'local', nota: 'Importado desde Excel' };
+    const f = firmaV(o.fecha, monto, nombre, cli?.id); if (repetida(vEx, vVistos, f)) { cont.repetidos++; return; }
+    const v = { id: uid(), fecha: o.fecha, cliente_id: cli?.id || null, total: monto, metodo_pago: parseMetodo(o.metodo_pago), canal: 'local', nota: monto ? 'Importado desde Excel' : 'Importado desde Excel (sin cobro: ' + (o.metodo_pago || 'giftcard') + ')' };
     lotes.ventas.push(v);
     lotes.venta_items.push({ id: uid(), venta_id: v.id, tipo_item: item ? item.tipo : 'libre', item_id: item?.x.id || null, nombre, cantidad: cant, precio_unitario: Math.round((monto / cant) * 100) / 100, empleado_id: null });
     cont.ventas++;
   };
   const registrarGasto = (o, det, monto) => {
-    const k = [o.fecha, Math.round(monto), norm(det)].join('|'); if (gEx.has(k)) { cont.repetidos++; return; } gEx.add(k);
+    const k = [o.fecha, Math.round(monto), norm(det)].join('|'); if (repetida(gEx, gVistos, k)) { cont.repetidos++; return; }
     lotes.gastos.push({ id: uid(), fecha: o.fecha, categoria: parseCategoria(o.categoria, det), monto, descripcion: det || o.categoria || '' });
     cont.gastos++;
   };
@@ -2677,7 +2750,7 @@ function importarTodo() {
   const orden = ['clientes', 'servicios', 'productos', 'insumos', 'ventas', 'gastos', 'caja', 'resumen'];
   const hojas = [...S.imp.hojas].filter((h) => h.tipo !== 'ninguno').sort((a, b) => orden.indexOf(a.tipo) - orden.indexOf(b.tipo));
   for (const h of hojas) {
-    const filas = h.datos.map((f) => filaAObjeto(h, f)).filter((o) => filaValida(h.tipo, o));
+    const filas = datosDe(h).map((f) => filaAObjeto(h, f)).filter((o) => filaValida(h.tipo, o));
     if (h.tipo === 'clientes') for (const o of filas) {
       const tel = telLimpio(o.telefono); const ex = (tel && clientePorTel.get(tel)) || clientePorNombre.get(norm(o.nombre));
       const fila = { nombre: o.nombre, telefono: o.telefono, cumpleanos: o.cumpleanos, notas: o.notas };
@@ -2718,7 +2791,7 @@ function importarTodo() {
   const comparacion = [];
   const hayDetalle = hojas.some((h) => ['ventas', 'gastos', 'caja'].includes(h.tipo));
   for (const h of hojas.filter((x) => x.tipo === 'resumen')) {
-    for (const o of h.datos.map((f) => filaAObjeto(h, f)).filter((o) => filaValida('resumen', o))) {
+    for (const o of datosDe(h).map((f) => filaAObjeto(h, f)).filter((o) => filaValida('resumen', o))) {
       const ing = o.ingresos ?? (o.balance > 0 && o.gastos == null ? o.balance : null);
       const gas = o.gastos != null ? Math.abs(o.gastos) : (o.balance < 0 && o.ingresos == null ? Math.abs(o.balance) : (o.ingresos != null && o.balance != null ? o.ingresos - o.balance : null));
       const yaHay = db.all('ventas').some((v) => mesDe(v.fecha) === o.mes) || db.all('gastos').some((g) => mesDe(g.fecha) === o.mes) || lotes.ventas.some((v) => mesDe(v.fecha) === o.mes) || lotes.gastos.some((g) => mesDe(g.fecha) === o.mes);
@@ -2732,9 +2805,14 @@ function importarTodo() {
   }
   // guardado en bloque (mucho más rápido en la nube que fila por fila)
   for (const t of ['clientes', 'ventas', 'venta_items', 'movimientos_stock', 'gastos']) if (lotes[t].length) db.insertMany(t, lotes[t]);
+  const catsNuevas = [...IMP_NUEVOS.cats.values()].filter((c) => !catGastos().includes(c)); const metNuevos = [...IMP_NUEVOS.metodos].filter(([k]) => !metodos()[k]);
+  if (catsNuevas.length || metNuevos.length) {
+    guardarConfig({ ...(catsNuevas.length ? { categorias_gasto: [...catGastos(), ...catsNuevas] } : {}), ...(metNuevos.length ? { metodos: [...Object.entries(metodos()).map(([k, l]) => ({ k, l })), ...metNuevos.map(([k, l]) => ({ k, l }))] } : {}) });
+    avisos.push(`Agregamos a tus listas: ${[...catsNuevas, ...metNuevos.map((m) => m[1])].join(', ')}.`);
+  }
   const n = (k, s, p) => (cont[k] ? `${cont[k]} ${cont[k] === 1 ? s : p}` : null);
   const lineas = [n('ventas', 'ingreso', 'ingresos'), n('gastos', 'gasto', 'gastos'), n('clientes', 'cliente nuevo', 'clientes nuevos'), n('productos', 'producto', 'productos'), n('servicios', 'servicio', 'servicios'), n('insumos', 'insumo', 'insumos'),
-    cont.actualizados ? `${cont.actualizados} registros que ya tenías quedaron al día` : null, cont.repetidos ? `${cont.repetidos} filas repetidas se saltaron` : null, cont.movidos ? `${cont.movidos} filas estaban en la hoja equivocada y las ordenamos (gasto o ingreso)` : null].filter(Boolean);
+    cont.actualizados ? (cont.actualizados === 1 ? '1 registro que ya tenías quedó al día' : `${cont.actualizados} registros que ya tenías quedaron al día`) : null, cont.repetidos ? (cont.repetidos === 1 ? '1 fila ya estaba en MiDerno y se saltó' : `${cont.repetidos} filas ya estaban en MiDerno y se saltaron (no se duplica nada)`) : null, cont.movidos ? `${cont.movidos} filas estaban en la hoja equivocada y las ordenamos (gasto o ingreso)` : null].filter(Boolean);
   if (cont.meses) lineas.push(`${cont.meses} mes${cont.meses > 1 ? 'es' : ''} cargado${cont.meses > 1 ? 's' : ''} desde tu resumen como totales del mes`);
   // con todo guardado, se compara lo que dice el resumen con lo que calcula MiDerno
   const cmp = comparacion.map((c) => {
@@ -3476,21 +3554,90 @@ function vistaEquipoApp() {
   return `<div class="pub">${banner}${top}<div><div class="eyebrow-hand" style="font-size:1.25rem">Hola, ${esc(primerNombre(d.empleado.nombre))}</div></div>${tabs}${cuerpo}</div>`;
 }
 
-/* ---------- acceso desde el lado del dueño ---------- */
+/* ---------- accesos del equipo (panel del dueño) ---------- */
+// quién del equipo ya tiene cuenta: lo responde la base (función equipo_cuentas, actualizacion-7.sql)
+async function cargarCuentasEq(forzar = false) {
+  if (S.modo !== 'nube' || (S.cuentasEq !== undefined && !forzar)) return;
+  S.cuentasEq = S.cuentasEq || null;
+  try { const { data, error } = await conCarga(NubeAdapter.sb.rpc('equipo_cuentas')); if (error) throw error; S.cuentasEq = data || []; }
+  catch (e) { S.cuentasEq = { error: /function|does not exist|PGRST202|schema cache/i.test(e.message || '') ? 'sql' : e.message || String(e) }; }
+  if (S.negocio && vistaActual() === 'equipo') render();
+}
+const cuentaDe = (empId) => (Array.isArray(S.cuentasEq) ? S.cuentasEq.find((c) => c.empleado_id === empId) : null);
+function tarjetaAccesos(todos) {
+  const activos = todos.filter((e) => e.activo !== false); if (!activos.length) return '';
+  const nube = S.modo === 'nube'; if (nube) cargarCuentasEq();
+  const faltaSql = S.cuentasEq?.error === 'sql';
+  return `<div class="card stack" id="accesos"><div><h2>Accesos del equipo</h2><p class="small muted">Crea el usuario y la contraseña de cada persona. En su celular verá solo sus horas y lo que lleva ganado; no ve la caja ni a los demás.</p></div>
+    ${!nube ? '<div class="banner">Para crear accesos, MiDerno debe estar conectado a la nube. Mientras tanto puedes ver cómo se ve su app.</div>' : ''}
+    ${faltaSql ? '<div class="banner">Para ver quién ya tiene acceso y poder quitarlo, corre <b>supabase/actualizacion-7.sql</b> en Supabase. Crear accesos funciona igual.</div>' : ''}
+    <div class="list">${activos.map((e) => {
+      const c = cuentaDe(e.id);
+      const estado = c ? `<span class="pill ok">Con acceso</span> <span class="muted">${esc(c.email || '')}</span>` : e.codigo_acceso ? `Código pendiente: <b class="num">${esc(e.codigo_acceso)}</b>` : nube ? (S.cuentasEq === null ? 'Revisando…' : 'Sin acceso') : 'Sin acceso';
+      const botones = !nube ? `<button class="btn sm" data-act="eq-preview" data-id="${e.id}">Ver su app</button>`
+        : c ? `<button class="btn sm" data-act="acceso-enviar" data-id="${e.id}">${icon('chat')}Enviar enlace</button><button class="btn sm ghost" data-act="acceso-quitar" data-id="${e.id}">Quitar</button>`
+        : `<button class="btn sm pri" data-act="acceso" data-id="${e.id}">${icon('plus')}Crear acceso</button>`;
+      return `<div class="row acceso-row"><div class="avatar">${esc(iniciales(e.nombre))}</div><div class="grow"><div class="t">${esc(e.nombre)}</div><div class="s">${estado}</div></div><div class="hstack acceso-btns">${botones}</div></div>`;
+    }).join('')}</div></div>`;
+}
+const claveSugerida = () => { const abc = 'abcdefghjkmnpqrstuvwxyz23456789'; let c = ''; for (const x of crypto.getRandomValues(new Uint32Array(8))) c += abc[x % abc.length]; return c; };
+const codigoNuevo = () => { const abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let c = ''; for (const x of crypto.getRandomValues(new Uint32Array(6))) c += abc[x % abc.length]; return c; };
 function formAcceso(empId) {
+  const e = db.get('empleados', empId); if (!e) return;
+  if (S.modo !== 'nube') return abrirEquipoPreview(empId);
+  abrirSheet(`Acceso para ${esc(primerNombre(e.nombre))}`, `<div class="form">
+    <p class="small muted" style="margin:0">Con estos datos ${esc(primerNombre(e.nombre))} entra desde su celular tocando <b>Soy del equipo</b>.</p>
+    ${field('Su correo', input('email', e.email || '', 'type="email" autocomplete="off" required placeholder="nombre@gmail.com"'))}
+    ${field('Contraseña', `<div class="hstack" style="flex-wrap:nowrap"><input class="in" id="f-clave" name="clave" value="${claveSugerida()}" autocomplete="off" minlength="6" required style="font-variant-numeric:tabular-nums;letter-spacing:.04em"><button type="button" class="btn" id="otra-clave" aria-label="Otra contraseña">${icon('refresh')}</button></div>`, 'Te sugerimos una. Ella la puede cambiar después.')}</div>`, {
+    pie: '<div class="sheet-foot"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri" type="submit">Crear acceso</button></div>',
+    submit: (d) => crearAcceso(empId, d.email.trim(), d.clave.trim()),
+  });
+  $('#otra-clave').onclick = () => { $('#f-clave').value = claveSugerida(); };
+}
+async function crearAcceso(empId, email, clave) {
   const e = db.get('empleados', empId);
-  const nube = S.modo === 'nube';
-  abrirSheet(`App de ${esc(primerNombre(e.nombre))}`, `<p>${esc(primerNombre(e.nombre))} verá en su celular sus horas (hora, cliente y servicio) y lo que lleva en el mes. No ve la caja ni los datos de clientes ni del resto del equipo.</p>
-    ${nube ? `<div class="banner" style="background:var(--accent-soft);flex-direction:column;align-items:flex-start"><span>Código de acceso, se usa una sola vez:</span><b class="num" id="cod-acceso" style="font:700 1.8rem var(--f-display);letter-spacing:.12em">${esc(e.codigo_acceso || '······')}</b>
-      <span class="small">Pasos para ${esc(primerNombre(e.nombre))}: abrir <b>${esc(appUrl() || 'tu sitio de MiDerno')}</b>, tocar <b>Soy del equipo</b>, crear su cuenta con su correo y escribir este código.</span></div>`
-      : '<p class="small muted">Para que tu equipo entre desde su propio celular, MiDerno debe estar conectado a la nube. Mientras tanto, mira cómo se ve:</p>'}`, {
-    pie: `<div class="sheet-foot">${nube ? `<button type="button" class="btn" data-act="nuevo-codigo" data-id="${empId}">${e.codigo_acceso ? 'Generar otro código' : 'Generar código'}</button>${e.codigo_acceso && e.telefono ? `<a class="btn" target="_blank" rel="noopener" href="${waLink(e.telefono, `Hola ${primerNombre(e.nombre)}, para ver tu agenda de ${S.negocio.nombre}: entra a ${appUrl()}, toca "Soy del equipo", crea tu cuenta y usa el código ${e.codigo_acceso}`)}">${icon('chat')}Enviar por WhatsApp</a>` : ''}` : ''}<button type="button" class="btn pri" data-act="eq-preview" data-id="${empId}">Ver cómo se ve</button></div>`,
+  if (!/^\S+@\S+\.\S+$/.test(email)) return toast('Escribe un correo válido', true);
+  if (clave.length < 6) return toast('La contraseña debe tener al menos 6 caracteres', true);
+  const codigo = codigoNuevo(); db.update('empleados', empId, { codigo_acceso: codigo }); await NubeAdapter.cola;
+  // cliente aparte, sin guardar sesión: así el dueño no pierde la suya
+  const tmp = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey, { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false, storageKey: 'miderno-alta-equipo' } });
+  let sesion = null;
+  const r = await tmp.auth.signUp({ email, password: clave, options: { emailRedirectTo: appUrl() || undefined, data: { equipo: true } } });
+  if (r.error && !/already|registered|exists/i.test(r.error.message)) { toast(r.error.message, true); return; }
+  sesion = r.data?.session || null;
+  if (!sesion) { const s2 = await tmp.auth.signInWithPassword({ email, password: clave }); sesion = s2.data?.session || null; }
+  if (!sesion) {
+    // el correo ya tenía cuenta con otra contraseña, o Supabase pide confirmar el correo: queda el código para su primer ingreso
+    cerrarSheet(); render();
+    return abrirSheet('Falta un paso', `<p>${/already|registered|exists/i.test(r.error?.message || '') ? `<b>${esc(email)}</b> ya tiene una cuenta.` : 'Supabase pidió confirmar el correo.'} Dile a ${esc(primerNombre(e.nombre))} que entre con su correo y contraseña en <b>Soy del equipo</b> y escriba este código:</p><div class="codigo-grande">${esc(codigo)}</div>`, { pie: `<div class="sheet-foot">${e.telefono ? `<a class="btn" target="_blank" rel="noopener" href="${waLink(e.telefono, `Hola ${primerNombre(e.nombre)}, entra a ${appUrl()}, toca "Soy del equipo", usa tu correo ${email} y el código ${codigo}`)}">${icon('chat')}Enviar por WhatsApp</a>` : ''}<button type="button" class="btn pri" data-close>Listo</button></div>` });
+  }
+  const { error } = await tmp.rpc('unirse_equipo', { p_codigo: codigo });
+  await tmp.auth.signOut({ scope: 'local' }).catch(() => {});
+  if (error && !/ya está vinculada/i.test(error.message)) { toast(error.message, true); return; }
+  if (error) { toast('Ese correo ya está vinculado a un negocio. Usa otro correo.', true); return; }
+  const loc = S.t.empleados.find((x) => x.id === empId); if (loc) loc.codigo_acceso = null;
+  S.cuentasEq = Array.isArray(S.cuentasEq) ? [...S.cuentasEq, { empleado_id: empId, email }] : S.cuentasEq;
+  cerrarSheet(); render(); cargarCuentasEq(true);
+  const msj = `Hola ${primerNombre(e.nombre)}, ya tienes tu acceso a ${S.negocio.nombre} en MiDerno.\nEntra a ${appUrl()} y toca "Soy del equipo".\nCorreo: ${email}\nContraseña: ${clave}`;
+  abrirSheet('Acceso creado', `<p>${esc(primerNombre(e.nombre))} ya puede entrar. Envíale sus datos:</p>
+    <div class="credenciales"><div><span>Enlace</span><b>${esc(appUrl())}</b></div><div><span>Correo</span><b>${esc(email)}</b></div><div><span>Contraseña</span><b>${esc(clave)}</b></div></div>`, {
+    pie: `<div class="sheet-foot"><button type="button" class="btn" data-act="pub-copiar" data-t="${esc(msj)}">Copiar</button>${e.telefono ? `<a class="btn pri" target="_blank" rel="noopener" href="${waLink(e.telefono, msj)}">${icon('chat')}Enviar por WhatsApp</a>` : '<button type="button" class="btn pri" data-close>Listo</button>'}</div>`,
   });
 }
-function nuevoCodigo(empId) {
-  const abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let c = ''; const r = crypto.getRandomValues(new Uint32Array(6)); for (const x of r) c += abc[x % abc.length];
-  db.update('empleados', empId, { codigo_acceso: c }); formAcceso(empId);
+function enviarAcceso(empId) {
+  const e = db.get('empleados', empId); const c = cuentaDe(empId);
+  const msj = `Hola ${primerNombre(e.nombre)}, para ver tu agenda de ${S.negocio.nombre} entra a ${appUrl()}, toca "Soy del equipo" y usa tu correo ${c?.email || ''}.`;
+  if (e.telefono) window.open(waLink(e.telefono, msj), '_blank', 'noopener'); else navigator.clipboard?.writeText(msj).then(() => toast('Mensaje copiado'), () => toast(msj));
 }
+function quitarAcceso(empId) {
+  const e = db.get('empleados', empId);
+  confirmar(`${esc(primerNombre(e.nombre))} ya no podrá entrar a su app. Puedes crearle un acceso nuevo cuando quieras.`, async () => {
+    const { error } = await conCarga(NubeAdapter.sb.rpc('quitar_acceso', { p_empleado: empId }));
+    if (error) return toast(/function|schema cache|PGRST202/i.test(error.message) ? 'Corre supabase/actualizacion-7.sql para poder quitar accesos' : error.message, true);
+    S.cuentasEq = (S.cuentasEq || []).filter((c) => c.empleado_id !== empId); toast('Acceso quitado'); render();
+  }, 'Quitar acceso');
+}
+function abrirEquipoPreview(empId) { ACCIONES['eq-preview']({ dataset: { id: empId } }); }
 
 /* ---------- ingreso del colaborador ---------- */
 function formEquipoLogin() {
@@ -3520,8 +3667,8 @@ function formEquipoLogin() {
    Ajustes del sistema (por dispositivo): tema, color, letra, idioma
    ========================================================= */
 
-const SIS_DEF = { tema: 'auto', color: 'tinta', letra: 'normal', idioma: 'es' };
-const COLORES = [['tinta', null, 'Tinta'], ['azul', '#2346A3', 'Azul'], ['rosa', '#C2477A', 'Rosa'], ['verde', '#1F7A4A', 'Verde'], ['terracota', '#B5532E', 'Terracota'], ['turquesa', '#0E7C86', 'Turquesa'], ['ciruela', '#7A3B8F', 'Ciruela']];
+const SIS_DEF = { tema: 'auto', color: 'turquesa', letra: 'normal', idioma: 'es' };
+const COLORES = [['turquesa', '#0E7C86', 'Isla (MiDerno)'], ['tinta', null, 'Tinta'], ['azul', '#2346A3', 'Azul'], ['rosa', '#C2477A', 'Rosa'], ['verde', '#1F7A4A', 'Verde'], ['terracota', '#B5532E', 'Terracota'], ['ciruela', '#7A3B8F', 'Ciruela']];
 const sis = () => ({ ...SIS_DEF, ...(LS.get('miderno:sistema') || {}) });
 function guardarSis(patch) { LS.set('miderno:sistema', { ...sis(), ...patch }); aplicarSistema(); render(); }
 const tintaSobre = (hex) => { const n = parseInt(hex.slice(1), 16); const r = n >> 16, g = (n >> 8) & 255, b = n & 255; return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.6 ? '#141414' : '#FFFFFF'; };
@@ -3607,12 +3754,12 @@ function vistaInicio() {
 
   return `<div class="hola"><div><div class="muted small">${esc(fechaLarga(H))}</div><h1>${t_('hola')}, ${esc(S.negocio.nombre)}</h1></div>${monthNav('inicio-mes', ym)}</div>
   <section class="resumen">
-    <div class="res-main"><span class="muted small">${t_('ganancia')} ${esc(nombreMes(ym, true).replace('.', ''))}</span><b class="res-num ${res < 0 ? 'down' : ''}">${money(res)}</b></div>
+    <div class="res-main"><span class="muted small">${t_('ganancia')} ${esc(nombreMes(ym, true).replace('.', ''))}</span><b class="res-num ${res < 0 ? 'down' : ''}" data-cuenta="${Math.round(res)}">${money(res)}</b></div>
     <div class="res-sub"><div><span class="muted small">${t_('ingresos')}</span><b class="num up">${money(ing)}</b></div><div><span class="muted small">${t_('gastos')}</span><b class="num">${money(egr)}</b></div></div>
     ${avance != null ? `<div class="res-meta"><div class="bar-fina"><i style="width:${avance}%"></i></div><span class="small muted">${t_('meta')} ${Math.floor(avance)}%${esActual && falta ? ` · ${t_('faltan')} ${money(falta)} · ${money(falta / restantes)}/${t_('dia')}` : ''}</span></div>` : ''}
   </section>
   <div class="acciones">
-    <a class="accion" href="#vender" data-act="reg-ingreso"><span class="ac-ico in">${icon('plus')}</span>${t_('ingreso')}</a>
+    <a class="accion" href="#vender" data-act="reg-ingreso"><span class="ac-ico ing">${icon('plus')}</span>${t_('ingreso')}</a>
     <a class="accion" href="#vender" data-act="reg-gasto"><span class="ac-ico out">${icon('minus')}</span>${t_('gasto')}</a>
     <a class="accion" href="#agenda" data-act="agendar-ir"><span class="ac-ico">${icon('cal')}</span>${t_('agendar')}</a>
   </div>
@@ -3643,6 +3790,49 @@ document.addEventListener('submit', (e) => {
 });
 
 /* =========================================================
+   Fluidez: montos con puntos de miles, cifras que cuentan y transiciones
+   ========================================================= */
+
+// Montos: 1500000 → 1.500.000 mientras se escribe (los campos de dinero usan inputmode="numeric")
+const conMiles = (v) => { const d = String(v ?? '').replace(/\D/g, '').replace(/^0+(?=\d)/, ''); return d.replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
+const esMonto = (el) => el?.tagName === 'INPUT' && el.getAttribute('inputmode') === 'numeric' && !el.hasAttribute('data-nofmt');
+function formatearMonto(el, mantenerCursor = true, inicial = false) {
+  // un valor recién traído de los datos puede venir con decimales (1170.5): se redondea antes de poner puntos
+  if (inicial && !el.dataset.fmt && /^-?\d+\.\d+$/.test(el.value)) el.value = String(Math.round(Number(el.value)));
+  el.dataset.fmt = '1'; const antes = el.value;
+  const pos = el.selectionStart ?? el.value.length; const digitosAntes = el.value.slice(0, pos).replace(/\D/g, '').length;
+  const nuevo = conMiles(el.value); if (nuevo === antes) return;
+  el.value = nuevo;
+  if (mantenerCursor && document.activeElement === el) {
+    let i = 0, n = 0; while (i < nuevo.length && n < digitosAntes) { if (/\d/.test(nuevo[i])) n++; i++; }
+    try { el.setSelectionRange(i, i); } catch {}
+  }
+}
+function prepararMontos(raiz = document) { raiz.querySelectorAll?.('input[inputmode="numeric"]:not([data-nofmt])').forEach((el) => { if (el.value && !el.dataset.fmt) formatearMonto(el, false, true); }); }
+document.addEventListener('input', (e) => { if (esMonto(e.target)) formatearMonto(e.target); }, true);
+document.addEventListener('focusout', (e) => { if (esMonto(e.target)) formatearMonto(e.target, false); }, true);
+// cualquier campo nuevo en pantalla (vistas y ventanas) se muestra con puntos
+let _montosPend = false;
+new MutationObserver(() => { if (_montosPend) return; _montosPend = true; queueMicrotask(() => { _montosPend = false; prepararMontos(); }); }).observe(document.documentElement, { childList: true, subtree: true });
+
+// Cifras grandes que suben desde cero al entrar a una vista
+function animarCifras(raiz = document) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  raiz.querySelectorAll('[data-cuenta]').forEach((el) => {
+    const fin = Number(el.dataset.cuenta) || 0; if (!fin) return;
+    const t0 = performance.now(), dur = 900; const ease = (x) => 1 - Math.pow(1 - x, 4);
+    const paso = (t) => { if (!el.isConnected) return; const k = Math.min(1, (t - t0) / dur); el.textContent = money(Math.round(fin * ease(k))); if (k < 1) requestAnimationFrame(paso); };
+    requestAnimationFrame(paso);
+  });
+}
+
+// Cambio de pantalla suave donde el navegador lo permite (View Transitions)
+function conTransicion(fn) {
+  if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches || navigator.webdriver) return fn();
+  try { document.startViewTransition(fn); } catch { fn(); }
+}
+
+/* =========================================================
    Render, eventos y arranque
    ========================================================= */
 
@@ -3655,7 +3845,7 @@ function render() {
   if (!S.negocio) { app.innerHTML = vistaBienvenida(); _ultimaVista = null; document.title = 'MiDerno'; return; }
   const v = vistaActual(); const y = window.scrollY;
   app.innerHTML = shell(RENDER[v]());
-  if (v !== _ultimaVista) $('.main .wrap')?.classList.add('entra');
+  if (v !== _ultimaVista) { $('.main .wrap')?.classList.add('entra'); animarCifras($('.main')); }
   document.title = `${VISTAS.find((x) => x.id === v).label} · ${S.negocio.nombre} · MiDerno`;
   window.scrollTo(0, v === _ultimaVista ? y : 0); _ultimaVista = v;
 }
@@ -3789,7 +3979,8 @@ const ACCIONES = {
   'eq-salir': () => { S.eq = null; ir('equipo'); },
   'eq-preview': (el) => { cerrarSheet(); abrirEquipo(EquipoLocal(el.dataset.id), true); },
   acceso: (el) => formAcceso(el.dataset.id),
-  'nuevo-codigo': (el) => nuevoCodigo(el.dataset.id),
+  'acceso-enviar': (el) => enviarAcceso(el.dataset.id),
+  'acceso-quitar': (el) => quitarAcceso(el.dataset.id),
   'equipo-login': () => formEquipoLogin(),
   'foto-del': (el) => { const f = [...(cfg().fotos || [])]; f.splice(+el.dataset.i, 1); guardarConfig({ fotos: f }); render(); },
   'pedir-resena': (el) => pedirResena(db.get('clientes', el.dataset.id)),
@@ -3812,6 +4003,7 @@ const ACCIONES = {
   'unificar-grupo': (el) => unificarGrupo(+el.dataset.i),
   // importar
   'imp-reset': () => { S.imp = null; render(); },
+  'imp-neg': (el) => { const h = S.imp.hojas[+el.dataset.h]; const v = el.dataset.v; h.negSel = h.negSel.includes(v) ? h.negSel.filter((x) => x !== v) : [...h.negSel, v]; render(); },
   'imp-go': (el) => { el.disabled = true; el.classList.add('cargando'); el.textContent = 'Importando…'; cargando(true); setTimeout(() => { try { importarTodo(); } finally { cargando(false); } }, 30); },
 };
 
@@ -3875,7 +4067,7 @@ document.addEventListener('dragover', (e) => { const d = e.target.closest?.('#im
 document.addEventListener('dragleave', (e) => { e.target.closest?.('#imp-drop')?.classList.remove('over'); });
 document.addEventListener('drop', (e) => { const d = e.target.closest?.('#imp-drop'); if (d) { e.preventDefault(); d.classList.remove('over'); abrirArchivo(e.dataTransfer.files[0]); } });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && $('#scrim')) cerrarSheet(); });
-window.addEventListener('hashchange', () => { cerrarSheet(); if (S.negocio) render(); });
+window.addEventListener('hashchange', () => { cerrarSheet(); if (S.negocio) conTransicion(render); });
 
 // trae los datos guardados con el nombre anterior de la app
 function migrarClaves() {
