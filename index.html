@@ -610,6 +610,15 @@ th { letter-spacing: .04em; }
 .splash-bar::before { content: ""; position: absolute; top: 0; bottom: 0; width: 40%; border-radius: 99px; background: var(--primary); animation: barra 1.1s cubic-bezier(.65, 0, .35, 1) infinite; }
 
 .version { color: var(--muted); font-size: .75rem; text-align: center; margin: 0; opacity: .7; }
+/* ordenar lo importado */
+.ordenar { display: flex; flex-direction: column; gap: 8px; }
+.ord-fila { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 14px; }
+.ord-nom { display: flex; flex-direction: column; min-width: 0; } .ord-nom small { color: var(--muted); font-size: .8rem; }
+.ord-seg label { padding: 6px 10px; border-radius: 9px; font-size: .82rem; font-weight: 600; cursor: pointer; color: var(--muted); }
+.ord-seg label.on { background: var(--bg); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.ord-seg input { position: absolute; opacity: 0; pointer-events: none; }
+.ord-stock { grid-column: 1 / -1; }
+@media (max-width: 520px) { .ord-fila { grid-template-columns: minmax(0, 1fr); } }
 /* elegir un ejemplo */
 .ej-lista { display: flex; flex-direction: column; gap: 10px; }
 .ej { display: flex; align-items: center; gap: 14px; text-align: left; padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--bg); color: var(--ink); cursor: pointer; font: inherit; animation: sube .5s calc(.08s + var(--i) * 70ms) var(--ease-out) both; }
@@ -662,7 +671,7 @@ td.n, th.n { white-space: nowrap; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '13';
+const VERSION = '15';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -756,6 +765,8 @@ const LocalAdapter = {
   insertMany() { this.persistir(); },
   update() { this.persistir(); },
   remove() { this.persistir(); },
+  updateMany() { this.persistir(); },
+  removeMany() { this.persistir(); },
   guardarNegocio() { this.persistir(); if (S.negocio.id.startsWith('demo-')) return; const idx = (LS.get('miderno:negocios') || []).map((n) => n.id === S.negocio.id ? { ...n, nombre: S.negocio.nombre, rubro: S.negocio.rubro } : n); LS.set('miderno:negocios', idx); },
   guardarModulo() { this.persistir(); },
 };
@@ -774,6 +785,9 @@ const NubeAdapter = {
   insertMany(t, rows) { const nid = S.negocio.id; for (let i = 0; i < rows.length; i += 500) { const parte = rows.slice(i, i + 500).map((r) => ({ ...r, negocio_id: nid })); this.enviar(() => this.sb.from(t).insert(parte)); } },
   update(t, id, patch) { this.enviar(() => this.sb.from(t).update(patch).eq('id', id)); },
   remove(t, id) { this.enviar(() => this.sb.from(t).delete().eq('id', id)); },
+  // cambios en bloque: 200 filas por envío en vez de una por una
+  updateMany(t, ids, patch) { for (let i = 0; i < ids.length; i += 200) { const parte = ids.slice(i, i + 200); this.enviar(() => this.sb.from(t).update(patch).in('id', parte)); } },
+  removeMany(t, ids) { for (let i = 0; i < ids.length; i += 200) { const parte = ids.slice(i, i + 200); this.enviar(() => this.sb.from(t).delete().in('id', parte)); } },
   guardarNegocio(patch) { const nid = S.negocio.id; this.enviar(() => this.sb.from('negocios').update(patch).eq('id', nid)); },
   guardarModulo(modulo, activo) { const nid = S.negocio.id; this.enviar(() => this.sb.from('negocio_modulos').upsert({ negocio_id: nid, modulo, activo })); },
   async traerTodo(t) {
@@ -800,6 +814,8 @@ const db = {
   update(t, id, patch) { const r = db.get(t, id); if (r) Object.assign(r, patch); adapter.update(t, id, patch); return r; },
   remove(t, id) { S.t[t] = db.all(t).filter((r) => r.id !== id); adapter.remove(t, id); },
   removeWhere(t, fn) { db.all(t).filter(fn).forEach((r) => db.remove(t, r.id)); },
+  updateMany(t, ids, patch) { if (!ids.length) return; const set = new Set(ids); db.all(t).forEach((r) => { if (set.has(r.id)) Object.assign(r, patch); }); adapter.updateMany(t, ids, patch); },
+  removeMany(t, ids) { if (!ids.length) return; const set = new Set(ids); S.t[t] = db.all(t).filter((r) => !set.has(r.id)); adapter.removeMany(t, ids); },
   negocio(patch) { Object.assign(S.negocio, patch); _fmt = null; adapter.guardarNegocio(patch); },
   modulo(m, activo) {
     S.modulos = activo ? [...new Set([...S.modulos, m])] : S.modulos.filter((x) => x !== m);
@@ -1681,6 +1697,7 @@ function vistaCatalogo() {
     cuerpo = p.length ? `<table><thead><tr><th>Producto</th><th>Código</th><th class="n">Precio</th><th class="n">Costo</th><th class="n">Margen</th>${tiene('inventario') ? '<th class="n">Stock</th>' : ''}<th></th></tr></thead><tbody>${p.map((x) => { const co = costoProducto(x); const mg = Number(x.precio_venta) ? Math.round(((x.precio_venta - co) / x.precio_venta) * 100) : 0; return `<tr><td><b>${esc(x.nombre)}</b>${x.activo === false ? ' <span class="pill">Pausado</span>' : ''}</td><td class="muted">${esc(x.sku || '')}</td><td class="n">${money(x.precio_venta)}</td><td class="n">${money(co)}${conReceta && db.all('formulas').some((f) => f.producto_id === x.id) ? ' <span class="pill acc">receta</span>' : ''}</td><td class="n"><span class="pill ${mg >= 40 ? 'ok' : mg >= 20 ? 'warn' : 'bad'}">${mg}%</span></td>${tiene('inventario') ? `<td class="n">${qtyFmt(stockDe('producto', x.id))}</td>` : ''}<td class="n"><button class="btn sm ghost" data-act="producto" data-id="${x.id}" aria-label="Editar">${icon('edit')}</button></td></tr>`; }).join('')}</tbody></table>` : '<div class="empty">Agrega tu primer producto con su precio de venta. Si tienes tu lista en Excel, <a href="#importar">impórtala</a>.</div>';
   }
   return `${head('Catálogo', 'Lo que vendes', `<button class="btn pri" data-act="${tab === 'servicios' ? 'servicio' : 'producto'}">${icon('plus')}${tab === 'servicios' ? 'Nuevo servicio' : 'Nuevo producto'}</button>`)}
+  ${conceptosLibres().length ? `<div class="banner" style="flex-wrap:wrap;gap:10px"><span>Tienes ventas importadas sin ordenar (${conceptosLibres().length} nombres distintos).</span><button class="btn sm" data-act="ordenar">Ordenar</button></div>` : ''}
   <div class="card">${tabs.length > 1 ? `<div class="card-head"><div class="seg">${tabs.map((t) => `<button data-act="cat-tab" data-tab="${t}" class="${tab === t ? 'on' : ''}">${t === 'servicios' ? 'Servicios' : 'Productos'}</button>`).join('')}</div></div>` : ''}<div class="tbl-wrap">${cuerpo}</div></div>`;
 }
 function formServicio(id) {
@@ -2581,8 +2598,9 @@ const textoFila = (o) => norm([o.detalle, o.descripcion, o.categoria, o.tipo].fi
 function buscarEnCatalogo(det) {
   const d = norm(det); if (!d) return null;
   const lista = [...db.all('servicios').map((x) => ({ tipo: 'servicio', x })), ...db.all('productos').map((x) => ({ tipo: 'producto', x }))]
-    .map((e) => ({ ...e, n: norm(e.x.nombre) })).filter((e) => e.n.length >= 4).sort((a, b) => b.n.length - a.n.length);
-  return lista.find((e) => d === e.n || d.includes(e.n)) || null;
+    .map((e) => ({ ...e, n: norm(e.x.nombre) })).sort((a, b) => b.n.length - a.n.length);
+  // nombre exacto primero (sirve para nombres cortos como "Gel"); si no, que el detalle lo contenga
+  return lista.find((e) => d === e.n) || lista.find((e) => e.n.length >= 4 && d.includes(e.n)) || null;
 }
 function clienteEnDetalle(det, item) {
   const d = norm(det); if (!d) return '';
@@ -2615,7 +2633,28 @@ function claseCaja(o) {
   return out;
 }
 // filas de la hoja, solo de los negocios elegidos si la planilla trae varios
-const datosDe = (h) => (h.negocios ? h.datos.filter((f) => h.negSel.includes(String(f[h.negCol] ?? '').trim())) : h.datos);
+function datosDe(h) {
+  if (h.negocios) return h.datos.filter((f) => h.negSel.includes(String(f[h.negCol] ?? '').trim()));
+  const multi = (S.imp?.hojas || []).filter((x) => x.negocios && x.tipo !== 'ninguno');
+  const excluye = multi.some((x) => x.negSel.length < x.negocios.length);
+  // hoja de clientes sin columna Negocio: solo las clientas que aparecen en las filas del negocio elegido
+  if (h.tipo === 'clientes' && excluye && h.map.nombre >= 0) {
+    const nombres = new Set(multi.flatMap((x) => x.map.cliente >= 0 ? datosDe(x).map((f) => norm(f[x.map.cliente])).filter(Boolean) : []));
+    return h.datos.filter((f) => nombres.has(norm(f[h.map.nombre])));
+  }
+  // resumen con columnas por negocio ("Ingresos ALMAR", "Ingresos Chabela"): usa las del negocio elegido
+  if (h.tipo === 'resumen') {
+    const elegidos = multi.flatMap((x) => x.negSel);
+    const fuente = elegidos.length ? elegidos : [S.negocio?.nombre || ''];
+    const tokens = [...new Set(fuente.flatMap((n) => norm(n).split(' ')).filter((t) => t.length >= 4))];
+    const campos = { ingresos: /ingreso|venta|entr/, gastos: /gasto|egreso|salida/, balance: /balance|resultado|utilidad|ganancia|neto/ };
+    if (tokens.length) for (const [c, re] of Object.entries(campos)) {
+      const i = h.headersN.findIndex((x) => re.test(x) && tokens.some((t) => x.includes(t)));
+      if (i >= 0) h.map[c] = i;
+    }
+  }
+  return h.datos;
+}
 function filaValida(tipo, o) {
   if (tipo === 'resumen') return !!o.mes && (o.ingresos || o.gastos || o.balance);
   if (tipo === 'caja') return !!o.fecha && claseCaja(o).length > 0;
@@ -2659,6 +2698,7 @@ function vistaImportar() {
           <td class="n">${money(c.gasM)}${c.gas != null && Math.round(c.gas) !== Math.round(c.gasM) ? `<div class="small muted">Excel: ${money(c.gas)}</div>` : ''}</td>
           <td class="n"><b>${money(c.balM)}</b>${c.bal != null && Math.round(c.bal) !== Math.round(c.balM) ? `<div class="small muted">Excel: ${money(c.bal)}</div>` : ''}</td>
           <td>${c.ok ? '<span class="pill ok">Cuadra</span>' : '<span class="pill warn">Revisar</span>'}</td></tr>`).join('')}</tbody></table></div>` : ''}
+      ${conceptosLibres().length ? `<div class="banner" style="flex-wrap:wrap;gap:10px"><span><b>Último paso:</b> dinos qué es servicio y qué es producto (por ejemplo aceites o gel), así aparecen en tu catálogo e inventario.</span><button class="btn sm pri" data-act="ordenar">Ordenar lo que vendo</button></div>` : ''}
       <div class="hstack"><a class="btn pri" href="#inicio">Ver mi resumen</a><button class="btn" data-act="imp-reset">Importar otro archivo</button></div></div>`;
   }
   const hojas = imp.hojas; const total = sum(hojas.filter((h) => h.tipo !== 'ninguno'), (h) => datosDe(h).filter((f) => filaValida(h.tipo, filaAObjeto(h, f))).length);
@@ -3326,7 +3366,7 @@ function ajustesGeneral() {
     </div>
     <div class="card"><div class="card-head"><h2>Cuenta y datos</h2></div>
       <div class="stack"><p class="small"><span class="dot ${S.modo === 'nube' ? 'cloud' : ''}"></span> ${S.modo === 'nube' ? 'Tus datos están en la nube y puedes entrar desde cualquier dispositivo.' : 'Tus datos están guardados solo en este navegador. Si borras los datos del navegador, se pierden.'}</p>
-      <div class="hstack"><a class="btn" href="#importar">${icon('upload')}Importar Excel</a><button class="btn" data-act="salir">${icon('out')}${S.modo === 'nube' ? 'Cerrar sesión' : 'Cambiar de negocio'}</button>
+      <div class="hstack"><a class="btn" href="#importar">${icon('upload')}Importar Excel</a>${conceptosLibres().length ? `<button class="btn" data-act="ordenar">Ordenar lo importado</button>` : ''}${esDemo ? '' : '<button class="btn" data-act="empezar-cero">Empezar de cero</button>'}<button class="btn" data-act="salir">${icon('out')}${S.modo === 'nube' ? 'Cerrar sesión' : 'Cambiar de negocio'}</button>
       ${S.modo === 'local' ? (esDemo ? '<button class="btn danger" data-act="reset-demo">Restablecer ejemplo</button>' : '<button class="btn danger" data-act="del-negocio">Eliminar negocio</button>') : ''}</div></div>
     </div>
   </div>`;
@@ -3833,6 +3873,106 @@ function conTransicion(fn) {
 }
 
 /* =========================================================
+   Ordenar lo importado y empezar de cero
+   ========================================================= */
+
+// Ventas importadas que todavía no están unidas a un servicio o producto del catálogo, agrupadas por nombre
+function conceptosLibres() {
+  const g = new Map();
+  for (const i of db.all('venta_items')) {
+    if (i.item_id || i.tipo_item !== 'libre' || /\(resumen\)$/.test(i.nombre || '')) continue;
+    const k = norm(i.nombre); if (!k) continue;
+    const e = g.get(k) || { nombres: new Map(), precios: new Map(), ids: [], n: 0 };
+    e.nombres.set(i.nombre, (e.nombres.get(i.nombre) || 0) + 1);
+    const pu = Math.round(Number(i.precio_unitario)); if (pu > 0) e.precios.set(pu, (e.precios.get(pu) || 0) + 1);
+    e.ids.push(i.id); e.n += Number(i.cantidad) || 1; g.set(k, e);
+  }
+  const moda = (m) => [...m].sort((a, b) => b[1] - a[1])[0]?.[0];
+  return [...g.values()].map((e) => ({ nombre: moda(e.nombres), precio: moda(e.precios) || 0, ids: e.ids, n: e.n })).sort((a, b) => b.n - a.n);
+}
+const PRODUCTO_RE = /aceite|crema|esmalte|lima|kit|vela|aromatiz|mikado|anillo|collar|bandeja|perfume|jabon|serum|^gel\b|\bgel$|botella|frasco|accesorio|cargador|funda|audifono/;
+const OTRO_RE = /retiro|ajuste|devoluc|giftcard|gift card|vale|abono|deposito|traspaso/;
+function tipoSugerido(nombre) {
+  const n = norm(nombre);
+  if (OTRO_RE.test(n)) return 'otro';
+  if (/soft ?gel|semi|manicure|pedicure|nivelacion|rubber|esculpid|acrilic|corte|tinte|masaje|depil|sesion|clase/.test(n)) return 'servicio';
+  if (PRODUCTO_RE.test(n)) return 'producto';
+  return tiene('servicios') ? 'servicio' : 'producto';
+}
+
+function abrirOrdenar() {
+  const lista = conceptosLibres().slice(0, 40);
+  if (!lista.length) return toast('Todo lo que vendes ya está ordenado en tu catálogo');
+  abrirSheet('¿Qué es cada cosa que vendiste?', `<p class="small muted" style="margin:-6px 0 0">Así tu historial queda unido a tu catálogo y los productos aparecen en el inventario. Lo marcado como “Dejar así” se mantiene como venta suelta.</p>
+    <div class="ordenar">${lista.map((c, i) => { const t = tipoSugerido(c.nombre); return `<div class="ord-fila" data-i="${i}">
+      <div class="ord-nom"><b>${esc(c.nombre)}</b><small>${qtyFmt(c.n)} ${c.n === 1 ? 'venta' : 'ventas'}${c.precio ? ' · ' + money(c.precio) : ''}</small></div>
+      <div class="seg ord-seg">${[['servicio', 'Servicio'], ['producto', 'Producto'], ['otro', 'Dejar así']].map(([k, l]) => `<label class="${t === k ? 'on' : ''}"><input type="radio" name="tipo_${i}" value="${k}" ${t === k ? 'checked' : ''}>${l}</label>`).join('')}</div>
+      <div class="ord-stock" ${t === 'producto' ? '' : 'hidden'}><input class="in" name="stock_${i}" inputmode="decimal" placeholder="¿Cuántos tienes hoy?" aria-label="Stock actual de ${esc(c.nombre)}"></div>
+    </div>`; }).join('')}</div>`, {
+    pie: '<div class="sheet-foot"><button type="button" class="btn" data-close>Ahora no</button><button class="btn pri" type="submit">Ordenar</button></div>',
+    submit: (d) => aplicarOrden(lista, d),
+  });
+  $('#sheet-form').addEventListener('change', (e) => {
+    const f = e.target.closest('.ord-fila'); if (!f || e.target.type !== 'radio') return;
+    f.querySelectorAll('.ord-seg label').forEach((l) => l.classList.toggle('on', l.querySelector('input').checked));
+    f.querySelector('.ord-stock').hidden = e.target.value !== 'producto';
+  });
+}
+function aplicarOrden(lista, d) {
+  let serv = 0, prod = 0, unidas = 0;
+  const porNombre = (t) => new Map(db.all(t).map((x) => [norm(x.nombre), x]));
+  const exS = porNombre('servicios'), exP = porNombre('productos');
+  lista.forEach((c, i) => {
+    const tipo = d['tipo_' + i]; if (tipo !== 'servicio' && tipo !== 'producto') return;
+    let item;
+    if (tipo === 'servicio') { item = exS.get(norm(c.nombre)) || db.insert('servicios', { nombre: c.nombre, precio: c.precio, duracion_min: 60, activo: true }); if (!exS.has(norm(c.nombre))) { serv++; exS.set(norm(c.nombre), item); } }
+    else {
+      item = exP.get(norm(c.nombre)) || db.insert('productos', { nombre: c.nombre, sku: '', precio_venta: c.precio, costo: 0, stock_minimo: 3, activo: true });
+      if (!exP.has(norm(c.nombre))) { prod++; exP.set(norm(c.nombre), item); }
+      const st = String(d['stock_' + i] ?? '').trim();
+      if (st !== '') { const dif = Number(st.replace(',', '.')) - stockDe('producto', item.id); if (dif) db.insert('movimientos_stock', { tipo_item: 'producto', item_id: item.id, cantidad: dif, motivo: 'ajuste', ref_id: null, fecha: hoy(), nota: 'Stock inicial' }); }
+    }
+    db.updateMany('venta_items', c.ids, { tipo_item: tipo, item_id: item.id }); unidas += c.ids.length;
+  });
+  if (prod && !tiene('inventario')) db.modulo('inventario', true);
+  cerrarSheet(); render();
+  toast(unidas ? `Listo: ${unidas} ventas unidas${serv ? ` · ${serv} servicio${serv > 1 ? 's' : ''} nuevo${serv > 1 ? 's' : ''}` : ''}${prod ? ` · ${prod} producto${prod > 1 ? 's' : ''} en inventario` : ''}` : 'No marcaste nada para ordenar');
+}
+
+// Borrar el historial para volver a importar limpio (no toca catálogo, equipo ni ajustes)
+function formEmpezarDeCero() {
+  const n = { ventas: db.all('ventas').length, gastos: db.all('gastos').length, clientes: db.all('clientes').length, stock: db.all('movimientos_stock').length };
+  abrirSheet('Empezar de cero', `<p>Borra lo registrado para volver a importar tu Excel limpio. Tu catálogo, tu equipo, tus mensajes y tus ajustes no se tocan.</p>
+    <div class="form">
+      <label class="hstack"><input type="checkbox" name="ventas" checked> Ingresos y ventas <span class="muted">(${n.ventas})</span></label>
+      <label class="hstack"><input type="checkbox" name="gastos" checked> Gastos <span class="muted">(${n.gastos})</span></label>
+      <label class="hstack"><input type="checkbox" name="clientes"> Clientes <span class="muted">(${n.clientes}; también borra los ingresos, y se mantienen las que tienen horas agendadas)</span></label>
+      <label class="hstack"><input type="checkbox" name="stock"> Movimientos de inventario <span class="muted">(${n.stock})</span></label>
+      ${field('Para confirmar, escribe BORRAR', input('confirmar', '', 'autocomplete="off" placeholder="BORRAR"'))}
+    </div>`, {
+    pie: '<div class="sheet-foot"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri" type="submit" style="background:var(--bad);border-color:var(--bad);color:#fff">Borrar</button></div>',
+    submit: async (d) => {
+      if (String(d.confirmar || '').trim().toUpperCase() !== 'BORRAR') return toast('Escribe BORRAR para confirmar', true);
+      const ids = (t, fn = () => true) => db.all(t).filter(fn).map((r) => r.id);
+      if (d.ventas || d.clientes) {
+        const ventas = ids('ventas');
+        const vset = new Set(ventas);
+        db.removeMany('comisiones', ids('comisiones', (c) => vset.has(c.venta_id)));
+        db.removeMany('movimientos_stock', ids('movimientos_stock', (m) => m.motivo === 'venta' && vset.has(m.ref_id)));
+        db.removeMany('venta_items', ids('venta_items', (i) => vset.has(i.venta_id)));
+        db.removeMany('ventas', ventas);
+      }
+      if (d.gastos) db.removeMany('gastos', ids('gastos'));
+      if (d.stock) db.removeMany('movimientos_stock', ids('movimientos_stock'));
+      // las clientas con horas en la agenda se mantienen (borrarlas borraría sus citas)
+      if (d.clientes) { const conCita = new Set(db.all('citas').map((c) => c.cliente_id).filter(Boolean)); db.removeMany('clientes', ids('clientes', (c) => !conCita.has(c.id))); }
+      if (S.modo === 'nube') await NubeAdapter.cola;
+      cerrarSheet(); render(); toast('Listo, quedó limpio. Ya puedes volver a importar.');
+    },
+  });
+}
+
+/* =========================================================
    Render, eventos y arranque
    ========================================================= */
 
@@ -4003,6 +4143,8 @@ const ACCIONES = {
   'unificar-grupo': (el) => unificarGrupo(+el.dataset.i),
   // importar
   'imp-reset': () => { S.imp = null; render(); },
+  ordenar: () => abrirOrdenar(),
+  'empezar-cero': () => formEmpezarDeCero(),
   'imp-neg': (el) => { const h = S.imp.hojas[+el.dataset.h]; const v = el.dataset.v; h.negSel = h.negSel.includes(v) ? h.negSel.filter((x) => x !== v) : [...h.negSel, v]; render(); },
   'imp-go': (el) => { el.disabled = true; el.classList.add('cargando'); el.textContent = 'Importando…'; cargando(true); setTimeout(() => { try { importarTodo(); } finally { cargando(false); } }, 30); },
 };
