@@ -10,6 +10,8 @@
 /* Layout: app shell — sidebar on desktop, bottom tab bar + "Más" sheet on phones. Brand idea: the entrepreneur's notebook — ink blue, highlighter yellow, margin red */
 /* Minimal: white paper, one typeface, ink-black actions; the notebook blue only marks what is active or linked */
 :root {
+  --primary: var(--ink);
+  --primary-ink: var(--bg);
   --bg: #FFFFFF;
   --surface: #FFFFFF;
   --surface-2: #F4F4F2;
@@ -194,7 +196,7 @@ tr:last-child td { border-bottom: 0; }
 .chip { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 6px 12px; font-size: .82rem; font-weight: 600; cursor: pointer; color: var(--muted); }
 .chips.scroll { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
 .chips.scroll .chip { flex: none; }
-.chip.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip.on { background: var(--primary); color: var(--primary-ink); border-color: var(--primary); }
 
 .toggle { position: relative; width: 44px; height: 26px; flex: none; }
 .toggle input { opacity: 0; width: 100%; height: 100%; position: absolute; inset: 0; margin: 0; cursor: pointer; z-index: 1; }
@@ -445,15 +447,15 @@ h2 { font-size: 1.08rem; letter-spacing: -.01em; }
 .goal { border: 0; }
 .btn { border-radius: 12px; border-color: var(--line); min-height: 40px; font-weight: 600; background: var(--bg); }
 .btn:hover { background: var(--surface-2); }
-.btn.pri { background: var(--ink); border-color: var(--ink); color: var(--bg); }
-.btn.pri:hover { filter: none; opacity: .88; background: var(--ink); }
+.btn.pri { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+.btn.pri:hover { filter: none; opacity: .88; background: var(--primary); }
 .btn.sm { min-height: 32px; border-radius: 10px; }
 .btn.ghost { background: transparent; }
 .icon-btn { min-height: 0; }
 .in { border-radius: 12px; border-color: var(--line); background: var(--bg); }
 .in:focus { outline: 2px solid var(--ink); }
 .chip { border-color: var(--line); background: var(--bg); color: var(--muted); }
-.chip.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip.on { background: var(--primary); color: var(--primary-ink); border-color: var(--primary); }
 .seg { background: var(--surface-2); border-radius: 12px; }
 .seg button.on { background: var(--bg); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
 .pill { background: var(--surface-2); }
@@ -471,16 +473,51 @@ h2 { font-size: 1.08rem; letter-spacing: -.01em; }
 .sheet { border-radius: 22px; }
 .tabbar { background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(10px); }
 .tabbar .on { color: var(--ink); }
-.tabbar .sell span.plus { background: var(--ink); color: var(--bg); }
+.tabbar .sell span.plus { background: var(--primary); color: var(--primary-ink); }
 .toast { border-radius: 12px; }
 th { letter-spacing: .04em; }
 .pub-opt.on, .pub-opt:hover, .pub-hora.on, .pub-hora:hover { border-color: var(--ink); }
 .pub-opt.on { background: var(--surface-2); }
-.pub-day.on, .pub-hora.on { background: var(--ink); border-color: var(--ink); color: var(--bg); }
-.pub-day.on small { color: var(--bg); }
-.pub-n { background: var(--ink); color: var(--bg); }
+.pub-day.on, .pub-hora.on { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+.pub-day.on small { color: var(--primary-ink); }
+.pub-n { background: var(--primary); color: var(--primary-ink); }
 .ag-chip { background: var(--surface-2); }
 .mode-pill { opacity: .8; }
+
+
+/* ---------- Inicio simple y Registrar ---------- */
+.hola { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.resumen { display: flex; flex-direction: column; gap: 14px; padding: 4px 0 6px; }
+.res-main { display: flex; flex-direction: column; gap: 2px; }
+.res-num { font-size: clamp(2.4rem, 7vw, 3.4rem); font-weight: 750; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.res-sub { display: flex; gap: 28px; }
+.res-sub > div { display: flex; flex-direction: column; }
+.res-sub b { font-size: 1.15rem; }
+.res-meta { display: flex; flex-direction: column; gap: 6px; max-width: 420px; }
+.bar-fina { height: 6px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.bar-fina i { display: block; height: 100%; background: var(--primary); border-radius: 99px; }
+.acciones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.accion { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 8px; border-radius: 16px; background: var(--surface-2); color: var(--ink); text-decoration: none; font-weight: 600; font-size: .92rem; }
+.accion:hover { opacity: .85; }
+.ac-ico { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--bg); }
+.ac-ico.in { background: var(--primary); color: var(--primary-ink); }
+.mov-ico { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); flex: none; }
+.mov-ico svg.i { width: 16px; height: 16px; }
+.mov-ico.in { color: var(--ok); } .mov-ico.out { color: var(--muted); }
+.seg-grande button { padding: 9px 18px; font-size: .95rem; }
+.gasto-rapido { max-width: 560px; gap: 14px; }
+.monto-grande { display: flex; align-items: baseline; gap: 6px; border-bottom: 2px solid var(--line); padding: 6px 0 10px; font-size: 2.6rem; font-weight: 700; }
+.monto-grande:focus-within { border-color: var(--primary); }
+.monto-grande input { border: 0; outline: 0; background: transparent; font: inherit; width: 100%; min-width: 0; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.btn.grande { min-height: 50px; font-size: 1rem; border-radius: 14px; }
+.sis-fila { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 0; border-top: 1px solid var(--line); }
+.sis-fila:first-child { border-top: 0; }
+.sis-fila > span { font-weight: 600; }
+.swatches { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.swatch { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--bg); background: var(--sw); box-shadow: 0 0 0 1px var(--line); cursor: pointer; padding: 0; position: relative; display: grid; place-items: center; color: var(--muted); font-weight: 700; }
+.swatch.on { box-shadow: 0 0 0 2px var(--ink); }
+.swatch-custom input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.nav a.on { color: var(--ink); }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
@@ -571,7 +608,7 @@ const S = {
   ui: { caja: { mes: null, tab: 'ventas' }, agenda: { fecha: null, emp: 'todos', vista: 'dia' }, clientes: { q: '', f: 'todos' }, inv: { tab: 'stock' }, prod: { tab: 'recetas' }, cat: { tab: null }, equipo: { mes: null }, vender: { q: '' } },
   cart: null,
 };
-function resetUI() { S.imp = null; S.pub = null; S.eq = null; Object.assign(S.ui, { inicio: null, caja: { mes: null, tab: 'ventas' }, agenda: { fecha: null, emp: 'todos', vista: 'dia' }, clientes: { q: '', f: 'todos' }, inv: { tab: 'stock' }, prod: { tab: 'recetas' }, cat: { tab: null }, equipo: { mes: null }, vender: { q: '' } }); }
+function resetUI() { S.imp = null; S.pub = null; S.eq = null; S.ui.registro = { tipo: 'ingreso' }; Object.assign(S.ui, { inicio: null, caja: { mes: null, tab: 'ventas' }, agenda: { fecha: null, emp: 'todos', vista: 'dia' }, clientes: { q: '', f: 'todos' }, inv: { tab: 'stock' }, prod: { tab: 'recetas' }, cat: { tab: null }, equipo: { mes: null }, vender: { q: '' } }); }
 const tiene = (m) => !m || S.modulos.includes(m);
 
 /* ---------- adaptadores de datos ---------- */
@@ -888,6 +925,7 @@ const DEMOS = {
 const ICONS = {
   home: '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
+  minus: '<path d="M5 12h14"/>',
   cash: '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M7 9.5v5M17 9.5v5"/>',
   users: '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.2c2.3.2 3.9 1.8 4.4 4.3"/>',
   cal: '<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
@@ -913,8 +951,8 @@ const icon = (n) => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICO
 /* ---------- navegación ---------- */
 const VISTAS = [
   { id: 'inicio', label: 'Inicio', icon: 'home', modulo: null },
-  { id: 'vender', label: 'Vender', icon: 'plus', modulo: null },
-  { id: 'caja', label: 'Caja', icon: 'cash', modulo: null },
+  { id: 'vender', label: 'Registrar', icon: 'plus', modulo: null },
+  { id: 'caja', label: 'Movimientos', icon: 'cash', modulo: null },
   { id: 'clientes', label: 'Clientes', icon: 'users', modulo: null },
   { id: 'agenda', label: 'Agenda', icon: 'cal', modulo: null },
   { id: 'equipo', label: 'Equipo', icon: 'team', modulo: 'servicios', grupo: 'Servicios' },
@@ -931,12 +969,12 @@ const ir = (id) => { if (location.hash === '#' + id) render(); else location.has
 function shell(contenido) {
   const cur = vistaActual();
   const visibles = VISTAS.filter((v) => tiene(v.modulo));
-  const link = (v) => `<a href="#${v.id}" class="${v.id === cur ? 'on' : ''}">${icon(v.icon)}<span>${v.label}</span></a>`;
+  const link = (v) => `<a href="#${v.id}" class="${v.id === cur ? 'on' : ''}">${icon(v.icon)}<span>${lblVista(v)}</span></a>`;
   const core = visibles.filter((v) => !v.grupo && !['catalogo', 'importar', 'ajustes'].includes(v.id));
   const grupos = [...new Set(visibles.filter((v) => v.grupo).map((v) => v.grupo))];
   // barra inferior del celular: Inicio, Caja, [+ Vender], módulo principal, Más
   const principal = visibles.find((v) => v.id === 'agenda');
-  const tab = (v) => `<a href="#${v.id}" class="${v.id === cur ? 'on' : ''}">${icon(v.icon)}<span>${v.label.split(' ')[0]}</span></a>`;
+  const tab = (v) => `<a href="#${v.id}" class="${v.id === cur ? 'on' : ''}">${icon(v.icon)}<span>${lblVista(v).split(' ')[0]}</span></a>`;
   return `
   <div class="shell">
     <aside class="side">
@@ -953,21 +991,21 @@ function shell(contenido) {
     </aside>
     <main class="main"><div class="wrap">
       <div class="mobile-top"><div class="brand">${MARCA}<b>${esc(S.negocio.nombre)}</b></div><a class="btn sm ghost" href="#ajustes" aria-label="Ajustes">${icon('gear')}</a></div>
-      ${S.negocio.id.startsWith('demo-') ? `<div class="banner"><span>Estás viendo un negocio de ejemplo. Puedes probar todo, pero nada se guarda: al salir o recargar vuelve a como estaba.</span><button class="btn sm" data-act="salir">Ver otros ejemplos</button></div>` : ''}
+      ${S.negocio.id.startsWith('demo-') ? `<div class="banner"><span>Ejemplo: pruébalo todo, nada se guarda.</span><button class="btn sm" data-act="salir">Ver otros ejemplos</button></div>` : ''}
       ${contenido}
     </div></main>
     <nav class="tabbar">
       ${tab(VISTAS[0])}${tab(VISTAS[2])}
-      <a href="#vender" class="sell ${cur === 'vender' ? 'on' : ''}"><span class="plus">${icon('plus')}</span><span>Vender</span></a>
+      <a href="#vender" class="sell ${cur === 'vender' ? 'on' : ''}"><span class="plus">${icon('plus')}</span><span>${t_('nav_vender')}</span></a>
       ${principal && principal.id !== 'clientes' ? tab(principal) : tab(VISTAS[3])}
-      <button data-act="mas" class="${['proveedores', 'catalogo', 'importar', 'ajustes', 'equipo', 'produccion', 'clientes', 'inventario'].includes(cur) && cur !== principal?.id ? 'on' : ''}">${icon('more')}<span>Más</span></button>
+      <button data-act="mas" class="${['proveedores', 'catalogo', 'importar', 'ajustes', 'equipo', 'produccion', 'clientes', 'inventario'].includes(cur) && cur !== principal?.id ? 'on' : ''}">${icon('more')}<span>${t_('nav_mas')}</span></button>
     </nav>
   </div>`;
 }
 
 function menuMas() {
   const items = VISTAS.filter((v) => tiene(v.modulo) && !['inicio', 'vender', 'caja'].includes(v.id));
-  abrirSheet('Más opciones', `<div class="list">${items.map((v) => `<a class="row click" href="#${v.id}" data-close style="text-decoration:none;color:inherit">${icon(v.icon)}<div class="grow"><div class="t">${v.label}</div></div>${icon('right')}</a>`).join('')}
+  abrirSheet('Más opciones', `<div class="list">${items.map((v) => `<a class="row click" href="#${v.id}" data-close style="text-decoration:none;color:inherit">${icon(v.icon)}<div class="grow"><div class="t">${lblVista(v)}</div></div>${icon('right')}</a>`).join('')}
     <button class="row click" data-act="salir" style="border:0;border-top:1px solid var(--line);background:none;width:100%;text-align:left">${icon('out')}<div class="grow"><div class="t">Cambiar de negocio</div></div></button></div>`);
 }
 
@@ -1081,6 +1119,7 @@ async function cargarSupabase() {
 function formLogin() {
   abrirSheet('Iniciar sesión', `${field('Correo', input('email', '', 'type="email" autocomplete="email" required'))}${field('Contraseña', input('password', '', 'type="password" autocomplete="current-password" required'))}
     <p class="small muted">¿No tienes cuenta? <a href="#" data-act="registro">Crea tu negocio</a></p>`, {
+    pie: '<div class="sheet-foot"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri" type="submit">Ingresar</button></div>',
     submit: async (d) => {
       try { const sb = await cargarSupabase(); const { error } = await sb.auth.signInWithPassword({ email: d.email.trim(), password: d.password }); if (error) throw error; cerrarSheet(); await abrirNube(); }
       catch (e) {
@@ -1172,7 +1211,7 @@ function formNegocio(modo = 'local') {
   abrirSheet(conCuenta ? 'Crea tu cuenta' : 'Crea tu negocio', `<div class="form">
     ${conCuenta ? `<div class="form-row">${field('Correo', input('email', '', 'type="email" autocomplete="email" required'))}${field('Contraseña', input('password', '', 'type="password" minlength="6" autocomplete="new-password" required'), 'Mínimo 6 caracteres')}</div>` : ''}
     ${field('Nombre del negocio', input('nombre', '', 'required placeholder="Ej: Studio Aurora" autocomplete="organization"'))}
-    <div class="form-row">${field('WhatsApp del negocio', telInput('telefono', ''), 'Opcional')}${field('Tu fecha de nacimiento', input('nacimiento', '', 'type="date"'), 'Opcional')}</div>
+    ${field('WhatsApp del negocio', telInput('telefono', ''), 'Opcional')}
     ${field('¿Qué hace tu negocio? Cuéntalo con tus palabras', '<textarea class="in" name="rubro" id="f-rubro" rows="2" placeholder="Ej: Salón de uñas que también vende esmaltes y cremas"></textarea>')}
     <div class="field"><label>¿Qué vendes? <span class="muted" style="font-weight:400">Puedes marcar más de uno</span></label>
       <div class="que-vende">${QUE_VENDE.map((q) => `<label class="qv"><input type="checkbox" name="mod" value="${q.k}"><span><b>${q.label}</b><small>${q.desc}</small></span></label>`).join('')}</div></div>
@@ -1263,90 +1302,6 @@ function monthNav(act, ym) {
 
 const pct = (a, b) => (b ? Math.round(((a - b) / b) * 100) : null);
 
-/* ---------- INICIO ---------- */
-function vistaInicio() {
-  S.ui.inicio ||= { mes: mesActual() };
-  const ym = S.ui.inicio.mes; const esActual = ym === mesActual(); const prev = addMonths(ym, -1); const H = hoy();
-  const vM = ventasDelMes(ym); const vP = ventasDelMes(prev);
-  const ing = sum(vM, (v) => Number(v.total)); const ingP = sum(esActual ? vP.filter((v) => Number(v.fecha.slice(8)) <= Number(H.slice(8))) : vP, (v) => Number(v.total));
-  const gas = sum(gastosDelMes(ym), (g) => Number(g.monto));
-  const com = tiene('servicios') ? sum(db.all('comisiones').filter((c) => mesDe(c.fecha) === ym), (c) => Number(c.monto)) : 0;
-  const util = ing - gas - com;
-  const ticket = vM.length ? ing / vM.length : 0;
-  const delta = pct(ing, ingP);
-
-  // meta del mes
-  const meta = metaDelMes(ym);
-  let metaHtml = '';
-  if (meta && Number(meta.monto_objetivo) > 0) {
-    const obj = Number(meta.monto_objetivo); const avance = Math.min(100, (ing / obj) * 100);
-    const restantes = esActual ? diasDelMes(ym) - Number(H.slice(8)) + 1 : 0; const falta = Math.max(0, obj - ing);
-    metaHtml = `<div class="card goal">
-      <div class="goal-row"><div><div class="lbl small">Meta de ${esc(nombreMes(ym))}</div><div class="goal-big">${money(ing)}</div><div class="sub small">de ${money(obj)}</div></div>
-      <div class="goal-big" style="color:var(--gold)">${Math.floor(avance)}%</div></div>
-      <div class="bar" role="progressbar" aria-valuenow="${Math.round(avance)}" aria-valuemin="0" aria-valuemax="100"><i style="width:${avance}%"></i></div>
-      ${esActual ? `<div class="goal-facts"><div><span class="sub">Falta</span><b>${money(falta)}</b></div><div><span class="sub">Días restantes</span><b>${restantes}</b></div><div><span class="sub">Necesitas por día</span><b>${falta ? money(falta / restantes) : '¡Meta cumplida!'}</b></div></div>`
-        : `<div class="goal-facts"><div><span class="sub">Resultado</span><b>${falta ? `Faltaron ${money(falta)}` : `Superada por ${money(ing - obj)}`}</b></div></div>`}
-    </div>`;
-  }
-
-  // caja de hoy (cierre por medio de pago)
-  const vH = db.all('ventas').filter((v) => v.fecha === H); const gH = db.all('gastos').filter((g) => g.fecha === H);
-  const porMetodo = Object.keys(metodos()).map((k) => [k, sum(vH.filter((v) => v.metodo_pago === k), (v) => Number(v.total))]);
-  const totalH = sum(vH, (v) => Number(v.total)); const gastoH = sum(gH, (g) => Number(g.monto));
-
-  // alertas
-  const alertas = [];
-  const solicitadas = db.all('citas').filter((c) => c.estado === 'solicitada' && c.fecha >= H).length;
-  if (solicitadas) alertas.push({ sev: 'warn', t: `${solicitadas} reserva${solicitadas > 1 ? 's' : ''} por confirmar`, s: 'Llegaron desde tu página de reservas', href: 'agenda' });
-  {
-    const deHoy = itemsDelDia(H, 'todos').filter(enAgenda);
-    const pend = deHoy.filter((i) => !['completada', 'entregada', 'hecha'].includes(i.estado));
-    const partes = [['cita', 'cita', 'citas'], ['entrega', 'entrega', 'entregas'], ['tarea', 'recordatorio', 'recordatorios']].map(([k, s1, s2]) => { const n = pend.filter((i) => i.kind === k).length; return n ? `${n} ${n > 1 ? s2 : s1}` : null; }).filter(Boolean);
-    if (deHoy.length) alertas.push({ sev: 'acc', t: pend.length ? `Agenda de hoy: ${partes.join(', ')}` : 'Agenda de hoy al día', s: pend.length ? pend.slice(0, 3).map((i) => (i.hora ? i.hora + ' ' : '') + i.titulo).join(' · ') : `${deHoy.length} listos`, href: 'agenda', act: 'ag-hoy-nav' });
-  }
-  const reactivar = resumenClientes().filter((r) => r.dias != null && r.dias > DIAS_REACTIVAR && r.dias < 120);
-  if (reactivar.length) alertas.push({ sev: 'warn', t: `${reactivar.length} clientes sin volver hace más de ${DIAS_REACTIVAR} días`, s: 'Escríbeles por WhatsApp para que vuelvan', href: 'clientes', act: 'filtro-reactivar' });
-  for (const { p: pv, bajos: bj } of porReponer().provs) alertas.push({ sev: 'warn', t: `Pedir a ${pv.nombre}`, s: `${bj.length} en el mínimo: ${bj.slice(0, 3).map((x) => x.item.nombre).join(', ')}${bj.length > 3 ? '…' : ''}`, href: 'proveedores', act: 'pedido-ir', id: pv.id });
-  if (tiene('inventario')) {
-    const bajos = db.all('productos').filter((p) => p.activo !== false && stockDe('producto', p.id) <= Number(p.stock_minimo || 0));
-    if (bajos.length) alertas.push({ sev: bajos.some((p) => stockDe('producto', p.id) <= 0) ? 'bad' : 'warn', t: `${bajos.length} productos con stock bajo`, s: bajos.slice(0, 3).map((p) => p.nombre).join(', ') + (bajos.length > 3 ? '…' : ''), href: 'inventario' });
-  }
-  if (tiene('produccion')) {
-    const ib = db.all('insumos').filter((i) => stockDe('insumo', i.id) <= Number(i.stock_minimo || 0));
-    if (ib.length) alertas.push({ sev: 'warn', t: `${ib.length} insumos por reponer`, s: ib.map((i) => i.nombre).slice(0, 3).join(', '), href: 'produccion', act: 'tab-insumos' });
-    const curando = db.all('lotes').filter((l) => l.listo_desde > H);
-    if (curando.length) alertas.push({ sev: 'acc', t: `${curando.length} lote${curando.length > 1 ? 's' : ''} en curado`, s: `Listo desde el ${fechaCorta(curando.map((l) => l.listo_desde).sort()[0])}`, href: 'produccion', act: 'tab-lotes' });
-  }
-
-  // más vendidos del mes
-  const top = new Map();
-  for (const v of vM) for (const i of itemsDeVenta(v.id)) { const k = i.nombre; const r = top.get(k) || { n: 0, m: 0 }; r.n += Number(i.cantidad); r.m += i.cantidad * i.precio_unitario; top.set(k, r); }
-  const topArr = [...top.entries()].sort((a, b) => b[1].m - a[1].m).slice(0, 5);
-
-  return `${head(`Hola, ${esc(S.negocio.nombre)}`, esc(fechaLarga(H)), `${monthNav('inicio-mes', ym)}<a class="btn pri" href="#vender">${icon('plus')}Registrar venta</a>`)}
-  ${alertas.length ? `<div class="card solo-movil"><div class="card-head"><h2>Para hoy</h2></div><div class="stack">${alertas.length ? alertas.map((a) => `<a class="alert-row" href="#${a.href}" ${a.act ? `data-act="${a.act}"` : ''} ${a.id ? `data-id="${a.id}"` : ''}><span class="sev ${a.sev}"></span><div class="grow"><b>${esc(a.t)}</b><small>${esc(a.s)}</small></div>${icon('right')}</a>`).join('') : '<div class="empty">Todo en orden por ahora.</div>'}</div></div>` : ''}
-  ${metaHtml}
-  <div class="grid g4">
-    <div class="card kpi"><span class="lbl">Ventas del mes</span><span class="val">${money(ing)}</span><span class="sub">${delta == null ? '&nbsp;' : `<span class="${delta >= 0 ? 'up' : 'down'}">${delta >= 0 ? '▲' : '▼'} ${Math.abs(delta)}%</span> vs. ${esActual ? 'mismo día de ' : ''}${nombreMes(prev, true)}`}</span></div>
-    <div class="card kpi"><span class="lbl">Gastos${com ? ' y comisiones' : ''}</span><span class="val">${money(gas + com)}</span><span class="sub">${com ? `${money(com)} en comisiones` : `${gastosDelMes(ym).length} registros`}</span></div>
-    <div class="card kpi"><span class="lbl">Ganancia del mes</span><span class="val ${util < 0 ? 'down' : ''}">${money(util)}</span><span class="sub">${ing && util > 0 ? Math.round((util / ing) * 100) + '% de margen' : esActual && Number(H.slice(8)) <= 7 ? 'el mes recién empieza' : '&nbsp;'}</span></div>
-    <div class="card kpi"><span class="lbl">Ticket promedio</span><span class="val">${money(ticket)}</span><span class="sub">${vM.length} ventas</span></div>
-  </div>
-  ${tarjetaBalance(ym)}
-  <div class="grid g3">
-    <div class="card span2 chart"><div class="card-head"><h2>Ventas y gastos, últimos 6 meses</h2><div class="legend"><span><i style="background:var(--accent)"></i>Ventas</span><span><i style="background:var(--gold)"></i>Gastos</span></div></div>${graficoMeses()}</div>
-    <div class="card solo-escritorio"><div class="card-head"><h2>Para hoy</h2></div><div class="stack">${alertas.length ? alertas.map((a) => `<a class="alert-row" href="#${a.href}" ${a.act ? `data-act="${a.act}"` : ''} ${a.id ? `data-id="${a.id}"` : ''}><span class="sev ${a.sev}"></span><div class="grow"><b>${esc(a.t)}</b><small>${esc(a.s)}</small></div>${icon('right')}</a>`).join('') : '<div class="empty">Todo en orden por ahora.</div>'}</div></div>
-  </div>
-  <div class="grid g2">
-    <div class="card"><div class="card-head"><h2>Caja de hoy</h2><p>${vH.length} ventas</p></div>
-      <div class="caja-dia">${porMetodo.map(([k, v]) => `<div><small>${metodoLabel(k)}</small><b>${money(v)}</b></div>`).join('')}</div>
-      <div class="between" style="margin-top:12px"><span class="muted small">Ventas ${money(totalH)} − gastos ${money(gastoH)}</span><b class="num">Neto ${money(totalH - gastoH)}</b></div></div>
-    <div class="card"><div class="card-head"><h2>Lo más vendido</h2><p>${esc(nombreMes(ym))}</p></div>
-      ${topArr.length ? `<div class="list">${topArr.map(([n, r]) => `<div class="row"><div class="grow"><div class="t">${esc(n)}</div><div class="s">${qtyFmt(r.n)} vendidos</div></div><div class="r">${money(r.m)}</div></div>`).join('')}</div>` : '<div class="empty">Aún no hay ventas este mes.</div>'}</div>
-  </div>`;
-}
-
 function graficoMeses() {
   const meses = Array.from({ length: 6 }, (_, i) => addMonths(mesActual(), i - 5));
   const datos = meses.map((m) => ({ m, v: sum(ventasDelMes(m), (x) => Number(x.total)), g: sum(gastosDelMes(m), (x) => Number(x.monto)) }));
@@ -1376,7 +1331,11 @@ function vistaVender() {
   const emps = db.all('empleados').filter((e) => e.activo !== false);
   const total = sum(c.lineas, (l) => l.cantidad * l.precio_unitario);
   const clientes = [...db.all('clientes')].sort((a, b) => a.nombre.localeCompare(b.nombre));
-  return `${head(c.cita_id ? 'Cobrar cita' : 'Nueva venta', 'Vender')}
+  S.ui.registro ||= { tipo: 'ingreso' };
+  const tipoReg = c.cita_id || c.evento_id ? 'ingreso' : S.ui.registro.tipo;
+  const toggle = `<div class="seg seg-grande"><button data-act="reg-tipo" data-t="ingreso" class="${tipoReg === 'ingreso' ? 'on' : ''}">${t_('ingreso')}</button><button data-act="reg-tipo" data-t="gasto" class="${tipoReg === 'gasto' ? 'on' : ''}">${t_('gasto')}</button></div>`;
+  if (tipoReg === 'gasto') return `<div class="hola"><h1>${t_('registrar')}</h1>${toggle}</div>${vistaGastoRapido()}`;
+  return `<div class="hola"><h1>${c.cita_id ? t_('cobrar_cita') : t_('registrar')}</h1>${c.cita_id || c.evento_id ? '' : toggle}</div>
   <div class="sell">
     <div class="card stack">
       <div class="between">
@@ -1452,13 +1411,9 @@ function vistaCaja() {
   const com = tiene('servicios') ? sum(db.all('comisiones').filter((c) => mesDe(c.fecha) === ui.mes), (c) => Number(c.monto)) : 0;
   const cli = new Map(db.all('clientes').map((c) => [c.id, c.nombre]));
   const porCat = catGastos().map((k) => [k, sum(gs.filter((g) => g.categoria === k), (g) => Number(g.monto))]).filter(([, v]) => v > 0);
-  return `${head('Caja', 'Ingresos y gastos', `${monthNav('caja-mes', ui.mes)}<button class="btn pri" data-act="gasto">${icon('plus')}Registrar gasto</button>`)}
-  <div class="grid g4">
-    <div class="card kpi"><span class="lbl">Ingresos</span><span class="val">${money(ing)}</span><span class="sub">${vs.length} ventas</span></div>
-    <div class="card kpi"><span class="lbl">Gastos</span><span class="val">${money(gas)}</span><span class="sub">${gs.length} registros</span></div>
-    ${com ? `<div class="card kpi"><span class="lbl">Comisiones</span><span class="val">${money(com)}</span><span class="sub">del equipo</span></div>` : `<div class="card kpi"><span class="lbl">Ventas online</span><span class="val">${money(sum(vs.filter((v) => v.canal === 'online'), (v) => Number(v.total)))}</span><span class="sub">${vs.filter((v) => v.canal === 'online').length} ventas</span></div>`}
-    <div class="card kpi"><span class="lbl">Resultado</span><span class="val ${ing - gas - com < 0 ? 'down' : 'up'}">${money(ing - gas - com)}</span><span class="sub">lo que queda para el negocio</span></div>
-  </div>
+  return `${head(t_('movimientos'), '', monthNav('caja-mes', ui.mes))}
+  ${tarjetaBalance(ui.mes)}
+  <div class="card chart"><div class="card-head"><h2>${t_('ultimos_6')}</h2><div class="legend"><span><i style="background:var(--accent)"></i>${t_('ingresos')}</span><span><i style="background:var(--gold)"></i>${t_('gastos')}</span></div></div>${graficoMeses()}</div>
   <div class="card">
     <div class="card-head"><div class="seg"><button data-act="caja-tab" data-tab="ventas" class="${ui.tab === 'ventas' ? 'on' : ''}">Ventas</button><button data-act="caja-tab" data-tab="gastos" class="${ui.tab === 'gastos' ? 'on' : ''}">Gastos</button></div>
       <p>${ui.tab === 'ventas' ? Object.keys(metodos()).map((k) => `${metodoLabel(k)} ${money(sum(vs.filter((v) => v.metodo_pago === k), (v) => Number(v.total)))}`).join(' · ') : porCat.map(([k, v]) => `${k} ${money(v)}`).join(' · ')}</p></div>
@@ -2365,7 +2320,14 @@ function analizarHoja(nombre, filas) {
     if (score > mejor.total) mejor = { tipo, total: score, map };
   }
   if (mejor.total < 4) mejor.tipo = 'ninguno';
-  return { nombre, headers: (filas[hr] || []).map((h) => String(h ?? '').trim()), headersN: headers, datos, tipo: mejor.tipo, map: mejor.tipo === 'ninguno' ? {} : mejor.map };
+  const hoja = { nombre, headers: (filas[hr] || []).map((h) => String(h ?? '').trim()), headersN: headers, datos, tipo: mejor.tipo, map: mejor.tipo === 'ninguno' ? {} : mejor.map };
+  // si una hoja de "ventas" o "gastos" en realidad trae de los dos, se trata como caja (todo junto)
+  if (['ventas', 'gastos'].includes(hoja.tipo) && datos.length >= 3) {
+    const clases = datos.map((f) => filaAObjeto(hoja, f)).filter((o) => filaValida(hoja.tipo, o)).flatMap((o) => claseFila(hoja.tipo, o).map((c) => c.clase));
+    const v = clases.filter((c) => c === 'venta').length, g = clases.length - v;
+    if (v && g && Math.min(v, g) / clases.length >= 0.2) { const m = mapear(headers, 'caja'); if (m.map.fecha >= 0 && (m.map.monto >= 0 || m.map.ingreso >= 0)) { hoja.tipo = 'caja'; hoja.map = m.map; } }
+  }
+  return hoja;
 }
 function filaAObjeto(h, fila) {
   const o = {};
@@ -2377,21 +2339,54 @@ function filaAObjeto(h, fila) {
   if (h.tipo === 'ventas' && h.map.total >= 0 && /unit|^precio$/.test(h.headersN[h.map.total]) && o.cantidad > 0) o.total = o.total * o.cantidad;
   return o;
 }
+function claseFila(tipo, o) {
+  const det = o.detalle || o.descripcion || '';
+  if (tipo === 'caja') return claseCaja(o);
+  if (tipo === 'ventas') return [{ clase: o.total < 0 || (pareceGasto(o) && !o.cliente && !buscarEnCatalogo(det)) ? 'gasto' : 'venta', monto: Math.abs(o.total) }];
+  return [{ clase: o.monto > 0 && pareceIngreso(o) && !pareceGasto(o) ? 'venta' : 'gasto', monto: Math.abs(o.monto) }];
+}
+// Decide si cada fila de una hoja de caja es venta, gasto o ambas
+const GASTO_RE = /arriendo|alquiler|\bluz\b|\bagua\b|\bgas\b|internet|telefon|compra|compre|insumo|material|proveedor|sueldo|remunera|honorario|impuesto|\biva\b|patente|contador|publicidad|anuncio|\bads\b|flete|envio|despacho|bencina|combustible|transporte|mantencion|reparacion|cuota|credito|prestamo|retiro|gasto|egreso|salida|pago de cuenta|pago luz|pago agua|factura recibida|distribuidora|mayorista/;
+const INGRESO_RE = /\bventa|vendi|ingreso|cobro|abono|entrada|boleta|servicio|atencion|sesion|cliente/;
+const textoFila = (o) => norm([o.detalle, o.descripcion, o.categoria, o.tipo].filter(Boolean).join(' '));
+function buscarEnCatalogo(det) {
+  const d = norm(det); if (!d) return null;
+  const lista = [...db.all('servicios').map((x) => ({ tipo: 'servicio', x })), ...db.all('productos').map((x) => ({ tipo: 'producto', x }))]
+    .map((e) => ({ ...e, n: norm(e.x.nombre) })).filter((e) => e.n.length >= 4).sort((a, b) => b.n.length - a.n.length);
+  return lista.find((e) => d === e.n || d.includes(e.n)) || null;
+}
+function clienteEnDetalle(det, item) {
+  const d = norm(det); if (!d) return '';
+  const cl = [...db.all('clientes')].map((c) => ({ c, n: norm(c.nombre) })).filter((e) => e.n.length >= 5).sort((a, b) => b.n.length - a.n.length).find((e) => d.includes(e.n));
+  if (cl) return cl.c.nombre;
+  if (!tiene('servicios')) return '';
+  // lo que sobra del detalle después de sacar el servicio: si son 1 a 3 palabras con mayúscula, es el nombre del cliente
+  let resto = String(det); if (item) resto = resto.replace(new RegExp(item.x.nombre.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), ' ');
+  const palabras = resto.replace(/[-–—:,.()\d$]/g, ' ').split(/\s+/).filter((w) => w && !/^(servicio|pago|de|del|la|el|por|a|cliente|clienta|abono|venta|efectivo|transferencia|debito|credito|sra|sr|srta|y)$/i.test(norm(w)));
+  return palabras.length >= 1 && palabras.length <= 3 && palabras.every((w) => /^[A-ZÁÉÍÓÚÑ]/.test(w)) && (item || palabras.length >= 2) ? palabras.join(' ') : '';
+}
+const pareceGasto = (o) => GASTO_RE.test(textoFila(o)) || (!!o.categoria && catGastos().some((c) => norm(c) === norm(o.categoria)));
+const pareceIngreso = (o) => !!o.cliente || INGRESO_RE.test(textoFila(o)) || !!buscarEnCatalogo(o.detalle || o.descripcion);
 // Decide si cada fila de una hoja de caja es venta, gasto o ambas
 function claseCaja(o) {
   const out = []; const ing = Math.abs(o.ingreso || 0), egr = Math.abs(o.egreso || 0);
   if (ing > 0) out.push({ clase: 'venta', monto: ing });
   if (egr > 0) out.push({ clase: 'gasto', monto: egr });
   if (!out.length && o.monto) {
-    const t = norm(o.tipo);
-    const gasto = /gasto|egreso|salida|compra|pago|retiro|cargo/.test(t) || (!/venta|ingreso|entrada|cobro|abono/.test(t) && o.monto < 0);
+    const t = norm(o.tipo); let gasto;
+    if (/gasto|egreso|salida|compra|pago|retiro|cargo/.test(t)) gasto = true;
+    else if (/venta|ingreso|entrada|cobro|abono/.test(t)) gasto = false;
+    else if (o.monto < 0) gasto = true;
+    else if (o.cliente || buscarEnCatalogo(o.detalle)) gasto = false;
+    else gasto = pareceGasto(o) && !INGRESO_RE.test(textoFila(o));
     out.push({ clase: gasto ? 'gasto' : 'venta', monto: Math.abs(o.monto) });
   }
   return out;
 }
 function filaValida(tipo, o) {
   if (tipo === 'caja') return !!o.fecha && claseCaja(o).length > 0;
-  return Object.entries(IMP[tipo].campos).every(([f, d]) => !d.req || (d.tipo === 'num' ? o[f] != null && o[f] > 0 : !!o[f]));
+  const neg = tipo === 'ventas' || tipo === 'gastos'; // en ventas y gastos un monto negativo también sirve (se ordena solo)
+  return Object.entries(IMP[tipo].campos).every(([f, d]) => !d.req || (d.tipo === 'num' ? o[f] != null && (neg ? o[f] !== 0 : o[f] > 0) : !!o[f]));
 }
 
 /* ---------- vista ---------- */
@@ -2438,7 +2433,7 @@ function vistaImportar() {
     return `<div class="card stack">
       <div class="between"><div><h2>Hoja “${esc(h.nombre)}”</h2><p class="small muted">${validas} de ${objs.length} filas se pueden importar${objs.length - validas ? ` · ${objs.length - validas} sin ${Object.entries(campos).filter(([, d]) => d.req).map(([, d]) => d.label.toLowerCase()).join(' o ')} se saltan` : ''}</p></div>${tipoSel}</div>
       <div class="map-grid">${Object.entries(campos).map(([f, d]) => `<div class="field"><label>${d.label}${d.req ? ' *' : ''}</label><select class="in" data-change="imp-map" data-h="${hi}" data-f="${f}">${colOpts(h.map[f])}</select></div>`).join('')}</div>
-      ${usados.length ? `<div class="tbl-wrap"><table><thead><tr>${usados.map((f) => `<th>${campos[f].label}</th>`).join('')}${h.tipo === 'caja' ? '<th>Se anota como</th>' : ''}<th></th></tr></thead><tbody>${objs.slice(0, 5).map((o) => `<tr>${usados.map((f) => `<td>${fmt(f, o[f], o)}</td>`).join('')}${h.tipo === 'caja' ? `<td>${claseCaja(o).map((c) => `<span class="pill ${c.clase === 'venta' ? 'ok' : 'warn'}">${c.clase === 'venta' ? 'Venta' : 'Gasto'} ${money(c.monto)}</span>`).join(' ')}</td>` : ''}<td>${filaValida(h.tipo, o) ? '<span class="pill ok">OK</span>' : '<span class="pill warn">Se salta</span>'}</td></tr>`).join('')}</tbody></table></div>${objs.length > 5 ? `<p class="small muted">y ${objs.length - 5} filas más</p>` : ''}` : ''}
+      ${usados.length ? `<div class="tbl-wrap"><table><thead><tr>${usados.map((f) => `<th>${campos[f].label}</th>`).join('')}${['caja', 'ventas', 'gastos'].includes(h.tipo) ? '<th>Se anota como</th>' : ''}<th></th></tr></thead><tbody>${objs.slice(0, 5).map((o) => `<tr>${usados.map((f) => `<td>${fmt(f, o[f], o)}</td>`).join('')}${['caja', 'ventas', 'gastos'].includes(h.tipo) ? `<td>${claseFila(h.tipo, o).map((c) => `<span class="pill ${c.clase === 'venta' ? 'ok' : 'warn'}">${c.clase === 'venta' ? 'Ingreso' : 'Gasto'} ${money(c.monto)}</span>`).join(' ')}</td>` : ''}<td>${filaValida(h.tipo, o) ? '<span class="pill ok">OK</span>' : '<span class="pill warn">Se salta</span>'}</td></tr>`).join('')}</tbody></table></div>${objs.length > 5 ? `<p class="small muted">y ${objs.length - 5} filas más</p>` : ''}` : ''}
     </div>`;
   }).join('')}
   ${hojas.some((h) => h.tipo === 'ventas') ? '<p class="small muted">Las ventas antiguas se suman a la caja y al historial de cada cliente, pero no descuentan stock. Si vuelves a subir el mismo archivo, las filas repetidas se saltan.</p>' : ''}`;
@@ -2463,7 +2458,7 @@ async function abrirArchivo(file) {
 
 /* ---------- guardar ---------- */
 function importarTodo() {
-  const cont = { clientes: 0, productos: 0, servicios: 0, insumos: 0, ventas: 0, gastos: 0, actualizados: 0, repetidos: 0 };
+  const cont = { clientes: 0, productos: 0, servicios: 0, insumos: 0, ventas: 0, gastos: 0, actualizados: 0, repetidos: 0, movidos: 0 };
   const avisos = []; const H = hoy();
   const clientePorNombre = new Map(db.all('clientes').map((c) => [norm(c.nombre), c]));
   const clientePorTel = new Map(db.all('clientes').filter((c) => c.telefono).map((c) => [telLimpio(c.telefono), c]));
@@ -2477,6 +2472,25 @@ function importarTodo() {
   const ajustarStock = (tipo, item, deseado) => {
     if (deseado == null) return; const dif = deseado - stockDe(tipo, item.id) - sum(lotes.movimientos_stock.filter((m) => m.item_id === item.id), (m) => m.cantidad);
     if (dif) lotes.movimientos_stock.push({ id: uid(), tipo_item: tipo, item_id: item.id, cantidad: dif, motivo: 'ajuste', ref_id: null, fecha: H, nota: 'Importado desde Excel' });
+  };
+  const firmaV = (fecha, total, nombre, cli) => [fecha, Math.round(total), norm(nombre), cli || ''].join('|');
+  const vEx = new Set(db.all('ventas').map((v) => firmaV(v.fecha, v.total, itemsDeVenta(v.id)[0]?.nombre, v.cliente_id)));
+  const gEx = new Set(db.all('gastos').map((g) => [g.fecha, Math.round(g.monto), norm(g.descripcion)].join('|')));
+  const registrarIngreso = (o, det, monto, cant) => {
+    const item = buscarEnCatalogo(det);
+    // en servicios el ingreso va con su cliente: de la columna Cliente o, si no hay, del mismo detalle ("Manicure Paula Rojas")
+    const nombreCli = o.cliente || clienteEnDetalle(det, item);
+    const cli = buscarCliente(nombreCli); const nombre = item?.x.nombre || det || 'Venta';
+    const f = firmaV(o.fecha, monto, nombre, cli?.id); if (vEx.has(f)) { cont.repetidos++; return; } vEx.add(f);
+    const v = { id: uid(), fecha: o.fecha, cliente_id: cli?.id || null, total: monto, metodo_pago: parseMetodo(o.metodo_pago), canal: 'local', nota: 'Importado desde Excel' };
+    lotes.ventas.push(v);
+    lotes.venta_items.push({ id: uid(), venta_id: v.id, tipo_item: item ? item.tipo : 'libre', item_id: item?.x.id || null, nombre, cantidad: cant, precio_unitario: Math.round((monto / cant) * 100) / 100, empleado_id: null });
+    cont.ventas++;
+  };
+  const registrarGasto = (o, det, monto) => {
+    const k = [o.fecha, Math.round(monto), norm(det)].join('|'); if (gEx.has(k)) { cont.repetidos++; return; } gEx.add(k);
+    lotes.gastos.push({ id: uid(), fecha: o.fecha, categoria: parseCategoria(o.categoria, det), monto, descripcion: det || o.categoria || '' });
+    cont.gastos++;
   };
   // orden: catálogos y clientes primero, después ventas y gastos que los usan
   const orden = ['clientes', 'servicios', 'productos', 'insumos', 'ventas', 'gastos', 'caja'];
@@ -2505,56 +2519,25 @@ function importarTodo() {
       let i; if (e) { if (o.costo_unitario) db.update('insumos', e.id, { costo_unitario: o.costo_unitario }); i = e; cont.actualizados++; } else { i = db.insert('insumos', fila); ex.set(norm(i.nombre), i); cont.insumos++; }
       ajustarStock('insumo', i, o.stock);
     } if (filas.length && !tiene('produccion')) { if (!tiene('inventario')) db.modulo('inventario', true); db.modulo('produccion', true); avisos.push('Activamos Producción porque tu archivo trae insumos.'); } }
-    if (h.tipo === 'ventas') {
-      const prod = porNombre('productos'); const serv = porNombre('servicios');
-      const firma = (fecha, total, nombre, cli) => [fecha, Math.round(total), norm(nombre), cli || ''].join('|');
-      const existentes = new Set(db.all('ventas').map((v) => firma(v.fecha, v.total, itemsDeVenta(v.id)[0]?.nombre, v.cliente_id)));
+    if (['ventas', 'caja', 'gastos'].includes(h.tipo)) {
+      // cada fila se decide sola: lo que es gasto va a gastos y lo que es ingreso va a ventas, con su cliente
       for (const o of filas) {
-        const cli = buscarCliente(o.cliente); const nombre = o.detalle || 'Venta importada';
-        const f = firma(o.fecha, o.total, nombre, cli?.id); if (existentes.has(f)) { cont.repetidos++; continue; } existentes.add(f);
-        const p = prod.get(norm(o.detalle)); const s = serv.get(norm(o.detalle)); const cant = o.cantidad > 0 ? o.cantidad : 1;
-        const v = { id: uid(), fecha: o.fecha, cliente_id: cli?.id || null, total: o.total, metodo_pago: parseMetodo(o.metodo_pago), canal: 'local', nota: 'Importado desde Excel' };
-        lotes.ventas.push(v);
-        lotes.venta_items.push({ id: uid(), venta_id: v.id, tipo_item: p ? 'producto' : s ? 'servicio' : 'libre', item_id: p?.id || s?.id || null, nombre: p?.nombre || s?.nombre || nombre, cantidad: cant, precio_unitario: Math.round((o.total / cant) * 100) / 100, empleado_id: null });
-        cont.ventas++;
-      }
-      if (filas.some((o) => o.fecha > H)) avisos.push('Algunas ventas tienen fecha futura; revisa que el formato de fecha sea día/mes/año.');
-    }
-    if (h.tipo === 'caja') {
-      const prod = porNombre('productos'); const serv = porNombre('servicios');
-      const firmaV = (fecha, total, nombre, cli) => [fecha, Math.round(total), norm(nombre), cli || ''].join('|');
-      const vEx = new Set(db.all('ventas').map((v) => firmaV(v.fecha, v.total, itemsDeVenta(v.id)[0]?.nombre, v.cliente_id)));
-      const gEx = new Set(db.all('gastos').map((g) => [g.fecha, Math.round(g.monto), norm(g.descripcion)].join('|')));
-      for (const o of filas) for (const c of claseCaja(o)) {
-        if (c.clase === 'venta') {
-          const cli = buscarCliente(o.cliente); const nombre = o.detalle || 'Venta';
-          const f = firmaV(o.fecha, c.monto, nombre, cli?.id); if (vEx.has(f)) { cont.repetidos++; continue; } vEx.add(f);
-          const p = prod.get(norm(o.detalle)); const sv = serv.get(norm(o.detalle));
-          const v = { id: uid(), fecha: o.fecha, cliente_id: cli?.id || null, total: c.monto, metodo_pago: parseMetodo(o.metodo_pago), canal: 'local', nota: 'Importado desde Excel' };
-          lotes.ventas.push(v);
-          lotes.venta_items.push({ id: uid(), venta_id: v.id, tipo_item: p ? 'producto' : sv ? 'servicio' : 'libre', item_id: p?.id || sv?.id || null, nombre: p?.nombre || sv?.nombre || nombre, cantidad: 1, precio_unitario: c.monto, empleado_id: null });
-          cont.ventas++;
-        } else {
-          const k = [o.fecha, Math.round(c.monto), norm(o.detalle)].join('|'); if (gEx.has(k)) { cont.repetidos++; continue; } gEx.add(k);
-          lotes.gastos.push({ id: uid(), fecha: o.fecha, categoria: parseCategoria(o.categoria, o.detalle), monto: c.monto, descripcion: o.detalle || o.categoria || '' });
-          cont.gastos++;
+        const det = o.detalle || o.descripcion || '';
+        const partes = claseFila(h.tipo, o);
+        for (const c of partes) {
+          if (c.clase === 'venta') registrarIngreso(o, det, c.monto, h.tipo === 'ventas' && o.cantidad > 0 ? o.cantidad : 1);
+          else registrarGasto(o, det, c.monto);
+          if (h.tipo !== 'caja' && (c.clase === 'venta') !== (h.tipo === 'ventas')) cont.movidos++;
         }
       }
-    }
-    if (h.tipo === 'gastos') {
-      const existentes = new Set(db.all('gastos').map((g) => [g.fecha, Math.round(g.monto), norm(g.descripcion)].join('|')));
-      for (const o of filas) {
-        const k = [o.fecha, Math.round(o.monto), norm(o.descripcion)].join('|'); if (existentes.has(k)) { cont.repetidos++; continue; } existentes.add(k);
-        lotes.gastos.push({ id: uid(), fecha: o.fecha, categoria: parseCategoria(o.categoria, o.descripcion), monto: o.monto, descripcion: o.descripcion || o.categoria || '' });
-        cont.gastos++;
-      }
+      if (filas.some((o) => o.fecha > H)) avisos.push('Algunas filas tienen fecha futura; revisa que el formato de fecha sea día/mes/año.');
     }
   }
   // guardado en bloque (mucho más rápido en la nube que fila por fila)
   for (const t of ['clientes', 'ventas', 'venta_items', 'movimientos_stock', 'gastos']) if (lotes[t].length) db.insertMany(t, lotes[t]);
   const n = (k, s, p) => (cont[k] ? `${cont[k]} ${cont[k] === 1 ? s : p}` : null);
-  const lineas = [n('ventas', 'venta', 'ventas'), n('gastos', 'gasto', 'gastos'), n('clientes', 'cliente nuevo', 'clientes nuevos'), n('productos', 'producto', 'productos'), n('servicios', 'servicio', 'servicios'), n('insumos', 'insumo', 'insumos'),
-    cont.actualizados ? `${cont.actualizados} registros que ya tenías quedaron al día` : null, cont.repetidos ? `${cont.repetidos} filas repetidas se saltaron` : null].filter(Boolean);
+  const lineas = [n('ventas', 'ingreso', 'ingresos'), n('gastos', 'gasto', 'gastos'), n('clientes', 'cliente nuevo', 'clientes nuevos'), n('productos', 'producto', 'productos'), n('servicios', 'servicio', 'servicios'), n('insumos', 'insumo', 'insumos'),
+    cont.actualizados ? `${cont.actualizados} registros que ya tenías quedaron al día` : null, cont.repetidos ? `${cont.repetidos} filas repetidas se saltaron` : null, cont.movidos ? `${cont.movidos} filas estaban en la hoja equivocada y las ordenamos (gasto o ingreso)` : null].filter(Boolean);
   S.imp.resultado = { lineas: lineas.length ? lineas : ['No había registros nuevos para agregar'], avisos };
   window.scrollTo(0, 0); render(); toast('Importación lista');
 }
@@ -3026,11 +3009,11 @@ function abonoDe(precio, c = cfg()) {
 /* ---------- AJUSTES (con pestañas) ---------- */
 function vistaAjustes() {
   S.ui.ajustes ||= { tab: 'general' };
-  const tabs = [['general', 'General'], ['perfil', 'Perfil y reseñas'], ['mensajes', 'Mensajes'], ['listas', 'Categorías y listas'], ...(tiene('servicios') ? [['reservas', 'Reservas']] : [])];
+  const tabs = [['general', 'General'], ['sistema', t_('sistema')], ['perfil', 'Perfil y reseñas'], ['mensajes', 'Mensajes'], ['listas', 'Categorías y listas'], ...(tiene('servicios') ? [['reservas', 'Reservas']] : [])];
   if (!tabs.some(([k]) => k === S.ui.ajustes.tab)) S.ui.ajustes.tab = 'general';
   const t = S.ui.ajustes.tab;
-  const cuerpo = t === 'perfil' ? ajustesPerfil() : t === 'mensajes' ? ajustesMensajes() : t === 'listas' ? ajustesListas() : t === 'reservas' ? ajustesReservas() : ajustesGeneral();
-  return `${head('Ajustes', esc(S.negocio.nombre))}
+  const cuerpo = t === 'sistema' ? ajustesSistema() : t === 'perfil' ? ajustesPerfil() : t === 'mensajes' ? ajustesMensajes() : t === 'listas' ? ajustesListas() : t === 'reservas' ? ajustesReservas() : ajustesGeneral();
+  return `${head(t_('nav_ajustes'), esc(S.negocio.nombre))}
   <div class="chips scroll">${tabs.map(([k, l]) => `<button class="chip ${t === k ? 'on' : ''}" data-act="aj-tab" data-t="${k}">${l}</button>`).join('')}</div>
   ${cuerpo}`;
 }
@@ -3310,6 +3293,132 @@ function formEquipoLogin() {
 }
 
 /* =========================================================
+   Ajustes del sistema (por dispositivo): tema, color, letra, idioma
+   ========================================================= */
+
+const SIS_DEF = { tema: 'auto', color: 'tinta', letra: 'normal', idioma: 'es' };
+const COLORES = [['tinta', null, 'Tinta'], ['azul', '#2346A3', 'Azul'], ['rosa', '#C2477A', 'Rosa'], ['verde', '#1F7A4A', 'Verde'], ['terracota', '#B5532E', 'Terracota'], ['turquesa', '#0E7C86', 'Turquesa'], ['ciruela', '#7A3B8F', 'Ciruela']];
+const sis = () => ({ ...SIS_DEF, ...(LS.get('miderno:sistema') || {}) });
+function guardarSis(patch) { LS.set('miderno:sistema', { ...sis(), ...patch }); aplicarSistema(); render(); }
+const tintaSobre = (hex) => { const n = parseInt(hex.slice(1), 16); const r = n >> 16, g = (n >> 8) & 255, b = n & 255; return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.6 ? '#141414' : '#FFFFFF'; };
+function aplicarSistema() {
+  const s = sis(); const root = document.documentElement;
+  if (s.tema === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', s.tema);
+  const hex = s.color.startsWith('#') ? s.color : COLORES.find((c) => c[0] === s.color)?.[1];
+  if (hex) { root.style.setProperty('--primary', hex); root.style.setProperty('--primary-ink', tintaSobre(hex)); root.style.setProperty('--accent', hex); }
+  else { root.style.removeProperty('--primary'); root.style.removeProperty('--primary-ink'); root.style.removeProperty('--accent'); }
+  root.style.fontSize = s.letra === 'grande' ? '112.5%' : '';
+  root.lang = s.idioma;
+}
+aplicarSistema();
+
+/* ---------- textos de la interfaz ---------- */
+const I18N = {
+  es: {
+    nav_inicio: 'Inicio', nav_vender: 'Registrar', nav_caja: 'Movimientos', nav_clientes: 'Clientes', nav_agenda: 'Agenda', nav_equipo: 'Equipo', nav_inventario: 'Inventario', nav_produccion: 'Producción', nav_proveedores: 'Proveedores', nav_catalogo: 'Catálogo', nav_importar: 'Importar Excel', nav_ajustes: 'Ajustes', nav_mas: 'Más',
+    hola: 'Hola', ganancia: 'Ganancia de', ingresos: 'Ingresos', gastos: 'Gastos', meta: 'Meta', faltan: 'faltan', dia: 'día',
+    ingreso: 'Ingreso', gasto: 'Gasto', agendar: 'Agendar', para_hoy: 'Para hoy', ultimos: 'Últimos movimientos', ver_todo: 'Ver todo', vacio_mov: 'Aún no hay movimientos. Registra tu primer ingreso o gasto.',
+    reservas_confirmar: (n) => `${n} reserva${n > 1 ? 's' : ''} por confirmar`, agenda_hoy: (n) => `${n} pendiente${n > 1 ? 's' : ''} en la agenda de hoy`, pedir_a: 'Pedir a', stock_bajo: (n) => `${n} producto${n > 1 ? 's' : ''} por reponer`, reactivar: (n) => `${n} cliente${n > 1 ? 's' : ''} sin volver hace más de ${DIAS_REACTIVAR} días`,
+    registrar: 'Registrar', cobrar_cita: 'Cobrar cita', monto: 'Monto', categoria: 'Categoría', detalle_opc: 'Detalle (opcional)', fecha: 'Fecha', proveedor: 'Proveedor', sin_proveedor: 'Sin proveedor', registrar_gasto: 'Registrar gasto', falta_monto: 'Escribe el monto', gasto_ok: 'Gasto registrado',
+    movimientos: 'Movimientos', ultimos_6: 'Últimos 6 meses',
+    sistema: 'Apariencia', tema: 'Tema', tema_auto: 'Automático', tema_claro: 'Claro', tema_oscuro: 'Oscuro', color: 'Color de la app', personalizado: 'Otro', letra: 'Tamaño de letra', letra_normal: 'Normal', letra_grande: 'Grande', idioma: 'Idioma', sis_nota: 'Se guarda en este dispositivo.', idioma_nota: 'En inglés están traducidos el menú, Inicio, Registrar y Apariencia. El resto se irá traduciendo.',
+  },
+  en: {
+    nav_inicio: 'Home', nav_vender: 'Record', nav_caja: 'Transactions', nav_clientes: 'Clients', nav_agenda: 'Calendar', nav_equipo: 'Team', nav_inventario: 'Inventory', nav_produccion: 'Production', nav_proveedores: 'Suppliers', nav_catalogo: 'Catalog', nav_importar: 'Import Excel', nav_ajustes: 'Settings', nav_mas: 'More',
+    hola: 'Hi', ganancia: 'Profit in', ingresos: 'Income', gastos: 'Expenses', meta: 'Goal', faltan: 'left', dia: 'day',
+    ingreso: 'Income', gasto: 'Expense', agendar: 'Schedule', para_hoy: 'Today', ultimos: 'Latest transactions', ver_todo: 'See all', vacio_mov: 'No transactions yet. Record your first income or expense.',
+    reservas_confirmar: (n) => `${n} booking${n > 1 ? 's' : ''} to confirm`, agenda_hoy: (n) => `${n} pending today`, pedir_a: 'Order from', stock_bajo: (n) => `${n} product${n > 1 ? 's' : ''} to restock`, reactivar: (n) => `${n} client${n > 1 ? 's' : ''} away for over ${DIAS_REACTIVAR} days`,
+    registrar: 'Record', cobrar_cita: 'Charge appointment', monto: 'Amount', categoria: 'Category', detalle_opc: 'Detail (optional)', fecha: 'Date', proveedor: 'Supplier', sin_proveedor: 'No supplier', registrar_gasto: 'Record expense', falta_monto: 'Enter the amount', gasto_ok: 'Expense recorded',
+    movimientos: 'Transactions', ultimos_6: 'Last 6 months',
+    sistema: 'Appearance', tema: 'Theme', tema_auto: 'Automatic', tema_claro: 'Light', tema_oscuro: 'Dark', color: 'App color', personalizado: 'Custom', letra: 'Text size', letra_normal: 'Normal', letra_grande: 'Large', idioma: 'Language', sis_nota: 'Saved on this device.', idioma_nota: 'Menu, Home, Record and Appearance are translated. The rest is coming soon.',
+  },
+};
+function t_(k, n) { const v = (I18N[sis().idioma] || I18N.es)[k] ?? I18N.es[k] ?? k; return typeof v === 'function' ? v(n) : v; }
+const lblVista = (v) => t_('nav_' + v.id) || v.label;
+
+function ajustesSistema() {
+  const s = sis(); const custom = s.color.startsWith('#');
+  const opc = (grupo, val, label) => `<button class="chip ${s[grupo] === val ? 'on' : ''}" data-act="sis" data-k="${grupo}" data-v="${val}">${label}</button>`;
+  return `<div class="card stack sis">
+    <div class="sis-fila"><span>${t_('tema')}</span><div class="chips">${opc('tema', 'auto', t_('tema_auto'))}${opc('tema', 'light', t_('tema_claro'))}${opc('tema', 'dark', t_('tema_oscuro'))}</div></div>
+    <div class="sis-fila"><span>${t_('color')}</span><div class="swatches">${COLORES.map(([k, hex, n]) => `<button class="swatch ${s.color === k ? 'on' : ''}" data-act="sis" data-k="color" data-v="${k}" style="--sw:${hex || 'var(--ink)'}" aria-label="${n}" title="${n}"></button>`).join('')}
+      <label class="swatch swatch-custom ${custom ? 'on' : ''}" style="--sw:${custom ? s.color : 'transparent'}" title="${t_('personalizado')}">+<input type="color" data-change="sis-color" value="${custom ? s.color : '#2346A3'}" aria-label="${t_('personalizado')}"></label></div></div>
+    <div class="sis-fila"><span>${t_('letra')}</span><div class="chips">${opc('letra', 'normal', t_('letra_normal'))}${opc('letra', 'grande', t_('letra_grande'))}</div></div>
+    <div class="sis-fila"><span>${t_('idioma')}</span><div class="chips">${opc('idioma', 'es', 'Español')}${opc('idioma', 'en', 'English')}</div></div>
+    <p class="small muted">${t_('sis_nota')}${s.idioma !== 'es' ? ' ' + t_('idioma_nota') : ''}</p>
+  </div>`;
+}
+
+/* =========================================================
+   Inicio simple + Registrar (ingreso o gasto en un solo lugar)
+   ========================================================= */
+
+function vistaInicio() {
+  S.ui.inicio ||= { mes: mesActual() };
+  const ym = S.ui.inicio.mes; const esActual = ym === mesActual(); const H = hoy();
+  const ing = sum(ventasDelMes(ym), (v) => Number(v.total));
+  const egr = sum(gastosDelMes(ym), (g) => Number(g.monto)) + (tiene('servicios') ? sum(db.all('comisiones').filter((c) => mesDe(c.fecha) === ym), (c) => Number(c.monto)) : 0);
+  const res = ing - egr; const meta = metaDelMes(ym);
+  const avance = meta && Number(meta.monto_objetivo) > 0 ? Math.min(100, (ing / meta.monto_objetivo) * 100) : null;
+  const restantes = esActual ? diasDelMes(ym) - Number(H.slice(8)) + 1 : 0;
+  const falta = meta ? Math.max(0, meta.monto_objetivo - ing) : 0;
+
+  // para hoy
+  const alertas = [];
+  const solicitadas = db.all('citas').filter((c) => c.estado === 'solicitada' && c.fecha >= H).length;
+  if (solicitadas) alertas.push({ sev: 'warn', t: t_('reservas_confirmar', solicitadas), href: 'agenda' });
+  const deHoy = itemsDelDia(H, 'todos').filter(enAgenda).filter((i) => !['completada', 'entregada', 'hecha'].includes(i.estado));
+  if (deHoy.length) alertas.push({ sev: 'acc', t: t_('agenda_hoy', deHoy.length), s: deHoy.slice(0, 3).map((i) => (i.hora ? i.hora + ' ' : '') + i.titulo).join(' · '), href: 'agenda', act: 'ag-hoy-nav' });
+  for (const { p: pv, bajos } of porReponer().provs) alertas.push({ sev: 'warn', t: `${t_('pedir_a')} ${pv.nombre}`, s: bajos.slice(0, 3).map((x) => x.item.nombre).join(', '), href: 'proveedores', act: 'pedido-ir', id: pv.id });
+  if (tiene('inventario')) { const sinProv = db.all('productos').filter((p) => p.activo !== false && !p.proveedor_id && stockDe('producto', p.id) <= Number(p.stock_minimo || 0)); if (sinProv.length) alertas.push({ sev: 'warn', t: t_('stock_bajo', sinProv.length), s: sinProv.slice(0, 3).map((p) => p.nombre).join(', '), href: 'inventario' }); }
+  const reactivar = resumenClientes().filter((r) => r.dias != null && r.dias > DIAS_REACTIVAR && r.dias < 120).length;
+  if (reactivar) alertas.push({ sev: '', t: t_('reactivar', reactivar), href: 'clientes', act: 'filtro-reactivar' });
+
+  // últimos movimientos (ingresos y gastos juntos)
+  const cli = new Map(db.all('clientes').map((c) => [c.id, c.nombre]));
+  const movs = [
+    ...db.all('ventas').map((v) => ({ f: v.fecha, monto: Number(v.total), tipo: 'in', t: itemsDeVenta(v.id).map((i) => i.nombre).join(', ') || t_('ingreso'), s: cli.get(v.cliente_id) || metodoLabel(v.metodo_pago) })),
+    ...db.all('gastos').map((g) => ({ f: g.fecha, monto: Number(g.monto), tipo: 'out', t: g.descripcion || g.categoria, s: g.categoria })),
+  ].sort((a, b) => b.f.localeCompare(a.f)).slice(0, 6);
+
+  return `<div class="hola"><div><div class="muted small">${esc(fechaLarga(H))}</div><h1>${t_('hola')}, ${esc(S.negocio.nombre)}</h1></div>${monthNav('inicio-mes', ym)}</div>
+  <section class="resumen">
+    <div class="res-main"><span class="muted small">${t_('ganancia')} ${esc(nombreMes(ym, true).replace('.', ''))}</span><b class="res-num ${res < 0 ? 'down' : ''}">${money(res)}</b></div>
+    <div class="res-sub"><div><span class="muted small">${t_('ingresos')}</span><b class="num up">${money(ing)}</b></div><div><span class="muted small">${t_('gastos')}</span><b class="num">${money(egr)}</b></div></div>
+    ${avance != null ? `<div class="res-meta"><div class="bar-fina"><i style="width:${avance}%"></i></div><span class="small muted">${t_('meta')} ${Math.floor(avance)}%${esActual && falta ? ` · ${t_('faltan')} ${money(falta)} · ${money(falta / restantes)}/${t_('dia')}` : ''}</span></div>` : ''}
+  </section>
+  <div class="acciones">
+    <a class="accion" href="#vender" data-act="reg-ingreso"><span class="ac-ico in">${icon('plus')}</span>${t_('ingreso')}</a>
+    <a class="accion" href="#vender" data-act="reg-gasto"><span class="ac-ico out">${icon('minus')}</span>${t_('gasto')}</a>
+    <a class="accion" href="#agenda" data-act="agendar-ir"><span class="ac-ico">${icon('cal')}</span>${t_('agendar')}</a>
+  </div>
+  ${alertas.length ? `<section class="stack"><h2>${t_('para_hoy')}</h2><div class="stack" style="gap:8px">${alertas.map((a) => `<a class="alert-row" href="#${a.href}" ${a.act ? `data-act="${a.act}"` : ''} ${a.id ? `data-id="${a.id}"` : ''}><span class="sev ${a.sev}"></span><div class="grow"><b>${esc(a.t)}</b>${a.s ? `<small>${esc(a.s)}</small>` : ''}</div>${icon('right')}</a>`).join('')}</div></section>` : ''}
+  <section class="stack"><div class="between"><h2>${t_('ultimos')}</h2><a class="small" href="#caja">${t_('ver_todo')}</a></div>
+    <div class="list">${movs.length ? movs.map((m) => `<div class="row"><span class="mov-ico ${m.tipo}">${icon(m.tipo === 'in' ? 'plus' : 'minus')}</span><div class="grow"><div class="t" style="font-weight:500">${esc(m.t)}</div><div class="s">${fechaCorta(m.f)}${m.s ? ' · ' + esc(m.s) : ''}</div></div><b class="r num ${m.tipo === 'in' ? 'up' : ''}">${m.tipo === 'in' ? '+' : '−'}${money(m.monto)}</b></div>`).join('') : `<div class="empty">${t_('vacio_mov')}</div>`}</div></section>`;
+}
+
+/* ---------- registrar gasto rápido ---------- */
+function vistaGastoRapido() {
+  const provs = db.all('proveedores').filter((p) => p.tipo === 'proveedor');
+  const cat = S.ui.registro?.cat || catGastos()[0];
+  return `<form class="gasto-rapido stack" id="form-gasto-rapido">
+    <label class="monto-grande"><span class="muted">$</span><input id="g-monto" name="monto" inputmode="numeric" placeholder="0" autocomplete="off" aria-label="${t_('monto')}"></label>
+    <div class="chips" role="radiogroup" aria-label="${t_('categoria')}">${catGastos().map((c) => `<button type="button" class="chip ${c === cat ? 'on' : ''}" data-act="g-cat" data-c="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+    <input class="in" name="descripcion" id="g-desc" placeholder="${t_('detalle_opc')}">
+    <div class="form-row"><input class="in" type="date" name="fecha" id="g-fecha" value="${hoy()}" max="${hoy()}" aria-label="${t_('fecha')}">${provs.length ? `<select class="in" name="proveedor" id="g-prov" aria-label="${t_('proveedor')}">${opt('', t_('sin_proveedor'))}${provs.map((p) => opt(p.id, p.nombre)).join('')}</select>` : ''}</div>
+    <button class="btn pri block grande">${t_('registrar_gasto')}</button>
+  </form>`;
+}
+document.addEventListener('submit', (e) => {
+  if (e.target.id !== 'form-gasto-rapido') return; e.preventDefault();
+  const d = Object.fromEntries(new FormData(e.target).entries()); const monto = num(d.monto);
+  if (!(monto > 0)) { toast(t_('falta_monto'), true); return $('#g-monto')?.focus(); }
+  const prov = d.proveedor ? db.get('proveedores', d.proveedor) : null;
+  db.insert('gastos', { fecha: d.fecha || hoy(), categoria: S.ui.registro?.cat || catGastos()[0], monto, descripcion: (d.descripcion || '').trim() || (prov ? prov.nombre : '') });
+  toast(`${t_('gasto_ok')}: ${money(monto)}`); render(); setTimeout(() => $('#g-monto')?.focus(), 50);
+});
+
+/* =========================================================
    Render, eventos y arranque
    ========================================================= */
 
@@ -3459,6 +3568,12 @@ const ACCIONES = {
   'equipo-login': () => formEquipoLogin(),
   'foto-del': (el) => { const f = [...(cfg().fotos || [])]; f.splice(+el.dataset.i, 1); guardarConfig({ fotos: f }); render(); },
   'pedir-resena': (el) => pedirResena(db.get('clientes', el.dataset.id)),
+  'reg-ingreso': () => { S.ui.registro = { ...(S.ui.registro || {}), tipo: 'ingreso' }; },
+  'reg-gasto': () => { S.ui.registro = { ...(S.ui.registro || {}), tipo: 'gasto' }; setTimeout(() => $('#g-monto')?.focus(), 80); },
+  'reg-tipo': (el) => { S.ui.registro = { ...(S.ui.registro || {}), tipo: el.dataset.t }; render(); if (el.dataset.t === 'gasto') setTimeout(() => $('#g-monto')?.focus(), 50); },
+  'g-cat': (el) => { S.ui.registro = { ...(S.ui.registro || {}), cat: el.dataset.c }; document.querySelectorAll('[data-act="g-cat"]').forEach((b) => b.classList.toggle('on', b === el)); },
+  'agendar-ir': () => { setTimeout(() => elegirAgendar(), 80); },
+  sis: (el) => guardarSis({ [el.dataset.k]: el.dataset.v }),
   'aj-tab': (el) => { S.ui.ajustes = { tab: el.dataset.t }; render(); },
   'quitar-meta': () => { const m = metaDelMes(mesActual()); if (m) db.remove('metas', m.id); toast('Meta quitada'); render(); },
   'msg-reset': (el) => { const m = { ...(cfg().mensajes || {}) }; delete m[el.dataset.k]; guardarConfig({ mensajes: m }); toast('Texto original restaurado'); render(); },
@@ -3487,6 +3602,7 @@ const CAMBIOS = {
   'dia-chip': (el) => { el.closest('.chip').classList.toggle('on', el.checked); },
   auto: (el) => { guardarConfig({ auto: { ...(cfg().auto || {}), [el.dataset.k]: el.checked } }); toast(el.checked ? 'Activado' : 'Desactivado'); },
   fotos: (el) => agregarFotos(el.files),
+  'sis-color': (el) => guardarSis({ color: el.value }),
   'ag-fecha': (el) => { if (el.value) { S.ui.agenda.fecha = el.value; render(); } },
   modulo: (el) => {
     const m = el.dataset.m; const on = el.checked;
