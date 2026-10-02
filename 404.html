@@ -662,7 +662,7 @@ td.n, th.n { white-space: nowrap; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '13';
+const VERSION = '14';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -2615,7 +2615,28 @@ function claseCaja(o) {
   return out;
 }
 // filas de la hoja, solo de los negocios elegidos si la planilla trae varios
-const datosDe = (h) => (h.negocios ? h.datos.filter((f) => h.negSel.includes(String(f[h.negCol] ?? '').trim())) : h.datos);
+function datosDe(h) {
+  if (h.negocios) return h.datos.filter((f) => h.negSel.includes(String(f[h.negCol] ?? '').trim()));
+  const multi = (S.imp?.hojas || []).filter((x) => x.negocios && x.tipo !== 'ninguno');
+  const excluye = multi.some((x) => x.negSel.length < x.negocios.length);
+  // hoja de clientes sin columna Negocio: solo las clientas que aparecen en las filas del negocio elegido
+  if (h.tipo === 'clientes' && excluye && h.map.nombre >= 0) {
+    const nombres = new Set(multi.flatMap((x) => x.map.cliente >= 0 ? datosDe(x).map((f) => norm(f[x.map.cliente])).filter(Boolean) : []));
+    return h.datos.filter((f) => nombres.has(norm(f[h.map.nombre])));
+  }
+  // resumen con columnas por negocio ("Ingresos ALMAR", "Ingresos Chabela"): usa las del negocio elegido
+  if (h.tipo === 'resumen') {
+    const elegidos = multi.flatMap((x) => x.negSel);
+    const fuente = elegidos.length ? elegidos : [S.negocio?.nombre || ''];
+    const tokens = [...new Set(fuente.flatMap((n) => norm(n).split(' ')).filter((t) => t.length >= 4))];
+    const campos = { ingresos: /ingreso|venta|entr/, gastos: /gasto|egreso|salida/, balance: /balance|resultado|utilidad|ganancia|neto/ };
+    if (tokens.length) for (const [c, re] of Object.entries(campos)) {
+      const i = h.headersN.findIndex((x) => re.test(x) && tokens.some((t) => x.includes(t)));
+      if (i >= 0) h.map[c] = i;
+    }
+  }
+  return h.datos;
+}
 function filaValida(tipo, o) {
   if (tipo === 'resumen') return !!o.mes && (o.ingresos || o.gastos || o.balance);
   if (tipo === 'caja') return !!o.fecha && claseCaja(o).length > 0;
