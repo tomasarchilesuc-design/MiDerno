@@ -513,7 +513,8 @@ th { letter-spacing: .04em; }
 .ac-ico svg.i { display: block; margin: 0; }
 .mov-ico { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); flex: none; }
 .mov-ico svg.i { width: 16px; height: 16px; }
-.mov-ico.in { color: var(--ok); } .mov-ico.out { color: var(--muted); }
+.mov-ico.t-in { color: var(--ok); } .mov-ico.t-out { color: var(--muted); }
+.mov-ico svg.i { display: block; }
 .seg-grande button { padding: 9px 18px; font-size: .95rem; }
 .gasto-rapido { max-width: 560px; gap: 14px; }
 .monto-grande { display: flex; align-items: baseline; gap: 6px; border-bottom: 2px solid var(--line); padding: 6px 0 10px; font-size: 2.6rem; font-weight: 700; }
@@ -610,6 +611,31 @@ th { letter-spacing: .04em; }
 .splash-bar::before { content: ""; position: absolute; top: 0; bottom: 0; width: 40%; border-radius: 99px; background: var(--primary); animation: barra 1.1s cubic-bezier(.65, 0, .35, 1) infinite; }
 
 .version { color: var(--muted); font-size: .75rem; text-align: center; margin: 0; opacity: .7; }
+/* recetas leídas de una planilla */
+.recetas-imp { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.receta-imp { border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; }
+.receta-imp table { width: 100%; } .receta-imp td { padding: 3px 0; border: 0; }
+/* observaciones del cliente */
+.obs { display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 14px; background: var(--surface-2); }
+.obs h3 { font-size: .95rem; margin: 0; }
+.obs-general { margin: 0; white-space: pre-line; font-size: .92rem; }
+.obs-lista { display: flex; flex-direction: column; gap: 8px; border-left: 2px solid var(--line); padding-left: 12px; }
+.obs-item p { margin: 2px 0 0; font-size: .92rem; white-space: pre-line; }
+.obs-nueva { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; } .obs-nueva .in { background: var(--bg); width: 100%; box-sizing: border-box; }
+/* movimientos */
+.rangos { margin-top: -6px; }
+.fechas-caja { gap: 12px; flex-wrap: wrap; } .fechas-caja label { display: flex; flex-direction: column; gap: 4px; } .fechas-caja .in { min-width: 160px; }
+.resumen-caja { display: flex; flex-direction: column; gap: 14px; }
+.rc-titulo { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.rc-nums { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.rc-nums > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.rc-nums b { font-size: clamp(1.15rem, 3.4vw, 1.7rem); letter-spacing: -.03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rc-detalle p { margin: 2px 0; line-height: 1.6; }
+@media (max-width: 520px) { .rc-nums { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .rc-nums > div:last-child { grid-column: 1 / -1; } }
+.dia-mov + .dia-mov { margin-top: 14px; }
+.dia-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 4px 2px 8px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+.mov-fila .icon-btn { opacity: .55; } .mov-fila:hover .icon-btn { opacity: 1; }
+.num.up { color: var(--ok); }
 /* ordenar lo importado */
 .ordenar { display: flex; flex-direction: column; gap: 8px; }
 .ord-fila { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 14px; }
@@ -671,7 +697,7 @@ td.n, th.n { white-space: nowrap; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '15';
+const VERSION = '18';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -744,10 +770,10 @@ const S = {
   negocio: null,     // { id, nombre, rubro, moneda }
   modulos: [],       // ['servicios', ...]
   t: {},             // filas por tabla
-  ui: { caja: { mes: null, tab: 'ventas' }, agenda: { fecha: null, emp: 'todos', vista: 'dia' }, clientes: { q: '', f: 'todos' }, inv: { tab: 'stock' }, prod: { tab: 'recetas' }, cat: { tab: null }, equipo: { mes: null }, vender: { q: '' } },
+  ui: { caja: { mes: null, rango: 'hoy', filtro: 'todos' }, agenda: { fecha: null, emp: 'todos', vista: 'dia' }, clientes: { q: '', f: 'todos' }, inv: { tab: 'stock' }, prod: { tab: 'recetas' }, cat: { tab: null }, equipo: { mes: null }, vender: { q: '' } },
   cart: null,
 };
-function resetUI() { S.cuentasEq = undefined; S.imp = null; S.pub = null; S.eq = null; S.ui.registro = { tipo: 'ingreso' }; Object.assign(S.ui, { inicio: null, caja: { mes: null, tab: 'ventas' }, agenda: { fecha: null, emp: 'todos', vista: 'dia' }, clientes: { q: '', f: 'todos' }, inv: { tab: 'stock' }, prod: { tab: 'recetas' }, cat: { tab: null }, equipo: { mes: null }, vender: { q: '' } }); }
+function resetUI() { S.cuentasEq = undefined; S.imp = null; S.pub = null; S.eq = null; S.ui.registro = { tipo: 'ingreso' }; Object.assign(S.ui, { inicio: null, caja: { mes: null, rango: 'hoy', filtro: 'todos' }, agenda: { fecha: null, emp: 'todos', vista: 'dia' }, clientes: { q: '', f: 'todos' }, inv: { tab: 'stock' }, prod: { tab: 'recetas' }, cat: { tab: null }, equipo: { mes: null }, vender: { q: '' } }); }
 const tiene = (m) => !m || S.modulos.includes(m);
 
 /* ---------- adaptadores de datos ---------- */
@@ -1249,7 +1275,7 @@ function vistaBienvenida() {
       <div>
         <span class="eyebrow-hand">Para quienes anotan todo en un cuaderno</span>
         <h1>Tu cuaderno de negocio, <mark>ahora se ordena solo</mark>.</h1>
-        <p>Las ventas, las horas agendadas, los gastos y el stock que hoy escribes a mano, MiDerno los suma y los ordena por ti. Además te avisa a quién escribirle y qué reponer. Si llevas tus cuentas en Excel, súbelo y empiezas con todo tu historial.</p>
+        <p>Las ventas, las horas agendadas, los egresos y el stock que hoy escribes a mano, MiDerno los suma y los ordena por ti. Además te avisa a quién escribirle y qué reponer. Si llevas tus cuentas en Excel, súbelo y empiezas con todo tu historial.</p>
         <div class="hstack" style="margin-top:22px">
           <button class="btn pri" data-act="${nube ? 'registro' : 'crear'}">Crear mi negocio</button>
           <button class="btn" data-act="ver-ejemplos">Probar un ejemplo</button>
@@ -1258,7 +1284,7 @@ function vistaBienvenida() {
       <div class="notebook" role="img" aria-label="Página de cuaderno con anotaciones a mano; MiDerno pone cada una en su lugar: caja, gastos, agenda, inventario y clientes">
         <div class="nb-date">${esc(fechaLarga(hoy()))}</div>
         <div class="nb-line"><span class="hand">Vendí 2 velas lavanda</span><span class="hand amt">$25.980</span><span class="tag acc">Caja</span></div>
-        <div class="nb-line"><span class="hand">Compré cera, 2 kilos</span><span class="hand amt">$13.000</span><span class="tag">Gastos</span></div>
+        <div class="nb-line"><span class="hand">Compré cera, 2 kilos</span><span class="hand amt">$13.000</span><span class="tag">Egresos</span></div>
         <div class="nb-line"><span class="hand">Paula, manicure jueves 4</span><span class="hand amt">16:00</span><span class="tag">Agenda</span></div>
         <div class="nb-line"><span class="hand">¡Quedan solo 3 frascos!</span><span class="amt"></span><span class="tag warn">Reponer</span></div>
         <div class="nb-line"><span class="hand">Sra. Rosa no viene hace un mes</span><span class="amt"></span><span class="tag">WhatsApp</span></div>
@@ -1486,12 +1512,12 @@ function graficoMeses() {
   const W = 640, Hh = 230, L = 58, B = 26, T = 10, R = 8; const ih = Hh - B - T; const cw = (W - L - R) / 6; const bw = Math.min(26, cw / 3.2);
   const y = (v) => T + ih - (v / top) * ih;
   const corto = (v) => (v >= 1e6 ? (v / 1e6).toLocaleString('es-CL', { maximumFractionDigits: 1 }) + ' M' : v >= 1e3 ? Math.round(v / 1e3) + ' mil' : String(v));
-  let s = `<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Gráfico de ventas y gastos por mes">`;
+  let s = `<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Gráfico de ventas y egresos por mes">`;
   for (let v = 0; v <= top; v += paso) s += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">$${corto(v)}</text>`;
   datos.forEach((d, i) => {
     const cx = L + cw * i + cw / 2; const actual = i === 5;
     s += `<rect x="${cx - bw - 2}" y="${y(d.v)}" width="${bw}" height="${Math.max(0, T + ih - y(d.v))}" rx="4" fill="var(--accent)" opacity="${actual ? 1 : .78}"><title>Ventas ${nombreMes(d.m)}: ${money(d.v)}</title></rect>`;
-    s += `<rect x="${cx + 2}" y="${y(d.g)}" width="${bw}" height="${Math.max(0, T + ih - y(d.g))}" rx="4" fill="var(--gold)" opacity="${actual ? 1 : .78}"><title>Gastos ${nombreMes(d.m)}: ${money(d.g)}</title></rect>`;
+    s += `<rect x="${cx + 2}" y="${y(d.g)}" width="${bw}" height="${Math.max(0, T + ih - y(d.g))}" rx="4" fill="var(--gold)" opacity="${actual ? 1 : .78}"><title>Egresos ${nombreMes(d.m)}: ${money(d.g)}</title></rect>`;
     s += `<text x="${cx}" y="${Hh - 8}" text-anchor="middle" style="${actual ? 'font-weight:700;fill:var(--ink)' : ''}">${nombreMes(d.m, true).replace('.', '')}</text>`;
   });
   return s + '</svg>';
@@ -1577,31 +1603,70 @@ function cobrar() {
   if (autoOn('resena') && v.cliente_id) setTimeout(() => pedirResena(db.get('clientes', v.cliente_id)), 150);
 }
 
-/* ---------- CAJA ---------- */
+/* ---------- MOVIMIENTOS (caja) ---------- */
+// Primero lo de hoy; con un toque se ve ayer, la semana, 15 días, el mes, otro mes o las fechas que quieras
+const RANGOS = [['hoy', 'Hoy'], ['ayer', 'Ayer'], ['semana', 'Esta semana'], ['7d', '7 días'], ['15d', '15 días'], ['mes', 'Este mes'], ['mesant', 'Mes anterior'], ['mesSel', 'Por mes'], ['fechas', 'Elegir fechas']];
+function rangoCaja(ui) {
+  const H = hoy(); const dow = (new Date(H + 'T12:00:00').getDay() + 6) % 7; const finMes = (m) => `${m}-${pad(diasDelMes(m))}`;
+  switch (ui.rango) {
+    case 'ayer': { const a = addDays(H, -1); return [a, a, 'Ayer']; }
+    case 'semana': return [addDays(H, -dow), H, 'Esta semana'];
+    case '7d': return [addDays(H, -6), H, 'Últimos 7 días'];
+    case '15d': return [addDays(H, -14), H, 'Últimos 15 días'];
+    case 'mes': return [mesActual() + '-01', finMes(mesActual()), nombreMes(mesActual())];
+    case 'mesant': { const m = addMonths(mesActual(), -1); return [m + '-01', finMes(m), nombreMes(m)]; }
+    case 'mesSel': return [ui.mes + '-01', finMes(ui.mes), nombreMes(ui.mes)];
+    case 'fechas': { const d = ui.desde || addDays(H, -6), h = ui.hasta || H; return d <= h ? [d, h, `${fechaCorta(d)} al ${fechaCorta(h)}`] : [h, d, `${fechaCorta(h)} al ${fechaCorta(d)}`]; }
+    default: return [H, H, 'Hoy'];
+  }
+}
+const nombreDia = (f) => f === hoy() ? 'Hoy' : f === addDays(hoy(), -1) ? 'Ayer' : fechaLarga(f).replace(/^./, (c) => c.toUpperCase());
 function vistaCaja() {
-  const ui = S.ui.caja; ui.mes ||= mesActual();
-  const vs = ventasDelMes(ui.mes).sort((a, b) => b.fecha.localeCompare(a.fecha));
-  const gs = gastosDelMes(ui.mes).sort((a, b) => b.fecha.localeCompare(a.fecha));
-  const ing = sum(vs, (v) => Number(v.total)); const gas = sum(gs, (g) => Number(g.monto));
-  const com = tiene('servicios') ? sum(db.all('comisiones').filter((c) => mesDe(c.fecha) === ui.mes), (c) => Number(c.monto)) : 0;
+  const ui = S.ui.caja; ui.mes ||= mesActual(); ui.rango ||= 'hoy'; ui.filtro ||= 'todos';
+  const [desde, hasta, titulo] = rangoCaja(ui); const enRango = (f) => f >= desde && f <= hasta;
   const cli = new Map(db.all('clientes').map((c) => [c.id, c.nombre]));
-  const porCat = catGastos().map((k) => [k, sum(gs.filter((g) => g.categoria === k), (g) => Number(g.monto))]).filter(([, v]) => v > 0);
-  return `${head(t_('movimientos'), '', monthNav('caja-mes', ui.mes))}
-  ${tarjetaBalance(ui.mes)}
-  ${tablaMeses(ui.mes < addMonths(mesActual(), -11) ? addMonths(ui.mes, 6) : mesActual(), ui.mes)}
-  <div class="card chart"><div class="card-head"><h2>${t_('ultimos_6')}</h2><div class="legend"><span><i style="background:var(--accent)"></i>${t_('ingresos')}</span><span><i style="background:var(--gold)"></i>${t_('gastos')}</span></div></div>${graficoMeses()}</div>
-  <div class="card">
-    <div class="card-head"><div class="seg"><button data-act="caja-tab" data-tab="ventas" class="${ui.tab === 'ventas' ? 'on' : ''}">Ventas</button><button data-act="caja-tab" data-tab="gastos" class="${ui.tab === 'gastos' ? 'on' : ''}">Gastos</button></div>
-      <p>${ui.tab === 'ventas' ? Object.keys(metodos()).map((k) => `${metodoLabel(k)} ${money(sum(vs.filter((v) => v.metodo_pago === k), (v) => Number(v.total)))}`).join(' · ') : porCat.map(([k, v]) => `${k} ${money(v)}`).join(' · ')}</p></div>
-    <div class="tbl-wrap">${ui.tab === 'ventas'
-      ? (vs.length ? `<table><thead><tr><th>Fecha</th><th>Detalle</th><th>Cliente</th><th>Pago</th><th class="n">Total</th><th></th></tr></thead><tbody>${vs.map((v) => `<tr><td class="num">${fechaCorta(v.fecha)}</td><td>${esc(itemsDeVenta(v.id).map((i) => (i.cantidad > 1 ? qtyFmt(i.cantidad) + '× ' : '') + i.nombre).join(', '))}${v.canal === 'online' ? ' <span class="pill acc">Online</span>' : ''}</td><td>${esc(cli.get(v.cliente_id) || '—')}</td><td>${metodoLabel(v.metodo_pago) || ''}</td><td class="n">${money(v.total)}</td><td class="n"><button class="btn sm ghost danger" data-act="del-venta" data-id="${v.id}" aria-label="Eliminar venta">${icon('trash')}</button></td></tr>`).join('')}</tbody></table>` : '<div class="empty">No hay ventas en este mes.</div>')
-      : (gs.length ? `<table><thead><tr><th>Fecha</th><th>Categoría</th><th>Descripción</th><th class="n">Monto</th><th></th></tr></thead><tbody>${gs.map((g) => `<tr><td class="num">${fechaCorta(g.fecha)}</td><td><span class="pill">${esc(g.categoria)}</span></td><td>${esc(g.descripcion || '')}</td><td class="n">${money(g.monto)}</td><td class="n" style="white-space:nowrap"><button class="btn sm ghost" data-act="gasto" data-id="${g.id}" aria-label="Editar gasto">${icon('edit')}</button><button class="btn sm ghost danger" data-act="del-gasto" data-id="${g.id}" aria-label="Eliminar gasto">${icon('trash')}</button></td></tr>`).join('')}</tbody></table>` : '<div class="empty">No hay gastos en este mes.</div>')}
+  const vs = db.all('ventas').filter((v) => enRango(v.fecha)); const gs = db.all('gastos').filter((g) => enRango(g.fecha));
+  const coms = tiene('servicios') ? db.all('comisiones').filter((c) => enRango(c.fecha)) : [];
+  const ing = sum(vs, (v) => Number(v.total)); const egr = sum(gs, (g) => Number(g.monto)); const com = sum(coms, (c) => Number(c.monto));
+  const res = ing - egr - com;
+  const movs = [
+    ...(ui.filtro === 'egresos' ? [] : vs.map((v) => ({ f: v.fecha, tipo: 'in', id: v.id, monto: Number(v.total), t: itemsDeVenta(v.id).map((i) => (i.cantidad > 1 ? qtyFmt(i.cantidad) + '× ' : '') + i.nombre).join(', ') || 'Venta', s: [cli.get(v.cliente_id), metodoLabel(v.metodo_pago)].filter(Boolean).join(' · ') }))),
+    ...(ui.filtro === 'ingresos' ? [] : gs.map((g) => ({ f: g.fecha, tipo: 'out', id: g.id, monto: Number(g.monto), t: g.descripcion || g.categoria, s: g.categoria }))),
+  ].sort((a, b) => b.f.localeCompare(a.f));
+  const dias = []; for (const m of movs) { const d = dias.at(-1); if (d && d.f === m.f) d.items.push(m); else dias.push({ f: m.f, items: [m] }); }
+  const porMetodo = Object.keys(metodos()).map((k) => [metodoLabel(k), sum(vs.filter((v) => v.metodo_pago === k), (v) => Number(v.total))]).filter(([, v]) => v > 0);
+  const porCat = [...new Set(gs.map((g) => g.categoria))].map((k) => [k, sum(gs.filter((g) => g.categoria === k), (g) => Number(g.monto))]).sort((a, b) => b[1] - a[1]);
+  const esMes = ['mes', 'mesant', 'mesSel'].includes(ui.rango); const mesVista = ui.rango === 'mes' ? mesActual() : ui.rango === 'mesant' ? addMonths(mesActual(), -1) : ui.mes;
+  const fila = (m) => `<div class="row mov-fila"><span class="mov-ico t-${m.tipo}">${icon(m.tipo === 'in' ? 'plus' : 'minus')}</span>
+    <div class="grow"><div class="t" style="font-weight:500">${esc(m.t)}</div><div class="s">${esc(m.s || '')}</div></div>
+    <b class="num ${m.tipo === 'in' ? 'up' : ''}" style="white-space:nowrap">${m.tipo === 'in' ? '+' : '−'}${money(m.monto)}</b>
+    ${m.tipo === 'out' ? `<button class="btn sm ghost icon-btn" data-act="gasto" data-id="${m.id}" aria-label="Editar egreso">${icon('edit')}</button><button class="btn sm ghost icon-btn" data-act="del-gasto" data-id="${m.id}" aria-label="Eliminar egreso">${icon('trash')}</button>`
+      : `<button class="btn sm ghost icon-btn" data-act="del-venta" data-id="${m.id}" aria-label="Eliminar ingreso">${icon('trash')}</button>`}</div>`;
+  return `${head(t_('movimientos'), '', `<a class="btn" href="#vender" data-act="reg-gasto">${icon('minus')}Egreso</a><a class="btn pri" href="#vender" data-act="reg-ingreso">${icon('plus')}Ingreso</a>`)}
+  <div class="chips scroll rangos">${RANGOS.map(([k, l]) => `<button class="chip ${ui.rango === k ? 'on' : ''}" data-act="caja-rango" data-r="${k}">${l}</button>`).join('')}</div>
+  ${ui.rango === 'fechas' ? `<div class="hstack fechas-caja"><label class="small muted">Desde <input class="in" type="date" value="${desde}" data-change="caja-desde"></label><label class="small muted">Hasta <input class="in" type="date" value="${hasta}" data-change="caja-hasta"></label></div>` : ''}
+  ${ui.rango === 'mesSel' ? `<div>${monthNav('caja-mes', ui.mes)}</div>` : ''}
+  <div class="card resumen-caja">
+    <div class="rc-titulo"><h2>${esc(titulo.replace(/^./, (c) => c.toUpperCase()))}</h2>${desde !== hasta && !esMes ? `<span class="small muted">${fechaCorta(desde)} – ${fechaCorta(hasta)}</span>` : ''}</div>
+    <div class="rc-nums">
+      <div><span class="muted small">Entró</span><b class="num up">${money(ing)}</b><small class="muted">${vs.length} ${vs.length === 1 ? 'ingreso' : 'ingresos'}</small></div>
+      <div><span class="muted small">Salió</span><b class="num">${money(egr + com)}</b><small class="muted">${gs.length} ${gs.length === 1 ? 'egreso' : 'egresos'}${com ? ' · comisiones ' + money(com) : ''}</small></div>
+      <div><span class="muted small">Resultado</span><b class="num ${res < 0 ? 'down' : ''}">${money(res)}</b><small class="muted">${res < 0 ? 'salió más de lo que entró' : 'lo que queda'}</small></div>
     </div>
-  </div>`;
+    ${porMetodo.length || porCat.length ? `<div class="rc-detalle">${porMetodo.length ? `<p class="small"><span class="muted">Ingresos por medio de pago:</span> ${porMetodo.map(([k, v]) => `${esc(k)} <b>${money(v)}</b>`).join(' · ')}</p>` : ''}${porCat.length ? `<p class="small"><span class="muted">Egresos por categoría:</span> ${porCat.map(([k, v]) => `${esc(k)} <b>${money(v)}</b>`).join(' · ')}</p>` : ''}</div>` : ''}
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="seg">${[['todos', 'Todos', vs.length + gs.length], ['ingresos', 'Ingresos', vs.length], ['egresos', 'Egresos', gs.length]].map(([k, l, n]) => `<button data-act="caja-filtro" data-f="${k}" class="${ui.filtro === k ? 'on' : ''}">${l} <span class="muted">${n}</span></button>`).join('')}</div></div>
+    ${dias.length ? dias.map((d) => { const di = sum(d.items.filter((m) => m.tipo === 'in'), (m) => m.monto), de = sum(d.items.filter((m) => m.tipo === 'out'), (m) => m.monto);
+      return `<div class="dia-mov"><div class="dia-head"><b>${esc(nombreDia(d.f))}</b><span class="small muted">${di ? `<span class="up">+${money(di)}</span>` : ''}${di && de ? ' · ' : ''}${de ? `−${money(de)}` : ''}</span></div><div class="list">${d.items.map(fila).join('')}</div></div>`; }).join('')
+      : `<div class="empty">${ui.rango === 'hoy' ? 'Hoy todavía no hay movimientos. Registra un ingreso o un egreso y aparece aquí al tiro.' : 'No hay movimientos en estas fechas.'}</div>`}
+  </div>
+  ${esMes ? `<div class="card chart"><div class="card-head"><h2>${t_('ultimos_6')}</h2><div class="legend"><span><i style="background:var(--accent)"></i>${t_('ingresos')}</span><span><i style="background:var(--gold)"></i>${t_('gastos')}</span></div></div>${graficoMeses()}</div>` : ''}
+  ${tablaMeses(esMes && mesVista < addMonths(mesActual(), -11) ? addMonths(mesVista, 6) : mesActual(), esMes ? mesVista : null)}`;
 }
 function formGasto(id) {
   const g = id ? db.get('gastos', id) : { fecha: hoy(), categoria: 'Insumos', monto: '', descripcion: '' };
-  abrirSheet(id ? 'Editar gasto' : 'Registrar gasto', `<div class="form">
+  abrirSheet(id ? 'Editar egreso' : 'Registrar egreso', `<div class="form">
     <div class="form-row">${field('Monto', input('monto', g.monto, 'inputmode="numeric" required placeholder="0"'))}${field('Fecha', input('fecha', g.fecha, 'type="date" required'))}</div>
     ${field('Categoría', `<select class="in" name="categoria" id="f-categoria">${catGastos().map((c) => opt(c, c, g.categoria)).join('')}</select>`)}
     ${field('Descripción', input('descripcion', g.descripcion, 'placeholder="Ej: Compra de esmaltes"'))}</div>`, {
@@ -1609,7 +1674,7 @@ function formGasto(id) {
       const monto = num(d.monto); if (monto <= 0) return toast('Escribe un monto mayor a cero', true);
       const row = { fecha: d.fecha || hoy(), categoria: d.categoria, monto, descripcion: d.descripcion.trim() };
       id ? db.update('gastos', id, row) : db.insert('gastos', row);
-      cerrarSheet(); toast(id ? 'Gasto actualizado' : 'Gasto registrado'); render();
+      cerrarSheet(); toast(id ? 'Egreso actualizado' : 'Egreso registrado'); render();
     },
   });
 }
@@ -1648,6 +1713,18 @@ const primerNombre = (n) => String(n).split(' ')[0];
 const msgReactivar = (c, dias) => msg('reactivar', { nombre: primerNombre(c.nombre), dias });
 const msgCumple = (c) => msg('cumple', { nombre: primerNombre(c.nombre) });
 
+// Observaciones del cliente: texto general + notas con fecha ("[2026-10-03] texto"), guardadas en el mismo campo
+function partirNotas(n) {
+  const general = [], fechadas = [];
+  for (const l of String(n || '').split('\n')) { const m = l.match(/^\[(\d{4}-\d{2}-\d{2})\] (.*)$/); if (m) fechadas.push({ f: m[1], t: m[2] }); else general.push(l); }
+  return { general: general.join('\n').trim(), fechadas: fechadas.sort((a, b) => b.f.localeCompare(a.f)) };
+}
+const unirNotas = (general, fechadas) => [general, ...fechadas.slice().sort((a, b) => a.f.localeCompare(b.f)).map((x) => `[${x.f}] ${x.t.replace(/\n/g, ' ')}`)].filter(Boolean).join('\n');
+function agregarObservacion(id) {
+  const c = db.get('clientes', id); const t = ($('#obs-texto')?.value || '').trim(); if (!c) return; if (!t) return toast('Escribe la observación', true);
+  const o = partirNotas(c.notas); db.update('clientes', id, { notas: unirNotas(o.general, [...o.fechadas, { f: hoy(), t }]) });
+  toast('Observación guardada'); verCliente(id);
+}
 function verCliente(id) {
   const r = resumenClientes().find((x) => x.c.id === id); if (!r) return; const c = r.c;
   const vs = db.all('ventas').filter((v) => v.cliente_id === id).sort((a, b) => b.fecha.localeCompare(a.fecha)).slice(0, 8);
@@ -1656,7 +1733,10 @@ function verCliente(id) {
       <div class="kpi"><span class="lbl">Compras</span><span class="val" style="font-size:1.15rem">${r.visitas}</span></div>
       <div class="kpi"><span class="lbl">Última vez</span><span class="val" style="font-size:1.15rem">${r.dias == null ? '—' : r.dias === 0 ? 'Hoy' : `Hace ${r.dias} d`}</span></div></div>
     <div class="small">${c.telefono ? `Teléfono: <span class="num">${esc(c.telefono)}</span>` : 'Sin teléfono'}${c.cumpleanos ? ` · Cumpleaños: ${fechaCorta('2000' + c.cumpleanos.slice(4))}` : ''}</div>
-    ${c.notas ? `<p class="small muted">${esc(c.notas)}</p>` : ''}
+    ${(() => { const o = partirNotas(c.notas); return `<div class="obs"><h3>Observaciones</h3>${o.general ? `<p class="obs-general">${esc(o.general)}</p>` : ''}
+      ${o.fechadas.length ? `<div class="obs-lista">${o.fechadas.map((x) => `<div class="obs-item"><span class="small muted">${fechaCorta(x.f)} ${x.f.slice(0, 4)}</span><p>${esc(x.t)}</p></div>`).join('')}</div>` : ''}
+      ${!o.general && !o.fechadas.length ? '<p class="small muted" style="margin:0">Sin observaciones todavía.</p>' : ''}
+      <div class="obs-nueva"><textarea class="in" id="obs-texto" rows="2" placeholder="Ej: piel sensible, alérgica al látex, prefiere tonos nude…"></textarea><button type="button" class="btn sm" data-act="obs-add" data-id="${c.id}">${icon('plus')}Agregar observación</button></div></div>`; })()}
     <div><h3 style="margin-bottom:6px">Últimas compras</h3><div class="list">${vs.length ? vs.map((v) => `<div class="row"><div class="grow"><div class="t" style="font-weight:500">${esc(itemsDeVenta(v.id).map((i) => i.nombre).join(', '))}</div><div class="s">${fechaCorta(v.fecha)} · ${metodoLabel(v.metodo_pago) || ''}</div></div><div class="r">${money(v.total)}</div></div>`).join('') : '<div class="empty">Sin compras registradas.</div>'}</div></div>`,
   { pie: `<div class="sheet-foot" style="justify-content:space-between"><button type="button" class="btn danger" data-act="del-cliente" data-id="${c.id}">${icon('trash')}Eliminar</button><div class="hstack">${c.telefono && cfg().resenas_url ? `<button type="button" class="btn" data-act="pedir-resena" data-id="${c.id}">Pedir reseña</button>` : ''}${c.telefono ? `<a class="btn" target="_blank" rel="noopener" href="${waLink(c.telefono, r.dias > DIAS_REACTIVAR ? msgReactivar(c, r.dias) : msg('saludo', { nombre: primerNombre(c.nombre) }))}">${icon('chat')}WhatsApp</a>` : ''}<button type="button" class="btn pri" data-act="cliente" data-id="${c.id}">${icon('edit')}Editar</button></div></div>` });
 }
@@ -1665,10 +1745,10 @@ function formCliente(id, alGuardar) {
   abrirSheet(id ? 'Editar cliente' : 'Nuevo cliente', `<div class="form">
     ${field('Nombre', input('nombre', c.nombre, 'required autocomplete="off"'))}
     <div class="form-row">${field('Teléfono (WhatsApp)', telInput('telefono', c.telefono))}${field('Fecha de nacimiento', input('cumpleanos', c.cumpleanos || '', 'type="date"'), 'Opcional')}</div>
-    ${field('Notas', `<textarea class="in" name="notas" id="f-notas" rows="2">${esc(c.notas || '')}</textarea>`)}</div>`, {
+    ${field('Observaciones', `<textarea class="in" name="notas" id="f-notas" rows="3" placeholder="Alergias, tipo de piel, tratamientos, preferencias…">${esc(partirNotas(c.notas).general)}</textarea>`, 'Solo las ve tu negocio. En la ficha del cliente puedes ir sumando observaciones con fecha.')}</div>`, {
     submit: (d) => {
       if (!d.nombre.trim()) return toast('Escribe el nombre', true);
-      const row = { nombre: d.nombre.trim(), telefono: d.telefono.trim(), cumpleanos: d.cumpleanos || null, notas: d.notas.trim() };
+      const row = { nombre: d.nombre.trim(), telefono: d.telefono.trim(), cumpleanos: d.cumpleanos || null, notas: unirNotas(d.notas.trim(), partirNotas(c.notas).fechadas) };
       const fin = (r, msg) => { cerrarSheet(); toast(msg); alGuardar ? alGuardar(r) : render(); };
       const guardar = () => fin(id ? db.update('clientes', id, row) : db.insert('clientes', { ...row, creado_en: hoy() }), id ? 'Cliente actualizado' : 'Cliente agregado');
       const gemelo = buscarGemelo(id, row.nombre, row.telefono);
@@ -1802,7 +1882,7 @@ function formIngreso(prodId) {
     ${field('Precio de venta', `<input class="in" id="f-pv" name="pv" inputmode="numeric" value="${esc(p0.precio_venta || '')}" placeholder="¿A cuánto lo vendes?">`)}
     <div class="margen-vivo" id="ing-margen"></div>
     ${field('Fecha', input('fecha', hoy(), 'type="date"'))}
-    <label class="hstack"><input type="checkbox" name="gasto" checked style="width:18px;height:18px;accent-color:var(--accent)"> Registrar el total pagado como gasto en la caja</label>
+    <label class="hstack"><input type="checkbox" name="gasto" checked style="width:18px;height:18px;accent-color:var(--accent)"> Registrar el total pagado como egreso en la caja</label>
     ${field('Nota', input('nota', '', 'placeholder="Ej: Factura 1234, llegada desde bodega"'))}</div>`, {
     submit: (d) => {
       const { cant, total, unit } = leerCompra(d); if (cant <= 0) return toast('Escribe cuántas unidades llegaron', true);
@@ -1883,7 +1963,7 @@ function formCompraInsumo(id) {
   const i = db.get('insumos', id);
   abrirSheet('Compra de ' + esc(i.nombre), `<div class="form">${camposCompra(i.unidad, i.costo_unitario)}
     ${field('Fecha', input('fecha', hoy(), 'type="date"'))}
-    <label class="hstack"><input type="checkbox" name="gasto" checked style="width:18px;height:18px;accent-color:var(--accent)"> Registrar el total pagado como gasto en la caja</label></div>`, {
+    <label class="hstack"><input type="checkbox" name="gasto" checked style="width:18px;height:18px;accent-color:var(--accent)"> Registrar el total pagado como egreso en la caja</label></div>`, {
     submit: (d) => {
       const { cant, total, unit } = leerCompra(d); if (!(cant > 0)) return toast('Escribe la cantidad que llegó', true);
       const fecha = d.fecha || hoy();
@@ -2331,7 +2411,7 @@ function eliminarEmpleado(id) {
    y deja revisar y corregir antes de guardar.
    ========================================================= */
 
-const norm = (s) => String(s ?? '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
+const norm = (s) => String(s ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
 
 const IMP = {
   clientes: { label: 'Clientes', pistas: ['client', 'contact', 'agenda'], campos: {
@@ -2371,10 +2451,10 @@ const IMP = {
   resumen: { label: 'Resumen por mes (balance)', pistas: ['resumen', 'balance', 'mensual', 'consolidado', 'totales', 'dashboard', 'anual', 'estado de resultado'], campos: {
     mes: { label: 'Mes', req: true, tipo: 'mes', syn: ['mes', 'meses', 'periodo', 'month', 'fecha'] },
     ingresos: { label: 'Ingresos', tipo: 'num', syn: ['ingresos', 'ingreso', 'ventas', 'venta', 'entradas', 'total ingresos', 'total ventas'] },
-    gastos: { label: 'Gastos', tipo: 'num', syn: ['gastos', 'gasto', 'egresos', 'egreso', 'salidas', 'total gastos', 'costos'] },
+    gastos: { label: 'Egresos', tipo: 'num', syn: ['gastos', 'gasto', 'egresos', 'egreso', 'salidas', 'total gastos', 'costos'] },
     balance: { label: 'Balance', tipo: 'num', syn: ['balance', 'resultado', 'utilidad', 'ganancia', 'saldo', 'neto', 'diferencia', 'total'] },
   } },
-  caja: { label: 'Caja: ventas y gastos juntos', pistas: ['caja', 'movimiento', 'libro', 'registro', 'flujo', 'cuentas', 'balance', 'contabilidad'], campos: {
+  caja: { label: 'Caja: ventas y egresos juntos', pistas: ['caja', 'movimiento', 'libro', 'registro', 'flujo', 'cuentas', 'balance', 'contabilidad'], campos: {
     fecha: { label: 'Fecha', req: true, tipo: 'fecha', syn: ['fecha', 'dia'] },
     detalle: { label: 'Detalle', syn: ['detalle', 'descripcion', 'concepto', 'glosa', 'item', 'producto', 'servicio'] },
     ingreso: { label: 'Entró (ventas)', tipo: 'num', syn: ['ingreso', 'ingresos', 'entrada', 'entradas', 'venta', 'ventas', 'cobro', 'cobros', 'haber'] },
@@ -2385,7 +2465,7 @@ const IMP = {
     metodo_pago: { label: 'Medio de pago', syn: ['medio de pago', 'forma de pago', 'metodo de pago', 'medio pago'] },
     cliente: { label: 'Cliente', syn: ['cliente', 'clienta'] },
   } },
-  gastos: { label: 'Gastos', pistas: ['gasto', 'egreso', 'compras', 'pagos'], campos: {
+  gastos: { label: 'Egresos', pistas: ['gasto', 'egreso', 'compras', 'pagos'], campos: {
     fecha: { label: 'Fecha', req: true, tipo: 'fecha', syn: ['fecha', 'dia'] },
     monto: { label: 'Monto', req: true, tipo: 'num', syn: ['monto', 'total', 'valor', 'importe', 'gasto', 'egreso', 'costo'] },
     categoria: { label: 'Categoría', syn: ['categoria', 'tipo', 'rubro', 'clasificacion', 'tipo de gasto'] },
@@ -2543,20 +2623,22 @@ function analizarHoja(nombre, filas) {
     if (tipo === 'ventas' && headers.some((h) => /categoria|proveedor|gasto|egreso/.test(h))) score -= 3;
     if (tipo === 'gastos' && headers.some((h) => /cliente|producto|servicio/.test(h))) score -= 3;
     if (tipo === 'resumen') {
-      // un resumen tiene una fila por mes (sin días repetidos) y totales de ingresos, gastos o balance
+      // un resumen tiene una fila por mes (sin días repetidos) y totales de ingresos, egresos o balance
       const meses = datos.map((f) => parseMes(f[map.mes])).filter(Boolean); const unicos = new Set(meses);
       const conTotales = map.ingresos >= 0 || map.gastos >= 0 || map.balance >= 0;
       const pareceDia = datos.some((f) => { const r = String(f[map.mes] ?? ''); return /^\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}/.test(r) || (typeof f[map.mes] === 'number' && parseFecha(f[map.mes])?.slice(8) !== '01'); });
       score += conTotales && meses.length >= 1 && meses.length >= datos.length * 0.5 && unicos.size === meses.length && meses.length <= 36 && !pareceDia ? 14 : -20;
     }
     if (tipo === 'caja') {
-      // es "caja" si trae columnas de entrada y salida, o monto + tipo, o montos negativos para los gastos
+      // es "caja" si trae columnas de entrada y salida, o monto + tipo, o montos negativos para los egresos
       const negativos = map.monto >= 0 && datos.some((f) => (parseNumero(f[map.monto]) || 0) < 0);
       score += (map.ingreso >= 0 && map.egreso >= 0) || (map.tipo >= 0 && map.monto >= 0) || negativos ? 10 : -8;
     }
     if (score > mejor.total) mejor = { tipo, total: score, map };
   }
   if (mejor.total < 4) mejor.tipo = 'ninguno';
+  // planilla "a mano": recetas en bloques (y listas sin fecha)
+  if (mejor.tipo === 'ninguno' || mejor.total < 12) { const b = leerBloques(filas); if (b.recetas.length) return { nombre, headers: [], headersN: [], datos: [], tipo: 'bloques', map: {}, ...b, listasSi: false, listasFecha: hoy() }; }
   const hoja = { nombre, headers: (filas[hr] || []).map((h) => String(h ?? '').trim()), headersN: headers, datos, tipo: mejor.tipo, map: mejor.tipo === 'ninguno' ? {} : mejor.map };
   // planillas con varios negocios o locales en una columna: se elige cuál importar
   const nc = headers.findIndex((x) => /^(negocio|local|sucursal|tienda|empresa|marca|unidad de negocio)$/.test(x));
@@ -2591,7 +2673,7 @@ function claseFila(tipo, o) {
   if (tipo === 'ventas') return [{ clase: o.total < 0 || (pareceGasto(o) && !o.cliente && !buscarEnCatalogo(det)) ? 'gasto' : 'venta', monto: Math.abs(o.total) }];
   return [{ clase: o.monto > 0 && pareceIngreso(o) && !pareceGasto(o) ? 'venta' : 'gasto', monto: Math.abs(o.monto) }];
 }
-// Decide si cada fila de una hoja de caja es venta, gasto o ambas
+// Decide si cada fila de una hoja de caja es venta, egreso o ambas
 const GASTO_RE = /arriendo|alquiler|\bluz\b|\bagua\b|\bgas\b|internet|telefon|compra|compre|insumo|material|proveedor|sueldo|remunera|honorario|impuesto|\biva\b|patente|contador|publicidad|anuncio|\bads\b|flete|envio|despacho|bencina|combustible|transporte|mantencion|reparacion|cuota|credito|prestamo|retiro|gasto|egreso|salida|pago de cuenta|pago luz|pago agua|factura recibida|distribuidora|mayorista/;
 const INGRESO_RE = /\bventa|vendi|ingreso|cobro|abono|entrada|boleta|servicio|atencion|sesion|cliente/;
 const textoFila = (o) => norm([o.detalle, o.descripcion, o.categoria, o.tipo].filter(Boolean).join(' '));
@@ -2614,7 +2696,7 @@ function clienteEnDetalle(det, item) {
 }
 const pareceGasto = (o) => GASTO_RE.test(textoFila(o)) || (!!o.categoria && catGastos().some((c) => norm(c) === norm(o.categoria)));
 const pareceIngreso = (o) => !!o.cliente || INGRESO_RE.test(textoFila(o)) || !!buscarEnCatalogo(o.detalle || o.descripcion);
-// Decide si cada fila de una hoja de caja es venta, gasto o ambas
+// Decide si cada fila de una hoja de caja es venta, egreso o ambas
 function claseCaja(o) {
   const out = []; const ing = Math.abs(o.ingreso || 0), egr = Math.abs(o.egreso || 0);
   if (ing > 0) out.push({ clase: 'venta', monto: ing });
@@ -2622,13 +2704,13 @@ function claseCaja(o) {
   // una atención pagada con giftcard viene con monto 0: igual cuenta como visita de la clienta
   if (!out.length && o.monto === 0 && o.cliente && /venta|ingreso|servicio/.test(norm(o.tipo + ' ' + (o.categoria || '')))) out.push({ clase: 'venta', monto: 0 });
   if (!out.length && o.monto) {
-    const t = norm(o.tipo); let gasto;
-    if (/gasto|egreso|salida|compra|pago|retiro|cargo/.test(t)) gasto = true;
-    else if (/venta|ingreso|entrada|cobro|abono/.test(t)) gasto = false;
-    else if (o.monto < 0) gasto = true;
-    else if (o.cliente || buscarEnCatalogo(o.detalle)) gasto = false;
-    else gasto = pareceGasto(o) && !INGRESO_RE.test(textoFila(o));
-    out.push({ clase: gasto ? 'gasto' : 'venta', monto: Math.abs(o.monto) });
+    const t = norm(o.tipo); let egreso;
+    if (/gasto|egreso|salida|compra|pago|retiro|cargo/.test(t)) egreso = true;
+    else if (/venta|ingreso|entrada|cobro|abono/.test(t)) egreso = false;
+    else if (o.monto < 0) egreso = true;
+    else if (o.cliente || buscarEnCatalogo(o.detalle)) egreso = false;
+    else egreso = pareceGasto(o) && !INGRESO_RE.test(textoFila(o));
+    out.push({ clase: egreso ? 'gasto' : 'venta', monto: Math.abs(o.monto) });
   }
   return out;
 }
@@ -2658,7 +2740,7 @@ function datosDe(h) {
 function filaValida(tipo, o) {
   if (tipo === 'resumen') return !!o.mes && (o.ingresos || o.gastos || o.balance);
   if (tipo === 'caja') return !!o.fecha && claseCaja(o).length > 0;
-  const neg = tipo === 'ventas' || tipo === 'gastos'; // en ventas y gastos un monto negativo también sirve (se ordena solo)
+  const neg = tipo === 'ventas' || tipo === 'gastos'; // en ventas y egresos un monto negativo también sirve (se ordena solo)
   return Object.entries(IMP[tipo].campos).every(([f, d]) => !d.req || (d.tipo === 'num' ? o[f] != null && (neg ? o[f] !== 0 : o[f] > 0) : !!o[f]));
 }
 
@@ -2667,8 +2749,8 @@ function vistaImportar() {
   const imp = S.imp;
   const ejemplos = `<div class="tbl-wrap"><table><thead><tr><th>Si tu hoja tiene columnas como…</th><th>La anotamos en</th></tr></thead><tbody>
     <tr><td>Fecha · Producto · Cantidad · Total · Cliente · Forma de pago</td><td><span class="pill acc">Ventas</span></td></tr>
-    <tr><td>Fecha · Monto · Categoría · Detalle o proveedor</td><td><span class="pill acc">Gastos</span></td></tr>
-    <tr><td>Todo junto: Fecha · Detalle · Ingreso · Egreso (o Monto + Tipo, o gastos con signo menos)</td><td><span class="pill acc">Caja: ventas y gastos</span></td></tr>
+    <tr><td>Fecha · Monto · Categoría · Detalle o proveedor</td><td><span class="pill acc">Egresos</span></td></tr>
+    <tr><td>Todo junto: Fecha · Detalle · Ingreso · Egreso (o Monto + Tipo, o egresos con signo menos)</td><td><span class="pill acc">Caja: ventas y egresos</span></td></tr>
     <tr><td>Nombre · Teléfono o WhatsApp · Cumpleaños</td><td><span class="pill acc">Clientes</span></td></tr>
     <tr><td>Producto · Precio · Costo · Stock · Código</td><td><span class="pill acc">Productos</span></td></tr>
     <tr><td>Servicio o tratamiento · Precio · Duración</td><td><span class="pill acc">Servicios</span></td></tr>
@@ -2679,7 +2761,7 @@ function vistaImportar() {
       <label class="drop" id="imp-drop" for="imp-file">
         <input type="file" id="imp-file" accept=".xlsx,.csv,.txt" data-change="imp-file" hidden>
         ${icon('upload')}<b>Sube tu Excel o CSV</b>
-        <span class="muted small">Toca aquí o arrastra el archivo. Puede tener varias hojas: ventas, clientes, productos, gastos…</span>
+        <span class="muted small">Toca aquí o arrastra el archivo. Puede tener varias hojas: ventas, clientes, productos, egresos…</span>
         <span class="btn pri" style="margin-top:6px">Elegir archivo</span>
       </label>
       <div class="card"><div class="card-head"><h2>Cómo lo entendemos</h2></div>
@@ -2693,7 +2775,7 @@ function vistaImportar() {
       <div class="list">${r.lineas.map((l) => `<div class="row"><span class="sev ok" style="align-self:center;height:22px"></span><div class="grow"><div class="t">${esc(l)}</div></div></div>`).join('')}</div>
       ${r.avisos.length ? `<div class="banner">${r.avisos.map(esc).join('<br>')}</div>` : ''}
       ${r.cmp?.length ? `<h2 style="margin-top:6px">Tu resumen vs. MiDerno</h2><p class="small muted">Comparamos los totales de tu pestaña de resumen con la suma del detalle. Si un mes dice "Revisar", tu resumen y tus filas no suman lo mismo en el Excel.</p>
-        <div class="tbl-wrap"><table><thead><tr><th>Mes</th><th class="n">Ingresos</th><th class="n">Gastos</th><th class="n">Balance</th><th></th></tr></thead><tbody>${r.cmp.map((c) => `<tr><td>${esc(nombreMes(c.mes))}</td>
+        <div class="tbl-wrap"><table><thead><tr><th>Mes</th><th class="n">Ingresos</th><th class="n">Egresos</th><th class="n">Balance</th><th></th></tr></thead><tbody>${r.cmp.map((c) => `<tr><td>${esc(nombreMes(c.mes))}</td>
           <td class="n">${money(c.ingM)}${c.ing != null && Math.round(c.ing) !== Math.round(c.ingM) ? `<div class="small muted">Excel: ${money(c.ing)}</div>` : ''}</td>
           <td class="n">${money(c.gasM)}${c.gas != null && Math.round(c.gas) !== Math.round(c.gasM) ? `<div class="small muted">Excel: ${money(c.gas)}</div>` : ''}</td>
           <td class="n"><b>${money(c.balM)}</b>${c.bal != null && Math.round(c.bal) !== Math.round(c.balM) ? `<div class="small muted">Excel: ${money(c.bal)}</div>` : ''}</td>
@@ -2701,9 +2783,18 @@ function vistaImportar() {
       ${conceptosLibres().length ? `<div class="banner" style="flex-wrap:wrap;gap:10px"><span><b>Último paso:</b> dinos qué es servicio y qué es producto (por ejemplo aceites o gel), así aparecen en tu catálogo e inventario.</span><button class="btn sm pri" data-act="ordenar">Ordenar lo que vendo</button></div>` : ''}
       <div class="hstack"><a class="btn pri" href="#inicio">Ver mi resumen</a><button class="btn" data-act="imp-reset">Importar otro archivo</button></div></div>`;
   }
-  const hojas = imp.hojas; const total = sum(hojas.filter((h) => h.tipo !== 'ninguno'), (h) => datosDe(h).filter((f) => filaValida(h.tipo, filaAObjeto(h, f))).length);
-  return `${head('Revisa antes de importar', esc(imp.archivo), `<button class="btn" data-act="imp-reset">Cambiar archivo</button><button class="btn pri" data-act="imp-go" ${total ? '' : 'disabled'}>Importar ${total} registros</button>`)}
+  const hojas = imp.hojas; const total = sum(hojas.filter((h) => h.tipo !== 'ninguno'), (h) => h.tipo === 'bloques' ? h.recetas.length + (h.listasSi ? sum(h.listas, (l) => l.items.length) : 0) : datosDe(h).filter((f) => filaValida(h.tipo, filaAObjeto(h, f))).length);
+  const reemplazar = imp.modo === 'reemplazar' && hayHistorial();
+  const modoCard = hayHistorial() ? `<div class="card stack"><div><h2>¿Qué hacemos con lo que ya tienes?</h2><p class="small muted">Hoy tienes ${qtyFmt(db.all('ventas').length)} ingresos, ${qtyFmt(db.all('gastos').length)} egresos y ${qtyFmt(db.all('clientes').length)} clientes en MiDerno.</p></div>
+    <div class="tipo-cards imp-modo" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+      <label class="tipo-card"><input type="radio" name="imp-modo" value="combinar" data-change="imp-modo" ${reemplazar ? '' : 'checked'}><b>Combinar</b><small>Suma lo nuevo a lo que ya tienes. Lo que ya estaba no se repite.</small></label>
+      <label class="tipo-card"><input type="radio" name="imp-modo" value="reemplazar" data-change="imp-modo" ${reemplazar ? 'checked' : ''}><b>Reemplazar todo</b><small>Borra tus ingresos, egresos y clientes, y deja solo lo de este archivo. El catálogo, el equipo y los ajustes no se tocan.</small></label>
+    </div></div>` : '';
+  return `${head('Revisa antes de importar', esc(imp.archivo), `<button class="btn" data-act="imp-reset">Cambiar archivo</button><button class="btn pri" data-act="imp-go" ${total ? '' : 'disabled'}${reemplazar ? ' style="background:var(--bad);border-color:var(--bad);color:#fff"' : ''}>${reemplazar ? 'Borrar e importar' : 'Importar'} ${total} registros</button>`)}
+  ${modoCard}
   ${hojas.map((h, hi) => {
+    if (h.tipo === 'bloques') return vistaBloques(h, hi);
+    if (h.recetas && h.tipo === 'ninguno') return `<div class="card between"><div><h2>Hoja “${esc(h.nombre)}”</h2><p class="small muted">No se importará.</p></div><select class="in" style="width:auto;min-height:36px" data-change="imp-tipo" data-h="${hi}">${opt('bloques', 'Recetas y listas', h.tipo)}${opt('ninguno', 'No importar esta hoja', h.tipo)}</select></div>`;
     const tipoSel = `<select class="in" style="width:auto;min-height:36px" data-change="imp-tipo" data-h="${hi}" aria-label="Qué contiene la hoja">${opt('ninguno', 'No importar esta hoja', h.tipo)}${Object.entries(IMP).map(([k, t]) => opt(k, t.label, h.tipo)).join('')}</select>`;
     if (h.tipo === 'ninguno') return `<div class="card between"><div><h2>Hoja “${esc(h.nombre)}”</h2><p class="small muted">${h.datos.length} filas · No reconocimos qué contiene. Elige qué es o déjala fuera.</p></div>${tipoSel}</div>`;
     const campos = IMP[h.tipo].campos; const objs = datosDe(h).map((f) => filaAObjeto(h, f)); const validas = objs.filter((o) => filaValida(h.tipo, o)).length;
@@ -2714,10 +2805,10 @@ function vistaImportar() {
       <div class="between"><div><h2>Hoja “${esc(h.nombre)}”</h2><p class="small muted">${validas} de ${objs.length} filas se pueden importar${objs.length - validas ? ` · ${objs.length - validas} sin ${Object.entries(campos).filter(([, d]) => d.req).map(([, d]) => d.label.toLowerCase()).join(' o ')} se saltan` : ''}</p></div>${tipoSel}</div>
       ${h.negocios ? `<div class="field"><label>Esta hoja trae varios negocios. ¿Cuáles importamos?</label><div class="chips">${h.negocios.map((n) => `<button type="button" class="chip ${h.negSel.includes(n) ? 'on' : ''}" data-act="imp-neg" data-h="${hi}" data-v="${esc(n)}">${esc(n)} <span class="muted">${h.datos.filter((f) => String(f[h.negCol] ?? '').trim() === n).length}</span></button>`).join('')}</div></div>` : ''}
       <div class="map-grid">${Object.entries(campos).map(([f, d]) => `<div class="field"><label>${d.label}${d.req ? ' *' : ''}</label><select class="in" data-change="imp-map" data-h="${hi}" data-f="${f}">${colOpts(h.map[f])}</select></div>`).join('')}</div>
-      ${usados.length ? `<div class="tbl-wrap"><table><thead><tr>${usados.map((f) => `<th>${campos[f].label}</th>`).join('')}${['caja', 'ventas', 'gastos'].includes(h.tipo) ? '<th>Se anota como</th>' : ''}<th></th></tr></thead><tbody>${objs.slice(0, 5).map((o) => `<tr>${usados.map((f) => `<td>${fmt(f, o[f], o)}</td>`).join('')}${['caja', 'ventas', 'gastos'].includes(h.tipo) ? `<td>${claseFila(h.tipo, o).map((c) => `<span class="pill ${c.clase === 'venta' ? 'ok' : 'warn'}">${c.clase === 'venta' ? 'Ingreso' : 'Gasto'} ${money(c.monto)}</span>`).join(' ')}</td>` : ''}<td>${filaValida(h.tipo, o) ? '<span class="pill ok">OK</span>' : '<span class="pill warn">Se salta</span>'}</td></tr>`).join('')}</tbody></table></div>${objs.length > 5 ? `<p class="small muted">y ${objs.length - 5} filas más</p>` : ''}` : ''}
+      ${usados.length ? `<div class="tbl-wrap"><table><thead><tr>${usados.map((f) => `<th>${campos[f].label}</th>`).join('')}${['caja', 'ventas', 'gastos'].includes(h.tipo) ? '<th>Se anota como</th>' : ''}<th></th></tr></thead><tbody>${objs.slice(0, 5).map((o) => `<tr>${usados.map((f) => `<td>${fmt(f, o[f], o)}</td>`).join('')}${['caja', 'ventas', 'gastos'].includes(h.tipo) ? `<td>${claseFila(h.tipo, o).map((c) => `<span class="pill ${c.clase === 'venta' ? 'ok' : 'warn'}">${c.clase === 'venta' ? 'Ingreso' : 'Egreso'} ${money(c.monto)}</span>`).join(' ')}</td>` : ''}<td>${filaValida(h.tipo, o) ? '<span class="pill ok">OK</span>' : '<span class="pill warn">Se salta</span>'}</td></tr>`).join('')}</tbody></table></div>${objs.length > 5 ? `<p class="small muted">y ${objs.length - 5} filas más</p>` : ''}` : ''}
     </div>`;
   }).join('')}
-  ${hojas.some((h) => h.tipo === 'resumen') ? `<p class="small muted">${hojas.some((h) => ['ventas', 'gastos', 'caja'].includes(h.tipo)) ? 'Tu pestaña de resumen no se suma de nuevo: la usamos para comprobar que los totales de cada mes cuadren con el detalle.' : 'Como el archivo no trae el detalle, cargamos cada mes del resumen como un total de ingresos y otro de gastos (los meses que ya tienes registrados no se tocan).'}</p>` : ''}
+  ${hojas.some((h) => h.tipo === 'resumen') ? `<p class="small muted">${hojas.some((h) => ['ventas', 'gastos', 'caja'].includes(h.tipo)) ? 'Tu pestaña de resumen no se suma de nuevo: la usamos para comprobar que los totales de cada mes cuadren con el detalle.' : 'Como el archivo no trae el detalle, cargamos cada mes del resumen como un total de ingresos y otro de egresos (los meses que ya tienes registrados no se tocan).'}</p>` : ''}
   ${hojas.some((h) => h.tipo === 'ventas') ? '<p class="small muted">Las ventas antiguas se suman a la caja y al historial de cada cliente, pero no descuentan stock. Si vuelves a subir el mismo archivo, las filas repetidas se saltan.</p>' : ''}`;
 }
 
@@ -2786,7 +2877,7 @@ function importarTodo() {
     lotes.gastos.push({ id: uid(), fecha: o.fecha, categoria: parseCategoria(o.categoria, det), monto, descripcion: det || o.categoria || '' });
     cont.gastos++;
   };
-  // orden: catálogos y clientes primero, después ventas y gastos que los usan
+  // orden: catálogos y clientes primero, después ventas y egresos que los usan
   const orden = ['clientes', 'servicios', 'productos', 'insumos', 'ventas', 'gastos', 'caja', 'resumen'];
   const hojas = [...S.imp.hojas].filter((h) => h.tipo !== 'ninguno').sort((a, b) => orden.indexOf(a.tipo) - orden.indexOf(b.tipo));
   for (const h of hojas) {
@@ -2814,7 +2905,7 @@ function importarTodo() {
       ajustarStock('insumo', i, o.stock);
     } if (filas.length && !tiene('produccion')) { if (!tiene('inventario')) db.modulo('inventario', true); db.modulo('produccion', true); avisos.push('Activamos Producción porque tu archivo trae insumos.'); } }
     if (['ventas', 'caja', 'gastos'].includes(h.tipo)) {
-      // cada fila se decide sola: lo que es gasto va a gastos y lo que es ingreso va a ventas, con su cliente
+      // cada fila se decide sola: lo que es egreso va a egresos y lo que es ingreso va a ventas, con su cliente
       for (const o of filas) {
         const det = o.detalle || o.descripcion || '';
         const partes = claseFila(h.tipo, o);
@@ -2827,6 +2918,7 @@ function importarTodo() {
       if (filas.some((o) => o.fecha > H)) avisos.push('Algunas filas tienen fecha futura; revisa que el formato de fecha sea día/mes/año.');
     }
   }
+  for (const h of hojas.filter((x) => x.tipo === 'bloques')) importarBloques(h, cont, avisos);
   // resumen mensual: si el archivo trae el detalle, solo sirve para comparar; si no, se cargan los totales del mes
   const comparacion = [];
   const hayDetalle = hojas.some((h) => ['ventas', 'gastos', 'caja'].includes(h.tipo));
@@ -2838,7 +2930,7 @@ function importarTodo() {
       if (!hayDetalle && !yaHay) {
         const fin = `${o.mes}-${pad(diasDelMes(o.mes))}`; const fecha = fin > H ? H : fin;
         if (ing > 0) { const v = { id: uid(), fecha, cliente_id: null, total: ing, metodo_pago: Object.keys(metodos())[0], canal: 'local', nota: 'Total del mes desde resumen' }; lotes.ventas.push(v); lotes.venta_items.push({ id: uid(), venta_id: v.id, tipo_item: 'libre', item_id: null, nombre: `Ingresos de ${nombreMes(o.mes)} (resumen)`, cantidad: 1, precio_unitario: ing, empleado_id: null }); cont.ventas++; }
-        if (gas > 0) { lotes.gastos.push({ id: uid(), fecha, categoria: catGastos().includes('Otros') ? 'Otros' : catGastos().at(-1), monto: gas, descripcion: `Gastos de ${nombreMes(o.mes)} (resumen)` }); cont.gastos++; }
+        if (gas > 0) { lotes.gastos.push({ id: uid(), fecha, categoria: catGastos().includes('Otros') ? 'Otros' : catGastos().at(-1), monto: gas, descripcion: `Egresos de ${nombreMes(o.mes)} (resumen)` }); cont.gastos++; }
         cont.meses = (cont.meses || 0) + 1;
       } else comparacion.push({ mes: o.mes, ing, gas, bal: o.balance ?? (ing != null && gas != null ? ing - gas : null) });
     }
@@ -2851,7 +2943,7 @@ function importarTodo() {
     avisos.push(`Agregamos a tus listas: ${[...catsNuevas, ...metNuevos.map((m) => m[1])].join(', ')}.`);
   }
   const n = (k, s, p) => (cont[k] ? `${cont[k]} ${cont[k] === 1 ? s : p}` : null);
-  const lineas = [n('ventas', 'ingreso', 'ingresos'), n('gastos', 'gasto', 'gastos'), n('clientes', 'cliente nuevo', 'clientes nuevos'), n('productos', 'producto', 'productos'), n('servicios', 'servicio', 'servicios'), n('insumos', 'insumo', 'insumos'),
+  const lineas = [cont.recetas ? `${cont.recetas} ${cont.recetas === 1 ? 'receta' : 'recetas'} de producción` : null, n('ventas', 'ingreso', 'ingresos'), n('gastos', 'gasto', 'gastos'), n('clientes', 'cliente nuevo', 'clientes nuevos'), n('productos', 'producto', 'productos'), n('servicios', 'servicio', 'servicios'), n('insumos', 'insumo', 'insumos'),
     cont.actualizados ? (cont.actualizados === 1 ? '1 registro que ya tenías quedó al día' : `${cont.actualizados} registros que ya tenías quedaron al día`) : null, cont.repetidos ? (cont.repetidos === 1 ? '1 fila ya estaba en MiDerno y se saltó' : `${cont.repetidos} filas ya estaban en MiDerno y se saltaron (no se duplica nada)`) : null, cont.movidos ? `${cont.movidos} filas estaban en la hoja equivocada y las ordenamos (gasto o ingreso)` : null].filter(Boolean);
   if (cont.meses) lineas.push(`${cont.meses} mes${cont.meses > 1 ? 'es' : ''} cargado${cont.meses > 1 ? 's' : ''} desde tu resumen como totales del mes`);
   // con todo guardado, se compara lo que dice el resumen con lo que calcula MiDerno
@@ -2861,6 +2953,110 @@ function importarTodo() {
   }).sort((a, b) => a.mes.localeCompare(b.mes));
   S.imp.resultado = { lineas: lineas.length ? lineas : ['No había registros nuevos para agregar'], avisos, cmp };
   window.scrollTo(0, 0); render(); toast('Importación lista');
+}
+
+/* =========================================================
+   Planillas "a mano": recetas en bloques y listas sin fecha
+   Ej: un bloque con el nombre del producto arriba (home spray), debajo cada insumo con su costo
+   (frasco 450 · 120 ml), después el costo total y el precio de venta.
+   ========================================================= */
+const ENVASE_RE = /frasco|caja|bolsa|etiqueta|sticker|envase|tapa|varilla|palito|pabilo|mecha|tarro|botella|cinta|tag/;
+const esTexto = (v) => typeof v === 'string' && /[a-záéíóúñü]/i.test(v);
+const esNum = (v) => typeof v === 'number' || (typeof v === 'string' && v.trim() !== '' && parseNumero(v) != null && /^[\s$\d.,-]+$/.test(v));
+const valNum = (v) => typeof v === 'number' ? v : parseNumero(v);
+const titulo = (s) => { let t = String(s).trim().replace(/\s+/g, ' '); if (t === t.toUpperCase()) t = t.toLowerCase(); return t.replace(/^./, (c) => c.toUpperCase()); };
+function parseCantidad(v) {
+  const m = String(v ?? '').trim().toLowerCase().match(/^(\d+(?:[.,]\d+)?)\s*(ml|cc|lt|l|gr|g|grs|kg|un|unid|unidades?)?\.?$/);
+  if (!m) return null;
+  const u = { cc: 'ml', l: 'lt', g: 'gr', grs: 'gr', un: 'unidad', unid: 'unidad', unidades: 'unidad' }[m[2]] || m[2] || 'unidad';
+  return { n: Number(m[1].replace(',', '.')), u };
+}
+function leerBloques(filas) {
+  const F = filas.map((f) => f || []); const ancho = Math.max(0, ...F.map((f) => f.length));
+  const cel = (r, c) => (F[r] || [])[c];
+  const usadas = new Set(); const recetas = []; const listas = [];
+  // recetas: encabezado de texto y debajo filas "insumo | costo | cantidad?", cerradas por el total (y el precio)
+  for (let c = 0; c < ancho - 1; c++) for (let r = 0; r < F.length - 2; r++) {
+    if (usadas.has(r + ',' + c) || !esTexto(cel(r, c))) continue;
+    const lineas = []; let k = r + 1;
+    while (k < F.length && esTexto(cel(k, c)) && esNum(cel(k, c + 1))) { lineas.push({ insumo: cel(k, c), costo: valNum(cel(k, c + 1)), cant: parseCantidad(cel(k, c + 2)) }); k++; }
+    if (lineas.length < 3 || /venta|gasto|compra|total/.test(norm(cel(r, c)))) continue;
+    const suma = sum(lineas, (l) => l.costo);
+    const t1 = !esTexto(cel(k, c)) && esNum(cel(k, c + 1)) ? valNum(cel(k, c + 1)) : null;
+    if (t1 == null || Math.abs(t1 - suma) > Math.max(2, suma * 0.03)) continue;
+    const t2 = !esTexto(cel(k + 1, c)) && esNum(cel(k + 1, c + 1)) ? valNum(cel(k + 1, c + 1)) : null;
+    const tam = parseCantidad(cel(r, c + 1));
+    recetas.push({ nombre: titulo(cel(r, c)) + (tam ? ` ${qtyFmt(tam.n)} ${tam.u}` : ''), base: titulo(cel(r, c)), costo: t1, precio: t2 && t2 > t1 ? t2 : null, lineas });
+    for (let x = r; x <= k + 1; x++) for (let y = c; y <= c + 2; y++) usadas.add(x + ',' + y);
+  }
+  // si dos recetas se llaman igual, se distinguen por el tamaño del frasco ("Mikado 50 ml")
+  for (const rc of recetas) if (rc.nombre === rc.base && recetas.filter((x) => norm(x.base) === norm(rc.base)).length > 1) { const env = rc.lineas.find((l) => ENVASE_RE.test(norm(l.insumo)) && l.cant && l.cant.u !== 'unidad'); if (env) rc.nombre = `${rc.base} ${qtyFmt(env.cant.n)} ${env.cant.u}`; }
+  // listas sin fecha: "monto | nombre" hacia abajo, con el total al final. Si arriba dice ventas, son ingresos
+  for (let c = 0; c < ancho - 1; c++) for (let r = 0; r < F.length; r++) {
+    if (usadas.has(r + ',' + c) || !esNum(cel(r, c)) || !esTexto(cel(r, c + 1))) continue;
+    if (r > 0 && esNum(cel(r - 1, c)) && esTexto(cel(r - 1, c + 1))) continue; // no es el comienzo
+    const items = []; let k = r;
+    while (k < F.length && esNum(cel(k, c)) && esTexto(cel(k, c + 1))) { items.push({ monto: valNum(cel(k, c)), nombre: titulo(cel(k, c + 1)), nota: esTexto(cel(k, c + 2)) ? String(cel(k, c + 2)).trim() : '' }); k++; }
+    if (items.length < 3) continue;
+    const total = esNum(cel(k, c)) && !esTexto(cel(k, c + 1)) ? valNum(cel(k, c)) : null;
+    const encabezado = norm([cel(r - 1, c), cel(r - 1, c + 1), cel(r, c - 1), cel(Math.max(0, r - 1), c - 1)].filter(esTexto).join(' ')) || norm(String(cel(0, c) ?? ''));
+    const tipo = /venta|ingreso|vendido/.test(encabezado) ? 'ingreso' : 'egreso';
+    listas.push({ tipo, items, total: total != null && Math.abs(total - sum(items, (i) => i.monto)) <= 2 ? total : sum(items, (i) => i.monto) });
+    for (let x = r; x <= k; x++) for (let y = c; y <= c + 2; y++) usadas.add(x + ',' + y);
+  }
+  return { recetas, listas };
+}
+
+// guarda productos, insumos y recetas; los insumos con el mismo nombre se comparten si cuestan lo mismo por unidad
+function importarBloques(h, cont, avisos) {
+  const insPorNombre = new Map(db.all('insumos').map((i) => [norm(i.nombre), i]));
+  const prodPorNombre = new Map(db.all('productos').map((p) => [norm(p.nombre), p]));
+  for (const rc of h.recetas) {
+    let p = prodPorNombre.get(norm(rc.nombre));
+    if (!p) { p = db.insert('productos', { nombre: rc.nombre, sku: '', precio_venta: rc.precio || 0, costo: rc.costo, stock_minimo: 3, activo: true }); prodPorNombre.set(norm(p.nombre), p); cont.productos++; }
+    else if (rc.precio && !Number(p.precio_venta)) db.update('productos', p.id, { precio_venta: rc.precio });
+    db.removeMany('formulas', db.all('formulas').filter((f) => f.producto_id === p.id).map((f) => f.id)); // la receta del archivo reemplaza a la anterior
+    for (const l of rc.lineas) {
+      const envase = ENVASE_RE.test(norm(l.insumo));
+      const usaCant = l.cant && !envase && l.cant.n > 0;
+      const unidad = usaCant ? l.cant.u : 'unidad'; const cantidad = usaCant ? l.cant.n : 1;
+      const cu = l.costo / cantidad;
+      let nombre = titulo(l.insumo) + (envase && l.cant && l.cant.u !== 'unidad' ? ` ${qtyFmt(l.cant.n)} ${l.cant.u}` : '');
+      // se comparte el insumo solo si tiene la misma unidad y el mismo costo; si no, se crea uno con el nombre del producto
+      const calza = (i) => i && i.unidad === unidad && Math.abs(Number(i.costo_unitario) - cu) <= Math.max(0.5, cu * 0.005);
+      const base = nombre; let ins = insPorNombre.get(norm(nombre));
+      for (let n = 0; ins && !calza(ins); n++) { nombre = `${base} (${rc.nombre}${n ? ' ' + (n + 1) : ''})`; ins = insPorNombre.get(norm(nombre)); }
+      if (!ins) { ins = db.insert('insumos', { nombre, unidad, costo_unitario: Math.round(cu * 10000) / 10000, stock_minimo: 0 }); insPorNombre.set(norm(nombre), ins); cont.insumos++; }
+      db.insert('formulas', { producto_id: p.id, insumo_id: ins.id, cantidad });
+    }
+    cont.recetas = (cont.recetas || 0) + 1;
+  }
+  if (h.recetas.length) { if (!tiene('inventario')) db.modulo('inventario', true); if (!tiene('produccion')) db.modulo('produccion', true); }
+  if (h.listasSi && h.listas.length) {
+    const fecha = h.listasFecha || hoy();
+    const ventas = [], items = [], gastos = [];
+    for (const li of h.listas) for (const it of li.items) {
+      if (li.tipo === 'ingreso') { const v = { id: uid(), fecha, cliente_id: null, total: it.monto, metodo_pago: Object.keys(metodos())[0], canal: 'local', nota: 'Importado desde Excel (sin fecha)' }; ventas.push(v); items.push({ id: uid(), venta_id: v.id, tipo_item: 'libre', item_id: null, nombre: it.nombre, cantidad: 1, precio_unitario: it.monto, empleado_id: null }); }
+      else gastos.push({ id: uid(), fecha, categoria: parseCategoria('', it.nombre), monto: it.monto, descripcion: it.nombre + (it.nota ? ` (${it.nota})` : '') });
+    }
+    if (ventas.length) { db.insertMany('ventas', ventas); db.insertMany('venta_items', items); cont.ventas += ventas.length; }
+    if (gastos.length) { db.insertMany('gastos', gastos); cont.gastos += gastos.length; }
+  }
+}
+
+function vistaBloques(h, hi) {
+  const listaHtml = h.listas.length ? `<div class="stack" style="gap:8px"><h3 style="margin:0">Listas sin fecha</h3>
+    ${h.listas.map((l) => `<p class="small" style="margin:0"><span class="pill ${l.tipo === 'ingreso' ? 'ok' : 'warn'}">${l.tipo === 'ingreso' ? 'Ingresos' : 'Egresos'}</span> ${l.items.length} filas · <b>${money(l.total)}</b> <span class="muted">(${l.items.slice(0, 4).map((i) => esc(i.nombre)).join(', ')}${l.items.length > 4 ? '…' : ''})</span></p>`).join('')}
+    <label class="hstack small"><input type="checkbox" data-change="imp-bl-si" data-h="${hi}" ${h.listasSi ? 'checked' : ''}> Importarlas también, con fecha <input class="in" type="date" style="width:auto;min-height:34px" value="${h.listasFecha || hoy()}" data-change="imp-bl-fecha" data-h="${hi}"></label>
+    <p class="small muted" style="margin:0">Como no traen fecha, quedan todas en el día que elijas. Si ya las anotaste de otra forma, déjalas sin marcar.</p></div>` : '';
+  return `<div class="card stack">
+    <div class="between"><div><h2>Hoja “${esc(h.nombre)}”</h2><p class="small muted">Encontramos ${h.recetas.length} ${h.recetas.length === 1 ? 'receta' : 'recetas'} de producción${h.listas.length ? ' y listas de ingresos y egresos' : ''}.</p></div>
+      <select class="in" style="width:auto;min-height:36px" data-change="imp-tipo" data-h="${hi}">${opt('bloques', 'Recetas y listas', h.tipo)}${opt('ninguno', 'No importar esta hoja', h.tipo)}</select></div>
+    <div class="recetas-imp">${h.recetas.map((rc) => { const m = rc.precio ? Math.round(((rc.precio - rc.costo) / rc.precio) * 100) : null; return `<div class="receta-imp">
+      <div class="between"><b>${esc(rc.nombre)}</b>${rc.precio ? `<span class="pill ok">gana ${m}%</span>` : ''}</div>
+      <p class="small muted" style="margin:2px 0 8px">Cuesta ${money(rc.costo)}${rc.precio ? ` · se vende a ${money(rc.precio)}` : ''}</p>
+      <table class="small"><tbody>${rc.lineas.map((l) => `<tr><td>${esc(titulo(l.insumo))}</td><td class="muted">${l.cant ? qtyFmt(l.cant.n) + ' ' + l.cant.u : ''}</td><td class="n">${money(l.costo)}</td></tr>`).join('')}</tbody></table></div>`; }).join('')}</div>
+    ${listaHtml}</div>`;
 }
 
 /* =========================================================
@@ -3396,7 +3592,7 @@ function ajustesMensajes() {
 function ajustesListas() {
   const ml = Object.values(metodos());
   return `<form class="grid g3" id="form-listas">
-    <div class="card stack"><h2>Categorías de gasto</h2><p class="small muted">Una por línea. Aparecen al registrar un gasto.</p><textarea class="in" name="categorias_gasto" id="l-cat" rows="9">${esc(catGastos().join('\n'))}</textarea></div>
+    <div class="card stack"><h2>Categorías de egreso</h2><p class="small muted">Una por línea. Aparecen al registrar un egreso.</p><textarea class="in" name="categorias_gasto" id="l-cat" rows="9">${esc(catGastos().join('\n'))}</textarea></div>
     <div class="card stack"><h2>Medios de pago</h2><p class="small muted">Una por línea. Ej: Mercado Pago, Webpay, Junaeb.</p><textarea class="in" name="metodos" id="l-met" rows="9">${esc(ml.join('\n'))}</textarea></div>
     <div class="card stack"><h2>Unidades de medida</h2><p class="small muted">Para insumos y recetas. Ej: kg, gr, ml, docena.</p><textarea class="in" name="unidades" id="l-uni" rows="9">${esc(unidades().join('\n'))}</textarea></div>
     <div class="span2 hstack" style="grid-column:1/-1"><button class="btn pri">Guardar listas</button><button type="button" class="btn" data-act="listas-reset">Volver a las originales</button></div>
@@ -3495,7 +3691,7 @@ function tarjetaBalance(ym) {
   return `<div class="card"><div class="card-head"><h2>Balance de ${esc(nombreMes(ym))}</h2><span class="pill ${res >= 0 ? 'ok' : 'bad'}">${res >= 0 ? 'Ganancia' : 'Pérdida'} ${money(Math.abs(res))}</span></div>
     <div class="balance">
       <div><div class="bal-head"><span>Entró</span><b class="num up">${money(ing)}</b></div>${porMet.map(fila).join('') || '<div class="small muted">Sin ventas</div>'}</div>
-      <div><div class="bal-head"><span>Salió</span><b class="num down">${money(gas + com)}</b></div>${porCat.map(fila).join('') || '<div class="small muted">Sin gastos</div>'}</div>
+      <div><div class="bal-head"><span>Salió</span><b class="num down">${money(gas + com)}</b></div>${porCat.map(fila).join('') || '<div class="small muted">Sin egresos</div>'}</div>
     </div>
     <div class="bal-total"><span>Resultado del mes</span><b class="num ${res < 0 ? 'down' : ''}">${money(res)}</b></div>
     <div class="small muted" style="margin-top:6px">En ${anio}: entró ${money(ingA)}, salió ${money(egrA)}, resultado <b class="num">${money(ingA - egrA)}</b>.</div></div>`;
@@ -3520,7 +3716,7 @@ function tablaMeses(hasta, sel = hasta) {
   if (!filas.length) return '';
   const max = Math.max(1, ...filas.map((f) => Math.abs(f.res)));
   const tot = filas.reduce((a, f) => ({ ing: a.ing + f.ing, gas: a.gas + f.gas, res: a.res + f.res }), { ing: 0, gas: 0, res: 0 });
-  return `<div class="card"><div class="card-head"><h2>Mes a mes</h2></div><div class="tbl-wrap"><table class="mes-a-mes"><thead><tr><th>Mes</th><th class="n">Ingresos</th><th class="n">Gastos</th><th class="n">Resultado</th><th class="barra-col"></th></tr></thead><tbody>
+  return `<div class="card"><div class="card-head"><h2>Mes a mes</h2></div><div class="tbl-wrap"><table class="mes-a-mes"><thead><tr><th>Mes</th><th class="n">Ingresos</th><th class="n">Egresos</th><th class="n">Resultado</th><th class="barra-col"></th></tr></thead><tbody>
     ${filas.slice().reverse().map((f) => `<tr class="click-mes ${f.m === sel ? 'on' : ''}" data-act="caja-ir-mes" data-m="${f.m}"><td style="white-space:nowrap">${esc(nombreMes(f.m))}</td><td class="n">${money(f.ing)}</td><td class="n">${money(f.gas)}</td><td class="n"><b class="${f.res < 0 ? 'down' : ''}">${money(f.res)}</b></td>
       <td class="barra-col"><span class="mini-barra ${f.res < 0 ? 'neg' : ''}" style="width:${Math.round((Math.abs(f.res) / max) * 100)}%"></span></td></tr>`).join('')}
     </tbody><tfoot><tr><td><b>Total</b></td><td class="n"><b>${money(tot.ing)}</b></td><td class="n"><b>${money(tot.gas)}</b></td><td class="n"><b class="${tot.res < 0 ? 'down' : ''}">${money(tot.res)}</b></td><td class="barra-col"></td></tr></tfoot></table></div></div>`;
@@ -3727,10 +3923,10 @@ aplicarSistema();
 const I18N = {
   es: {
     nav_inicio: 'Inicio', nav_vender: 'Registrar', nav_caja: 'Movimientos', nav_clientes: 'Clientes', nav_agenda: 'Agenda', nav_equipo: 'Equipo', nav_inventario: 'Inventario', nav_produccion: 'Producción', nav_proveedores: 'Proveedores', nav_catalogo: 'Catálogo', nav_importar: 'Importar Excel', nav_ajustes: 'Ajustes', nav_mas: 'Más',
-    hola: 'Hola', ganancia: 'Ganancia de', ingresos: 'Ingresos', gastos: 'Gastos', meta: 'Meta', faltan: 'faltan', dia: 'día',
-    ingreso: 'Ingreso', gasto: 'Gasto', agendar: 'Agendar', para_hoy: 'Para hoy', ultimos: 'Últimos movimientos', ver_todo: 'Ver todo', vacio_mov: 'Aún no hay movimientos. Registra tu primer ingreso o gasto.',
+    hola: 'Hola', ganancia: 'Ganancia de', ingresos: 'Ingresos', gastos: 'Egresos', meta: 'Meta', faltan: 'faltan', dia: 'día',
+    ingreso: 'Ingreso', gasto: 'Egreso', agendar: 'Agendar', para_hoy: 'Para hoy', ultimos: 'Últimos movimientos', ver_todo: 'Ver todo', vacio_mov: 'Aún no hay movimientos. Registra tu primer ingreso o egreso.',
     reservas_confirmar: (n) => `${n} reserva${n > 1 ? 's' : ''} por confirmar`, agenda_hoy: (n) => `${n} pendiente${n > 1 ? 's' : ''} en la agenda de hoy`, pedir_a: 'Pedir a', stock_bajo: (n) => `${n} producto${n > 1 ? 's' : ''} por reponer`, reactivar: (n) => `${n} cliente${n > 1 ? 's' : ''} sin volver hace más de ${DIAS_REACTIVAR} días`,
-    registrar: 'Registrar', cobrar_cita: 'Cobrar cita', monto: 'Monto', categoria: 'Categoría', detalle_opc: 'Detalle (opcional)', fecha: 'Fecha', proveedor: 'Proveedor', sin_proveedor: 'Sin proveedor', registrar_gasto: 'Registrar gasto', falta_monto: 'Escribe el monto', gasto_ok: 'Gasto registrado',
+    registrar: 'Registrar', cobrar_cita: 'Cobrar cita', monto: 'Monto', categoria: 'Categoría', detalle_opc: 'Detalle (opcional)', fecha: 'Fecha', proveedor: 'Proveedor', sin_proveedor: 'Sin proveedor', registrar_gasto: 'Registrar egreso', falta_monto: 'Escribe el monto', gasto_ok: 'Egreso registrado',
     movimientos: 'Movimientos', ultimos_6: 'Últimos 6 meses',
     sistema: 'Apariencia', tema: 'Tema', tema_auto: 'Automático', tema_claro: 'Claro', tema_oscuro: 'Oscuro', color: 'Color de la app', personalizado: 'Otro', letra: 'Tamaño de letra', letra_normal: 'Normal', letra_grande: 'Grande', idioma: 'Idioma', sis_nota: 'Se guarda en este dispositivo.', idioma_nota: 'En inglés están traducidos el menú, Inicio, Registrar y Apariencia. El resto se irá traduciendo.',
   },
@@ -3761,7 +3957,7 @@ function ajustesSistema() {
 }
 
 /* =========================================================
-   Inicio simple + Registrar (ingreso o gasto en un solo lugar)
+   Inicio simple + Registrar (ingreso o egreso en un solo lugar)
    ========================================================= */
 
 function vistaInicio() {
@@ -3785,7 +3981,7 @@ function vistaInicio() {
   const reactivar = resumenClientes().filter((r) => r.dias != null && r.dias > DIAS_REACTIVAR && r.dias < 120).length;
   if (reactivar) alertas.push({ sev: '', t: t_('reactivar', reactivar), href: 'clientes', act: 'filtro-reactivar' });
 
-  // últimos movimientos (ingresos y gastos juntos)
+  // últimos movimientos (ingresos y egresos juntos)
   const cli = new Map(db.all('clientes').map((c) => [c.id, c.nombre]));
   const movs = [
     ...db.all('ventas').map((v) => ({ f: v.fecha, monto: Number(v.total), tipo: 'in', t: itemsDeVenta(v.id).map((i) => i.nombre).join(', ') || t_('ingreso'), s: cli.get(v.cliente_id) || metodoLabel(v.metodo_pago) })),
@@ -3805,10 +4001,10 @@ function vistaInicio() {
   </div>
   ${alertas.length ? `<section class="stack"><h2>${t_('para_hoy')}</h2><div class="stack" style="gap:8px">${alertas.map((a) => `<a class="alert-row" href="#${a.href}" ${a.act ? `data-act="${a.act}"` : ''} ${a.id ? `data-id="${a.id}"` : ''}><span class="sev ${a.sev}"></span><div class="grow"><b>${esc(a.t)}</b>${a.s ? `<small>${esc(a.s)}</small>` : ''}</div>${icon('right')}</a>`).join('')}</div></section>` : ''}
   <section class="stack"><div class="between"><h2>${t_('ultimos')}</h2><a class="small" href="#caja">${t_('ver_todo')}</a></div>
-    <div class="list">${movs.length ? movs.map((m) => `<div class="row"><span class="mov-ico ${m.tipo}">${icon(m.tipo === 'in' ? 'plus' : 'minus')}</span><div class="grow"><div class="t" style="font-weight:500">${esc(m.t)}</div><div class="s">${fechaCorta(m.f)}${m.s ? ' · ' + esc(m.s) : ''}</div></div><b class="r num ${m.tipo === 'in' ? 'up' : ''}">${m.tipo === 'in' ? '+' : '−'}${money(m.monto)}</b></div>`).join('') : `<div class="empty">${t_('vacio_mov')}</div>`}</div></section>`;
+    <div class="list">${movs.length ? movs.map((m) => `<div class="row"><span class="mov-ico t-${m.tipo}">${icon(m.tipo === 'in' ? 'plus' : 'minus')}</span><div class="grow"><div class="t" style="font-weight:500">${esc(m.t)}</div><div class="s">${fechaCorta(m.f)}${m.s ? ' · ' + esc(m.s) : ''}</div></div><b class="r num ${m.tipo === 'in' ? 'up' : ''}">${m.tipo === 'in' ? '+' : '−'}${money(m.monto)}</b></div>`).join('') : `<div class="empty">${t_('vacio_mov')}</div>`}</div></section>`;
 }
 
-/* ---------- registrar gasto rápido ---------- */
+/* ---------- registrar egreso rápido ---------- */
 function vistaGastoRapido() {
   const provs = db.all('proveedores').filter((p) => p.tipo !== 'contacto');
   const cat = S.ui.registro?.cat || catGastos()[0];
@@ -3945,7 +4141,7 @@ function formEmpezarDeCero() {
   abrirSheet('Empezar de cero', `<p>Borra lo registrado para volver a importar tu Excel limpio. Tu catálogo, tu equipo, tus mensajes y tus ajustes no se tocan.</p>
     <div class="form">
       <label class="hstack"><input type="checkbox" name="ventas" checked> Ingresos y ventas <span class="muted">(${n.ventas})</span></label>
-      <label class="hstack"><input type="checkbox" name="gastos" checked> Gastos <span class="muted">(${n.gastos})</span></label>
+      <label class="hstack"><input type="checkbox" name="gastos" checked> Egresos <span class="muted">(${n.gastos})</span></label>
       <label class="hstack"><input type="checkbox" name="clientes"> Clientes <span class="muted">(${n.clientes}; también borra los ingresos, y se mantienen las que tienen horas agendadas)</span></label>
       <label class="hstack"><input type="checkbox" name="stock"> Movimientos de inventario <span class="muted">(${n.stock})</span></label>
       ${field('Para confirmar, escribe BORRAR', input('confirmar', '', 'autocomplete="off" placeholder="BORRAR"'))}
@@ -3953,24 +4149,29 @@ function formEmpezarDeCero() {
     pie: '<div class="sheet-foot"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri" type="submit" style="background:var(--bad);border-color:var(--bad);color:#fff">Borrar</button></div>',
     submit: async (d) => {
       if (String(d.confirmar || '').trim().toUpperCase() !== 'BORRAR') return toast('Escribe BORRAR para confirmar', true);
-      const ids = (t, fn = () => true) => db.all(t).filter(fn).map((r) => r.id);
-      if (d.ventas || d.clientes) {
-        const ventas = ids('ventas');
-        const vset = new Set(ventas);
-        db.removeMany('comisiones', ids('comisiones', (c) => vset.has(c.venta_id)));
-        db.removeMany('movimientos_stock', ids('movimientos_stock', (m) => m.motivo === 'venta' && vset.has(m.ref_id)));
-        db.removeMany('venta_items', ids('venta_items', (i) => vset.has(i.venta_id)));
-        db.removeMany('ventas', ventas);
-      }
-      if (d.gastos) db.removeMany('gastos', ids('gastos'));
-      if (d.stock) db.removeMany('movimientos_stock', ids('movimientos_stock'));
-      // las clientas con horas en la agenda se mantienen (borrarlas borraría sus citas)
-      if (d.clientes) { const conCita = new Set(db.all('citas').map((c) => c.cliente_id).filter(Boolean)); db.removeMany('clientes', ids('clientes', (c) => !conCita.has(c.id))); }
+      borrarHistorial(d);
       if (S.modo === 'nube') await NubeAdapter.cola;
       cerrarSheet(); render(); toast('Listo, quedó limpio. Ya puedes volver a importar.');
     },
   });
 }
+
+// borra el historial elegido; el catálogo, el equipo y los ajustes no se tocan
+function borrarHistorial({ ventas, gastos, clientes, stock } = {}) {
+  const ids = (t, fn = () => true) => db.all(t).filter(fn).map((r) => r.id);
+  if (ventas || clientes) {
+    const vs = ids('ventas'); const vset = new Set(vs);
+    db.removeMany('comisiones', ids('comisiones', (c) => vset.has(c.venta_id)));
+    db.removeMany('movimientos_stock', ids('movimientos_stock', (m) => m.motivo === 'venta' && vset.has(m.ref_id)));
+    db.removeMany('venta_items', ids('venta_items', (i) => vset.has(i.venta_id)));
+    db.removeMany('ventas', vs);
+  }
+  if (gastos) db.removeMany('gastos', ids('gastos'));
+  if (stock) db.removeMany('movimientos_stock', ids('movimientos_stock'));
+  // las clientas con horas en la agenda se mantienen (borrarlas borraría sus citas)
+  if (clientes) { const conCita = new Set(db.all('citas').map((c) => c.cliente_id).filter(Boolean)); db.removeMany('clientes', ids('clientes', (c) => !conCita.has(c.id))); }
+}
+const hayHistorial = () => db.all('ventas').length + db.all('gastos').length + db.all('clientes').length > 0;
 
 /* =========================================================
    Render, eventos y arranque
@@ -4040,11 +4241,12 @@ const ACCIONES = {
   cobrar: () => cobrar(),
   'cliente-nuevo-venta': () => formCliente(null, (r) => { S.cart.cliente_id = r.id; render(); }),
   // caja
-  'caja-mes': (el) => { S.ui.caja.mes = addMonths(S.ui.caja.mes, +el.dataset.d); render(); },
-  'caja-tab': (el) => { S.ui.caja.tab = el.dataset.tab; render(); },
+  'caja-mes': (el) => { S.ui.caja.mes = addMonths(S.ui.caja.mes, +el.dataset.d); S.ui.caja.rango = 'mesSel'; render(); },
+  'caja-rango': (el) => { const u = S.ui.caja; u.rango = el.dataset.r; if (u.rango === 'mesSel') u.mes ||= mesActual(); render(); },
+  'caja-filtro': (el) => { S.ui.caja.filtro = el.dataset.f; render(); },
   gasto: (el) => formGasto(el.dataset.id),
   'del-venta': (el) => { const v = db.get('ventas', el.dataset.id); confirmar(`Se eliminará la venta de <b>${money(v.total)}</b> del ${fechaCorta(v.fecha)}. Si tenía productos, vuelven al stock.`, () => { eliminarVenta(v.id); toast('Venta eliminada'); render(); }); },
-  'del-gasto': (el) => { const g = db.get('gastos', el.dataset.id); confirmar(`Se eliminará el gasto de <b>${money(g.monto)}</b>.`, () => { db.remove('gastos', g.id); toast('Gasto eliminado'); render(); }); },
+  'del-gasto': (el) => { const g = db.get('gastos', el.dataset.id); confirmar(`Se eliminará el egreso de <b>${money(g.monto)}</b>.`, () => { db.remove('gastos', g.id); toast('Egreso eliminado'); render(); }); },
   // clientes
   'cli-f': (el) => { S.ui.clientes.f = el.dataset.f; render(); },
   'ver-cliente': (el) => verCliente(el.dataset.id),
@@ -4130,7 +4332,7 @@ const ACCIONES = {
   'g-cat': (el) => { S.ui.registro = { ...(S.ui.registro || {}), cat: el.dataset.c }; document.querySelectorAll('[data-act="g-cat"]').forEach((b) => b.classList.toggle('on', b === el)); },
   'agendar-ir': () => { setTimeout(() => elegirAgendar(), 80); },
   sis: (el) => guardarSis({ [el.dataset.k]: el.dataset.v }),
-  'caja-ir-mes': (el) => { S.ui.caja.mes = el.dataset.m; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); },
+  'caja-ir-mes': (el) => { S.ui.caja.mes = el.dataset.m; S.ui.caja.rango = 'mesSel'; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); },
   'aj-tab': (el) => { S.ui.ajustes = { tab: el.dataset.t }; render(); },
   'quitar-meta': () => { const m = metaDelMes(mesActual()); if (m) db.remove('metas', m.id); toast('Meta quitada'); render(); },
   'msg-reset': (el) => { const m = { ...(cfg().mensajes || {}) }; delete m[el.dataset.k]; guardarConfig({ mensajes: m }); toast('Texto original restaurado'); render(); },
@@ -4144,17 +4346,27 @@ const ACCIONES = {
   // importar
   'imp-reset': () => { S.imp = null; render(); },
   ordenar: () => abrirOrdenar(),
+  'obs-add': (el) => agregarObservacion(el.dataset.id),
   'empezar-cero': () => formEmpezarDeCero(),
   'imp-neg': (el) => { const h = S.imp.hojas[+el.dataset.h]; const v = el.dataset.v; h.negSel = h.negSel.includes(v) ? h.negSel.filter((x) => x !== v) : [...h.negSel, v]; render(); },
-  'imp-go': (el) => { el.disabled = true; el.classList.add('cargando'); el.textContent = 'Importando…'; cargando(true); setTimeout(() => { try { importarTodo(); } finally { cargando(false); } }, 30); },
+  'imp-go': (el) => {
+    const correr = (borrar) => { el.disabled = true; el.classList.add('cargando'); el.textContent = 'Importando…'; cargando(true); setTimeout(() => { try { if (borrar) borrarHistorial({ ventas: true, gastos: true, clientes: true }); importarTodo(); } finally { cargando(false); } }, 30); };
+    if (S.imp.modo === 'reemplazar' && hayHistorial()) return confirmar(`Se borrarán <b>${qtyFmt(db.all('ventas').length)} ingresos</b>, <b>${qtyFmt(db.all('gastos').length)} egresos</b> y tus clientes (menos las que tienen horas agendadas), y quedará solo lo de este archivo. No se puede deshacer.`, () => correr(true), 'Borrar e importar');
+    correr(false);
+  },
 };
 
 const CAMBIOS = {
+  'imp-modo': (el) => { S.imp.modo = el.value; render(); },
+  'caja-desde': (el) => { S.ui.caja.desde = el.value; render(); },
+  'caja-hasta': (el) => { S.ui.caja.hasta = el.value; render(); },
   'linea-emp': (el) => { S.cart.lineas[+el.dataset.i].empleado_id = el.value || null; },
   'cart-cliente': (el) => { S.cart.cliente_id = el.value; },
   'cart-fecha': (el) => { S.cart.fecha = el.value || hoy(); },
   'imp-file': (el) => abrirArchivo(el.files[0]),
-  'imp-tipo': (el) => { const h = S.imp.hojas[+el.dataset.h]; h.tipo = el.value; h.map = el.value === 'ninguno' ? {} : mapear(h.headersN, el.value).map; render(); },
+  'imp-tipo': (el) => { const h = S.imp.hojas[+el.dataset.h]; h.tipo = el.value; h.map = el.value === 'ninguno' || el.value === 'bloques' ? {} : mapear(h.headersN, el.value).map; render(); },
+  'imp-bl-si': (el) => { S.imp.hojas[+el.dataset.h].listasSi = el.checked; render(); },
+  'imp-bl-fecha': (el) => { S.imp.hojas[+el.dataset.h].listasFecha = el.value || hoy(); render(); },
   'imp-map': (el) => { S.imp.hojas[+el.dataset.h].map[el.dataset.f] = +el.value; render(); },
   'cart-entrega': (el) => { S.cart.entrega = el.checked ? { fecha: addDays(hoy(), 1), hora: '', direccion: '' } : null; if (el.checked && tiene('inventario')) S.cart.canal = 'online'; render(); },
   'cart-ent': (el) => { S.cart.entrega[el.dataset.k] = el.value; },
