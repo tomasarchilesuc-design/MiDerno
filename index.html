@@ -685,6 +685,47 @@ td.n, th.n { white-space: nowrap; }
 .res-num { display: inline-block; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; } }
 
+/* ---------- v19: enlaces-botón, contraseña, ayuda ---------- */
+.link-btn{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left}
+.link-btn:hover b{text-decoration:underline;text-underline-offset:3px}
+.clave-wrap{position:relative;display:block}
+.clave-wrap .in{padding-right:46px;width:100%}
+.ver-clave{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:38px;height:38px;display:grid;place-items:center;border:0;background:none;color:var(--muted);border-radius:10px;cursor:pointer}
+.ver-clave:hover{color:var(--ink);background:var(--surface-2)}
+.ver-clave .i{width:19px;height:19px}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:var(--surface);border:1px solid var(--line);font-weight:500}
+.btn-google .i{width:18px;height:18px}
+.o-sep{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.82rem;margin:2px 0}
+.o-sep::before,.o-sep::after{content:"";flex:1;height:1px;background:var(--line)}
+.link-sm{font-size:.85rem}
+.ayuda-side{display:flex;align-items:center;gap:8px;margin:0 8px 8px;padding:9px 12px;border:1px dashed var(--line);border-radius:12px;background:none;color:var(--muted);font:inherit;font-size:.88rem;cursor:pointer;text-align:left}
+.ayuda-side:hover{color:var(--ink);border-color:var(--marca)}
+.ayuda-side .i{width:18px;height:18px}
+.tip{display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:14px;border-radius:14px;background:color-mix(in srgb,var(--marca) 10%,var(--surface));animation:tipIn .35s var(--ease-out,ease) both}
+.tip p{margin:0;flex:1;font-size:.9rem;line-height:1.4}
+.tip-ico{color:var(--marca);display:grid;place-items:center}.tip-ico .i{width:20px;height:20px}
+@keyframes tipIn{from{opacity:0;transform:translateY(-4px)}}
+.guia h2{margin:0}
+.guia-lista{display:flex;flex-direction:column;gap:2px;margin-top:6px}
+.guia-paso{display:flex;align-items:center;gap:12px;padding:10px 6px;border-radius:12px;color:inherit;text-decoration:none;border:0;background:none;font:inherit;text-align:left;width:100%;cursor:pointer}
+.guia-paso:hover{background:var(--surface-2)}
+.guia-paso b{display:block;font-weight:500}.guia-paso small{display:block;color:var(--muted);font-size:.82rem}
+.guia-paso.ok b{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+.guia-check{width:24px;height:24px;flex:none;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center}
+.guia-paso.ok .guia-check{background:var(--marca);border-color:var(--marca);color:#fff}
+.guia-check .i{width:14px;height:14px}
+.guia-paso.sug{background:color-mix(in srgb,var(--marca) 10%,var(--surface))}
+.guia-head{display:flex;align-items:flex-start;gap:10px}.guia-head>div{flex:1}.guia-head .btn{flex:none}
+.guia-paso.sug .guia-check{border-color:var(--marca);color:var(--marca)}
+.ayuda-lista{display:flex;flex-direction:column;gap:6px}
+.ayuda-item{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.ayuda-item summary{cursor:pointer;font-weight:500;list-style:none}
+.ayuda-item summary::-webkit-details-marker{display:none}
+.ayuda-item summary::after{content:"+";float:right;color:var(--muted)}
+.ayuda-item[open] summary::after{content:"–"}
+.ayuda-item p{margin:8px 0;font-size:.92rem;line-height:1.45;color:var(--ink-2,var(--ink))}
+@media (prefers-reduced-motion:reduce){.tip{animation:none}}
+
 </style>
 </head>
 <body>
@@ -697,7 +738,7 @@ td.n, th.n { white-space: nowrap; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '18';
+const VERSION = '19';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -1099,6 +1140,11 @@ const ICONS = {
   plus: '<path d="M12 5v14M5 12h14"/>',
   minus: '<path d="M5 12h14"/>',
   refresh: '<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>',
+  ojo: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  'ojo-no': '<path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6C3.8 8.4 2 12 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
+  ok: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.3-2.5 3.8M12 17h.01"/>',
+  google: '<path d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3z" fill="#4285F4" stroke="none"/><path d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22z" fill="#34A853" stroke="none"/><path d="M6.4 14a6 6 0 0 1 0-3.9V7.5H3.1a10 10 0 0 0 0 9z" fill="#FBBC05" stroke="none"/><path d="M12 5.9c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.5l3.3 2.6C7.2 7.7 9.4 5.9 12 5.9z" fill="#EA4335" stroke="none"/>',
   key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/>',
   cash: '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M7 9.5v5M17 9.5v5"/>',
   users: '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.2c2.3.2 3.9 1.8 4.4 4.3"/>',
@@ -1185,10 +1231,11 @@ function shell(contenido) {
         ${visibles.filter((v) => ['catalogo', 'importar', 'ajustes'].includes(v.id)).map(link).join('')}
       </nav>
       <div class="grow"></div>
+      <button class="ayuda-side" data-act="ayuda">${icon('help')}<span>¿Necesitas ayuda?</span></button>
       <div class="mode-pill"><span class="dot ${S.modo === 'nube' ? 'cloud' : ''}"></span>${S.modo === 'nube' ? 'Sincronizado en la nube' : 'Guardado en este dispositivo'} · v${VERSION}</div>
     </aside>
     <main class="main"><div class="wrap">
-      <div class="mobile-top"><div class="brand">${MARCA}<b>${esc(S.negocio.nombre)}</b></div><a class="btn sm ghost" href="#ajustes" aria-label="Ajustes">${icon('gear')}</a></div>
+      <div class="mobile-top"><div class="brand">${MARCA}<b>${esc(S.negocio.nombre)}</b></div><div class="hstack" style="gap:2px"><button class="btn sm ghost" data-act="ayuda" aria-label="Ayuda">${icon('help')}</button><a class="btn sm ghost" href="#ajustes" aria-label="Ajustes">${icon('gear')}</a></div></div>
       ${S.negocio.id.startsWith('demo-') ? `<div class="banner"><span>Ejemplo: pruébalo todo, nada se guarda.</span><button class="btn sm" data-act="ver-ejemplos">Ver otros ejemplos</button></div>` : ''}
       ${contenido}
     </div></main>
@@ -1311,10 +1358,50 @@ async function cargarSupabase() {
   if (NubeAdapter.sb) return NubeAdapter.sb;
   if (!window.supabase) await new Promise((ok, fail) => { const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js'; s.onload = ok; s.onerror = () => fail(new Error('No se pudo cargar Supabase')); document.head.appendChild(s); });
   NubeAdapter.sb = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+  NubeAdapter.sb.auth.onAuthStateChange?.((ev) => { if (ev === 'PASSWORD_RECOVERY') { S.recuperar = true; setTimeout(revisarRecuperacion, 400); } });
   return NubeAdapter.sb;
 }
+/* ---------- recuperar contraseña ---------- */
+function formOlvide() {
+  const email = $('#f-email')?.value || '';
+  abrirSheet('Recuperar contraseña', `<p class="muted" style="margin:-4px 0 0">Te mandamos un enlace a tu correo. Al tocarlo vuelves a MiDerno y eliges una contraseña nueva.</p>${field('Correo', input('email', email, 'type="email" autocomplete="email" required'))}`, {
+    pie: '<div class="sheet-foot"><button type="button" class="btn" data-act="login">Volver</button><button class="btn pri" type="submit">Enviar enlace</button></div>',
+    submit: async (d) => {
+      const correo = (d.email || '').trim(); if (!/^\S+@\S+\.\S+$/.test(correo)) return toast('Escribe tu correo', true);
+      try {
+        const sb = await cargarSupabase(); const { error } = await sb.auth.resetPasswordForEmail(correo, { redirectTo: appUrl() || undefined }); if (error) throw error;
+        abrirSheet('Revisa tu correo', `<p>Si <b>${esc(correo)}</b> tiene cuenta en MiDerno, te llegará un enlace para crear una contraseña nueva.</p><p class="small muted">Puede tardar unos minutos. Revisa también spam.</p>`, { pie: '<div class="sheet-foot"><button type="button" class="btn pri" data-close>Entendido</button></div>' });
+      } catch (e) { const m = e.message || String(e); toast(/rate|seconds|too many/i.test(m) ? 'Ya enviamos un enlace hace poco. Espera unos minutos y vuelve a intentar.' : 'No pudimos enviar el enlace: ' + m, true); }
+    },
+  });
+}
+function formNuevaClave(desdeCorreo = false) {
+  abrirSheet(desdeCorreo ? 'Crea tu nueva contraseña' : 'Cambiar contraseña', `<div class="form">${field('Contraseña nueva', input('clave', '', 'type="password" minlength="6" autocomplete="new-password" required'), 'Mínimo 6 caracteres')}${field('Repítela', input('clave2', '', 'type="password" minlength="6" autocomplete="new-password" required'))}</div>`, {
+    pie: '<div class="sheet-foot"><button type="button" class="btn" data-close>Ahora no</button><button class="btn pri" type="submit">Guardar contraseña</button></div>',
+    submit: async (d) => {
+      if ((d.clave || '').length < 6) return toast('La contraseña debe tener al menos 6 caracteres', true);
+      if (d.clave !== d.clave2) return toast('Las dos contraseñas no coinciden', true);
+      try { const sb = await cargarSupabase(); const { error } = await sb.auth.updateUser({ password: d.clave }); if (error) throw error; S.recuperar = false; cerrarSheet(); toast('Contraseña actualizada'); }
+      catch (e) { const m = e.message || String(e); toast(/different|same/i.test(m) ? 'Usa una contraseña distinta a la anterior' : 'No pudimos cambiarla: ' + m, true); }
+    },
+  });
+}
+function revisarRecuperacion() { if (S.recuperar && S.negocio && !$('#f-clave2')) formNuevaClave(true); }
+/* ---------- entrar con Google ---------- */
+async function entrarConGoogle(pendiente) {
+  try {
+    const sb = await cargarSupabase();
+    try { const r = await fetch(CONFIG.supabaseUrl + '/auth/v1/settings', { headers: { apikey: CONFIG.supabaseAnonKey } }); const j = await r.json(); if (j?.external && !j.external.google) return toast('El ingreso con Google todavía no está activado. Por ahora entra con tu correo y contraseña.', true); } catch {}
+    if (pendiente) LS.set('miderno:pendiente', pendiente);
+    const { error } = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: appUrl() || undefined, queryParams: { prompt: 'select_account' } } });
+    if (error) throw error;
+  } catch (e) { toast('No pudimos abrir Google: ' + (e.message || e), true); }
+}
 function formLogin() {
-  abrirSheet('Iniciar sesión', `${field('Correo', input('email', '', 'type="email" autocomplete="email" required'))}${field('Contraseña', input('password', '', 'type="password" autocomplete="current-password" required'))}
+  abrirSheet('Iniciar sesión', `<button type="button" class="btn btn-google" data-act="google">${icon('google')}Continuar con Google</button>
+    <div class="o-sep">o con tu correo</div>
+    ${field('Correo', input('email', '', 'type="email" autocomplete="email" required'))}${field('Contraseña', input('password', '', 'type="password" autocomplete="current-password" required'))}
+    <a href="#" class="link-sm" data-act="olvide" style="align-self:flex-start">¿Olvidaste tu contraseña?</a>
     <p class="small muted">¿No tienes cuenta? <a href="#" data-act="registro">Crea tu negocio</a></p>`, {
     pie: '<div class="sheet-foot"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri" type="submit">Ingresar</button></div>',
     submit: async (d) => {
@@ -1355,7 +1442,7 @@ async function abrirNubeCon(sb, user) {
 // quita del enlace los datos que deja el correo de confirmación
 function limpiarUrlAuth() {
   const q = new URLSearchParams(location.search); const h = location.hash;
-  if (q.has('code') || /access_token|refresh_token|type=signup|error_description/.test(h) || q.has('error_description')) history.replaceState(null, '', location.pathname + '#inicio');
+  if (q.has('code') || /access_token|refresh_token|type=signup|type=recovery|error_description/.test(h) || q.has('error_description')) history.replaceState(null, '', location.pathname + '#inicio');
 }
 async function salir() {
   if (S.modo === 'nube' && NubeAdapter.sb) await NubeAdapter.sb.auth.signOut();
@@ -1410,6 +1497,7 @@ const appUrl = () => (/^https?:/.test(location.protocol) ? location.origin + loc
 function formNegocio(modo = 'local') {
   const conCuenta = modo === 'cuenta'; const soloNube = modo === 'solo-nube';
   abrirSheet(conCuenta ? 'Crea tu cuenta' : 'Crea tu negocio', `<div class="form">
+    ${conCuenta ? `<p class="small muted" style="margin:-4px 0 0">Cuéntanos de tu negocio y elige cómo entrar: con Google o con correo y contraseña.</p>` : ''}
     ${conCuenta ? `<div class="form-row">${field('Correo', input('email', '', 'type="email" autocomplete="email" required'))}${field('Contraseña', input('password', '', 'type="password" minlength="6" autocomplete="new-password" required'), 'Mínimo 6 caracteres')}</div>` : ''}
     ${field('Nombre del negocio', input('nombre', '', 'required placeholder="Ej: Studio Aurora" autocomplete="organization"'))}
     ${field('WhatsApp del negocio', telInput('telefono', ''), 'Opcional')}
@@ -1418,7 +1506,7 @@ function formNegocio(modo = 'local') {
       <div class="que-vende">${QUE_VENDE.map((q) => `<label class="qv"><input type="checkbox" name="mod" value="${q.k}"><span><b>${q.label}</b><small>${q.desc}</small></span></label>`).join('')}</div></div>
     <div id="neg-entendido" class="entendido" hidden></div>
     ${conCuenta || soloNube ? '' : '<p class="small muted">Sin cuenta, los datos quedan guardados solo en este navegador.</p>'}</div>`, {
-    pie: `<div class="sheet-foot"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri" type="submit">${conCuenta ? 'Crear cuenta y entrar' : 'Crear negocio'}</button></div>`,
+    pie: `<div class="sheet-foot">${conCuenta ? `<button type="button" class="btn btn-google" data-act="google-registro" style="width:auto">${icon('google')}Crear con Google</button>` : '<button type="button" class="btn" data-close>Cancelar</button>'}<button class="btn pri" type="submit">${conCuenta ? 'Crear con correo' : 'Crear negocio'}</button></div>`,
     submit: (d) => enviarNegocio(modo, d),
   });
   const form = $('#sheet-form'); const tocados = new Set();
@@ -1440,6 +1528,7 @@ async function enviarNegocio(modo, d) {
   const e = entenderNegocio(d.rubro || '');
   const neg = { telefono: (d.telefono || '').trim(), nacimiento: d.nacimiento || '', nombre: d.nombre.trim(), rubro: (d.rubro || '').trim() || e.nombres.join(' + ') || 'Mi negocio', modulos, sugeridos: d.sugeridos ? { servicios: e.servicios, productos: e.productos } : null };
   if (!neg.nombre) return toast('Escribe el nombre del negocio', true);
+  if (modo === 'google') return entrarConGoogle({ nombre: neg.nombre, rubro: neg.rubro, modulos, sugeridos: neg.sugeridos, telefono: neg.telefono, nacimiento: neg.nacimiento });
   if (modo === 'cuenta') return registrarNube({ ...neg, email: d.email.trim(), password: d.password });
   if (modo === 'solo-nube') return crearNegocioNube(neg);
   const id = uid();
@@ -1713,6 +1802,9 @@ const primerNombre = (n) => String(n).split(' ')[0];
 const msgReactivar = (c, dias) => msg('reactivar', { nombre: primerNombre(c.nombre), dias });
 const msgCumple = (c) => msg('cumple', { nombre: primerNombre(c.nombre) });
 
+// Observaciones: herramienta opcional (clínicas estéticas, faciales, spa…). Si no se eligió, se activa sola según el rubro
+const OBS_RE = /est[eé]tic|cl[ií]nic|facial|\bspa\b|masaj|depil|pesta[ñn]|ceja|derma|podol|kine|tatu|lash|cosmet|nutri|psic|dental|terap|fisio|botox|l[aá]ser|micropig/i;
+const usaObs = () => (typeof cfg().observaciones === 'boolean' ? cfg().observaciones : OBS_RE.test(`${S.negocio?.rubro || ''} ${RUBROS[S.negocio?.rubro]?.nombre || ''}`));
 // Observaciones del cliente: texto general + notas con fecha ("[2026-10-03] texto"), guardadas en el mismo campo
 function partirNotas(n) {
   const general = [], fechadas = [];
@@ -1733,7 +1825,7 @@ function verCliente(id) {
       <div class="kpi"><span class="lbl">Compras</span><span class="val" style="font-size:1.15rem">${r.visitas}</span></div>
       <div class="kpi"><span class="lbl">Última vez</span><span class="val" style="font-size:1.15rem">${r.dias == null ? '—' : r.dias === 0 ? 'Hoy' : `Hace ${r.dias} d`}</span></div></div>
     <div class="small">${c.telefono ? `Teléfono: <span class="num">${esc(c.telefono)}</span>` : 'Sin teléfono'}${c.cumpleanos ? ` · Cumpleaños: ${fechaCorta('2000' + c.cumpleanos.slice(4))}` : ''}</div>
-    ${(() => { const o = partirNotas(c.notas); return `<div class="obs"><h3>Observaciones</h3>${o.general ? `<p class="obs-general">${esc(o.general)}</p>` : ''}
+    ${!usaObs() ? '' : (() => { const o = partirNotas(c.notas); return `<div class="obs"><h3>Observaciones</h3>${o.general ? `<p class="obs-general">${esc(o.general)}</p>` : ''}
       ${o.fechadas.length ? `<div class="obs-lista">${o.fechadas.map((x) => `<div class="obs-item"><span class="small muted">${fechaCorta(x.f)} ${x.f.slice(0, 4)}</span><p>${esc(x.t)}</p></div>`).join('')}</div>` : ''}
       ${!o.general && !o.fechadas.length ? '<p class="small muted" style="margin:0">Sin observaciones todavía.</p>' : ''}
       <div class="obs-nueva"><textarea class="in" id="obs-texto" rows="2" placeholder="Ej: piel sensible, alérgica al látex, prefiere tonos nude…"></textarea><button type="button" class="btn sm" data-act="obs-add" data-id="${c.id}">${icon('plus')}Agregar observación</button></div></div>`; })()}
@@ -1745,10 +1837,10 @@ function formCliente(id, alGuardar) {
   abrirSheet(id ? 'Editar cliente' : 'Nuevo cliente', `<div class="form">
     ${field('Nombre', input('nombre', c.nombre, 'required autocomplete="off"'))}
     <div class="form-row">${field('Teléfono (WhatsApp)', telInput('telefono', c.telefono))}${field('Fecha de nacimiento', input('cumpleanos', c.cumpleanos || '', 'type="date"'), 'Opcional')}</div>
-    ${field('Observaciones', `<textarea class="in" name="notas" id="f-notas" rows="3" placeholder="Alergias, tipo de piel, tratamientos, preferencias…">${esc(partirNotas(c.notas).general)}</textarea>`, 'Solo las ve tu negocio. En la ficha del cliente puedes ir sumando observaciones con fecha.')}</div>`, {
+    ${usaObs() ? field('Observaciones', `<textarea class="in" name="notas" id="f-notas" rows="3" placeholder="Alergias, tipo de piel, tratamientos, preferencias…">${esc(partirNotas(c.notas).general)}</textarea>`, 'Solo las ve tu negocio. En la ficha del cliente puedes ir sumando observaciones con fecha.') : ''}</div>`, {
     submit: (d) => {
       if (!d.nombre.trim()) return toast('Escribe el nombre', true);
-      const row = { nombre: d.nombre.trim(), telefono: d.telefono.trim(), cumpleanos: d.cumpleanos || null, notas: unirNotas(d.notas.trim(), partirNotas(c.notas).fechadas) };
+      const row = { nombre: d.nombre.trim(), telefono: d.telefono.trim(), cumpleanos: d.cumpleanos || null, notas: d.notas == null ? c.notas || '' : unirNotas(d.notas.trim(), partirNotas(c.notas).fechadas) };
       const fin = (r, msg) => { cerrarSheet(); toast(msg); alGuardar ? alGuardar(r) : render(); };
       const guardar = () => fin(id ? db.update('clientes', id, row) : db.insert('clientes', { ...row, creado_en: hoy() }), id ? 'Cliente actualizado' : 'Cliente agregado');
       const gemelo = buscarGemelo(id, row.nombre, row.telefono);
@@ -1843,8 +1935,8 @@ function vistaInventario() {
   filas.sort((a, b) => { const r = (f) => (f.st <= 0 ? 0 : f.st <= Number(f.p.stock_minimo || 0) ? 1 : 2); return r(a) - r(b) || a.p.nombre.localeCompare(b.p.nombre); });
   const movs = [...db.all('movimientos_stock')].filter((m) => m.tipo_item === 'producto').sort((a, b) => b.fecha.localeCompare(a.fecha)).slice(0, 60);
   const pmap = new Map(db.all('productos').map((p) => [p.id, p.nombre]));
-  const MOTIVOS = { venta: 'Venta', compra: 'Ingreso', produccion: 'Producción', ajuste: 'Ajuste', consumo: 'Consumo' };
-  return `${head('Inventario', 'Productos', `<button class="btn" data-act="ajuste">Ajuste o merma</button><button class="btn pri" data-act="ingreso">${icon('plus')}Ingresar stock</button>`)}
+  const MOTIVOS = { venta: 'Venta', compra: 'Compra', produccion: 'Producción', ajuste: 'Ajuste', consumo: 'Consumo' };
+  return `${head('Inventario', 'Productos', `<button class="btn" data-act="ajuste">Ajuste o merma</button><button class="btn pri" data-act="ingreso">${icon('plus')}Compra de mercadería</button>`)}
   <div class="grid g4">
     <div class="card kpi"><span class="lbl">Unidades en stock</span><span class="val">${qtyFmt(sum(filas, (f) => Math.max(0, f.st)))}</span><span class="sub">${filas.length} productos</span></div>
     <div class="card kpi"><span class="lbl">Valor a precio de venta</span><span class="val">${money(sum(filas, (f) => Math.max(0, f.st) * f.p.precio_venta))}</span><span class="sub">precio etiqueta</span></div>
@@ -1854,7 +1946,7 @@ function vistaInventario() {
   <div class="card">
     <div class="card-head"><div class="seg"><button data-act="inv-tab" data-tab="stock" class="${ui.tab === 'stock' ? 'on' : ''}">Stock</button><button data-act="inv-tab" data-tab="movs" class="${ui.tab === 'movs' ? 'on' : ''}">Movimientos</button></div></div>
     <div class="tbl-wrap">${ui.tab === 'stock'
-      ? (filas.length ? `<table><thead><tr><th>Producto</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th>Último movimiento</th><th class="n">Última entrada</th><th class="n">Precio</th><th></th></tr></thead><tbody>${filas.map((f) => { const [e, c] = estado(f); return `<tr><td><b>${esc(f.p.nombre)}</b><div class="small muted">${esc(f.p.sku || '')}</div></td><td class="n"><b>${qtyFmt(f.st)}</b></td><td class="n muted">${qtyFmt(f.p.stock_minimo || 0)}</td><td><span class="pill ${c}">${e}</span></td>${celdasMov('producto', f.p.id)}<td class="n"><button class="link-precio ${Number(f.p.precio_venta) ? '' : 'falta'}" data-act="producto" data-id="${f.p.id}" title="Cambiar precio">${Number(f.p.precio_venta) ? money(f.p.precio_venta) : 'Poner precio'}</button>${Number(f.p.precio_venta) && f.co ? `<div class="small muted">gana ${Math.round(((f.p.precio_venta - f.co) / f.p.precio_venta) * 100)}%</div>` : ''}</td><td class="n" style="white-space:nowrap">${f.p.proveedor_id && f.st <= Number(f.p.stock_minimo || 0) && db.get('proveedores', f.p.proveedor_id) ? `<button class="btn sm icon-btn" data-act="pedido" data-id="${f.p.proveedor_id}" title="Pedir al proveedor" aria-label="Pedir al proveedor">${icon('chat')}</button>` : ''}<button class="btn sm icon-btn" data-act="ingreso" data-id="${f.p.id}" title="Ingresar stock" aria-label="Ingresar stock">${icon('plus')}</button></td></tr>`; }).join('')}</tbody></table>` : '<div class="empty">Agrega productos en el catálogo para controlar su stock.</div>')
+      ? (filas.length ? `<table><thead><tr><th>Producto</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th>Último movimiento</th><th class="n">Última entrada</th><th class="n">Precio</th><th></th></tr></thead><tbody>${filas.map((f) => { const [e, c] = estado(f); return `<tr><td><b>${esc(f.p.nombre)}</b><div class="small muted">${esc(f.p.sku || '')}</div></td><td class="n"><b>${qtyFmt(f.st)}</b></td><td class="n muted">${qtyFmt(f.p.stock_minimo || 0)}</td><td><span class="pill ${c}">${e}</span></td>${celdasMov('producto', f.p.id)}<td class="n"><button class="link-precio ${Number(f.p.precio_venta) ? '' : 'falta'}" data-act="producto" data-id="${f.p.id}" title="Cambiar precio">${Number(f.p.precio_venta) ? money(f.p.precio_venta) : 'Poner precio'}</button>${Number(f.p.precio_venta) && f.co ? `<div class="small muted">gana ${Math.round(((f.p.precio_venta - f.co) / f.p.precio_venta) * 100)}%</div>` : ''}</td><td class="n" style="white-space:nowrap">${f.p.proveedor_id && f.st <= Number(f.p.stock_minimo || 0) && db.get('proveedores', f.p.proveedor_id) ? `<button class="btn sm icon-btn" data-act="pedido" data-id="${f.p.proveedor_id}" title="Pedir al proveedor" aria-label="Pedir al proveedor">${icon('chat')}</button>` : ''}<button class="btn sm icon-btn" data-act="ingreso" data-id="${f.p.id}" title="Compra de mercadería" aria-label="Compra de mercadería">${icon('plus')}</button></td></tr>`; }).join('')}</tbody></table>` : '<div class="empty">Agrega productos en el catálogo para controlar su stock.</div>')
       : (movs.length ? `<table><thead><tr><th>Fecha</th><th>Producto</th><th>Motivo</th><th class="n">Cantidad</th><th>Nota</th></tr></thead><tbody>${movs.map((m) => `<tr><td class="num" style="white-space:nowrap">${fechaConAnio(m.fecha)}</td><td>${esc(pmap.get(m.item_id) || '—')}</td><td>${MOTIVOS[m.motivo] || m.motivo}</td><td class="n ${m.cantidad < 0 ? 'down' : 'up'}">${m.cantidad > 0 ? '+' : ''}${qtyFmt(m.cantidad)}</td><td class="muted small">${esc(m.nota || '')}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">Sin movimientos todavía.</div>')}
     </div></div>`;
 }
@@ -1876,7 +1968,7 @@ function formIngreso(prodId) {
   const prods = db.all('productos').filter((p) => p.activo !== false);
   if (!prods.length) { toast('Primero agrega productos en el catálogo', true); return ir('catalogo'); }
   const p0 = prodId ? db.get('productos', prodId) : prods[0];
-  abrirSheet('Ingresar stock', `<div class="form">
+  abrirSheet('Compra de mercadería', `<div class="form">
     ${field('Producto', `<select class="in" name="producto" id="f-producto">${prods.map((p) => opt(p.id, `${p.nombre} (hay ${qtyFmt(stockDe('producto', p.id))})`, p0.id)).join('')}</select>`)}
     ${camposCompra('unidad', p0.costo)}
     ${field('Precio de venta', `<input class="in" id="f-pv" name="pv" inputmode="numeric" value="${esc(p0.precio_venta || '')}" placeholder="¿A cuánto lo vendes?">`)}
@@ -1927,12 +2019,12 @@ function vistaProduccion() {
       const fs = db.all('formulas').filter((f) => f.producto_id === p.id); const co = costoReceta(p.id); const mg = p.precio_venta - co; const mp = p.precio_venta ? Math.round((mg / p.precio_venta) * 100) : 0;
       return `<div class="card" style="background:var(--surface-2);border:0">
         <div class="between"><h3>${esc(p.nombre)}</h3>${fs.length ? `<span class="pill ${mp >= 50 ? 'ok' : mp >= 30 ? 'warn' : 'bad'}">Margen ${mp}%</span>` : '<span class="pill">Sin receta</span>'}</div>
-        <div class="list" style="margin:8px 0">${fs.map((f) => { const i = db.get('insumos', f.insumo_id); return `<div class="row" style="padding:7px 0"><div class="grow"><div class="s" style="color:var(--ink)">${esc(i?.nombre || '—')}</div></div><span class="small muted num">${qtyFmt(f.cantidad)} ${esc(i?.unidad || '')}</span><span class="r small" style="min-width:70px">${money(f.cantidad * (i?.costo_unitario || 0))}</span><button class="btn sm ghost" data-act="del-formula" data-id="${f.id}" aria-label="Quitar">${icon('x')}</button></div>`; }).join('') || '<div class="small muted" style="padding:6px 0">Agrega los insumos que lleva una unidad.</div>'}</div>
+        <div class="list" style="margin:8px 0">${fs.map((f) => { const i = db.get('insumos', f.insumo_id); return `<div class="row" style="padding:7px 0"><div class="grow"><div class="s" style="color:var(--ink)">${esc(i?.nombre || '—')}</div></div><span class="small muted num">${qtyFmt(f.cantidad)} ${esc(i?.unidad || '')}</span><span class="r small" style="min-width:70px">${money(f.cantidad * (i?.costo_unitario || 0))}</span></div>`; }).join('') || '<div class="small muted" style="padding:6px 0">Agrega los insumos que lleva una unidad.</div>'}</div>
         <div class="between small"><span class="muted">Costo ${money(co)} · Precio ${money(p.precio_venta)}</span><b class="num">Ganas ${money(mg)} por unidad</b></div>
-        ${fs.length ? `<button class="btn sm" style="margin-top:10px" data-act="formula" data-id="${p.id}" ${ins.length ? '' : 'disabled'}>${icon('plus')}Agregar insumo</button>` : `<button class="btn sm pri" style="margin-top:10px" data-act="receta" data-id="${p.id}">${icon('plus')}Armar receta</button>`}</div>`;
+        ${fs.length ? `<button class="btn sm" style="margin-top:10px" data-act="receta" data-id="${p.id}" data-editar="1">${icon('edit')}Editar receta</button>` : `<button class="btn sm pri" style="margin-top:10px" data-act="receta" data-id="${p.id}">${icon('plus')}Armar receta</button>`}</div>`;
     }).join('')}</div>` : `<div class="empty">Todavía no hay recetas. Con <b>Nueva receta</b> anotas qué lleva cada producto y MiDerno calcula cuánto te cuesta hacerlo y cuánto ganas.</div>`;
   } else if (ui.tab === 'insumos') {
-    cuerpo = ins.length ? `<div class="tbl-wrap"><table><thead><tr><th>Insumo</th><th class="n">Costo</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th>Último movimiento</th><th class="n">Última entrada</th><th></th></tr></thead><tbody>${ins.map((i) => { const st = stockDe('insumo', i.id); const bajo = st <= Number(i.stock_minimo || 0); return `<tr><td><b>${esc(i.nombre)}</b></td><td class="n">${money(i.costo_unitario)} / ${esc(i.unidad)}</td><td class="n"><b>${qtyFmt(st)}</b> ${esc(i.unidad)}</td><td class="n muted">${qtyFmt(i.stock_minimo || 0)}</td><td>${bajo ? '<span class="pill warn">Reponer</span>' : '<span class="pill ok">OK</span>'}</td>${celdasMov('insumo', i.id)}<td class="n" style="white-space:nowrap">${bajo && i.proveedor_id && db.get('proveedores', i.proveedor_id) ? `<button class="btn sm" data-act="pedido" data-id="${i.proveedor_id}">${icon('chat')}Pedir</button>` : ''}<button class="btn sm" data-act="compra-insumo" data-id="${i.id}">+ Compra</button><button class="btn sm ghost" data-act="insumo" data-id="${i.id}" aria-label="Editar">${icon('edit')}</button></td></tr>`; }).join('')}</tbody></table></div>` : '<div class="empty">Registra tus materias primas: cera, frascos, esencias, harina…</div>';
+    cuerpo = ins.length ? `<div class="tbl-wrap"><table><thead><tr><th>Insumo</th><th class="n">Costo</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th>Último movimiento</th><th class="n">Última entrada</th><th></th></tr></thead><tbody>${ins.map((i) => { const st = stockDe('insumo', i.id); const bajo = st <= Number(i.stock_minimo || 0); return `<tr><td><button type="button" class="link-btn" data-act="insumo" data-id="${i.id}"><b>${esc(i.nombre)}</b></button>${db.all('formulas').some((f) => f.insumo_id === i.id) ? `<div class="small muted">En ${new Set(db.all('formulas').filter((f) => f.insumo_id === i.id).map((f) => f.producto_id)).size} receta(s)</div>` : ''}</td><td class="n">${money(i.costo_unitario)} / ${esc(i.unidad)}</td><td class="n"><b>${qtyFmt(st)}</b> ${esc(i.unidad)}</td><td class="n muted">${qtyFmt(i.stock_minimo || 0)}</td><td>${bajo ? '<span class="pill warn">Reponer</span>' : '<span class="pill ok">OK</span>'}</td>${celdasMov('insumo', i.id)}<td class="n" style="white-space:nowrap">${bajo && i.proveedor_id && db.get('proveedores', i.proveedor_id) ? `<button class="btn sm" data-act="pedido" data-id="${i.proveedor_id}">${icon('chat')}Pedir</button>` : ''}<button class="btn sm" data-act="compra-insumo" data-id="${i.id}">+ Compra</button><button class="btn sm ghost" data-act="insumo" data-id="${i.id}" aria-label="Editar">${icon('edit')}</button></td></tr>`; }).join('')}</tbody></table></div>` : '<div class="empty">Registra tus materias primas: cera, frascos, esencias, harina…</div>';
   } else {
     const ls = [...db.all('lotes')].sort((a, b) => b.fecha.localeCompare(a.fecha)).slice(0, 40);
     cuerpo = ls.length ? `<div class="tbl-wrap"><table><thead><tr><th>Fabricado</th><th>Producto</th><th class="n">Unidades</th><th class="n">Costo total</th><th class="n">Costo c/u</th><th>Estado</th></tr></thead><tbody>${ls.map((l) => `<tr><td class="num">${fechaCorta(l.fecha)}</td><td>${esc(db.get('productos', l.producto_id)?.nombre || '—')}</td><td class="n">${qtyFmt(l.cantidad)}</td><td class="n">${money(l.costo_total)}</td><td class="n">${money(l.costo_total / (l.cantidad || 1))}</td><td>${l.listo_desde > H ? `<span class="pill warn">Listo el ${fechaCorta(l.listo_desde)}</span>` : '<span class="pill ok">Listo para vender</span>'}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">Cuando fabriques, registra el lote: descuenta los insumos y suma el producto al stock.</div>';
@@ -1947,16 +2039,19 @@ function formInsumo(id) {
   const i = id ? db.get('insumos', id) : { nombre: '', unidad: 'unidad', costo_unitario: '', stock_minimo: 0, proveedor_id: null };
   abrirSheet(id ? 'Editar insumo' : 'Nuevo insumo', `<div class="form">${field('Nombre', input('nombre', i.nombre, 'required placeholder="Ej: Cera de soya"'))}
     <div class="form-row">${field('Unidad', `<select class="in" name="unidad" id="f-unidad">${[...new Set([...unidades(), i.unidad])].map((u) => opt(u, u, i.unidad)).join('')}</select>`, id ? 'Si cambias de kg a gr (o lt a ml), convertimos stock, recetas y costo solos.' : '')}${field('Costo por unidad', input('costo_unitario', i.costo_unitario, 'inputmode="decimal" required'))}</div>
-    <div class="form-row">${field('Avisar cuando queden', input('stock_minimo', i.stock_minimo, 'type="number" min="0" step="any"'))}${!id ? field('Stock inicial', input('stock_inicial', '', 'type="number" min="0" step="any"')) : ''}</div>
+    <div class="form-row">${field('Avisar cuando queden', input('stock_minimo', i.stock_minimo, 'type="number" min="0" step="any"'))}${!id ? field('Stock inicial', input('stock_inicial', '', 'type="number" min="0" step="any"')) : field('Stock actual', input('stock_real', Math.round(stockDe('insumo', id) * 1000) / 1000, 'type="number" min="0" step="any"'), 'Si contaste y no coincide, corrígelo aquí.')}</div>
+    ${id && db.all('formulas').some((f) => f.insumo_id === id) ? `<p class="small muted">Se usa en: ${esc([...new Set(db.all('formulas').filter((f) => f.insumo_id === id).map((f) => db.get('productos', f.producto_id)?.nombre).filter(Boolean))].join(', '))}. Si cambias el costo, esas recetas se recalculan solas.</p>` : ''}
     ${db.all('proveedores').filter((x) => x.tipo !== 'contacto').length ? field('Proveedor', `<select class="in" name="proveedor_id" id="f-proveedor_id">${opt('', 'Sin proveedor', i.proveedor_id)}${db.all('proveedores').filter((x) => x.tipo !== 'contacto').map((x) => opt(x.id, x.nombre, i.proveedor_id)).join('')}</select>`, 'Para avisarte a quién pedirle cuando quede poco') : ''}</div>`, {
     submit: (d) => {
       if (!d.nombre.trim()) return toast('Escribe el nombre', true);
       const row = { ...(d.proveedor_id !== undefined ? { proveedor_id: d.proveedor_id || null } : {}), nombre: d.nombre.trim(), unidad: d.unidad, costo_unitario: Number(String(d.costo_unitario).replace(',', '.')) || 0, stock_minimo: Number(d.stock_minimo) || 0 };
       if (id && i.unidad !== row.unidad) { const f = factorUnidad(i.unidad, row.unidad); if (f) { convertirInsumo(id, f); row.costo_unitario = Math.round((row.costo_unitario / f) * 10000) / 10000; row.stock_minimo = row.stock_minimo * f; S._msgConv = `Convertimos stock, recetas y costo de ${i.unidad} a ${row.unidad}`; } }
       const r = id ? db.update('insumos', id, row) : db.insert('insumos', row);
+      if (id && !S._msgConv && d.stock_real !== '' && d.stock_real != null) { const dif = Math.round((Number(String(d.stock_real).replace(',', '.')) - stockDe('insumo', id)) * 1000) / 1000; if (dif) db.insert('movimientos_stock', { tipo_item: 'insumo', item_id: id, cantidad: dif, motivo: 'ajuste', ref_id: null, fecha: hoy(), nota: 'Corrección de stock' }); }
       if (!id && Number(d.stock_inicial) > 0) db.insert('movimientos_stock', { tipo_item: 'insumo', item_id: r.id, cantidad: Number(d.stock_inicial), motivo: 'compra', ref_id: null, fecha: hoy(), nota: 'Stock inicial' });
       cerrarSheet(); toast(S._msgConv || 'Insumo guardado'); S._msgConv = null; render();
     },
+    ...(id ? { pie: `<div class="sheet-foot" style="justify-content:space-between"><button type="button" class="btn danger" data-act="del-insumo" data-id="${id}">${icon('trash')}Eliminar</button><div class="hstack"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri" type="submit">Guardar</button></div></div>` } : {}),
   });
 }
 function formCompraInsumo(id) {
@@ -1974,15 +2069,7 @@ function formCompraInsumo(id) {
     },
   });
   escucharCompra(i.unidad, i.costo_unitario);
-}function formFormula(prodId) {
-  const p = db.get('productos', prodId); const ya = new Set(db.all('formulas').filter((f) => f.producto_id === prodId).map((f) => f.insumo_id));
-  const libres = db.all('insumos').filter((i) => !ya.has(i.id)); if (!libres.length) return toast('Ya agregaste todos los insumos a esta receta');
-  abrirSheet('Receta de ' + esc(p.nombre), `<div class="form">${field('Insumo', `<select class="in" name="insumo" id="f-insumo">${libres.map((i) => opt(i.id, `${i.nombre} (${money(i.costo_unitario)} / ${i.unidad})`)).join('')}</select>`)}
-    ${field('Cantidad por unidad de producto', input('cantidad', '', 'type="number" min="0" step="any" required'), 'Ej: una vela de 200 g lleva 0,18 kg de cera')}</div>`, {
-    submit: (d) => { const c = Number(String(d.cantidad).replace(',', '.')); if (!(c > 0)) return toast('Escribe la cantidad', true); db.insert('formulas', { producto_id: prodId, insumo_id: d.insumo, cantidad: c }); cerrarSheet(); render(); },
-  });
-}
-function formLote() {
+}function formLote() {
   const prods = db.all('productos').filter((p) => p.activo !== false && db.all('formulas').some((f) => f.producto_id === p.id));
   if (!prods.length) { S.ui.prod.tab = 'recetas'; render(); return toast('Primero arma la receta de algún producto', true); }
   abrirSheet('Registrar lote', `<div class="form">${field('Producto', `<select class="in" name="producto" id="f-producto">${prods.map((p) => opt(p.id, p.nombre)).join('')}</select>`)}
@@ -2011,10 +2098,10 @@ function unidadesPara(base) {
   const extra = Object.keys(CONVERSIONES).filter((k) => k.startsWith(norm(base) + '>')).map((k) => k.split('>')[1]).filter((u) => u !== 'g' && u !== norm(base));
   return [base, ...extra];
 }
-function filaReceta(ins) {
+function filaReceta(ins, f) {
   return `<div class="rec-row">
-    <select class="in rec-ins" aria-label="Insumo">${opt('', 'Elige un insumo…')}${ins.map((i) => opt(i.id, `${i.nombre} (${money(i.costo_unitario)} / ${i.unidad})`)).join('')}<option value="__nuevo">+ Insumo nuevo…</option></select>
-    <input class="in rec-cant" inputmode="decimal" placeholder="Cantidad" aria-label="Cantidad por unidad">
+    <select class="in rec-ins" aria-label="Insumo">${opt('', 'Elige un insumo…')}${ins.map((i) => opt(i.id, `${i.nombre} (${money(i.costo_unitario)} / ${i.unidad})`, f?.insumo_id)).join('')}<option value="__nuevo">+ Insumo nuevo…</option></select>
+    <input class="in rec-cant" inputmode="decimal" placeholder="Cantidad" aria-label="Cantidad por unidad" value="${f ? esc(String(Math.round(Number(f.cantidad) * 10000) / 10000).replace('.', ',')) : ''}">
     <select class="in rec-uni" aria-label="Unidad de medida">${unidades().map((u) => opt(u, u)).join('')}</select>
     <button type="button" class="btn icon-btn ghost rec-del" aria-label="Quitar fila">${icon('x')}</button>
     <div class="rec-nuevo" hidden>
@@ -2025,15 +2112,18 @@ function filaReceta(ins) {
 }
 // precio sugerido según el margen que se quiere ganar, redondeado como precio de vitrina
 const precioVitrina = (p) => (p >= 10000 ? Math.ceil(p / 1000) * 1000 - 10 : p >= 1000 ? Math.ceil(p / 100) * 100 - 10 : Math.ceil(p / 50) * 50);
-function formReceta(prodId) {
+function formReceta(prodId, editar = false) {
+  const fsAct = prodId ? db.all('formulas').filter((f) => f.producto_id === prodId) : [];
+  if (prodId && fsAct.length) editar = true;
   const sinReceta = db.all('productos').filter((p) => p.activo !== false && !db.all('formulas').some((f) => f.producto_id === p.id));
   const ins = [...db.all('insumos')].sort((a, b) => a.nombre.localeCompare(b.nombre));
-  const sel = prodId || (sinReceta[0]?.id ?? '__nuevo');
-  abrirSheet('Nueva receta', `<div class="form">
-    ${field('¿Para qué producto?', `<select class="in" id="rec-prod">${sinReceta.map((p) => opt(p.id, p.nombre, sel)).join('')}<option value="__nuevo" ${sel === '__nuevo' ? 'selected' : ''}>+ Producto nuevo…</option></select>`)}
-    <div id="rec-prod-nuevo" ${sel === '__nuevo' ? '' : 'hidden'}>${field('Nombre del producto', '<input class="in" id="rec-p-nombre" placeholder="Ej: Vela de coco 200 g">')}</div>
-    <div class="field"><label>¿Qué lleva una unidad?</label><span class="hint" style="margin-top:-2px">Elige la medida que te acomode en cada fila: por ejemplo 180 gr aunque compres la cera por kilo.</span>
-      <div class="stack" id="rec-filas">${filaReceta(ins)}${filaReceta(ins)}</div>
+  const sel = prodId || (sinReceta[0]?.id ?? '__nuevo'); const pAct = editar ? db.get('productos', prodId) : null;
+  abrirSheet(editar ? 'Editar receta' : 'Nueva receta', `<div class="form">
+    ${editar ? `<input type="hidden" id="rec-prod" value="${esc(prodId)}">${field('Producto', `<input class="in" id="rec-p-renombrar" value="${esc(pAct.nombre)}" aria-label="Nombre del producto">`, 'Puedes cambiarle el nombre aquí mismo.')}`
+    : `${field('¿Para qué producto?', `<select class="in" id="rec-prod">${sinReceta.map((p) => opt(p.id, p.nombre, sel)).join('')}<option value="__nuevo" ${sel === '__nuevo' ? 'selected' : ''}>+ Producto nuevo…</option></select>`)}
+    <div id="rec-prod-nuevo" ${sel === '__nuevo' ? '' : 'hidden'}>${field('Nombre del producto', '<input class="in" id="rec-p-nombre" placeholder="Ej: Vela de coco 200 g">')}</div>`}
+    <div class="field"><label>¿Qué lleva una unidad?</label><span class="hint" style="margin-top:-2px">Elige la medida que te acomode en cada fila: por ejemplo 180 gr aunque compres la cera por kilo.${editar ? ' Toca la ✕ para sacar un insumo.' : ''}</span>
+      <div class="stack" id="rec-filas">${editar ? fsAct.map((f) => filaReceta(ins, f)).join('') : filaReceta(ins) + filaReceta(ins)}</div>
       <button type="button" class="btn sm" id="rec-mas" style="align-self:flex-start">${icon('plus')}Agregar otro insumo</button></div>
     <div class="banner" id="rec-resumen" style="background:var(--accent-soft)">Agrega los insumos para ver cuánto te cuesta hacer una unidad.</div>
     <div class="field" id="rec-precio-box"><label for="rec-p-precio">Precio de venta</label>
@@ -2042,6 +2132,7 @@ function formReceta(prodId) {
       <span class="hint" id="rec-margen"></span></div>
   </div>`, {
     submit: () => guardarReceta(),
+    ...(editar ? { pie: `<div class="sheet-foot" style="justify-content:space-between"><button type="button" class="btn danger" data-act="del-receta" data-id="${esc(prodId)}">${icon('trash')}Borrar receta</button><div class="hstack"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri" type="submit">Guardar cambios</button></div></div>` } : {}),
   });
   const form = $('#sheet-form');
   const ajustarUnidades = (r) => {
@@ -2081,6 +2172,8 @@ function formReceta(prodId) {
 }
 function guardarReceta() {
   const form = $('#sheet-form'); let prodId = $('#rec-prod').value; const precio = num($('#rec-p-precio').value);
+  const editando = !!$('#rec-p-renombrar'); const nuevoNombre = editando ? $('#rec-p-renombrar').value.trim() : '';
+  if (editando && !nuevoNombre) return toast('Escribe el nombre del producto', true);
   if (prodId === '__nuevo' && !$('#rec-p-nombre').value.trim()) return toast('Escribe el nombre del producto', true);
   const lineas = [];
   for (const r of form.querySelectorAll('.rec-row')) {
@@ -2102,12 +2195,16 @@ function guardarReceta() {
   if (!(precio > 0)) return toast('Elige una sugerencia o escribe el precio de venta', true);
   if (prodId === '__nuevo') prodId = db.insert('productos', { nombre: $('#rec-p-nombre').value.trim(), sku: '', precio_venta: precio, costo: 0, stock_minimo: 0, activo: true }).id;
   else if (Number(db.get('productos', prodId).precio_venta) !== precio) db.update('productos', prodId, { precio_venta: precio });
+  if (editando) {
+    if (nuevoNombre !== db.get('productos', prodId).nombre) db.update('productos', prodId, { nombre: nuevoNombre });
+    db.removeMany('formulas', db.all('formulas').filter((f) => f.producto_id === prodId).map((f) => f.id));
+  }
   for (const l of lineas) {
     const insumoId = l.id || db.insert('insumos', l.nuevo).id;
     db.insert('formulas', { producto_id: prodId, insumo_id: insumoId, cantidad: l.cant });
   }
   const p = db.get('productos', prodId);
-  cerrarSheet(); S.ui.prod.tab = 'recetas'; toast(`Receta guardada: ${p.nombre} cuesta ${money(costoReceta(prodId))} y se vende a ${money(p.precio_venta)}`); render();
+  cerrarSheet(); S.ui.prod.tab = 'recetas'; toast(`${editando ? 'Receta actualizada' : 'Receta guardada'}: ${p.nombre} cuesta ${money(costoReceta(prodId))} y se vende a ${money(p.precio_venta)}`); render();
 }
 
 /* ---------- cambio de unidad (kg ↔ gr, lt ↔ ml, mt ↔ cm) ---------- */
@@ -2119,7 +2216,6 @@ function convertirInsumo(id, f) {
 }
 
 const fechaConAnio = (f) => fechaCorta(f) + (String(f).slice(0, 4) !== hoy().slice(0, 4) ? ' ' + String(f).slice(0, 4) : '');
-const MOTIVOS_TXT = { venta: 'venta', compra: 'ingreso', produccion: 'producción', ajuste: 'ajuste', consumo: 'consumo' };
 // dos columnas: cuándo y qué fue el último movimiento, y cuánto entró o salió
 function celdasMov(tipo, id) {
   const ms = db.all('movimientos_stock').filter((m) => m.tipo_item === tipo && m.item_id === id);
@@ -2130,6 +2226,22 @@ function celdasMov(tipo, id) {
   // última entrada: la cantidad que llegó (compra o producción), siempre en positivo
   const ent = ms.filter((m) => m.cantidad > 0 && (m.motivo === 'compra' || m.motivo === 'produccion')).reduce((a, b) => (!a || b.fecha > a.fecha ? b : a), null);
   return `<td class="small" style="white-space:nowrap">${fechaConAnio(u.fecha)}<div class="muted">${que}</div></td><td class="n small" style="white-space:nowrap">${ent ? `<b class="num">${qtyFmt(ent.cantidad)}${esc(un)}</b><div class="muted">${fechaConAnio(ent.fecha)}</div>` : '<span class="muted">—</span>'}</td>`;
+}
+
+function borrarInsumo(id) {
+  const i = db.get('insumos', id); if (!i) return;
+  const fs = db.all('formulas').filter((f) => f.insumo_id === id); const prods = [...new Set(fs.map((f) => db.get('productos', f.producto_id)?.nombre).filter(Boolean))];
+  confirmar(`Se eliminará <b>${esc(i.nombre)}</b>${prods.length ? ` y se sacará de ${prods.length === 1 ? 'la receta' : 'las recetas'} de ${esc(prods.join(', '))}` : ''}.`, () => {
+    db.removeMany('formulas', fs.map((f) => f.id));
+    db.removeMany('movimientos_stock', db.all('movimientos_stock').filter((m) => m.tipo_item === 'insumo' && m.item_id === id).map((m) => m.id));
+    db.remove('insumos', id); toast('Insumo eliminado'); render();
+  });
+}
+function borrarReceta(prodId) {
+  const p = db.get('productos', prodId); if (!p) return;
+  confirmar(`Se borrará la receta de <b>${esc(p.nombre)}</b>. El producto y sus insumos se mantienen.`, () => {
+    db.removeMany('formulas', db.all('formulas').filter((f) => f.producto_id === prodId).map((f) => f.id)); toast('Receta borrada'); render();
+  }, 'Borrar receta');
 }
 
 /* =========================================================
@@ -3555,6 +3667,7 @@ function ajustesGeneral() {
     <div class="card"><div class="card-head"><h2>Herramientas activas</h2></div>
       <p class="small muted" style="margin-bottom:8px">Caja, clientes, agenda, proveedores y catálogo vienen siempre. Activa lo que tu negocio necesita y el menú se ajusta solo.</p>
       ${Object.entries(MODULOS).map(([k, m]) => `<div class="mod-row"><div class="grow"><b>${m.nombre}</b><small>${m.desc}${m.requiere ? ' · Necesita ' + MODULOS[m.requiere].nombre.toLowerCase() : ''}</small></div><label class="toggle" aria-label="${m.nombre}"><input type="checkbox" data-change="modulo" data-m="${k}" ${tiene(k) ? 'checked' : ''}><span></span></label></div>`).join('')}
+      <div class="mod-row"><div class="grow"><b>Observaciones de clientes</b><small>Fichas con notas por fecha: alergias, tipo de piel, tratamientos. Ideal para clínicas estéticas, faciales y spa.</small></div><label class="toggle" aria-label="Observaciones de clientes"><input type="checkbox" data-change="obs-on" ${usaObs() ? 'checked' : ''}><span></span></label></div>
     </div>
     <div class="card"><div class="card-head"><div><h2>Meta del mes</h2><p>Opcional. Si la dejas vacía, no aparece en Inicio.</p></div></div>
       <form class="form" id="form-meta">${field(`Cuánto quieres vender en ${esc(nombreMes(ym))}`, `<input class="in" name="monto" id="f-meta" inputmode="numeric" value="${meta ? meta.monto_objetivo : ''}" placeholder="Sin meta">`)}
@@ -3562,7 +3675,7 @@ function ajustesGeneral() {
     </div>
     <div class="card"><div class="card-head"><h2>Cuenta y datos</h2></div>
       <div class="stack"><p class="small"><span class="dot ${S.modo === 'nube' ? 'cloud' : ''}"></span> ${S.modo === 'nube' ? 'Tus datos están en la nube y puedes entrar desde cualquier dispositivo.' : 'Tus datos están guardados solo en este navegador. Si borras los datos del navegador, se pierden.'}</p>
-      <div class="hstack"><a class="btn" href="#importar">${icon('upload')}Importar Excel</a>${conceptosLibres().length ? `<button class="btn" data-act="ordenar">Ordenar lo importado</button>` : ''}${esDemo ? '' : '<button class="btn" data-act="empezar-cero">Empezar de cero</button>'}<button class="btn" data-act="salir">${icon('out')}${S.modo === 'nube' ? 'Cerrar sesión' : 'Cambiar de negocio'}</button>
+      <div class="hstack"><a class="btn" href="#importar">${icon('upload')}Importar Excel</a>${conceptosLibres().length ? `<button class="btn" data-act="ordenar">Ordenar lo importado</button>` : ''}${esDemo ? '' : '<button class="btn" data-act="empezar-cero">Empezar de cero</button>'}${S.modo === 'nube' ? `<button class="btn" data-act="cambiar-clave">${icon('key')}Cambiar contraseña</button>` : ''}<button class="btn" data-act="salir">${icon('out')}${S.modo === 'nube' ? 'Cerrar sesión' : 'Cambiar de negocio'}</button>
       ${S.modo === 'local' ? (esDemo ? '<button class="btn danger" data-act="reset-demo">Restablecer ejemplo</button>' : '<button class="btn danger" data-act="del-negocio">Eliminar negocio</button>') : ''}</div></div>
     </div>
   </div>`;
@@ -3677,25 +3790,6 @@ document.addEventListener('submit', (e) => {
 });
 
 /* ---------- BALANCE (Inicio) ---------- */
-function tarjetaBalance(ym) {
-  const vs = ventasDelMes(ym); const gs = gastosDelMes(ym);
-  const com = sum(db.all('comisiones').filter((c) => mesDe(c.fecha) === ym), (c) => Number(c.monto));
-  const ing = sum(vs, (v) => Number(v.total)); const gas = sum(gs, (g) => Number(g.monto));
-  const porMet = Object.entries(vs.reduce((a, v) => { const k = metodoLabel(v.metodo_pago) || 'Otro'; a[k] = (a[k] || 0) + Number(v.total); return a; }, {})).sort((a, b) => b[1] - a[1]);
-  const porCat = Object.entries(gs.reduce((a, g) => { a[g.categoria || 'Otros'] = (a[g.categoria || 'Otros'] || 0) + Number(g.monto); return a; }, {})).sort((a, b) => b[1] - a[1]);
-  if (com) porCat.push(['Comisiones del equipo', com]);
-  const res = ing - gas - com;
-  const anio = ym.slice(0, 4); const vA = db.all('ventas').filter((v) => v.fecha.startsWith(anio)); const gA = db.all('gastos').filter((g) => g.fecha.startsWith(anio)); const cA = db.all('comisiones').filter((c) => c.fecha.startsWith(anio));
-  const ingA = sum(vA, (v) => Number(v.total)); const egrA = sum(gA, (g) => Number(g.monto)) + sum(cA, (c) => Number(c.monto));
-  const fila = ([l, v]) => `<div class="bal-row"><span>${esc(l)}</span><span class="num">${money(v)}</span></div>`;
-  return `<div class="card"><div class="card-head"><h2>Balance de ${esc(nombreMes(ym))}</h2><span class="pill ${res >= 0 ? 'ok' : 'bad'}">${res >= 0 ? 'Ganancia' : 'Pérdida'} ${money(Math.abs(res))}</span></div>
-    <div class="balance">
-      <div><div class="bal-head"><span>Entró</span><b class="num up">${money(ing)}</b></div>${porMet.map(fila).join('') || '<div class="small muted">Sin ventas</div>'}</div>
-      <div><div class="bal-head"><span>Salió</span><b class="num down">${money(gas + com)}</b></div>${porCat.map(fila).join('') || '<div class="small muted">Sin egresos</div>'}</div>
-    </div>
-    <div class="bal-total"><span>Resultado del mes</span><b class="num ${res < 0 ? 'down' : ''}">${money(res)}</b></div>
-    <div class="small muted" style="margin-top:6px">En ${anio}: entró ${money(ingA)}, salió ${money(egrA)}, resultado <b class="num">${money(ingA - egrA)}</b>.</div></div>`;
-}
 
 // insertar variables y vista previa en vivo del editor de mensajes
 document.addEventListener('click', (e) => {
@@ -3879,7 +3973,8 @@ function abrirEquipoPreview(empId) { ACCIONES['eq-preview']({ dataset: { id: emp
 function formEquipoLogin() {
   abrirSheet('Entrar como parte del equipo', `<div class="form">
     <div class="form-row">${field('Correo', input('email', '', 'type="email" autocomplete="email" required'))}${field('Contraseña', input('password', '', 'type="password" autocomplete="current-password" minlength="6" required'), 'Mínimo 6 caracteres')}</div>
-    ${field('Código de acceso', input('codigo', '', 'autocomplete="off" placeholder="Solo la primera vez" style="text-transform:uppercase;letter-spacing:.1em"'), 'Te lo da el dueño del negocio. La primera vez se crea tu cuenta con este correo y contraseña.')}</div>`, {
+    ${field('Código de acceso', input('codigo', '', 'autocomplete="off" placeholder="Solo la primera vez" style="text-transform:uppercase;letter-spacing:.1em"'), 'Te lo da el dueño del negocio. La primera vez se crea tu cuenta con este correo y contraseña.')}
+    <a href="#" class="link-sm" data-act="olvide" style="align-self:flex-start">¿Olvidaste tu contraseña?</a></div>`, {
     pie: '<div class="sheet-foot"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri" type="submit">Entrar</button></div>',
     submit: async (d) => {
       const email = d.email.trim(); const codigo = d.codigo.trim().toUpperCase();
@@ -3999,6 +4094,7 @@ function vistaInicio() {
     <a class="accion" href="#vender" data-act="reg-gasto"><span class="ac-ico out">${icon('minus')}</span>${t_('gasto')}</a>
     <a class="accion" href="#agenda" data-act="agendar-ir"><span class="ac-ico">${icon('cal')}</span>${t_('agendar')}</a>
   </div>
+  ${tarjetaGuia()}
   ${alertas.length ? `<section class="stack"><h2>${t_('para_hoy')}</h2><div class="stack" style="gap:8px">${alertas.map((a) => `<a class="alert-row" href="#${a.href}" ${a.act ? `data-act="${a.act}"` : ''} ${a.id ? `data-id="${a.id}"` : ''}><span class="sev ${a.sev}"></span><div class="grow"><b>${esc(a.t)}</b>${a.s ? `<small>${esc(a.s)}</small>` : ''}</div>${icon('right')}</a>`).join('')}</div></section>` : ''}
   <section class="stack"><div class="between"><h2>${t_('ultimos')}</h2><a class="small" href="#caja">${t_('ver_todo')}</a></div>
     <div class="list">${movs.length ? movs.map((m) => `<div class="row"><span class="mov-ico t-${m.tipo}">${icon(m.tipo === 'in' ? 'plus' : 'minus')}</span><div class="grow"><div class="t" style="font-weight:500">${esc(m.t)}</div><div class="s">${fechaCorta(m.f)}${m.s ? ' · ' + esc(m.s) : ''}</div></div><b class="r num ${m.tipo === 'in' ? 'up' : ''}">${m.tipo === 'in' ? '+' : '−'}${money(m.monto)}</b></div>`).join('') : `<div class="empty">${t_('vacio_mov')}</div>`}</div></section>`;
@@ -4047,9 +4143,23 @@ function formatearMonto(el, mantenerCursor = true, inicial = false) {
 function prepararMontos(raiz = document) { raiz.querySelectorAll?.('input[inputmode="numeric"]:not([data-nofmt])').forEach((el) => { if (el.value && !el.dataset.fmt) formatearMonto(el, false, true); }); }
 document.addEventListener('input', (e) => { if (esMonto(e.target)) formatearMonto(e.target); }, true);
 document.addEventListener('focusout', (e) => { if (esMonto(e.target)) formatearMonto(e.target, false); }, true);
+// Contraseñas: botón de ojo para ver lo que se escribió
+function prepararClaves(raiz = document) {
+  raiz.querySelectorAll?.('input[type="password"]:not([data-ojo])').forEach((el) => {
+    el.dataset.ojo = '1'; const w = document.createElement('div'); w.className = 'clave-wrap';
+    el.parentNode.insertBefore(w, el); w.appendChild(el);
+    w.insertAdjacentHTML('beforeend', `<button type="button" class="ver-clave" aria-label="Mostrar contraseña" aria-pressed="false" tabindex="0">${icon('ojo')}</button>`);
+  });
+}
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('.ver-clave'); if (!b) return; e.preventDefault();
+  const el = b.parentNode.querySelector('input'); const ver = el.type === 'password';
+  el.type = ver ? 'text' : 'password'; b.setAttribute('aria-pressed', String(ver)); b.setAttribute('aria-label', ver ? 'Ocultar contraseña' : 'Mostrar contraseña');
+  b.innerHTML = icon(ver ? 'ojo-no' : 'ojo'); el.focus({ preventScroll: true });
+});
 // cualquier campo nuevo en pantalla (vistas y ventanas) se muestra con puntos
 let _montosPend = false;
-new MutationObserver(() => { if (_montosPend) return; _montosPend = true; queueMicrotask(() => { _montosPend = false; prepararMontos(); }); }).observe(document.documentElement, { childList: true, subtree: true });
+new MutationObserver(() => { if (_montosPend) return; _montosPend = true; queueMicrotask(() => { _montosPend = false; prepararMontos(); prepararClaves(); }); }).observe(document.documentElement, { childList: true, subtree: true });
 
 // Cifras grandes que suben desde cero al entrar a una vista
 function animarCifras(raiz = document) {
@@ -4174,6 +4284,82 @@ function borrarHistorial({ ventas, gastos, clientes, stock } = {}) {
 const hayHistorial = () => db.all('ventas').length + db.all('gastos').length + db.all('clientes').length > 0;
 
 /* =========================================================
+   Ayuda: primeros pasos, consejos por pantalla y asistente
+   ========================================================= */
+
+// Lista de primeros pasos según lo que usa el negocio. Cada paso se marca solo cuando ya está hecho.
+function pasosGuia() {
+  const t = (x) => db.all(x).length > 0;
+  const p = [
+    { k: 'catalogo', t: 'Anota lo que vendes', s: 'Tus servicios o productos con su precio', hecho: t('servicios') || t('productos'), href: 'catalogo' },
+    { k: 'ingreso', t: 'Registra tu primer ingreso', s: 'Una venta o un servicio cobrado', hecho: t('ventas'), href: 'vender', act: 'reg-ingreso' },
+    { k: 'egreso', t: 'Registra un egreso', s: 'Arriendo, insumos, lo que salga de la caja', hecho: t('gastos'), href: 'vender', act: 'reg-gasto' },
+    { k: 'cliente', t: 'Agrega un cliente', s: 'Para saber quién vuelve y a quién escribirle', hecho: t('clientes'), href: 'clientes' },
+  ];
+  if (tiene('servicios')) p.push({ k: 'cita', t: 'Agenda tu primera hora', s: 'Y envía el recordatorio por WhatsApp', hecho: t('citas'), href: 'agenda' });
+  if (tiene('inventario')) p.push({ k: 'stock', t: 'Carga tu stock', s: 'Cuántas unidades tienes de cada producto', hecho: db.all('movimientos_stock').some((m) => m.tipo_item === 'producto'), href: 'inventario' });
+  if (tiene('produccion')) p.push({ k: 'receta', t: 'Arma tu primera receta', s: 'Qué lleva cada producto y cuánto te cuesta', hecho: t('formulas'), href: 'produccion' });
+  return p;
+}
+function tarjetaGuia() {
+  if (cfg().guia_oculta || S.negocio?.id?.startsWith('demo-')) return '';
+  const p = pasosGuia(); const listos = p.filter((x) => x.hecho).length;
+  if (listos === p.length) return '';
+  return `<section class="card guia"><div class="guia-head"><div><h2>Primeros pasos</h2><p class="small muted" style="margin:2px 0 0">${listos} de ${p.length} listos · ¿Ya tienes todo en un Excel? <a href="#importar">Impórtalo</a></p></div><button class="btn sm ghost" data-act="guia-ocultar">Ocultar</button></div>
+    <div class="bar-fina" style="margin:10px 0 4px"><i style="width:${Math.round((listos / p.length) * 100)}%"></i></div>
+    <div class="guia-lista">${p.map((x) => `<a class="guia-paso ${x.hecho ? 'ok' : ''}" href="#${x.href}" ${x.act && !x.hecho ? `data-act="${x.act}"` : ''}><span class="guia-check">${x.hecho ? icon('ok') : ''}</span><span class="grow"><b>${x.t}</b><small>${x.s}</small></span>${x.hecho ? '' : icon('right')}</a>`).join('')}</div></section>`;
+}
+
+// Consejo corto la primera vez que se entra a cada pantalla (se recuerda en este navegador)
+const TIPS = {
+  vender: 'Elige <b>Ingreso</b> o <b>Egreso</b> arriba. Para un ingreso toca lo que vendiste y cobra: queda en Movimientos y suma al día.',
+  caja: 'Aquí ves todo lo que entró y salió. Parte en <b>Hoy</b>; cambia a Semana, Mes o <b>Elegir fechas</b> para mirar cualquier período.',
+  clientes: 'Cada venta con cliente suma a su historial. El filtro <b>Por reactivar</b> te muestra a quién escribirle porque hace tiempo no vuelve.',
+  agenda: 'Toca un espacio libre para agendar. Al terminar, marca la cita como completada y cóbrala: se registra sola como ingreso.',
+  inventario: 'El stock baja solo con cada venta. Usa <b>Compra de mercadería</b> cuando llega producto y <b>Ajuste o merma</b> si contaste y no cuadra.',
+  produccion: 'Primero tus <b>insumos</b> (con su costo), después la <b>receta</b> de cada producto. Al registrar un lote se descuentan los insumos y sube el stock.',
+  catalogo: 'Lo que vendes con su precio. Desde aquí lo eliges rápido al registrar un ingreso.',
+  proveedores: 'Guarda a quién le compras. Cuando algo queda bajo, MiDerno te arma el pedido por WhatsApp.',
+  importar: 'Sube tu Excel tal como lo tienes. MiDerno reconoce las columnas y te muestra todo antes de guardar.',
+};
+const tipsVistos = () => { try { return JSON.parse(localStorage.getItem('miderno:tips') || '[]'); } catch { return []; } };
+function tipVista(v) {
+  if (!TIPS[v] || S.negocio?.id?.startsWith('demo-') || tipsVistos().includes(v)) return '';
+  return `<div class="tip" role="note"><span class="tip-ico">${icon('help')}</span><p>${TIPS[v]}</p><button class="btn sm ghost" data-act="tip-ok" data-v="${v}">Entendido</button></div>`;
+}
+function tipVisto(v) { try { localStorage.setItem('miderno:tips', JSON.stringify([...new Set([...tipsVistos(), v])])); } catch {} }
+
+// Asistente: preguntas frecuentes que te llevan directo a la pantalla
+const AYUDA = [
+  { q: '¿Cómo registro una venta o un servicio?', a: 'Toca <b>Registrar</b> (el + de abajo en el celular), elige lo que vendiste, el cliente si quieres y cómo te pagaron.', href: 'vender', act: 'reg-ingreso', k: 'venta vender cobrar ingreso boleta' },
+  { q: '¿Cómo anoto un egreso (gasto)?', a: 'En <b>Registrar</b> elige <b>Egreso</b>, escribe el monto y la categoría. Si es una compra de mercadería o insumos, regístrala desde Inventario o Producción para que también suba el stock.', href: 'vender', act: 'reg-gasto', k: 'gasto egreso pago arriendo compra' },
+  { q: '¿Dónde veo lo que vendí hoy, esta semana o un mes?', a: 'En <b>Movimientos</b>: parte en Hoy y puedes cambiar a Ayer, Semana, Mes, Mes anterior o elegir fechas.', href: 'caja', k: 'movimientos caja hoy semana mes balance resumen' },
+  { q: '¿Cómo corrijo o borro un movimiento?', a: 'En <b>Movimientos</b>, cada fila tiene un lápiz para editar y un basurero para borrar.', href: 'caja', k: 'editar borrar corregir error movimiento' },
+  { q: '¿Cómo agrego o cambio precios de lo que vendo?', a: 'En <b>Catálogo</b> tocas el servicio o producto para cambiar nombre y precio.', href: 'catalogo', k: 'precio catalogo servicio producto agregar' },
+  { q: '¿Cómo edito una receta o un insumo?', a: 'En <b>Producción</b> → Recetas toca <b>Editar receta</b>: cambias cantidades, sacas o agregas insumos y el precio. En la pestaña Insumos toca el nombre para cambiar costo, unidad o stock.', href: 'produccion', mod: 'produccion', k: 'receta insumo costo editar produccion margen' },
+  { q: '¿Cómo cargo stock cuando llega mercadería?', a: 'En <b>Inventario</b> toca <b>Compra de mercadería</b>: anotas cuánto llegó y cuánto pagaste, y se calcula el costo por unidad.', href: 'inventario', mod: 'inventario', k: 'stock inventario mercaderia llegada compra' },
+  { q: '¿Cómo agendo una hora?', a: 'En <b>Agenda</b> toca el horario libre o el botón Agendar. Puedes enviar el recordatorio por WhatsApp.', href: 'agenda', k: 'agenda cita hora reservar' },
+  { q: '¿Cómo anoto observaciones de un cliente?', a: 'Actívalas en <b>Ajustes → Herramientas activas</b>. Luego en la ficha de cada cliente agregas notas con fecha (alergias, tipo de piel, tratamientos).', href: 'ajustes', k: 'observacion nota ficha paciente alergia clinica' },
+  { q: '¿Cómo le doy acceso a alguien de mi equipo?', a: 'En <b>Equipo</b>, en Accesos del equipo, creas su correo y contraseña. Solo verá su agenda y sus comisiones.', href: 'equipo', mod: 'servicios', k: 'equipo acceso empleado colaborador clave' },
+  { q: '¿Cómo paso mi Excel a MiDerno?', a: 'En <b>Importar Excel</b> subes el archivo. Te muestra lo que entendió antes de guardar y puedes combinar o reemplazar lo anterior.', href: 'importar', k: 'excel importar subir planilla archivo' },
+  { q: 'Olvidé mi contraseña', a: 'Cierra sesión y en <b>Iniciar sesión</b> toca “¿Olvidaste tu contraseña?”. Si estás dentro, cámbiala en Ajustes → Cuenta y datos.', href: 'ajustes', k: 'contraseña clave olvide password' },
+];
+function abrirAsistente() {
+  const items = AYUDA.filter((x) => !x.mod || tiene(x.mod));
+  const pasos = pasosGuia(); const sig = pasos.find((x) => !x.hecho);
+  abrirSheet('¿En qué te ayudo?', `<input class="in" id="ayuda-q" placeholder="Escribe tu duda: venta, stock, receta…" autocomplete="off" aria-label="Buscar ayuda">
+    ${sig ? `<button type="button" class="guia-paso sug" data-act="ayuda-ir" data-h="${sig.href}" data-a="${sig.act || ''}"><span class="guia-check">${icon('right')}</span><span class="grow"><small>Te sugerimos ahora</small><b>${sig.t}</b></span></button>` : ''}
+    <div class="ayuda-lista">${items.map((x, i) => `<details class="ayuda-item" data-k="${esc(norm(x.q + ' ' + x.k))}" ${i === 0 && !sig ? 'open' : ''}><summary>${x.q}</summary><p>${x.a}</p><button type="button" class="btn sm" data-act="ayuda-ir" data-h="${x.href}" data-a="${x.act || ''}">Llévame ahí ${icon('right')}</button></details>`).join('')}
+      <p class="small muted" id="ayuda-nada" hidden>No encontramos eso. Prueba con otra palabra o escríbenos por WhatsApp.</p></div>
+    ${cfg().guia_oculta ? '<button type="button" class="btn sm ghost" data-act="guia-mostrar" style="align-self:flex-start">Volver a mostrar los primeros pasos</button>' : ''}`);
+  $('#ayuda-q').addEventListener('input', (e) => {
+    const q = norm(e.target.value).split(/\s+/).filter(Boolean); let n = 0;
+    document.querySelectorAll('.ayuda-item').forEach((d) => { const ok = q.every((w) => d.dataset.k.includes(w)); d.hidden = !ok; if (ok) n++; d.open = ok && q.length > 0 && n === 1; });
+    $('#ayuda-nada').hidden = n > 0;
+  });
+}
+
+/* =========================================================
    Render, eventos y arranque
    ========================================================= */
 
@@ -4185,16 +4371,12 @@ function render() {
   if (S.pub) { app.innerHTML = vistaReserva(); document.title = `Agenda ${S.pub.info?.negocio?.nombre || ''} · MiDerno`; return; }
   if (!S.negocio) { app.innerHTML = vistaBienvenida(); _ultimaVista = null; document.title = 'MiDerno'; return; }
   const v = vistaActual(); const y = window.scrollY;
-  app.innerHTML = shell(RENDER[v]());
+  app.innerHTML = shell(tipVista(v) + RENDER[v]());
   if (v !== _ultimaVista) { $('.main .wrap')?.classList.add('entra'); animarCifras($('.main')); }
   document.title = `${VISTAS.find((x) => x.id === v).label} · ${S.negocio.nombre} · MiDerno`;
   window.scrollTo(0, v === _ultimaVista ? y : 0); _ultimaVista = v;
 }
 
-function formMeta() {
-  const ym = mesActual(); const m = metaDelMes(ym);
-  abrirSheet(`Meta de ${nombreMes(ym)}`, field('¿Cuánto quieres vender este mes?', input('monto', m?.monto_objetivo || '', 'inputmode="numeric" required placeholder="Ej: 3000000"'), 'La verás en Inicio con lo que llevas y lo que falta por día.'), { submit: (d) => { guardarMeta(d.monto); cerrarSheet(); render(); } });
-}
 function guardarMeta(monto) {
   const v = num(monto); const ym = mesActual(); const m = metaDelMes(ym);
   if (v <= 0) { if (m) db.remove('metas', m.id); return toast('Meta eliminada'); }
@@ -4213,16 +4395,22 @@ const ACCIONES = {
   salir: () => { cerrarSheet(); salir(); },
   mas: () => menuMas(),
   login: () => formLogin(),
+  olvide: () => formOlvide(),
+  ayuda: () => abrirAsistente(),
+  'ayuda-ir': (el) => { cerrarSheet(); if (el.dataset.a) ACCIONES[el.dataset.a]?.(el); ir(el.dataset.h); },
+  'tip-ok': (el) => { tipVisto(el.dataset.v); el.closest('.tip')?.remove(); },
+  'guia-ocultar': () => { guardarConfig({ guia_oculta: true }); toast('Listo. Puedes volver a verlos desde Ayuda.'); render(); },
+  'guia-mostrar': () => { guardarConfig({ guia_oculta: false }); cerrarSheet(); ir('inicio'); },
+  google: () => entrarConGoogle(),
+  'google-registro': () => { const d = Object.fromEntries(new FormData($('#sheet-form')).entries()); if (!(d.nombre || '').trim()) { toast('Primero escribe el nombre de tu negocio', true); return $('#f-nombre')?.focus(); } enviarNegocio('google', d); },
+  'cambiar-clave': () => formNuevaClave(false),
   registro: () => formNegocio('cuenta'),
   crear: () => formNegocio('local'),
   'ver-ejemplos': () => elegirEjemplo(),
   demo: (el) => { cerrarSheet(); history.replaceState(null, '', location.pathname + '#inicio'); abrirLocal(el.dataset.id); },
   abrir: (el) => { history.replaceState(null, '', location.pathname + '#inicio'); abrirLocal(el.dataset.id); },
-  meta: () => formMeta(),
   'inicio-mes': (el) => { S.ui.inicio.mes = addMonths(S.ui.inicio.mes, +el.dataset.d); render(); },
   'filtro-reactivar': () => { S.ui.clientes.f = 'reactivar'; },
-  'tab-insumos': () => { S.ui.prod.tab = 'insumos'; },
-  'tab-lotes': () => { S.ui.prod.tab = 'lotes'; },
   // vender
   'vender-tab': (el) => { S.ui.vender.tab = el.dataset.tab; S.ui.vender.q = ''; render(); },
   'item-libre': () => abrirSheet('Otro monto', `<div class="form">${field('Descripción', input('nombre', '', 'required placeholder="Ej: Diseño especial"'))}${field('Monto', input('precio', '', 'inputmode="numeric" required'))}</div>`, {
@@ -4309,12 +4497,12 @@ const ACCIONES = {
   ajuste: () => formAjuste(),
   // producción
   'prod-tab': (el) => { S.ui.prod.tab = el.dataset.tab; render(); },
-  formula: (el) => formFormula(el.dataset.id),
-  'del-formula': (el) => { db.remove('formulas', el.dataset.id); render(); },
+  'del-insumo': (el) => borrarInsumo(el.dataset.id),
+  'del-receta': (el) => borrarReceta(el.dataset.id),
   insumo: (el) => formInsumo(el.dataset.id),
   'compra-insumo': (el) => formCompraInsumo(el.dataset.id),
   lote: () => formLote(),
-  receta: (el) => formReceta(el.dataset.id),
+  receta: (el) => formReceta(el.dataset.id, !!el.dataset.editar),
   'eq-tab': (el) => { S.eq.tab = el.dataset.t; render(); },
   'eq-dia': (el) => { S.eq.fecha = el.dataset.f; render(); },
   'eq-mes-app': (el) => { S.eq.mes = addMonths(S.eq.mes, +el.dataset.d); cargarEquipo(); },
@@ -4376,6 +4564,7 @@ const CAMBIOS = {
   fotos: (el) => agregarFotos(el.files),
   'sis-color': (el) => guardarSis({ color: el.value }),
   'ag-fecha': (el) => { if (el.value) { S.ui.agenda.fecha = el.value; render(); } },
+  'obs-on': (el) => { guardarConfig({ observaciones: el.checked }); toast(`Observaciones de clientes: ${el.checked ? 'activadas' : 'desactivadas'}`); render(); },
   modulo: (el) => {
     const m = el.dataset.m; const on = el.checked;
     db.modulo(m, on);
@@ -4391,7 +4580,7 @@ document.addEventListener('click', (e) => {
   if (cerrar) { if (cerrar.tagName !== 'A') e.preventDefault(); cerrarSheet(); if (cerrar.tagName === 'A') return; }
   const el = e.target.closest('[data-act]'); if (!el) return;
   const fn = ACCIONES[el.dataset.act]; if (!fn) return;
-  if (el.tagName !== 'A' || !el.getAttribute('href')?.startsWith('#')) e.preventDefault();
+  if (el.tagName !== 'A' || !el.getAttribute('href')?.startsWith('#') || el.getAttribute('href') === '#') e.preventDefault();
   try { fn(el); } catch (err) { console.error(err); toast('Algo falló: ' + err.message, true); }
 });
 document.addEventListener('change', (e) => { const el = e.target.closest('[data-change]'); if (el && CAMBIOS[el.dataset.change]) CAMBIOS[el.dataset.change](el); });
@@ -4444,8 +4633,9 @@ function migrarClaves() {
   // si el enlace del correo venció o falló, Supabase lo indica en la dirección
   const err = new URLSearchParams(location.hash.slice(1)).get('error_description') || new URLSearchParams(location.search).get('error_description');
   if (err) setTimeout(() => toast(/expired|invalid/i.test(err) ? 'El enlace del correo venció o ya se usó. Inicia sesión con tu correo y contraseña.' : 'Problema con el enlace: ' + err, true), 300);
+  if (/type=recovery/.test(location.hash + location.search)) S.recuperar = true;
   if (CONFIG.supabaseUrl && CONFIG.supabaseAnonKey) {
-    try { if (await abrirNube()) return; } catch (e) { console.error(e); pantallaCarga(false); toast('No pudimos conectar con la nube: ' + (e.message || e), true); }
+    try { if (await abrirNube()) { revisarRecuperacion(); return; } } catch (e) { console.error(e); pantallaCarga(false); toast('No pudimos conectar con la nube: ' + (e.message || e), true); }
   }
   const ultimo = LS.get('miderno:ultimo');
   if (ultimo) abrirLocal(ultimo); else render();
