@@ -781,6 +781,20 @@ td.n, th.n { white-space: nowrap; }
 }
 @media (max-width: 380px) { .por-txt h1 { font-size: 2.9rem; } }
 @media (prefers-reduced-motion: reduce) { .por-panel, .pp-barras i, .pp-mov, .por-chip, .por-txt > * { animation: none !important; } }
+.banner.ok-soft{background:var(--ok-soft);gap:10px;justify-content:flex-start}.banner.ok-soft .i{flex:none;color:var(--ok)}.pill .i{width:13px;height:13px;margin-right:3px;vertical-align:-2px}
+.tipo-cards.tipo-2{grid-template-columns:repeat(2,minmax(0,1fr))}.prov-inline{display:grid;gap:8px;margin-top:8px;padding:10px;border-radius:12px;background:var(--surface-2)}
+.dias-horario{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.dh-row{display:grid;grid-template-columns:auto 42px minmax(0,1fr) auto minmax(0,1fr) 0;align-items:center;gap:8px}
+.dh-row .in{min-height:38px;padding:6px 8px}
+.dh-row .dh-cerrado{display:none}
+.dh-row.off .in,.dh-row.off>.muted:not(.dh-cerrado){display:none}
+.dh-row.off .dh-cerrado{display:block;grid-column:3/-1}
+.pub-fin{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}.pub-fin .btn{flex:1 1 200px}
+.banner.ok-soft{flex-direction:row;align-items:flex-start;flex-wrap:nowrap}
+.banner.ok-soft .i{margin-top:2px}
+.dh-row{grid-template-columns:auto 36px minmax(0,1fr) auto minmax(0,1fr)}
+.dh-row .in{min-width:0;width:100%;padding:6px 4px;font-size:.88rem}
+@media (max-width:480px){.dh-row{gap:6px}.dh-row .toggle{transform:scale(.85);transform-origin:left center}}
 
 </style>
 </head>
@@ -794,7 +808,7 @@ td.n, th.n { white-space: nowrap; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '20';
+const VERSION = '21';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -1676,6 +1690,28 @@ function graficoMeses() {
 
 /* ---------- VENDER ---------- */
 function nuevoCarro() { return { lineas: [], cliente_id: '', metodo: 'debito' in metodos() ? 'debito' : Object.keys(metodos())[0], canal: 'local', cita_id: null, evento_id: null, fecha: hoy(), entrega: null }; }
+// Algo que no está en el catálogo: se elige si es servicio o producto (según las herramientas activas) y queda guardado
+function formItemNuevo() {
+  const tipos = [tiene('servicios') && ['servicio', 'Servicio', 'Queda en tu catálogo de servicios'], (tiene('inventario') || !tiene('servicios')) && ['producto', 'Producto', tiene('inventario') ? 'Queda en tu catálogo y descuenta stock' : 'Queda en tu catálogo de productos'], ['libre', 'Solo esta vez', 'No se guarda en el catálogo']].filter(Boolean);
+  const pre = S.ui.vender.tab === 'servicios' ? 'servicio' : S.ui.vender.tab === 'productos' ? 'producto' : tipos[0][0];
+  abrirSheet('Agregar algo nuevo', `<div class="form">
+    <div class="field"><label>¿Qué es?</label><div class="tipo-cards tipo-${tipos.length}" role="radiogroup">${tipos.map(([k, l, d]) => `<label class="tipo-card"><input type="radio" name="tipo" value="${k}" ${k === pre ? 'checked' : ''}><b>${l}</b><small>${d}</small></label>`).join('')}</div></div>
+    ${field('Nombre', input('nombre', S.ui.vender.q || '', 'required placeholder="Ej: Diseño especial"'))}
+    <div class="form-row">${field('Precio', input('precio', '', 'inputmode="numeric" required'))}<div data-solo-tipo="servicio">${field('Duración', `<select class="in" name="duracion" id="f-duracion">${[15, 30, 45, 60, 90, 120].map((m) => opt(m, m + ' min', 60)).join('')}</select>`)}</div></div>
+  </div>`, {
+    submit: (d) => {
+      const nombre = (d.nombre || '').trim(); const precio = num(d.precio);
+      if (!nombre || precio <= 0) return toast('Completa nombre y precio', true);
+      let linea = { tipo_item: 'libre', item_id: null, nombre, cantidad: 1, precio_unitario: precio, empleado_id: null };
+      if (d.tipo === 'servicio') { const x = db.insert('servicios', { nombre, precio, duracion_min: Number(d.duracion) || 60, activo: true }); linea = { ...linea, tipo_item: 'servicio', item_id: x.id }; }
+      if (d.tipo === 'producto') { const x = db.insert('productos', { nombre, sku: '', precio_venta: precio, costo: 0, stock_minimo: 0, activo: true, proveedor_id: null }); linea = { ...linea, tipo_item: 'producto', item_id: x.id }; }
+      S.cart.lineas.push(linea); S.ui.vender.q = ''; cerrarSheet();
+      toast(d.tipo === 'libre' ? 'Agregado' : `${nombre} quedó en tu catálogo como ${d.tipo}`); render();
+    },
+  });
+  const f = $('#sheet-form'); const sync = () => { const t = f.querySelector('input[name=tipo]:checked')?.value; f.querySelectorAll('[data-solo-tipo]').forEach((x) => { x.hidden = x.dataset.soloTipo !== t; }); };
+  f.addEventListener('change', sync); sync();
+}
 function vistaVender() {
   S.cart ||= nuevoCarro(); const c = S.cart;
   const tabs = [tiene('servicios') && 'servicios', (tiene('inventario') || !tiene('servicios')) && 'productos'].filter(Boolean);
@@ -1692,7 +1728,7 @@ function vistaVender() {
     <div class="card stack">
       <div class="between">
         ${tabs.length > 1 ? `<div class="seg">${tabs.map((t) => `<button data-act="vender-tab" data-tab="${t}" class="${S.ui.vender.tab === t ? 'on' : ''}">${t === 'servicios' ? 'Servicios' : 'Productos'}</button>`).join('')}</div>` : `<h2>${tabs[0] === 'servicios' ? 'Servicios' : tabs[0] === 'productos' ? 'Productos' : 'Agrega lo que vendiste'}</h2>`}
-        <button class="btn sm" data-act="item-libre">${icon('plus')}Otro monto</button>
+        <button class="btn sm" data-act="item-libre">${icon('plus')}Agregar nuevo</button>
       </div>
       ${tabs.length ? `<input class="in" id="q-vender" placeholder="Buscar…" value="${esc(S.ui.vender.q)}" autocomplete="off">` : ''}
       <div class="catalog" id="catalogo-grid">${gridCatalogo()}</div>
@@ -1831,17 +1867,25 @@ function formGasto(id) {
 }
 
 /* ---------- CLIENTES ---------- */
+// Próxima hora agendada del cliente (dentro de los próximos 30 días): si la tiene, no hace falta reactivarlo
+const CITA_VIVA = ['solicitada', 'agendada', 'confirmada'];
+function proximaCita(clienteId) {
+  const H = hoy(), lim = addDays(H, 30);
+  return db.all('citas').filter((c) => c.cliente_id === clienteId && CITA_VIVA.includes(c.estado) && c.fecha >= H && c.fecha <= lim).sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora))[0] || null;
+}
+const inactivo = (r) => r.dias != null && r.dias > DIAS_REACTIVAR;
+const porReactivar = (r) => inactivo(r) && !proximaCita(r.c.id);
 function vistaClientes() {
   const ui = S.ui.clientes; const mes = hoy().slice(5, 7);
   let rs = resumenClientes();
-  const nReact = rs.filter((r) => r.dias != null && r.dias > DIAS_REACTIVAR).length;
+  const nReact = rs.filter(porReactivar).length; const nAgendadas = rs.filter((r) => inactivo(r) && proximaCita(r.c.id)).length;
   const nCumple = rs.filter((r) => r.c.cumpleanos && r.c.cumpleanos.slice(5, 7) === mes).length;
-  if (ui.f === 'reactivar') rs = rs.filter((r) => r.dias != null && r.dias > DIAS_REACTIVAR).sort((a, b) => a.dias - b.dias);
+  if (ui.f === 'reactivar') rs = rs.filter(porReactivar).sort((a, b) => a.dias - b.dias);
   else if (ui.f === 'cumple') rs = rs.filter((r) => r.c.cumpleanos && r.c.cumpleanos.slice(5, 7) === mes).sort((a, b) => a.c.cumpleanos.slice(8).localeCompare(b.c.cumpleanos.slice(8)));
   else if (ui.f === 'top') rs = rs.sort((a, b) => b.total - a.total);
   else rs = rs.sort((a, b) => a.c.nombre.localeCompare(b.c.nombre));
   const q = ui.q.trim().toLowerCase(); if (q) rs = rs.filter((r) => (r.c.nombre + ' ' + (r.c.telefono || '')).toLowerCase().includes(q));
-  const estado = (r) => r.dias == null ? '<span class="pill">Sin compras</span>' : r.dias > DIAS_REACTIVAR ? `<span class="pill warn">Hace ${r.dias} días</span>` : `<span class="pill ok">Activa</span>`;
+  const estado = (r) => { const pc = proximaCita(r.c.id); return pc ? `<span class="pill ok" title="Tiene hora agendada">${icon('cal')}${fechaCorta(pc.fecha)}</span>` : r.dias == null ? '<span class="pill">Sin compras</span>' : r.dias > DIAS_REACTIVAR ? `<span class="pill warn">Hace ${r.dias} días</span>` : `<span class="pill ok">Activa</span>`; };
   return `${head('Clientes', `${db.all('clientes').length} registrados`, `<a class="btn" href="#importar">${icon('upload')}Importar</a><button class="btn pri" data-act="cliente">${icon('plus')}Nuevo cliente</button>`)}
   ${(() => { const n = gruposDuplicados().length; return n ? `<div class="banner"><span>Encontramos ${n} cliente${n > 1 ? 's' : ''} con la ficha repetida (mismo nombre o teléfono).</span><button class="btn sm" data-act="revisar-duplicados">Revisar y unificar</button></div>` : ''; })()}
   <div class="card stack">
@@ -1851,7 +1895,7 @@ function vistaClientes() {
       <button class="chip ${ui.f === 'cumple' ? 'on' : ''}" data-act="cli-f" data-f="cumple">Cumpleaños del mes (${nCumple})</button>
       <button class="chip ${ui.f === 'top' ? 'on' : ''}" data-act="cli-f" data-f="top">Los que más compran</button></div>
       <input class="in" id="q-clientes" placeholder="Buscar por nombre o teléfono" value="${esc(ui.q)}" style="max-width:280px" autocomplete="off"></div>
-    ${ui.f === 'reactivar' ? `<p class="small muted">Clientes que no han vuelto en más de ${DIAS_REACTIVAR} días. Toca WhatsApp para enviarles un mensaje ya escrito.</p>` : ''}
+    ${ui.f === 'reactivar' ? `<p class="small muted">Clientes que no han vuelto en más de ${DIAS_REACTIVAR} días. Toca WhatsApp para enviarles un mensaje ya escrito.</p>${nAgendadas ? `<div class="banner ok-soft">${icon('cal')}<span>${nAgendadas === 1 ? '1 clienta no aparece aquí porque ya tiene' : `${nAgendadas} clientas no aparecen aquí porque ya tienen`} hora agendada este mes. No necesitan reactivación.</span></div>` : ''}` : ''}
     <div class="list" id="lista-clientes">${rs.length ? rs.map((r) => `<div class="row click" data-act="ver-cliente" data-id="${r.c.id}">
         <div class="avatar">${esc(iniciales(r.c.nombre))}</div>
         <div class="grow"><div class="t">${esc(r.c.nombre)}</div><div class="s">${r.visitas} compras · ${r.ultima ? 'última ' + fechaCorta(r.ultima) : 'sin compras'}${ui.f === 'cumple' ? ' · cumple ' + fechaCorta('2000' + r.c.cumpleanos.slice(4)) : ''}</div></div>
@@ -1886,13 +1930,14 @@ function verCliente(id) {
       <div class="kpi"><span class="lbl">Total comprado</span><span class="val" style="font-size:1.15rem">${money(r.total)}</span></div>
       <div class="kpi"><span class="lbl">Compras</span><span class="val" style="font-size:1.15rem">${r.visitas}</span></div>
       <div class="kpi"><span class="lbl">Última vez</span><span class="val" style="font-size:1.15rem">${r.dias == null ? '—' : r.dias === 0 ? 'Hoy' : `Hace ${r.dias} d`}</span></div></div>
+    ${(() => { const pc = proximaCita(c.id); return pc ? `<div class="banner ok-soft">${icon('cal')}<span>Tiene hora el <b>${esc(fechaLarga(pc.fecha))}</b>${pc.hora ? ` a las ${esc(hhmm(pc.hora))}` : ''}.${r.dias > DIAS_REACTIVAR ? ' No necesita reactivación.' : ''}</span></div>` : ''; })()}
     <div class="small">${c.telefono ? `Teléfono: <span class="num">${esc(c.telefono)}</span>` : 'Sin teléfono'}${c.cumpleanos ? ` · Cumpleaños: ${fechaCorta('2000' + c.cumpleanos.slice(4))}` : ''}</div>
     ${!usaObs() ? '' : (() => { const o = partirNotas(c.notas); return `<div class="obs"><h3>Observaciones</h3>${o.general ? `<p class="obs-general">${esc(o.general)}</p>` : ''}
       ${o.fechadas.length ? `<div class="obs-lista">${o.fechadas.map((x) => `<div class="obs-item"><span class="small muted">${fechaCorta(x.f)} ${x.f.slice(0, 4)}</span><p>${esc(x.t)}</p></div>`).join('')}</div>` : ''}
       ${!o.general && !o.fechadas.length ? '<p class="small muted" style="margin:0">Sin observaciones todavía.</p>' : ''}
       <div class="obs-nueva"><textarea class="in" id="obs-texto" rows="2" placeholder="Ej: piel sensible, alérgica al látex, prefiere tonos nude…"></textarea><button type="button" class="btn sm" data-act="obs-add" data-id="${c.id}">${icon('plus')}Agregar observación</button></div></div>`; })()}
     <div><h3 style="margin-bottom:6px">Últimas compras</h3><div class="list">${vs.length ? vs.map((v) => `<div class="row"><div class="grow"><div class="t" style="font-weight:500">${esc(itemsDeVenta(v.id).map((i) => i.nombre).join(', '))}</div><div class="s">${fechaCorta(v.fecha)} · ${metodoLabel(v.metodo_pago) || ''}</div></div><div class="r">${money(v.total)}</div></div>`).join('') : '<div class="empty">Sin compras registradas.</div>'}</div></div>`,
-  { pie: `<div class="sheet-foot" style="justify-content:space-between"><button type="button" class="btn danger" data-act="del-cliente" data-id="${c.id}">${icon('trash')}Eliminar</button><div class="hstack">${c.telefono && cfg().resenas_url ? `<button type="button" class="btn" data-act="pedir-resena" data-id="${c.id}">Pedir reseña</button>` : ''}${c.telefono ? `<a class="btn" target="_blank" rel="noopener" href="${waLink(c.telefono, r.dias > DIAS_REACTIVAR ? msgReactivar(c, r.dias) : msg('saludo', { nombre: primerNombre(c.nombre) }))}">${icon('chat')}WhatsApp</a>` : ''}<button type="button" class="btn pri" data-act="cliente" data-id="${c.id}">${icon('edit')}Editar</button></div></div>` });
+  { pie: `<div class="sheet-foot" style="justify-content:space-between"><button type="button" class="btn danger" data-act="del-cliente" data-id="${c.id}">${icon('trash')}Eliminar</button><div class="hstack">${c.telefono && cfg().resenas_url ? `<button type="button" class="btn" data-act="pedir-resena" data-id="${c.id}">Pedir reseña</button>` : ''}${c.telefono ? `<a class="btn" target="_blank" rel="noopener" href="${waLink(c.telefono, porReactivar(r) ? msgReactivar(c, r.dias) : msg('saludo', { nombre: primerNombre(c.nombre) }))}">${icon('chat')}WhatsApp</a>` : ''}<button type="button" class="btn pri" data-act="cliente" data-id="${c.id}">${icon('edit')}Editar</button></div></div>` });
 }
 function formCliente(id, alGuardar) {
   const c = id ? db.get('clientes', id) : { nombre: '', telefono: '', cumpleanos: '', notas: '' };
@@ -1955,12 +2000,13 @@ function formProducto(id) {
     <div class="margen-vivo" id="prod-margen"></div>
     <div class="form-row">${field('Código (SKU)', input('sku', p.sku || ''))}${tiene('inventario') ? field('Avisar cuando queden', input('stock_minimo', p.stock_minimo, 'type="number" min="0"'), 'unidades o menos') : ''}</div>
     ${!id && tiene('inventario') ? field('Stock inicial', input('stock_inicial', '', 'type="number" min="0" placeholder="0"')) : ''}
-    ${db.all('proveedores').filter((x) => x.tipo !== 'contacto').length ? field('Proveedor', `<select class="in" name="proveedor_id" id="f-proveedor_id">${opt('', 'Sin proveedor', p.proveedor_id)}${db.all('proveedores').filter((x) => x.tipo !== 'contacto').map((x) => opt(x.id, x.nombre, p.proveedor_id)).join('')}</select>`, 'Para avisarte a quién pedirle cuando quede poco') : ''}
+    ${campoProveedor(p.proveedor_id)}
     <label class="hstack"><span class="toggle"><input type="checkbox" name="activo" ${p.activo !== false ? 'checked' : ''}><span></span></span>Disponible para vender</label></div>`, {
     pie: `<div class="sheet-foot" style="justify-content:space-between">${id ? `<button type="button" class="btn danger" data-act="del-producto" data-id="${id}">Eliminar</button>` : '<span></span>'}<div class="hstack"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri">Guardar</button></div></div>`,
     submit: (d) => {
       if (!d.nombre.trim() || num(d.precio_venta) <= 0) return toast('Completa nombre y precio', true);
-      const row = { ...(d.proveedor_id !== undefined ? { proveedor_id: d.proveedor_id || null } : {}), nombre: d.nombre.trim(), sku: (d.sku || '').trim(), precio_venta: num(d.precio_venta), costo: num(d.costo), stock_minimo: num(d.stock_minimo ?? p.stock_minimo), activo: !!d.activo };
+      const prov = resolverProveedor(d); if (prov === false) return toast('Escribe el nombre del proveedor nuevo', true);
+      const row = { proveedor_id: prov, nombre: d.nombre.trim(), sku: (d.sku || '').trim(), precio_venta: num(d.precio_venta), costo: num(d.costo), stock_minimo: num(d.stock_minimo ?? p.stock_minimo), activo: !!d.activo };
       const r = id ? db.update('productos', id, row) : db.insert('productos', row);
       if (!id && num(d.stock_inicial) > 0) db.insert('movimientos_stock', { tipo_item: 'producto', item_id: r.id, cantidad: num(d.stock_inicial), motivo: 'compra', ref_id: null, fecha: hoy(), nota: 'Stock inicial' });
       cerrarSheet(); toast('Producto guardado'); render();
@@ -2103,10 +2149,11 @@ function formInsumo(id) {
     <div class="form-row">${field('Unidad', `<select class="in" name="unidad" id="f-unidad">${[...new Set([...unidades(), i.unidad])].map((u) => opt(u, u, i.unidad)).join('')}</select>`, id ? 'Si cambias de kg a gr (o lt a ml), convertimos stock, recetas y costo solos.' : '')}${field('Costo por unidad', input('costo_unitario', i.costo_unitario, 'inputmode="decimal" required'))}</div>
     <div class="form-row">${field('Avisar cuando queden', input('stock_minimo', i.stock_minimo, 'type="number" min="0" step="any"'))}${!id ? field('Stock inicial', input('stock_inicial', '', 'type="number" min="0" step="any"')) : field('Stock actual', input('stock_real', Math.round(stockDe('insumo', id) * 1000) / 1000, 'type="number" min="0" step="any"'), 'Si contaste y no coincide, corrígelo aquí.')}</div>
     ${id && db.all('formulas').some((f) => f.insumo_id === id) ? `<p class="small muted">Se usa en: ${esc([...new Set(db.all('formulas').filter((f) => f.insumo_id === id).map((f) => db.get('productos', f.producto_id)?.nombre).filter(Boolean))].join(', '))}. Si cambias el costo, esas recetas se recalculan solas.</p>` : ''}
-    ${db.all('proveedores').filter((x) => x.tipo !== 'contacto').length ? field('Proveedor', `<select class="in" name="proveedor_id" id="f-proveedor_id">${opt('', 'Sin proveedor', i.proveedor_id)}${db.all('proveedores').filter((x) => x.tipo !== 'contacto').map((x) => opt(x.id, x.nombre, i.proveedor_id)).join('')}</select>`, 'Para avisarte a quién pedirle cuando quede poco') : ''}</div>`, {
+    ${campoProveedor(i.proveedor_id)}</div>`, {
     submit: (d) => {
       if (!d.nombre.trim()) return toast('Escribe el nombre', true);
-      const row = { ...(d.proveedor_id !== undefined ? { proveedor_id: d.proveedor_id || null } : {}), nombre: d.nombre.trim(), unidad: d.unidad, costo_unitario: Number(String(d.costo_unitario).replace(',', '.')) || 0, stock_minimo: Number(d.stock_minimo) || 0 };
+      const prov = resolverProveedor(d); if (prov === false) return toast('Escribe el nombre del proveedor nuevo', true);
+      const row = { proveedor_id: prov, nombre: d.nombre.trim(), unidad: d.unidad, costo_unitario: Number(String(d.costo_unitario).replace(',', '.')) || 0, stock_minimo: Number(d.stock_minimo) || 0 };
       if (id && i.unidad !== row.unidad) { const f = factorUnidad(i.unidad, row.unidad); if (f) { convertirInsumo(id, f); row.costo_unitario = Math.round((row.costo_unitario / f) * 10000) / 10000; row.stock_minimo = row.stock_minimo * f; S._msgConv = `Convertimos stock, recetas y costo de ${i.unidad} a ${row.unidad}`; } }
       const r = id ? db.update('insumos', id, row) : db.insert('insumos', row);
       if (id && !S._msgConv && d.stock_real !== '' && d.stock_real != null) { const dif = Math.round((Number(String(d.stock_real).replace(',', '.')) - stockDe('insumo', id)) * 1000) / 1000; if (dif) db.insert('movimientos_stock', { tipo_item: 'insumo', item_id: id, cantidad: dif, motivo: 'ajuste', ref_id: null, fecha: hoy(), nota: 'Corrección de stock' }); }
@@ -3242,14 +3289,16 @@ function vistaBloques(h, hi) {
 const HORARIO_DEF = { dias: [1, 2, 3, 4, 5, 6], desde: '10:00', hasta: '19:00', intervalo: 30 };
 const DIAS_SEMANA = [[1, 'Lun'], [2, 'Mar'], [3, 'Mié'], [4, 'Jue'], [5, 'Vie'], [6, 'Sáb'], [0, 'Dom']];
 const horarioDe = (n) => ({ ...HORARIO_DEF, ...(typeof n?.horario === 'string' ? JSON.parse(n.horario) : n?.horario || {}) });
+// horario de un día de la semana (0 = domingo): null si está cerrado
+const horarioDia = (h, dow) => (h.dias.includes(dow) ? { desde: h.porDia?.[dow]?.desde || h.desde, hasta: h.porDia?.[dow]?.hasta || h.hasta } : null);
 const slugDe = (nombre) => norm(nombre).replace(/ /g, '-').slice(0, 40) || 'mi-negocio';
 const aMin = (h) => { const [a, b] = hhmm(h).split(':').map(Number); return a * 60 + (b || 0); };
 const deMin = (m) => `${pad(Math.floor(m / 60))}:${pad(m % 60)}`;
 
 // Horas libres de un día: recorre el horario de atención y deja las que no chocan
 function horasLibres({ horario, fecha, dur, ocupadas, empleados, empleadoId }) {
-  const dow = new Date(fecha + 'T12:00:00').getDay(); if (!horario.dias.includes(dow)) return [];
-  const ini = aMin(horario.desde), fin = aMin(horario.hasta), paso = Number(horario.intervalo) || 30;
+  const dow = new Date(fecha + 'T12:00:00').getDay(); const hd = horarioDia(horario, dow); if (!hd) return [];
+  const ini = aMin(hd.desde), fin = aMin(hd.hasta), paso = Number(horario.intervalo) || 30;
   const n = new Date(); const minimo = fecha === hoy() ? n.getHours() * 60 + n.getMinutes() + 60 : fecha < hoy() ? 99999 : 0;
   const ids = empleados.map((e) => e.id); const out = [];
   for (let m = ini; m + dur <= fin; m += paso) {
@@ -3332,10 +3381,11 @@ function vistaReserva() {
       ${conAbono ? `<div class="abono-box"><div class="between"><b>Abono para confirmar</b><b class="num" style="font-size:1.3rem">${fmtP(abonoDe(p.servicio.precio, c))}</b></div>
         <p style="white-space:pre-line">${esc(textoAbono)}</p>
         <div class="hstack"><button class="btn sm" data-act="pub-copiar" data-t="${esc(c.abono.datos)}">Copiar datos de transferencia</button></div></div>` : ''}
-      ${tel ? `<a class="btn ${conAbono ? 'pri' : ''}" target="_blank" rel="noopener" href="${waLink(tel, conAbono ? textoComp : `Hola, acabo de reservar ${p.servicio.nombre} el ${fechaLarga(p.fecha)} a las ${p.hora.hora}. Soy ${p.datos.nombre}.`)}">${icon('chat')}${conAbono ? 'Enviar comprobante por WhatsApp' : 'Escribir a ' + esc(info.negocio.nombre)}</a><p class="small muted">Teléfono: <span class="num">${esc(tel)}</span></p>` : ''}
+      ${p.compEnviado ? `<div class="banner ok-soft">${icon('ok')}<span>¡Gracias! Cuando ${esc(info.negocio.nombre)} confirme tu hora te llegará un WhatsApp.</span></div>` : ''}
+      ${tel ? `<a class="btn ${conAbono && !p.compEnviado ? 'pri' : ''}" data-act="pub-comp" target="_blank" rel="noopener" href="${waLink(tel, conAbono ? textoComp : `Hola, acabo de reservar ${p.servicio.nombre} el ${fechaLarga(p.fecha)} a las ${p.hora.hora}. Soy ${p.datos.nombre}.`)}">${icon('chat')}${conAbono ? 'Enviar comprobante por WhatsApp' : 'Escribir a ' + esc(info.negocio.nombre)}</a><p class="small muted">Teléfono: <span class="num">${esc(tel)}</span></p>` : ''}
       ${botonesCalendario(p, info)}
       ${info.perfil?.direccion ? `<p class="small">Te esperamos en <a target="_blank" rel="noopener" href="${esc(linkMapa(info.perfil))}">${esc(info.perfil.direccion)}</a></p>` : ''}
-      <button class="btn ghost" data-act="pub-otra">Reservar otra hora</button></div>`);
+      <div class="pub-fin">${p.preview ? `<button class="btn ${p.compEnviado || !conAbono ? 'pri' : ''}" data-act="pub-salir">${icon('left')}Volver a la agenda</button>` : `<button class="btn ${p.compEnviado || !conAbono ? 'pri' : ''}" data-act="pub-otra">${icon('left')}Listo, volver al inicio</button>`}${p.preview ? '<button class="btn ghost" data-act="pub-otra">Reservar otra hora</button>' : ''}</div></div>`);
   }
   const pasos = [];
   // 1. servicio
@@ -3385,8 +3435,10 @@ function tarjetaReservas() {
   return `<div class="card span2"><div class="card-head"><div><h2>Página de reservas</h2><p>Tus clientes eligen servicio, día y hora libre. Tú confirmas desde la agenda.</p></div>
       <label class="toggle" aria-label="Activar página de reservas"><input type="checkbox" data-change="reservas-on" ${on ? 'checked' : ''}><span></span></label></div>
     <form class="form" id="form-reservas">
-      <div class="field"><label>Días de atención</label><div class="chips">${DIAS_SEMANA.map(([d, l]) => `<label class="chip ${h.dias.includes(d) ? 'on' : ''}" style="cursor:pointer"><input type="checkbox" name="dia" value="${d}" ${h.dias.includes(d) ? 'checked' : ''} hidden data-change="dia-chip">${l}</label>`).join('')}</div></div>
-      <div class="form-row">${field('Abre a las', `<input class="in" type="time" name="desde" id="f-desde" value="${h.desde}" step="900">`)}${field('Cierra a las', `<input class="in" type="time" name="hasta" id="f-hasta" value="${h.hasta}" step="900">`)}</div>
+      <div class="field"><div class="between"><label>Días y horario de atención</label><button type="button" class="btn sm ghost" data-act="dh-copiar">Usar el primer día en todos</button></div>
+        <div class="dias-horario">${DIAS_SEMANA.map(([d, l]) => { const on = h.dias.includes(d); const hd = { desde: h.porDia?.[d]?.desde || h.desde, hasta: h.porDia?.[d]?.hasta || h.hasta };
+          return `<div class="dh-row ${on ? '' : 'off'}"><label class="toggle" aria-label="Abierto el ${l}"><input type="checkbox" name="dia" value="${d}" ${on ? 'checked' : ''} data-change="dh-dia"><span></span></label><b>${l}</b>
+            <input class="in" type="time" name="desde_${d}" value="${hd.desde}" step="900" aria-label="${l}: abre"><span class="muted small">a</span><input class="in" type="time" name="hasta_${d}" value="${hd.hasta}" step="900" aria-label="${l}: cierra"><span class="dh-cerrado small muted">Cerrado</span></div>`; }).join('')}</div></div>
       <div class="form-row">${field('Mostrar horas cada', `<select class="in" name="intervalo" id="f-intervalo">${[15, 30, 60].map((m) => opt(m, m + ' minutos', h.intervalo)).join('')}</select>`)}${field('WhatsApp del negocio', telInput('telefono', n.telefono || ''), 'Aparece al cliente después de reservar')}</div>
       ${field('Dirección de tu página', `<div class="hstack" style="flex-wrap:nowrap"><span class="muted small" style="white-space:nowrap">?reservar=</span>${input('slug', n.slug || slugDe(n.nombre), 'pattern="[a-z0-9-]+" placeholder="mi-negocio"')}</div>`, 'Solo minúsculas, números y guiones.')}
       <div class="hstack"><button class="btn pri">Guardar horario</button><button type="button" class="btn" data-act="pub-preview">Ver mi página</button></div>
@@ -3398,11 +3450,17 @@ function tarjetaReservas() {
 }
 function guardarReservas(form) {
   const fd = new FormData(form); const dias = fd.getAll('dia').map(Number);
-  const desde = fd.get('desde') || '10:00', hasta = fd.get('hasta') || '19:00';
   if (!dias.length) return toast('Elige al menos un día de atención', true);
-  if (aMin(hasta) <= aMin(desde)) return toast('La hora de cierre debe ser después de la de apertura', true);
+  const porDia = {};
+  for (const d of dias) {
+    const desde = fd.get('desde_' + d) || '10:00', hasta = fd.get('hasta_' + d) || '19:00';
+    if (aMin(hasta) <= aMin(desde)) return toast(`${DIAS_SEMANA.find((x) => x[0] === d)[1]}: la hora de cierre debe ser después de la de apertura`, true);
+    porDia[d] = { desde, hasta };
+  }
+  // el horario general queda como el más amplio (sirve de respaldo para versiones anteriores)
+  const desde = deMin(Math.min(...dias.map((d) => aMin(porDia[d].desde)))), hasta = deMin(Math.max(...dias.map((d) => aMin(porDia[d].hasta))));
   const slug = slugDe(fd.get('slug') || S.negocio.nombre);
-  db.negocio({ horario: { dias, desde, hasta, intervalo: Number(fd.get('intervalo')) || 30 }, telefono: String(fd.get('telefono') || '').trim(), slug });
+  db.negocio({ horario: { dias, desde, hasta, porDia, intervalo: Number(fd.get('intervalo')) || 30 }, telefono: String(fd.get('telefono') || '').trim(), slug });
   toast('Horario guardado'); render();
 }
 
@@ -3581,6 +3639,20 @@ function formPedido(provId) {
 }
 
 const normWeb = (w) => { w = String(w || '').trim(); if (!w) return ''; return /^https?:\/\//i.test(w) ? w : 'https://' + w; };
+
+/* ---------- proveedor dentro del formulario de producto o insumo (con opción de crearlo ahí mismo) ---------- */
+function campoProveedor(sel) {
+  const provs = db.all('proveedores').filter((x) => x.tipo !== 'contacto');
+  return field('Proveedor', `<select class="in" name="proveedor_id" id="f-proveedor_id" data-change="prov-sel">${opt('', 'Sin proveedor', sel || '')}${provs.map((x) => opt(x.id, x.nombre, sel)).join('')}<option value="__nuevo">+ Proveedor nuevo…</option></select>
+    <div class="prov-inline" id="prov-inline" hidden><input class="in" name="prov_nombre" id="f-prov_nombre" placeholder="Nombre del proveedor" autocomplete="off">${telInput('prov_tel', '', { ph: 'WhatsApp (opcional)' })}</div>`, 'Para avisarte a quién pedirle cuando quede poco');
+}
+// devuelve el id del proveedor elegido (lo crea si es nuevo); false si falta el nombre
+function resolverProveedor(d) {
+  if (d.proveedor_id !== '__nuevo') return d.proveedor_id || null;
+  const nombre = (d.prov_nombre || '').trim(); if (!nombre) return false;
+  const ya = db.all('proveedores').find((x) => norm(x.nombre) === norm(nombre)); if (ya) return ya.id;
+  return db.insert('proveedores', { nombre, tipo: 'proveedor', contacto: '', telefono: (d.prov_tel || '').trim(), email: '', web: '', que_vende: '', notas: '' }).id;
+}
 
 /* =========================================================
    Clientes repetidos: si dos fichas tienen el mismo nombre o el
@@ -4135,7 +4207,7 @@ function vistaInicio() {
   if (deHoy.length) alertas.push({ sev: 'acc', t: t_('agenda_hoy', deHoy.length), s: deHoy.slice(0, 3).map((i) => (i.hora ? i.hora + ' ' : '') + i.titulo).join(' · '), href: 'agenda', act: 'ag-hoy-nav' });
   for (const { p: pv, bajos } of porReponer().provs) alertas.push({ sev: 'warn', t: `${t_('pedir_a')} ${pv.nombre}`, s: bajos.slice(0, 3).map((x) => x.item.nombre).join(', '), href: 'proveedores', act: 'pedido-ir', id: pv.id });
   if (tiene('inventario')) { const sinProv = db.all('productos').filter((p) => p.activo !== false && !p.proveedor_id && stockDe('producto', p.id) <= Number(p.stock_minimo || 0)); if (sinProv.length) alertas.push({ sev: 'warn', t: t_('stock_bajo', sinProv.length), s: sinProv.slice(0, 3).map((p) => p.nombre).join(', '), href: 'inventario' }); }
-  const reactivar = resumenClientes().filter((r) => r.dias != null && r.dias > DIAS_REACTIVAR && r.dias < 120).length;
+  const reactivar = resumenClientes().filter((r) => porReactivar(r) && r.dias < 120).length;
   if (reactivar) alertas.push({ sev: '', t: t_('reactivar', reactivar), href: 'clientes', act: 'filtro-reactivar' });
 
   // últimos movimientos (ingresos y egresos juntos)
@@ -4462,6 +4534,8 @@ const ACCIONES = {
   empezar: () => formNegocio(CONFIG.supabaseUrl && CONFIG.supabaseAnonKey ? 'cuenta' : 'local'),
   olvide: () => formOlvide(),
   ayuda: () => abrirAsistente(),
+  'dh-copiar': () => { const rows = [...document.querySelectorAll('.dh-row')]; const base = rows.find((r) => r.querySelector('input[name=dia]').checked); if (!base) return toast('Activa al menos un día', true);
+    const [a, b] = base.querySelectorAll('input[type=time]'); rows.forEach((r) => { const [x, y] = r.querySelectorAll('input[type=time]'); x.value = a.value; y.value = b.value; }); toast('Mismo horario para todos los días'); },
   'ayuda-ir': (el) => { cerrarSheet(); if (el.dataset.a) ACCIONES[el.dataset.a]?.(el); ir(el.dataset.h); },
   'tip-ok': (el) => { tipVisto(el.dataset.v); el.closest('.tip')?.remove(); },
   'guia-ocultar': () => { guardarConfig({ guia_oculta: true }); toast('Listo. Puedes volver a verlos desde Ayuda.'); render(); },
@@ -4478,9 +4552,7 @@ const ACCIONES = {
   'filtro-reactivar': () => { S.ui.clientes.f = 'reactivar'; },
   // vender
   'vender-tab': (el) => { S.ui.vender.tab = el.dataset.tab; S.ui.vender.q = ''; render(); },
-  'item-libre': () => abrirSheet('Otro monto', `<div class="form">${field('Descripción', input('nombre', '', 'required placeholder="Ej: Diseño especial"'))}${field('Monto', input('precio', '', 'inputmode="numeric" required'))}</div>`, {
-    submit: (d) => { if (!d.nombre.trim() || num(d.precio) <= 0) return toast('Completa descripción y monto', true); S.cart.lineas.push({ tipo_item: 'libre', item_id: null, nombre: d.nombre.trim(), cantidad: 1, precio_unitario: num(d.precio), empleado_id: null }); cerrarSheet(); render(); },
-  }),
+  'item-libre': () => formItemNuevo(),
   add: (el) => {
     const tipo = el.dataset.tipo; const x = db.get(tipo === 'servicio' ? 'servicios' : 'productos', el.dataset.id);
     const ya = S.cart.lineas.find((l) => l.tipo_item === tipo && l.item_id === x.id && tipo === 'producto');
@@ -4539,7 +4611,8 @@ const ACCIONES = {
   'pub-dia': (el) => { const p = S.pub; p.fecha = el.dataset.f; p.hora = null; pubCargarHoras(); },
   'pub-hora': (el) => { const p = S.pub; p.hora = p.horas[+el.dataset.i]; render(); setTimeout(() => $('#form-reserva')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50); },
   'pub-copiar': (el) => { navigator.clipboard?.writeText(el.dataset.t).then(() => toast('Datos copiados'), () => toast('Mantén presionado el texto para copiarlo')); },
-  'pub-otra': () => { Object.assign(S.pub, { enviado: false, hora: null, fecha: null, horas: null, servicio: null }); render(); },
+  'pub-comp': () => { setTimeout(() => { if (S.pub) { S.pub.compEnviado = true; render(); } }, 800); },
+  'pub-otra': () => { window.scrollTo(0, 0); Object.assign(S.pub, { compEnviado: false, enviado: false, hora: null, fecha: null, horas: null, servicio: null }); render(); },
   'copiar-link': () => { const t = $('#link-reservas')?.textContent || ''; navigator.clipboard?.writeText(t).then(() => toast('Enlace copiado'), () => toast('Mantén presionado el enlace para copiarlo')); },
   'ag-hoy': () => { S.ui.agenda.fecha = hoy(); render(); },
   'ag-set': (el) => { S.ui.agenda.fecha = el.dataset.f; render(); },
@@ -4629,6 +4702,8 @@ const CAMBIOS = {
   fotos: (el) => agregarFotos(el.files),
   'sis-color': (el) => guardarSis({ color: el.value }),
   'ag-fecha': (el) => { if (el.value) { S.ui.agenda.fecha = el.value; render(); } },
+  'dh-dia': (el) => { el.closest('.dh-row').classList.toggle('off', !el.checked); },
+  'prov-sel': (el) => { const b = $('#prov-inline'); if (b) { b.hidden = el.value !== '__nuevo'; if (!b.hidden) $('#f-prov_nombre')?.focus(); } },
   'obs-on': (el) => { guardarConfig({ observaciones: el.checked }); toast(`Observaciones de clientes: ${el.checked ? 'activadas' : 'desactivadas'}`); render(); },
   modulo: (el) => {
     const m = el.dataset.m; const on = el.checked;
