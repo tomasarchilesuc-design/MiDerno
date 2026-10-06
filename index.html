@@ -938,6 +938,91 @@ td.n, th.n { white-space: nowrap; }
   .ag-ctrl .seg button { padding-inline: 10px; }
 }
 
+/* v23 · buscar clienta, precio editable, hora en lista, formularios más livianos */
+.busca-cli { position: relative; flex: 1; min-width: 0; }
+.busca-cli .bc-in { width: 100%; }
+.busca-cli.con .bc-in { padding-right: 40px; font-weight: 600; background: color-mix(in srgb, var(--primary) 6%, var(--surface)); border-color: color-mix(in srgb, var(--primary) 40%, var(--line)); }
+.bc-x { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); width: 34px; height: 34px; border: 0; background: none; color: var(--muted); border-radius: 9px; cursor: pointer; display: grid; place-items: center; }
+.bc-x .i { width: 16px; height: 16px; }
+.bc-lista { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 30; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 16px 40px rgba(16,40,42,.16); padding: 4px; max-height: 280px; overflow: auto; animation: sube .18s var(--ease-out, ease); }
+.bc-op { display: flex; justify-content: space-between; align-items: center; gap: 10px; width: 100%; border: 0; background: none; padding: 10px 12px; border-radius: 10px; font: inherit; color: var(--ink); text-align: left; cursor: pointer; }
+.bc-op small { color: var(--muted); }
+.bc-op.act, .bc-op:hover { background: var(--surface-2); }
+.bc-nueva { justify-content: flex-start; color: var(--primary); font-weight: 600; }
+.bc-nueva .i { width: 16px; height: 16px; }
+.precio-wrap { display: inline-flex; align-items: center; gap: 2px; border-bottom: 1px dashed color-mix(in srgb, var(--muted) 60%, transparent); }
+.precio-ln { border: 0 !important; background: transparent !important; padding: 2px 0 !important; min-height: 0 !important; width: 8ch; font: inherit; color: inherit; box-shadow: none !important; }
+.precio-ln:focus { outline: none; }
+.precio-wrap:focus-within { border-bottom: 2px solid var(--primary); }
+.cobro-precio { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); font-size: .92rem; }
+.cart-precio { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.sel-hora { font-variant-numeric: tabular-nums; }
+.mas-datos { border-top: 1px solid var(--line); padding-top: 10px; }
+.mas-datos summary { cursor: pointer; color: var(--muted); font-size: .9rem; font-weight: 500; list-style: none; display: flex; align-items: center; gap: 6px; }
+.mas-datos summary::before { content: "+"; display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; background: var(--surface-2); }
+.mas-datos[open] summary::before { content: "–"; }
+.mas-datos summary::-webkit-details-marker { display: none; }
+/* indicadores */
+.ind { background: var(--surface); border: 1px solid var(--renglon); border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.ind-head { display: flex; justify-content: space-between; align-items: center; border: 0; background: none; padding: 0; cursor: pointer; color: var(--ink); font: inherit; text-align: left; }
+.ind-head h2 { margin: 0; font-size: 1.05rem; }
+.ind-head span { display: inline-flex; align-items: center; gap: 2px; font-size: .85rem; color: var(--primary); font-weight: 600; }
+.ind-head .i { width: 15px; height: 15px; }
+.ind-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.ind-k { display: flex; flex-direction: column; gap: 1px; padding: 10px 12px; border-radius: 12px; background: var(--surface-2); min-width: 0; }
+.ind-k small { color: var(--muted); font-size: .78rem; }
+.ind-k b { font-size: 1.45rem; letter-spacing: -.03em; font-weight: 650; line-height: 1.15; }
+.ind-d { font-size: .74rem; color: var(--muted); line-height: 1.3; }
+.ind-d.up { color: var(--ok); } .ind-d.down { color: var(--lapiz); }
+.ind-barra { display: block; height: 5px; border-radius: 5px; background: color-mix(in srgb, var(--primary) 14%, transparent); margin-top: 6px; overflow: hidden; }
+.ind-barra i { display: block; height: 100%; border-radius: 5px; background: var(--primary); transform-origin: left; animation: crece .8s .2s var(--ease-out, ease) both; }
+@keyframes crece { from { transform: scaleX(0); } }
+.ind-pista { font-size: .85rem; background: color-mix(in srgb, var(--sol) 16%, var(--surface)); border-radius: 10px; padding: 8px 10px; color: var(--ink); text-decoration: none; }
+.ind-tabla td, .ind-tabla th { white-space: nowrap; }
+.ind-tabla tr.on td { font-weight: 600; background: color-mix(in srgb, var(--primary) 6%, transparent); }
+.ind-mini { display: inline-block; width: 40px; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--primary) var(--w), color-mix(in srgb, var(--primary) 12%, transparent) var(--w)); margin-right: 8px; vertical-align: middle; }
+@media (prefers-reduced-motion: reduce) { .ind-barra i { animation: none; } }
+
+/* ---------- v23: pulido general (menos tosco) ---------- */
+:root { --fondo: #F7F7F5; --line-suave: rgba(20,20,20,.06); --sombra-card: 0 1px 2px rgba(20,20,20,.04), 0 4px 14px rgba(20,20,20,.04); }
+:root[data-theme="dark"] { --fondo: #0E0E0F; --line-suave: rgba(255,255,255,.06); --sombra-card: none; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fondo: #0E0E0F; --line-suave: rgba(255,255,255,.06); --sombra-card: none; } }
+body { background: var(--fondo); }
+.main, main { background: transparent; }
+.card { border-color: var(--line-suave); box-shadow: var(--sombra-card); border-radius: 18px; background: var(--surface); }
+.card .card { box-shadow: none; }
+.row { border-top-color: var(--line-suave); }
+.in, select.in, textarea.in { background: var(--surface-2); border-color: transparent; transition: border-color .15s, background-color .15s, box-shadow .15s; }
+.in:hover { border-color: var(--line); }
+.in:focus { outline: none; background: var(--surface); border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+label > span:first-child, .lbl { font-size: .8rem; font-weight: 600; color: var(--muted); letter-spacing: .01em; }
+.btn { border-color: var(--line); box-shadow: 0 1px 1px rgba(20,20,20,.03); }
+.btn:active { transform: scale(.97); }
+.btn.primary { box-shadow: 0 1px 2px rgba(0,0,0,.12), 0 6px 16px -8px rgba(0,0,0,.4); }
+.btn.ghost { box-shadow: none; }
+.sheet { border-radius: 24px; padding: 22px; gap: 14px; }
+.sheet h2 { font-size: 1.2rem; }
+.side { background: var(--fondo); border-right-color: var(--line-suave); }
+.seg { background: var(--surface-2); }
+.chip { border-color: var(--line-suave); }
+table td, table th { border-color: var(--line-suave); }
+details > summary { cursor: pointer; }
+@media (max-width: 600px) { .sheet { border-radius: 22px 22px 0 0; padding: 18px 16px calc(18px + env(safe-area-inset-bottom)); } }
+@media (max-width: 860px) {
+  .card { border-radius: 16px; padding: 16px; }
+  .tabbar { background: color-mix(in srgb, var(--surface) 88%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top-color: var(--line-suave); }
+}
+.ind-tabla { width: 100%; }
+@media (max-width: 600px) {
+  .ind-tabla { font-size: .82rem; }
+  .ind-tabla td, .ind-tabla th { padding-left: 4px; padding-right: 4px; }
+  .ind-tabla th { font-size: .66rem; }
+  .ind-mini { display: none; }
+}
+.ind-pista.ok { background: var(--ok-soft); }
+.cobro-ln .precio-wrap { margin-left: auto; padding: 2px 4px; background: var(--surface); border-radius: 8px 8px 0 0; }
+.bc-op small { white-space: nowrap; flex: none; } .bc-op b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 </style>
 </head>
 <body>
@@ -950,7 +1035,7 @@ td.n, th.n { white-space: nowrap; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '22';
+const VERSION = '23';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -1507,6 +1592,14 @@ function partirTel(v) {
   return ['+56', s];
 }
 // Teléfono con prefijo de país: guarda "+56 912345678" en un campo oculto con el nombre pedido
+// hora con lista cada 10 minutos (más cómodo que el reloj del navegador)
+function selHora(name, val = '', { id = 'f-' + name, desde = '06:00', hasta = '23:50', paso = 10, vacio = '', attrs = '' } = {}) {
+  const aM = (h) => { const [a, b] = String(h).split(':').map(Number); return a * 60 + (b || 0); };
+  const v = String(val || '').slice(0, 5); const ops = [];
+  for (let m = aM(desde); m <= aM(hasta); m += paso) ops.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
+  if (v && !ops.includes(v)) { ops.push(v); ops.sort(); }
+  return `<select class="in sel-hora" name="${name}" id="${id}" ${attrs}>${vacio ? `<option value="">${vacio}</option>` : ''}${ops.map((h) => `<option value="${h}" ${h === v ? 'selected' : ''}>${h}</option>`).join('')}</select>`;
+}
 function telInput(name, val = '', { id = 'f-' + name, req = false, ph = '9 1234 5678' } = {}) {
   const [pref, numero] = partirTel(val);
   return `<div class="tel-group"><select class="in tel-pref" aria-label="Prefijo de país">${PREFIJOS.map(([c, p]) => opt(c, `${p} ${c}`, pref)).join('')}</select><input class="in tel-num" id="${id}" type="tel" inputmode="tel" autocomplete="tel-national" value="${esc(numero)}" placeholder="${ph}" ${req ? 'required' : ''}><input type="hidden" name="${name}" value="${esc(val || '')}"></div>`;
@@ -1889,14 +1982,14 @@ function vistaVender() {
     <div class="card cart">
       <div class="card-head"><h2>Detalle</h2>${c.lineas.length ? '<button class="btn sm ghost" data-act="vaciar">Vaciar</button>' : ''}</div>
       <div>${c.lineas.length ? c.lineas.map((l, i) => `<div class="cart-line">
-          <div><b>${esc(l.nombre)}</b><div class="small muted num">${money(l.precio_unitario)} c/u${l.tipo_item === 'producto' && tiene('inventario') ? ` · quedan ${qtyFmt(stockDe('producto', l.item_id))}` : ''}</div></div>
+          <div><b>${esc(l.nombre)}</b><div class="small muted num cart-precio">${precioLinea(l, i, 'cart')}${l.cantidad > 1 ? ' c/u' : ''}${l.tipo_item === 'producto' && tiene('inventario') ? ` · quedan ${qtyFmt(stockDe('producto', l.item_id))}` : ''}</div></div>
           <div class="r num"><b>${money(l.cantidad * l.precio_unitario)}</b></div>
           <div class="qty"><button data-act="qty" data-i="${i}" data-d="-1" aria-label="Quitar uno">−</button><span class="num" style="min-width:22px;text-align:center">${qtyFmt(l.cantidad)}</span><button data-act="qty" data-i="${i}" data-d="1" aria-label="Agregar uno">+</button></div>
           ${l.tipo_item === 'servicio' && emps.length ? `<select class="in" style="min-height:32px;padding:4px 8px;font-size:.82rem" data-change="linea-emp" data-i="${i}" aria-label="Quién atendió">${opt('', 'Atendió…', l.empleado_id)}${emps.map((e) => opt(e.id, e.nombre, l.empleado_id)).join('')}</select>` : '<span></span>'}
         </div>`).join('') : '<div class="empty">Toca un servicio o producto para agregarlo.</div>'}</div>
       <div class="total-row"><span>Total</span><b>${money(total)}</b></div>
       <div class="form">
-        <div class="field"><label for="v-cliente">Cliente</label><div class="hstack" style="flex-wrap:nowrap"><select class="in" id="v-cliente" data-change="cart-cliente">${opt('', 'Sin registrar', c.cliente_id)}${clientes.map((x) => opt(x.id, x.nombre, c.cliente_id)).join('')}</select><button class="btn" data-act="cliente-nuevo-venta" aria-label="Nuevo cliente">${icon('plus')}</button></div></div>
+        <div class="field"><label for="bc-cart">Cliente</label><div class="hstack" style="flex-wrap:nowrap;align-items:flex-start">${buscaCliente('cart')}<button class="btn" data-act="cliente-nuevo-venta" aria-label="Nuevo cliente con todos sus datos" title="Nuevo cliente con teléfono y más datos">${icon('plus')}</button></div></div>
         <div class="field"><label>Medio de pago</label><div class="seg">${Object.entries(metodos()).map(([k, v]) => `<button data-act="metodo" data-m="${k}" class="${c.metodo === k ? 'on' : ''}">${v}</button>`).join('')}</div></div>
         ${tiene('inventario') ? `<div class="field"><label>Canal</label><div class="seg"><button data-act="canal" data-c="local" class="${c.canal === 'local' ? 'on' : ''}">En el local</button><button data-act="canal" data-c="online" class="${c.canal === 'online' ? 'on' : ''}">Online</button></div></div>` : ''}
         ${field('Fecha', `<input class="in" type="date" id="v-fecha" data-change="cart-fecha" value="${c.fecha}" max="${hoy()}">`)}
@@ -2646,10 +2739,10 @@ function formCita(id, pre = {}) {
   const servs = db.all('servicios').filter((s) => s.activo !== false); const emps = db.all('empleados').filter((e) => e.activo !== false);
   if (!servs.length) { cerrarSheet(); toast('Primero agrega servicios en el catálogo', true); return ir('catalogo'); }
   abrirSheet(id ? 'Editar cita' : 'Agendar hora', `<div class="form">
-    ${field('Cliente', `<div class="hstack" style="flex-wrap:nowrap"><select class="in" name="cliente_id" id="f-cliente_id" required>${opt('', 'Elige un cliente', c.cliente_id)}${clientes.map((x) => opt(x.id, x.nombre, c.cliente_id)).join('')}</select><button type="button" class="btn" data-act="cliente-nuevo-cita" aria-label="Nuevo cliente">${icon('plus')}</button></div>`)}
+    ${field('Cliente', `<div class="hstack" style="flex-wrap:nowrap;align-items:flex-start"><div class="grow">${buscaCliente('cita', { name: 'cliente_id', valor: c.cliente_id })}</div><button type="button" class="btn" data-act="cliente-nuevo-cita" aria-label="Nuevo cliente">${icon('plus')}</button></div>`)}
     ${field('Servicio', `<select class="in" name="servicio_id" id="f-servicio_id">${servs.map((s) => opt(s.id, `${s.nombre} · ${money(s.precio)}`, c.servicio_id)).join('')}</select>`)}
     ${emps.length ? field('Atiende', `<select class="in" name="empleado_id" id="f-empleado_id">${opt('', 'Sin asignar', c.empleado_id)}${emps.map((e) => opt(e.id, e.nombre, c.empleado_id)).join('')}</select>`) : ''}
-    <div class="form-row">${field('Fecha', input('fecha', c.fecha, 'type="date" required'))}${field('Hora', input('hora', hhmm(c.hora), 'type="time" step="900" required'))}</div>
+    <div class="form-row">${field('Fecha', input('fecha', c.fecha, 'type="date" required'))}${field('Hora', selHora('hora', hhmm(c.hora) || '10:00', { attrs: 'required' }))}</div>
     ${id ? field('Estado', `<select class="in" name="estado" id="f-estado">${Object.entries(ESTADOS_CITA).map(([k, [l]]) => opt(k, l, c.estado)).join('')}</select>`) : ''}
     ${field('Nota', input('nota', c.nota || '', 'placeholder="Opcional"'))}</div>`, {
     pie: `<div class="sheet-foot" style="justify-content:space-between">${id ? `<button type="button" class="btn danger" data-act="del-cita" data-id="${id}">Eliminar</button>` : '<span></span>'}<div class="hstack"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri">Guardar</button></div></div>`,
@@ -2691,9 +2784,9 @@ function formEvento(tipo, id) {
   tipo = e.tipo; const entrega = tipo === 'entrega';
   const clientes = [...db.all('clientes')].sort((a, b) => a.nombre.localeCompare(b.nombre));
   abrirSheet(id ? (entrega ? 'Editar entrega' : 'Editar recordatorio') : (entrega ? 'Agendar entrega' : 'Nuevo recordatorio'), `<div class="form">
-    ${entrega ? field('Cliente', `<div class="hstack" style="flex-wrap:nowrap"><select class="in" name="cliente_id" id="f-cliente_id">${opt('', 'Sin cliente registrado', e.cliente_id)}${clientes.map((x) => opt(x.id, x.nombre, e.cliente_id)).join('')}</select><button type="button" class="btn" data-act="cliente-nuevo-evento" data-id="${id || ''}" aria-label="Nuevo cliente">${icon('plus')}</button></div>`) : ''}
+    ${entrega ? field('Cliente', `<div class="hstack" style="flex-wrap:nowrap;align-items:flex-start"><div class="grow">${buscaCliente('evento', { name: 'cliente_id', valor: e.cliente_id })}</div><button type="button" class="btn" data-act="cliente-nuevo-evento" data-id="${id || ''}" aria-label="Nuevo cliente">${icon('plus')}</button></div>`) : ''}
     ${field(entrega ? 'Qué se entrega' : 'Qué hay que hacer', input('titulo', e.titulo, `required placeholder="${entrega ? 'Ej: 2 velas lavanda + caja regalo' : 'Ej: Pagar a proveedor de frascos'}"`))}
-    <div class="form-row">${field('Fecha', input('fecha', e.fecha, 'type="date" required'))}${field('Hora', input('hora', hhmm(e.hora), 'type="time" step="900"'), 'Opcional')}</div>
+    <div class="form-row">${field('Fecha', input('fecha', e.fecha, 'type="date" required'))}${field('Hora', selHora('hora', hhmm(e.hora), { vacio: 'Sin hora' }), 'Opcional')}</div>
     ${entrega ? `${field('Dirección o lugar de retiro', input('direccion', e.direccion || '', 'placeholder="Ej: Av. Brasil 123, Rancagua"'))}
     <div class="form-row">${field('Monto', input('monto', e.monto || '', 'inputmode="numeric" placeholder="0"'))}<label class="hstack" style="align-self:end;min-height:42px"><span class="toggle"><input type="checkbox" name="pagado" ${e.pagado ? 'checked' : ''}><span></span></span>Ya está pagado</label></div>` : ''}
     ${id ? field('Estado', `<select class="in" name="estado" id="f-estado">${Object.entries(ESTADOS_EV).filter(([k]) => entrega ? k !== 'hecha' : k !== 'entregada').map(([k, [l]]) => opt(k, l, e.estado)).join('')}</select>`) : ''}
@@ -3595,8 +3688,8 @@ function tarjetaReservas() {
       <div class="field"><div class="between"><label>Días y horario de atención</label><button type="button" class="btn sm ghost" data-act="dh-copiar">Usar el primer día en todos</button></div>
         <div class="dias-horario">${DIAS_SEMANA.map(([d, l]) => { const on = h.dias.includes(d); const hd = { desde: h.porDia?.[d]?.desde || h.desde, hasta: h.porDia?.[d]?.hasta || h.hasta };
           return `<div class="dh-row ${on ? '' : 'off'}"><label class="toggle" aria-label="Abierto el ${l}"><input type="checkbox" name="dia" value="${d}" ${on ? 'checked' : ''} data-change="dh-dia"><span></span></label><b>${l}</b>
-            <input class="in" type="time" name="desde_${d}" value="${hd.desde}" step="900" aria-label="${l}: abre"><span class="muted small">a</span><input class="in" type="time" name="hasta_${d}" value="${hd.hasta}" step="900" aria-label="${l}: cierra"><span class="dh-cerrado small muted">Cerrado</span></div>`; }).join('')}</div></div>
-      <div class="form-row">${field('Mostrar horas cada', `<select class="in" name="intervalo" id="f-intervalo">${[15, 30, 60].map((m) => opt(m, m + ' minutos', h.intervalo)).join('')}</select>`)}${field('WhatsApp del negocio', telInput('telefono', n.telefono || ''), 'Aparece al cliente después de reservar')}</div>
+            ${selHora('desde_' + d, hd.desde, { id: 'f-desde_' + d, desde: '05:00', hasta: '23:00', attrs: `aria-label="${l}: abre"` })}<span class="muted small">a</span>${selHora('hasta_' + d, hd.hasta, { id: 'f-hasta_' + d, desde: '06:00', hasta: '23:50', attrs: `aria-label="${l}: cierra"` })}<span class="dh-cerrado small muted">Cerrado</span></div>`; }).join('')}</div></div>
+      <div class="form-row">${field('Mostrar horas cada', `<select class="in" name="intervalo" id="f-intervalo">${[10, 15, 20, 30, 60].map((m) => opt(m, m + ' minutos', h.intervalo)).join('')}</select>`)}${field('WhatsApp del negocio', telInput('telefono', n.telefono || ''), 'Aparece al cliente después de reservar')}</div>
       ${field('Dirección de tu página', `<div class="hstack" style="flex-wrap:nowrap"><span class="muted small" style="white-space:nowrap">?reservar=</span>${input('slug', n.slug || slugDe(n.nombre), 'pattern="[a-z0-9-]+" placeholder="mi-negocio"')}</div>`, 'Solo minúsculas, números y guiones.')}
       <div class="hstack"><button class="btn pri">Guardar horario</button><button type="button" class="btn" data-act="pub-preview">Ver mi página</button></div>
     </form>
@@ -3713,18 +3806,21 @@ function formProveedor(id) {
     <div class="tipo-cards" role="radiogroup" aria-label="Tipo">${[['proveedor', 'truck', 'Proveedor', 'Te vende con WhatsApp o correo'], ['web', 'upload', 'Página web', 'Compras en su tienda online'], ['contacto', 'users', 'Contacto', 'Técnico, contadora, etc.']].map(([k, ic, t, d]) => `<label class="tipo-card"><input type="radio" name="tipo" value="${k}" ${T === k ? 'checked' : ''}>${icon(ic)}<b>${t}</b><small>${d}</small></label>`).join('')}</div>
     ${field('<span data-lbl="proveedor">Nombre o empresa</span><span data-lbl="web">Nombre de la tienda</span><span data-lbl="contacto">Nombre</span>', input('nombre', c.nombre, 'required autocomplete="off"'))}
     ${solo('web', field('Página web', input('web', c.web || '', 'inputmode="url" placeholder="Ej: www.distribuidora.cl"')))}
-    ${solo('proveedor', field('Persona de contacto', input('contacto', c.contacto || '', 'placeholder="Opcional"')))}
-    ${solo('proveedor contacto', `<div class="form-row">${field('WhatsApp', telInput('telefono', c.telefono || ''))}${field('Correo', input('email', c.email || '', 'type="email" placeholder="Opcional"'))}</div>`)}
-    ${field('<span data-lbl="proveedor">Qué te vende</span><span data-lbl="web">Qué compras ahí</span><span data-lbl="contacto">Qué hace</span>', input('que_vende', c.que_vende || '', 'placeholder="Opcional"'))}
+    ${solo('proveedor contacto', field('WhatsApp', telInput('telefono', c.telefono || '')))}
+    ${solo('contacto', field('Qué hace', input('que_vende', c.que_vende || '', 'placeholder="Ej: técnico de máquinas, contadora"')))}
     ${solo('proveedor web', `<div class="field"><label>¿Qué le compras? Te avisamos cuando haya que pedirle</label>
       <div class="prov-items" id="prov-items">${prods.map((p) => check('producto', p)).join('')}${ins.map((i) => check('insumo', i)).join('')}${prods.length || ins.length ? '' : '<span class="small muted" id="prov-vacio">Aún no tienes productos. Agrégalos aquí abajo.</span>'}</div>
       <div class="prov-nuevo"><input class="in" id="pn-nombre" placeholder="Agregar algo nuevo"><select class="in" id="pn-tipo" aria-label="Tipo">${opt('producto', 'Producto para vender')}${tiene('produccion') ? opt('insumo', 'Insumo / materia prima') : ''}</select><button type="button" class="btn" id="pn-agregar">${icon('plus')}Agregar</button></div></div>`)}
-    ${field('Notas', input('notas', c.notas || '', 'placeholder="Opcional"'))}
+    <details class="mas-datos" ${c.contacto || c.email || c.notas ? 'open' : ''}><summary>Más datos (opcional)</summary><div class="form" style="margin-top:10px">
+      ${solo('proveedor', field('Persona con quien hablas', input('contacto', c.contacto || '', 'placeholder="Solo si es distinta al nombre"')))}
+      ${solo('proveedor contacto', field('Correo', input('email', c.email || '', 'type="email"')))}
+      ${field('Notas', input('notas', c.notas || '', 'placeholder="Ej: despacha martes y jueves"'))}
+      ${c.que_vende && T !== 'contacto' ? `<input type="hidden" name="que_vende" value="${esc(c.que_vende)}">` : ''}</div></details>
   </div>`, {
     pie: `<div class="sheet-foot" style="justify-content:space-between">${id ? `<button type="button" class="btn danger" data-act="del-proveedor" data-id="${id}">Eliminar</button>` : '<span></span>'}<div class="hstack"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri">Guardar</button></div></div>`,
     submit: (d) => {
       if (!d.nombre.trim()) return toast('Escribe el nombre', true);
-      const row = { nombre: d.nombre.trim(), tipo: d.tipo, contacto: d.tipo === 'proveedor' ? d.contacto.trim() : '', telefono: d.tipo === 'web' ? '' : d.telefono.trim(), email: d.tipo === 'web' ? '' : d.email.trim(), web: d.tipo === 'web' ? normWeb(d.web) : (id ? db.get('proveedores', id).web || '' : ''), que_vende: d.que_vende.trim(), notas: d.notas.trim() };
+      const row = { nombre: d.nombre.trim(), tipo: d.tipo, contacto: d.tipo === 'proveedor' ? d.contacto.trim() : '', telefono: d.tipo === 'web' ? '' : d.telefono.trim(), email: d.tipo === 'web' ? '' : d.email.trim(), web: d.tipo === 'web' ? normWeb(d.web) : (id ? db.get('proveedores', id).web || '' : ''), que_vende: (d.que_vende || '').trim(), notas: (d.notas || '').trim() };
       const prov = id ? db.update('proveedores', id, row) : db.insert('proveedores', row);
       // lo agregado aquí mismo se crea ahora y queda asignado a este proveedor
       for (const cb of [...$('#sheet-form').querySelectorAll('input[name=item]:checked')].filter((x) => x.value.startsWith('nuevo|'))) {
@@ -4388,6 +4484,7 @@ function vistaInicio() {
       ${avance != null ? `<a href="#ajustes"><small>${t_('meta')}</small><b class="num">${Math.floor(avance)}%</b><span>${esActual && falta ? `faltan ${money(falta)}` : 'lograda'}</span><i class="bar-fina"><i style="width:${avance}%"></i></i></a>` : `<a href="#caja"><small>${t_('ingresos')}</small><b class="num">${money(ing)}</b><span>en el mes</span></a>`}
       ${porCobrar != null ? `<a href="#agenda" data-act="ag-hoy-nav"><small>Agenda hoy</small><b class="num">${porCobrar}</b><span>${porCobrar === 1 ? 'cita por atender' : 'citas por atender'}</span></a>` : `<a href="#caja"><small>${t_('gastos')}</small><b class="num">${money(egr)}</b><span>en el mes</span></a>`}
     </section>
+    ${tarjetaIndicadores(ym)}
     ${tarjetaGuia()}
     ${alertas.length ? `<section class="stack"><h2>${t_('para_hoy')}</h2><div class="stack" style="gap:8px">${alertas.map((a) => `<a class="alert-row" href="#${a.href}" ${a.act ? `data-act="${a.act}"` : ''} ${a.id ? `data-id="${a.id}"` : ''}><span class="sev ${a.sev}"></span><div class="grow"><b>${esc(a.t)}</b>${a.s ? `<small>${esc(a.s)}</small>` : ''}</div>${icon('right')}</a>`).join('')}</div></section>` : ''}
     <a class="ini-todo" href="#caja">Ver todos los movimientos ${icon('right')}</a>
@@ -4797,16 +4894,14 @@ function pintarCobro() {
   const total = sum(c.lineas, (l) => l.cantidad * l.precio_unitario);
   const recientes = clientesRecientes(); const sel = c.cliente_id ? db.get('clientes', c.cliente_id) : null;
   const chipsCli = [...(sel && !recientes.some((x) => x.id === sel.id) ? [sel] : []), ...recientes].slice(0, 4);
-  const todos = [...db.all('clientes')].sort((a, b) => a.nombre.localeCompare(b.nombre));
   el.innerHTML = `
     <div class="cobro-lineas">${c.lineas.map((l, i) => `<div class="cobro-ln">
-      <div class="grow"><b>${esc(l.nombre)}</b><small class="num">${money(l.precio_unitario)}${l.cantidad > 1 ? ' c/u' : ''}</small></div>
+      <div class="grow"><b>${esc(l.nombre)}</b><span class="cobro-precio">${precioLinea(l, i, 'cobro')}${l.cantidad > 1 ? '<small> c/u</small>' : ''}</span></div>
       <div class="qty"><button type="button" data-act="cobro-qty" data-i="${i}" data-d="-1" aria-label="Quitar uno">−</button><span class="num">${qtyFmt(l.cantidad)}</span><button type="button" data-act="cobro-qty" data-i="${i}" data-d="1" aria-label="Agregar uno">+</button></div>
       ${l.tipo_item === 'servicio' && emps.length ? `<div class="cobro-chips w100"><span class="lbl">Atendió</span>${emps.map((e) => `<button type="button" class="chip ${l.empleado_id === e.id ? 'on' : ''}" data-act="cobro-emp" data-i="${i}" data-e="${e.id}">${esc(e.nombre.split(' ')[0])}</button>`).join('')}</div>` : ''}
     </div>`).join('')}</div>
     <div class="field"><label>Cliente</label><div class="cobro-chips">${chipsCli.map((x) => `<button type="button" class="chip ${c.cliente_id === x.id ? 'on' : ''}" data-act="cobro-cli" data-id="${x.id}">${esc(x.nombre.split(' ').slice(0, 2).join(' '))}</button>`).join('')}
-      <select class="in cobro-sel" data-change="cobro-cli-sel" aria-label="Elegir otro cliente">${opt('', c.cliente_id && !chipsCli.some((x) => x.id === c.cliente_id) ? '' : 'Otro…')}${todos.map((x) => opt(x.id, x.nombre, chipsCli.some((y) => y.id === c.cliente_id) ? '' : c.cliente_id)).join('')}</select>
-      ${c.cliente_id ? '<button type="button" class="chip" data-act="cobro-cli" data-id="">Sin cliente</button>' : ''}</div></div>
+</div>${buscaCliente('cobro')}</div>
     <div class="field"><label>¿Cómo pagó?</label><div class="cobro-chips">${Object.entries(metodos()).map(([k, v]) => `<button type="button" class="chip ${c.metodo === k ? 'on' : ''}" data-act="cobro-met" data-m="${k}">${esc(v)}</button>`).join('')}</div></div>
     ${tiene('inventario') && c.lineas.some((l) => l.tipo_item === 'producto') ? `<div class="field"><label>Canal</label><div class="cobro-chips"><button type="button" class="chip ${c.canal === 'local' ? 'on' : ''}" data-act="cobro-canal" data-c="local">En el local</button><button type="button" class="chip ${c.canal === 'online' ? 'on' : ''}" data-act="cobro-canal" data-c="online">Online</button></div></div>` : ''}
     <label class="cobro-fecha small muted">Fecha <input type="date" class="in" data-change="cobro-fecha" value="${c.fecha || hoy()}" max="${hoy()}"></label>`;
@@ -4927,6 +5022,118 @@ function portadaViva() {
   }, 3200);
 }
 
+/* ---------- buscar clienta escribiendo (en Registrar y en la hoja de cobrar) ---------- */
+function buscaCliente(ctx, campo) {
+  const cid = campo ? campo.valor : S.cart?.cliente_id; const sel = cid ? db.get('clientes', cid) : null;
+  return `<div class="busca-cli ${sel ? 'con' : ''}" data-ctx="${ctx}" ${campo ? 'data-campo="1"' : ''}>${campo ? `<input type="hidden" name="${campo.name}" id="f-${campo.name}" value="${esc(sel?.id || '')}">` : ''}
+    <input class="in bc-in" id="bc-${ctx}" value="${esc(sel?.nombre || '')}" placeholder="Escribe el nombre de la clienta…" autocomplete="off" aria-label="Buscar cliente" role="combobox" aria-expanded="false">
+    ${sel ? `<button type="button" class="bc-x" data-act="bc-quitar" data-ctx="${ctx}" aria-label="Quitar cliente">${icon('x')}</button>` : ''}
+    <div class="bc-lista" role="listbox" hidden></div></div>`;
+}
+function bcOpciones(q) {
+  const t = norm(q).split(' ').filter(Boolean); if (!t.length) return [];
+  return db.all('clientes').map((c) => ({ c, n: norm(c.nombre + ' ' + (c.telefono || '')) }))
+    .filter((x) => t.every((w) => x.n.split(' ').some((p) => p.startsWith(w)) || x.n.includes(w)))
+    .sort((a, b) => (a.n.startsWith(t[0]) ? 0 : 1) - (b.n.startsWith(t[0]) ? 0 : 1) || a.c.nombre.localeCompare(b.c.nombre)).slice(0, 6).map((x) => x.c);
+}
+function bcPintar(inp) {
+  const box = inp.closest('.busca-cli'); const lista = box.querySelector('.bc-lista'); const q = inp.value.trim();
+  if (!q) { lista.hidden = true; inp.setAttribute('aria-expanded', 'false'); return; }
+  const ops = bcOpciones(q); const exacta = ops.some((c) => norm(c.nombre) === norm(q));
+  lista.innerHTML = ops.map((c, k) => `<button type="button" class="bc-op ${k === 0 ? 'act' : ''}" data-act="bc-elegir" data-id="${c.id}" data-ctx="${box.dataset.ctx}" role="option"><b>${esc(c.nombre)}</b>${c.telefono ? `<small class="num">${esc(c.telefono)}</small>` : ''}</button>`).join('')
+    + (exacta ? '' : `<button type="button" class="bc-op bc-nueva ${ops.length ? '' : 'act'}" data-act="bc-nueva" data-ctx="${box.dataset.ctx}" data-n="${esc(q)}">${icon('plus')}Agregar “${esc(q)}” como clienta nueva</button>`);
+  lista.hidden = false; inp.setAttribute('aria-expanded', 'true');
+}
+// modo campo (formularios de agenda): escribe en un input oculto en vez del carro
+function bcCampo(ctx, id) {
+  const box = document.querySelector(`.busca-cli[data-ctx="${ctx}"]`); if (!box) return;
+  const c = id ? db.get('clientes', id) : null; box.querySelector('input[type=hidden]').value = c?.id || '';
+  const inp = box.querySelector('.bc-in'); inp.value = c?.nombre || ''; box.classList.toggle('con', !!c); box.querySelector('.bc-lista').hidden = true;
+  box.querySelector('.bc-x')?.remove();
+  if (c) inp.insertAdjacentHTML('afterend', `<button type="button" class="bc-x" data-act="bc-quitar" data-ctx="${ctx}" aria-label="Quitar cliente">${icon('x')}</button>`);
+  else inp.focus();
+}
+const bcEsCampo = (ctx) => !!document.querySelector(`.busca-cli[data-ctx="${ctx}"][data-campo]`);
+function bcElegido(ctx) { if (ctx === 'cobro') pintarCobro(); else render(); }
+document.addEventListener('input', (e) => { if (e.target.classList?.contains('bc-in')) bcPintar(e.target); });
+document.addEventListener('keydown', (e) => {
+  if (!e.target.classList?.contains('bc-in')) return;
+  const lista = e.target.closest('.busca-cli').querySelector('.bc-lista'); const ops = [...lista.querySelectorAll('.bc-op')]; const k = ops.findIndex((o) => o.classList.contains('act'));
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); if (!ops.length) return; ops[k]?.classList.remove('act'); ops[(k + (e.key === 'ArrowDown' ? 1 : -1) + ops.length) % ops.length].classList.add('act'); }
+  else if (e.key === 'Enter') { e.preventDefault(); (ops[k] || ops[0])?.click(); }
+  else if (e.key === 'Escape') { lista.hidden = true; }
+});
+document.addEventListener('focusout', (e) => { if (e.target.classList?.contains('bc-in')) setTimeout(() => { const l = e.target.closest?.('.busca-cli')?.querySelector('.bc-lista'); if (l && !l.contains(document.activeElement)) l.hidden = true; }, 180); });
+Object.assign(ACC_COBRO, {
+  'bc-elegir': (el) => { if (bcEsCampo(el.dataset.ctx)) return bcCampo(el.dataset.ctx, el.dataset.id); S.cart.cliente_id = el.dataset.id; bcElegido(el.dataset.ctx); },
+  'bc-nueva': (el) => { const n = el.dataset.n.trim(); if (!n) return; const c = db.insert('clientes', { nombre: n.replace(/(^|\s)\p{Ll}/gu, (x) => x.toUpperCase()), telefono: '', cumpleanos: null, notas: '', creado_en: hoy() }); if (bcEsCampo(el.dataset.ctx)) { toast(`${c.nombre} quedó en tus clientes`); return bcCampo(el.dataset.ctx, c.id); } S.cart.cliente_id = c.id; toast(`${c.nombre} quedó en tus clientes`); bcElegido(el.dataset.ctx); },
+  'bc-quitar': (el) => { if (bcEsCampo(el.dataset.ctx)) return bcCampo(el.dataset.ctx, ''); S.cart.cliente_id = ''; bcElegido(el.dataset.ctx); setTimeout(() => $('#bc-' + el.dataset.ctx)?.focus(), 30); },
+});
+// precio editable en cada línea (para descuentos o servicios con precio variable)
+Object.assign(CAMB_COBRO, {
+  'linea-precio': (el) => { const l = S.cart.lineas[+el.dataset.i]; if (!l) return; const v = num(el.value); if (v >= 0) l.precio_unitario = v; el.dataset.ctx === 'cobro' ? pintarCobro() : render(); },
+});
+document.addEventListener('input', (e) => {
+  if (!e.target.matches?.('.precio-ln')) return; const l = S.cart?.lineas[+e.target.dataset.i]; if (!l) return;
+  const t = sum(S.cart.lineas.map((x, k) => (k === +e.target.dataset.i ? num(e.target.value) : x.precio_unitario) * x.cantidad));
+  const b = $('#cobro-btn'); if (b && e.target.dataset.ctx === 'cobro') b.textContent = `Cobrar ${money(t)}`;
+});
+const precioLinea = (l, i, ctx) => `<label class="precio-wrap"><span class="muted">$</span><input class="in precio-ln num" inputmode="numeric" value="${Math.round(l.precio_unitario)}" data-change="linea-precio" data-i="${i}" data-ctx="${ctx}" aria-label="Precio de ${esc(l.nombre)}"></label>`;
+
+/* ---------- indicadores del negocio: atenciones, ticket promedio, clientas nuevas y retención ---------- */
+function primerasCompras() {
+  const m = new Map(); for (const v of db.all('ventas')) if (v.cliente_id && (!m.has(v.cliente_id) || v.fecha < m.get(v.cliente_id))) m.set(v.cliente_id, v.fecha);
+  return m;
+}
+// hasta = día del mes hasta el que se cuenta (para comparar el mes en curso con el mismo tramo del anterior)
+function indicadoresMes(ym, hasta = 31, primeras = primerasCompras()) {
+  const lim = `${ym}-${pad(Math.min(hasta, diasDelMes(ym)))}`;
+  const vs = db.all('ventas').filter((v) => mesDe(v.fecha) === ym && v.fecha <= lim); const ids = new Set(vs.map((v) => v.id));
+  const items = db.all('venta_items').filter((i) => ids.has(i.venta_id));
+  const atenciones = tiene('servicios') ? sum(items.filter((i) => i.tipo_item === 'servicio'), (i) => Number(i.cantidad || 1)) || vs.length : vs.length;
+  const total = sum(vs, (v) => Number(v.total)); const ticket = vs.length ? total / vs.length : 0;
+  const clientes = new Set(vs.map((v) => v.cliente_id).filter(Boolean));
+  const nuevas = [...clientes].filter((id) => mesDe(primeras.get(id) || '') === ym);
+  const ant = addMonths(ym, -1); const deAntes = new Set(db.all('ventas').filter((v) => mesDe(v.fecha) === ant && v.cliente_id).map((v) => v.cliente_id));
+  const volvieron = [...deAntes].filter((id) => clientes.has(id));
+  return { ym, ventas: vs.length, total, atenciones, ticket, clientes: clientes.size, nuevas: nuevas.length, volvieron: volvieron.length, base: deAntes.size, retencion: deAntes.size ? volvieron.length / deAntes.size : null,
+    recurrentes: clientes.size ? (clientes.size - nuevas.length) / clientes.size : null, pendientes: [...deAntes].filter((id) => !clientes.has(id)) };
+}
+const pctInd = (x) => (x == null ? '—' : Math.round(x * 100) + '%');
+function variacion(a, b) { if (!b) return ''; const d = (a - b) / b; if (Math.abs(d) < 0.03) return '<span class="ind-d">igual que el mes pasado</span>'; return `<span class="ind-d ${d > 0 ? 'up' : 'down'}">${d > 0 ? '▲' : '▼'} ${Math.abs(Math.round(d * 100))}% vs mismo tramo de ${esc(nombreMes(addMonths(S.ui.ind?.ym || mesActual(), -1), true).replace('.', ''))}</span>`; }
+function tarjetaIndicadores(ym = mesActual()) {
+  if (!db.all('ventas').length) return '';
+  const esActual = ym === mesActual(); const dia = esActual ? Number(hoy().slice(8)) : 31; const prim = primerasCompras();
+  const a = indicadoresMes(ym, 31, prim); const b = indicadoresMes(addMonths(ym, -1), dia, prim);
+  const svc = tiene('servicios'); const mes = nombreMes(ym).split(' ')[0];
+  return `<section class="ind" aria-label="Indicadores del mes">
+    <button class="ind-head" data-act="ind-ver" data-ym="${ym}"><h2>Tu negocio en ${esc(mes)}</h2><span>Ver detalle ${icon('right')}</span></button>
+    <div class="ind-grid">
+      <div class="ind-k"><small>${svc ? 'Atenciones' : 'Ventas'}</small><b class="num">${a.atenciones}</b>${variacion(a.atenciones, b.atenciones)}</div>
+      <div class="ind-k"><small>Ticket promedio</small><b class="num">${money(a.ticket)}</b>${variacion(a.ticket, b.ticket)}</div>
+      <div class="ind-k"><small>${svc ? 'Clientas nuevas' : 'Clientes nuevos'}</small><b class="num">${a.nuevas}</b><span class="ind-d">${a.clientes ? `de ${a.clientes} ${svc ? 'atendidas' : 'clientes'}` : 'anota a quién le vendes'}</span></div>
+      <div class="ind-k ind-ret"><small>Retención</small><b class="num">${pctInd(a.retencion)}</b><span class="ind-d">${a.base ? `${a.volvieron} de ${a.base} de ${esc(nombreMes(addMonths(ym, -1), true).replace('.', ''))} ${esActual ? 'ya' : ''} volvieron` : 'aún sin mes anterior'}</span>
+        ${a.retencion != null ? `<i class="ind-barra"><i style="width:${Math.round(a.retencion * 100)}%"></i></i>` : ''}</div>
+    </div>
+    ${(() => { if (!esActual || !a.pendientes.length) return ''; const sin = a.pendientes.filter((id) => !proximaCita(id)).length; const con = a.pendientes.length - sin; const mes = esc(nombreMes(addMonths(ym, -1)).split(' ')[0]); const q = svc ? 'clientas' : 'clientes';
+      return `<a class="ind-pista ${sin ? '' : 'ok'}" href="#" data-act="ind-ver" data-ym="${ym}">${sin ? `${sin} ${sin === 1 ? q.slice(0, -1) : q} de ${mes} no ${sin === 1 ? 'ha' : 'han'} vuelto ni ${sin === 1 ? 'tiene' : 'tienen'} hora. Escríbeles →` : `Las ${con} ${q} de ${mes} que faltan ya tienen hora agendada →`}</a>`; })()}
+  </section>`;
+}
+function detalleIndicadores(ym) {
+  const prim = primerasCompras(); const meses = Array.from({ length: 6 }, (_, k) => addMonths(ym, k - 5)); const datos = meses.map((m) => indicadoresMes(m, 31, prim));
+  const a = datos[5]; const svc = tiene('servicios');
+  const maxAt = Math.max(1, ...datos.map((d) => d.atenciones));
+  const pend = a.pendientes.map((id) => db.get('clientes', id)).filter(Boolean).map((c) => [c, proximaCita(c.id) ? 1 : 0]).sort((x, y) => x[1] - y[1]).map((x) => x[0]).slice(0, 20);
+  abrirSheet(`Tu negocio en ${esc(nombreMes(ym))}`, `<div class="stack">
+    <p class="muted small" style="margin:0">Cómo se calcula: <b>atenciones</b> son los servicios hechos; <b>ticket promedio</b>, lo que deja en promedio cada venta; <b>clientas nuevas</b>, las que compraron por primera vez ese mes; <b>retención</b>, cuántas de las que vinieron el mes anterior volvieron este mes.</p>
+    <div class="tbl-wrap"><table class="ind-tabla"><thead><tr><th>Mes</th><th class="n">${svc ? 'Atenciones' : 'Ventas'}</th><th class="n">Ticket</th><th class="n">Nuevas</th><th class="n">Retención</th></tr></thead>
+    <tbody>${datos.map((d) => `<tr class="${d.ym === ym ? 'on' : ''}"><td>${esc(nombreMes(d.ym, true).replace('.', ''))}</td><td class="n"><span class="ind-mini" style="--w:${Math.round((d.atenciones / maxAt) * 100)}%"></span>${d.atenciones}</td><td class="n">${money(d.ticket)}</td><td class="n">${d.nuevas}</td><td class="n">${pctInd(d.retencion)}</td></tr>`).join('')}</tbody></table></div>
+    ${pend.length ? `<div><h3 style="margin:6px 0">${svc ? 'Vinieron' : 'Compraron'} en ${esc(nombreMes(addMonths(ym, -1)).split(' ')[0])} y aún no vuelven</h3><div class="list">${pend.map((c) => { const pc = proximaCita(c.id); return `<div class="row"><div class="grow"><div class="t">${esc(c.nombre)}</div><div class="s">${pc ? `Tiene hora el ${fechaCorta(pc.fecha)}` : 'Sin hora agendada'}</div></div>${c.telefono && !pc ? `<a class="btn sm" target="_blank" rel="noopener" href="${waLink(c.telefono, msg('reactivar', { nombre: primerNombre(c.nombre), dias: Math.max(1, diasEntre(ultimaCompra(c.id) || hoy(), hoy())) }))}">${icon('chat')}Escribir</a>` : ''}</div>`; }).join('')}</div></div>` : ''}
+  </div>`);
+}
+const ultimaCompra = (id) => db.all('ventas').filter((v) => v.cliente_id === id).reduce((m, v) => (v.fecha > m ? v.fecha : m), '');
+Object.assign(ACC_COBRO, { 'ind-ver': (el) => detalleIndicadores(el.dataset.ym || mesActual()) });
+
 /* =========================================================
    Render, eventos y arranque
    ========================================================= */
@@ -4972,7 +5179,7 @@ const ACCIONES = {
   olvide: () => formOlvide(),
   ayuda: () => abrirAsistente(),
   'dh-copiar': () => { const rows = [...document.querySelectorAll('.dh-row')]; const base = rows.find((r) => r.querySelector('input[name=dia]').checked); if (!base) return toast('Activa al menos un día', true);
-    const [a, b] = base.querySelectorAll('input[type=time]'); rows.forEach((r) => { const [x, y] = r.querySelectorAll('input[type=time]'); x.value = a.value; y.value = b.value; }); toast('Mismo horario para todos los días'); },
+    const [a, b] = base.querySelectorAll('.sel-hora'); rows.forEach((r) => { const [x, y] = r.querySelectorAll('.sel-hora'); x.value = a.value; y.value = b.value; }); toast('Mismo horario para todos los días'); },
   'ayuda-ir': (el) => { cerrarSheet(); if (el.dataset.a) ACCIONES[el.dataset.a]?.(el); ir(el.dataset.h); },
   'tip-ok': (el) => { tipVisto(el.dataset.v); el.closest('.tip')?.remove(); },
   'guia-ocultar': () => { guardarConfig({ guia_oculta: true }); toast('Listo. Puedes volver a verlos desde Ayuda.'); render(); },
@@ -5038,7 +5245,7 @@ const ACCIONES = {
   'ev-estado': (el) => { db.update('eventos', el.dataset.id, { estado: el.dataset.e }); toast(el.dataset.e === 'entregada' ? 'Entrega lista' : 'Hecho'); render(); },
   'ev-cobrar': (el) => cobrarEvento(el.dataset.id),
   'del-evento': (el) => { db.remove('eventos', el.dataset.id); cerrarSheet(); toast('Eliminado de la agenda'); render(); },
-  'cliente-nuevo-evento': (el) => { const id = el.dataset.id || null; formCliente(null, (r) => { formEvento('entrega', id); const s = $('#f-cliente_id'); if (s) s.value = r.id; }); },
+  'cliente-nuevo-evento': (el) => { const id = el.dataset.id || null; formCliente(null, (r) => { formEvento('entrega', id); bcCampo('evento', r.id); }); },
   'confirmar-reserva': (el) => confirmarReserva(el.dataset.id),
   'del-empleado': (el) => eliminarEmpleado(el.dataset.id),
   // página de reservas
@@ -5059,7 +5266,7 @@ const ACCIONES = {
   'cita-estado': (el) => { db.update('citas', el.dataset.id, { estado: el.dataset.e }); render(); },
   'cita-cobrar': (el) => cobrarCita(el.dataset.id),
   'del-cita': (el) => { db.remove('citas', el.dataset.id); cerrarSheet(); toast('Cita eliminada'); render(); },
-  'cliente-nuevo-cita': () => formCliente(null, (r) => { formCita(); const s = $('#f-cliente_id'); if (s) s.value = r.id; }),
+  'cliente-nuevo-cita': () => formCliente(null, (r) => { formCita(null, { cliente_id: r.id }); }),
   // equipo
   'eq-mes': (el) => { S.ui.equipo.mes = addMonths(S.ui.equipo.mes, +el.dataset.d); render(); },
   empleado: (el) => formEmpleado(el.dataset.id),
