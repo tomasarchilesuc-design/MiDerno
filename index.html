@@ -809,39 +809,13 @@ td.n, th.n { white-space: nowrap; }
 @media (max-width: 980px) { .inicio { grid-template-columns: minmax(0, 1fr); gap: 18px; } }
 .ini-dia h1 { font: 400 clamp(2.3rem, 6vw, 3rem)/1 var(--f-serif); letter-spacing: -.01em; margin: 0; }
 .ini-dia p { margin: 4px 0 0; font-size: .92rem; }
-.hoja-dia { position: relative; background: var(--surface); border-radius: 18px; padding: 6px 16px 10px 46px; box-shadow: 0 1px 0 var(--renglon), 0 10px 30px rgba(14,124,134,.07); border: 1px solid var(--renglon);
   background-image: repeating-linear-gradient(transparent 0 43px, var(--renglon) 43px 44px); background-position: 0 6px; }
-.hoja-dia::before { content: ""; position: absolute; left: 32px; top: 0; bottom: 0; width: 1px; background: color-mix(in srgb, var(--lapiz) 35%, transparent); }
-.hd-ln { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 44px; color: var(--ink); text-decoration: none; }
-.hd-t { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 1rem; }
-.hd-t small { color: var(--muted); font-size: .85rem; }
-.hd-ln b { font-variant-numeric: tabular-nums; font-weight: 600; }
-.hd-ln.out b { color: var(--lapiz); }
-.hd-ln.recien { animation: hd-escribe .7s var(--ease-out, ease) both; }
-.hd-ln.recien b { animation: hd-resalta 1.6s ease; border-radius: 4px; }
 @keyframes hd-escribe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 @keyframes hd-resalta { 0%, 35% { background: color-mix(in srgb, var(--sol) 70%, transparent); } 100% { background: transparent; } }
-.hd-prox { color: var(--muted); font-size: .92rem; }
-.hd-prox .hd-t { color: var(--muted); }
-.hd-prox .i { width: 16px; height: 16px; flex: none; }
-.hd-vacia { min-height: 88px; display: flex; align-items: center; color: var(--muted); font-size: .95rem; }
-.hd-mas { display: block; height: 44px; line-height: 44px; font-size: .85rem; color: var(--muted); }
-.hd-total { display: flex; justify-content: space-between; align-items: baseline; border-top: 2px solid var(--ink); margin-top: 2px; padding-top: 8px; color: var(--muted); }
-.hd-total b { font-size: clamp(1.8rem, 6vw, 2.2rem); color: var(--ink); letter-spacing: -.035em; font-weight: 650; padding: 0 2px;
   background: linear-gradient(transparent 58%, var(--sol) 58%, var(--sol) 90%, transparent 90%) no-repeat 0 0 / 100% 100%; }
-.hd-total b.down { color: var(--lapiz); background-image: none; }
-.entra .hd-total b { animation: hd-subraya .7s .55s var(--ease-out, ease) both; }
 @keyframes hd-subraya { from { background-size: 0 100%; } }
 /* anotar escribiendo */
-.anota { position: sticky; bottom: 14px; z-index: 5; display: flex; flex-direction: column; gap: 6px; }
 @media (max-width: 860px) { .anota { bottom: calc(78px + env(safe-area-inset-bottom, 0px)); } }
-.anota-fila { display: flex; gap: 6px; background: var(--ink); border-radius: 16px; padding: 6px; box-shadow: 0 12px 30px rgba(16,40,42,.22); }
-.anota-in { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--bg); font: 500 .98rem var(--f-body); padding: 8px 10px; outline: none; }
-.anota-in::placeholder { color: color-mix(in srgb, var(--bg) 60%, transparent); }
-.anota-btn { border: 0; border-radius: 11px; background: var(--sol); color: #10282A; font: 600 .92rem var(--f-body); padding: 0 16px; cursor: pointer; }
-.anota-fila:focus-within { box-shadow: 0 0 0 3px color-mix(in srgb, var(--sol) 55%, transparent), 0 12px 30px rgba(16,40,42,.22); }
-.anota-prev { font-size: .88rem; background: var(--surface); border: 1px solid var(--renglon); border-radius: 12px; padding: 0 12px; max-height: 0; opacity: 0; overflow: hidden; transition: max-height .25s var(--ease-out, ease), opacity .2s, padding .25s; }
-.anota-prev.on { max-height: 80px; opacity: 1; padding: 8px 12px; }
 .an-tipo { font-size: .75rem; font-weight: 600; border-radius: 6px; padding: 1px 6px; margin-right: 4px; }
 .an-tipo.in { background: var(--ok-soft); color: var(--ok); } .an-tipo.out { background: var(--bad-soft); color: var(--lapiz); }
 /* mes en tres datos */
@@ -929,7 +903,6 @@ td.n, th.n { white-space: nowrap; }
 @keyframes timbre { from { transform: rotate(-2deg) scale(2.2); opacity: 0; } 60% { opacity: 1; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .hd-ln.recien, .hd-ln.recien b, .entra .hd-total b, .ag-fila.recien, .ag-fila.pagada-ahora .ag-hecho, .ag-hecho.pop, .ag-dia-card.entra-der, .ag-dia-card.entra-izq, .pp-mov.nueva, .pp-mov.nueva b, .campo-err, .pub-horas.aparecen .pub-hora, .pub-ok .stamp-ok, .cobro-barra, #ag-cobrado.late, .anota-prev { animation: none !important; transition: none !important; }
 }
 @media (max-width: 860px) {
   .ag-ctrl { padding: 10px 12px; gap: 8px; }
@@ -1138,6 +1111,48 @@ details > summary { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { .wrap.entra > *, .sheet, .scrim, .pub-horas, .bc-lista { animation: none !important; } }
 .sk-hora { height: 42px; border-radius: 12px; }
 
+/* ---------- v25: Inicio, panel de hoy ---------- */
+.hoy { display: flex; flex-direction: column; gap: 14px; }
+.hoy-acciones { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.hoy-acc { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px; border-radius: 16px; border: 1px solid var(--line-suave); background: var(--surface); box-shadow: var(--sombra-card); cursor: pointer; text-align: left; font-weight: 600; font-size: .9rem; color: var(--ink); transition: transform .15s var(--ease-suave), border-color .2s; }
+.hoy-acc .i { width: 32px; height: 32px; padding: 7px; border-radius: 10px; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
+.hoy-acc:first-child { background: var(--accent); color: var(--accent-ink, #fff); border-color: var(--accent); }
+.hoy-acc:first-child .i { background: color-mix(in srgb, #fff 20%, transparent); color: inherit; }
+@media (hover: hover) { .hoy-acc:hover { transform: translateY(-2px); border-color: var(--line); } }
+.hoy-acc:active { transform: scale(.97); }
+.hoy-cifras { display: flex; gap: 8px; } .hoy-cifras a { flex: 1; }
+.hoy-cifras a { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; border-radius: 14px; background: var(--surface-2); color: var(--ink); text-decoration: none; min-width: 0; }
+.hoy-cifras small { color: var(--muted); font-size: .76rem; } .hoy-cifras b { font-size: 1.25rem; letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .hoy-cifras span { color: var(--muted); font-size: .76rem; }
+.hoy-bloque { background: var(--surface); border: 1px solid var(--line-suave); box-shadow: var(--sombra-card); border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.hoy-bloque h2 { font-size: 1rem; }
+.hoy-lista { display: flex; flex-direction: column; }
+.hoy-fila { display: flex; align-items: center; gap: 12px; padding: 9px 0; border: 0; border-top: 1px solid var(--line-suave); background: none; text-align: left; width: 100%; color: var(--ink); cursor: pointer; font: inherit; }
+.hoy-fila:first-child { border-top: 0; }
+.hoy-fila.mov { cursor: default; }
+.hoy-fila b { display: block; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .hoy-fila .grow { min-width: 0; }
+.hoy-fila small { color: var(--muted); font-size: .8rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hoy-h { font-weight: 600; color: var(--accent); min-width: 44px; }
+.hoy-vacio { padding: 4px 0 2px; }
+@media (max-width: 600px) { .hoy-acciones { grid-template-columns: repeat(2, minmax(0, 1fr)); } .hoy-acc { flex-direction: row; align-items: center; padding: 12px; } .hoy-cifras b { font-size: 1.05rem; } }
+.cal-op { display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 16px; background: var(--surface-2); }
+.cal-op > div:first-child { display: flex; align-items: center; gap: 8px; }
+.cal-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ---------- v25: redes sociales ---------- */
+.enlace-bio { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 12px; background: var(--surface-2); min-width: 0; }
+.enlace-bio code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .8rem; }
+.enlace-bio > span { flex: none; width: 90px; color: var(--muted); }
+.redes-cifra { display: flex; align-items: baseline; gap: 10px; } .redes-cifra b { font-size: 2.2rem; letter-spacing: -.03em; } .redes-cifra span { color: var(--muted); }
+.ideas { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.idea { display: flex; flex-direction: column; gap: 8px; }
+.idea h3 { font-size: 1.02rem; }
+.idea-txt { font-size: .88rem; line-height: 1.45; resize: vertical; }
+.redes-ini { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); padding: 14px 16px; }
+.redes-ini small { display: block; color: var(--muted); font-size: .76rem; } .redes-ini b { display: block; font-weight: 600; }
+.redes-ico { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; flex: none; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
+@media (max-width: 600px) { .ideas { grid-template-columns: 1fr; } }
+.hoy-fila .grow { flex: 1; } .hoy-fila > b.num { flex: none; }
+
 </style>
 </head>
 <body>
@@ -1150,7 +1165,7 @@ details > summary { cursor: pointer; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '24';
+const VERSION = '25';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -1181,7 +1196,13 @@ const DIAS_REACTIVAR = 21;
 const $ = (s, el = document) => el.querySelector(s);
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : 'id-' + Math.random().toString(36).slice(2) + Date.now().toString(36));
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+// montos en pesos: "15.000" → 15000 (el punto es separador de miles)
 const num = (v) => { const n = Number(String(v ?? '').replace(/\./g, '').replace(',', '.')); return Number.isFinite(n) ? n : 0; };
+// cantidades con decimales (campos type=number): "1.5" o "1,5" → 1.5
+const dec = (v) => { const n = Number(String(v ?? '').trim().replace(',', '.')); return Number.isFinite(n) ? n : 0; };
+// solo imágenes guardadas como data:image (logo y fotos) y enlaces http(s)
+const imgSegura = (u) => (/^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(u || '') ? u : '');
+const urlSegura = (u) => (/^https?:\/\//i.test(String(u || '').trim()) ? String(u).trim() : '');
 const pad = (n) => String(n).padStart(2, '0');
 const isoDate = (d = new Date()) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 const hoy = () => isoDate();
@@ -1303,16 +1324,26 @@ function guardarCacheNube() {
   CacheNube.set('u:' + uid, { negocio: S.negocio, modulos: S.modulos, t: S.t, nombre: S.usuarioNombre || '', at: Date.now() });
 }
 
+// Índices en memoria: se rehacen solo cuando la tabla cambia (cada escritura sube _ver)
+let _ver = 0; const _indices = new Map();
+function indice(clave, t, armar) {
+  const arr = db.all(t); const x = _indices.get(clave);
+  if (x && x.arr === arr && x.ver === _ver && x.n === arr.length) return x.m;
+  const m = armar(arr); _indices.set(clave, { arr, ver: _ver, n: arr.length, m }); return m;
+}
+const agrupar = (arr, k) => { const m = new Map(); for (const r of arr) { const v = r[k]; const l = m.get(v); l ? l.push(r) : m.set(v, [r]); } return m; };
+
 const db = {
   all: (t) => S.t[t] || (S.t[t] = []),
-  get: (t, id) => db.all(t).find((r) => r.id === id),
-  insert(t, row) { row.id = row.id || uid(); db.all(t).push(row); adapter.insert(t, row); return row; },
-  insertMany(t, rows) { rows.forEach((r) => { r.id = r.id || uid(); db.all(t).push(r); }); adapter.insertMany(t, rows); },
-  update(t, id, patch) { const r = db.get(t, id); if (r) Object.assign(r, patch); adapter.update(t, id, patch); return r; },
-  remove(t, id) { S.t[t] = db.all(t).filter((r) => r.id !== id); adapter.remove(t, id); },
-  removeWhere(t, fn) { db.all(t).filter(fn).forEach((r) => db.remove(t, r.id)); },
-  updateMany(t, ids, patch) { if (!ids.length) return; const set = new Set(ids); db.all(t).forEach((r) => { if (set.has(r.id)) Object.assign(r, patch); }); adapter.updateMany(t, ids, patch); },
-  removeMany(t, ids) { if (!ids.length) return; const set = new Set(ids); S.t[t] = db.all(t).filter((r) => !set.has(r.id)); adapter.removeMany(t, ids); },
+  get: (t, id) => (id == null ? undefined : indice('id:' + t, t, (arr) => new Map(arr.map((r) => [r.id, r]))).get(id)),
+  insert(t, row) { row.id = row.id || uid(); db.all(t).push(row); _ver++; adapter.insert(t, row); return row; },
+  insertMany(t, rows) { rows.forEach((r) => { r.id = r.id || uid(); db.all(t).push(r); }); _ver++; adapter.insertMany(t, rows); },
+  update(t, id, patch) { const r = db.get(t, id); if (r) Object.assign(r, patch); _ver++; adapter.update(t, id, patch); return r; },
+  remove(t, id) { S.t[t] = db.all(t).filter((r) => r.id !== id); _ver++; adapter.remove(t, id); },
+  // borra en bloque (una sola llamada a la nube en vez de una por fila)
+  removeWhere(t, fn) { db.removeMany(t, db.all(t).filter(fn).map((r) => r.id)); },
+  updateMany(t, ids, patch) { if (!ids.length) return; const set = new Set(ids); db.all(t).forEach((r) => { if (set.has(r.id)) Object.assign(r, patch); }); _ver++; adapter.updateMany(t, ids, patch); },
+  removeMany(t, ids) { if (!ids.length) return; const set = new Set(ids); S.t[t] = db.all(t).filter((r) => !set.has(r.id)); _ver++; adapter.removeMany(t, ids); },
   negocio(patch) { Object.assign(S.negocio, patch); _fmt = null; adapter.guardarNegocio(patch); },
   modulo(m, activo) {
     S.modulos = activo ? [...new Set([...S.modulos, m])] : S.modulos.filter((x) => x !== m);
@@ -1321,14 +1352,16 @@ const db = {
 };
 
 /* ---------- cálculos de negocio ---------- */
-function stockDe(tipo, id) { return sum(db.all('movimientos_stock').filter((m) => m.tipo_item === tipo && m.item_id === id), (m) => Number(m.cantidad)); }
+function stockDe(tipo, id) {
+  return indice('stock', 'movimientos_stock', (arr) => { const m = new Map(); for (const x of arr) { const k = x.tipo_item + ':' + x.item_id; m.set(k, (m.get(k) || 0) + Number(x.cantidad)); } return m; }).get(tipo + ':' + id) || 0;
+}
 function costoReceta(productoId) {
   return sum(db.all('formulas').filter((f) => f.producto_id === productoId), (f) => Number(f.cantidad) * Number(db.get('insumos', f.insumo_id)?.costo_unitario || 0));
 }
 function costoProducto(p) { return tiene('produccion') && db.all('formulas').some((f) => f.producto_id === p.id) ? costoReceta(p.id) : Number(p.costo || 0); }
 function ventasDelMes(ym) { return db.all('ventas').filter((v) => mesDe(v.fecha) === ym); }
 function gastosDelMes(ym) { return db.all('gastos').filter((g) => mesDe(g.fecha) === ym); }
-function itemsDeVenta(ventaId) { return db.all('venta_items').filter((i) => i.venta_id === ventaId); }
+function itemsDeVenta(ventaId) { return indice('items', 'venta_items', (arr) => agrupar(arr, 'venta_id')).get(ventaId) || []; }
 function metaDelMes(ym) { return db.all('metas').find((m) => m.periodo === ym); }
 function resumenClientes() {
   const map = new Map(db.all('clientes').map((c) => [c.id, { c, total: 0, visitas: 0, ultima: null }]));
@@ -1343,7 +1376,9 @@ function eliminarVenta(id) {
   db.removeWhere('venta_items', (i) => i.venta_id === id);
   db.removeWhere('movimientos_stock', (m) => m.ref_id === id && m.motivo === 'venta');
   db.removeWhere('comisiones', (c) => c.venta_id === id);
-  db.all('citas').filter((c) => c.venta_id === id).forEach((c) => db.update('citas', c.id, { venta_id: null, estado: 'confirmada' }));
+  db.updateMany('citas', db.all('citas').filter((c) => c.venta_id === id).map((c) => c.id), { venta_id: null, estado: 'confirmada' });
+  // una entrega cobrada con esta venta vuelve a quedar por cobrar
+  db.updateMany('eventos', db.all('eventos').filter((e) => e.venta_id === id).map((e) => e.id), { venta_id: null, pagado: false });
   db.remove('ventas', id);
 }
 
@@ -1566,6 +1601,7 @@ const DEMOS = {
    ========================================================= */
 
 const ICONS = {
+  megafono: '<path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 9a3.5 3.5 0 0 1 0 6"/><path d="M18 6.5a7 7 0 0 1 0 11"/>',
   lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
   clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
   home: '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
@@ -1615,7 +1651,7 @@ function cargando(on) {
 // envuelve una promesa con la barra de carga
 async function conCarga(p) { cargando(true); try { return await p; } finally { cargando(false); } }
 // pantalla completa con el logo animado mientras se abren los datos
-function pantallaCarga(on, texto = 'Abriendo tu cuaderno…') {
+function pantallaCarga(on, texto = 'Cargando tu negocio…') {
   document.getElementById('splash-over')?.remove();
   if (!on) return;
   const el = document.createElement('div'); el.id = 'splash-over'; el.className = 'splash';
@@ -1634,6 +1670,7 @@ const VISTAS = [
   { id: 'equipo', label: 'Equipo', icon: 'team', modulo: 'servicios', grupo: 'Servicios' },
   { id: 'inventario', label: 'Inventario', icon: 'box', modulo: 'inventario', grupo: 'Productos' },
   { id: 'produccion', label: 'Producción', icon: 'flask', modulo: 'produccion', grupo: 'Productos' },
+  { id: 'redes', label: 'Redes sociales', icon: 'megafono', modulo: null },
   { id: 'proveedores', label: 'Proveedores', icon: 'truck', modulo: null },
   { id: 'catalogo', label: 'Catálogo', icon: 'tag', modulo: null },
   { id: 'importar', label: 'Importar Excel', icon: 'upload', modulo: null },
@@ -1675,7 +1712,7 @@ function shell(contenido) {
       ${tab(VISTAS[0])}${tab(VISTAS[2])}
       <a href="#vender" class="sell ${cur === 'vender' ? 'on' : ''}"><span class="plus">${icon('plus')}</span><span>${t_('nav_vender')}</span></a>
       ${principal && principal.id !== 'clientes' ? tab(principal) : tab(VISTAS[3])}
-      <button data-act="mas" class="${['proveedores', 'catalogo', 'importar', 'ajustes', 'equipo', 'produccion', 'clientes', 'inventario'].includes(cur) && cur !== principal?.id ? 'on' : ''}">${icon('more')}<span>${t_('nav_mas')}</span></button>
+      <button data-act="mas" class="${['proveedores', 'catalogo', 'importar', 'ajustes', 'equipo', 'produccion', 'clientes', 'inventario', 'redes'].includes(cur) && cur !== principal?.id ? 'on' : ''}">${icon('more')}<span>${t_('nav_mas')}</span></button>
     </nav>
   </div>`;
 }
@@ -1769,7 +1806,7 @@ function vistaBienvenida() {
       </div>
       <div class="por-vis" aria-hidden="true">
         <div class="por-panel">
-          <span class="pp-k">Ganancia de ${esc(mes)}</span><b class="pp-n">$1.284.300</b><span class="pp-up">▲ 18% vs el mes anterior</span>
+          <span class="pp-k">Resultado de ${esc(mes)}</span><b class="pp-n">$1.284.300</b><span class="pp-up">▲ 18% vs el mes anterior</span>
           <div class="pp-barras">${barras.map((h, k) => `<i style="--h:${h}%;--k:${k}" class="${k === barras.length - 1 ? 'hoy' : ''}"></i>`).join('')}</div>
           <div class="pp-feed"><div class="pp-mov m1"><span>Manicure · Paula</span><b class="pp-in">+$15.000</b></div>
           <div class="pp-mov m2"><span>Vela lavanda ×2</span><b class="pp-in">+$25.980</b></div>
@@ -1876,7 +1913,7 @@ async function abrirNube({ fondo = false } = {}) {
   const user = session?.user || (await sb.auth.getUser()).data?.user;
   limpiarUrlAuth();
   if (!user) return false;
-  if (!fondo) pantallaCarga(true, 'Abriendo tu cuaderno…');
+  if (!fondo) pantallaCarga(true, 'Cargando tu negocio…');
   try { return await abrirNubeCon(sb, user, { fondo }); } finally { pantallaCarga(false); }
 }
 // abre al tiro con la última copia guardada en este dispositivo; después se pone al día con la nube
@@ -2115,7 +2152,7 @@ function formItemNuevo() {
       if (d.tipo === 'servicio') { const x = db.insert('servicios', { nombre, precio, duracion_min: Number(d.duracion) || 60, activo: true }); linea = { ...linea, tipo_item: 'servicio', item_id: x.id }; }
       if (d.tipo === 'producto') { const x = db.insert('productos', { nombre, sku: '', precio_venta: precio, costo: 0, stock_minimo: 0, activo: true, proveedor_id: null }); linea = { ...linea, tipo_item: 'producto', item_id: x.id }; }
       S.cart.lineas.push(linea); S.ui.vender.q = ''; cerrarSheet();
-      toast(d.tipo === 'libre' ? 'Agregado' : `${nombre} quedó en tu catálogo como ${d.tipo}`); render();
+      toast(d.tipo === 'libre' ? 'Agregado' : `${nombre} se agregó a tu catálogo como ${d.tipo}`); render();
     },
   });
   const f = $('#sheet-form'); const sync = () => { const t = f.querySelector('input[name=tipo]:checked')?.value; f.querySelectorAll('[data-solo-tipo]').forEach((x) => { x.hidden = x.dataset.soloTipo !== t; }); };
@@ -2153,7 +2190,7 @@ function vistaVender() {
       <div class="total-row"><span>Total</span><b>${money(total)}</b></div>
       <div class="form">
         <div class="field"><label for="bc-cart">Cliente</label><div class="hstack" style="flex-wrap:nowrap;align-items:flex-start">${buscaCliente('cart')}<button class="btn" data-act="cliente-nuevo-venta" aria-label="Nuevo cliente con todos sus datos" title="Nuevo cliente con teléfono y más datos">${icon('plus')}</button></div></div>
-        <div class="field"><label>Medio de pago</label><div class="seg">${Object.entries(metodos()).map(([k, v]) => `<button data-act="metodo" data-m="${k}" class="${c.metodo === k ? 'on' : ''}">${v}</button>`).join('')}</div></div>
+        <div class="field"><label>Medio de pago</label><div class="seg">${Object.entries(metodos()).map(([k, v]) => `<button data-act="metodo" data-m="${esc(k)}" class="${c.metodo === k ? 'on' : ''}">${esc(v)}</button>`).join('')}</div></div>
         ${tiene('inventario') ? `<div class="field"><label>Canal</label><div class="seg"><button data-act="canal" data-c="local" class="${c.canal === 'local' ? 'on' : ''}">En el local</button><button data-act="canal" data-c="online" class="${c.canal === 'online' ? 'on' : ''}">Online</button></div></div>` : ''}
         ${field('Fecha', `<input class="in" type="date" id="v-fecha" data-change="cart-fecha" value="${c.fecha}" max="${hoy()}">`)}
         ${c.evento_id ? '' : `<label class="hstack"><span class="toggle"><input type="checkbox" id="v-entrega" data-change="cart-entrega" ${c.entrega ? 'checked' : ''}><span></span></span>Agendar entrega o despacho</label>
@@ -2256,12 +2293,13 @@ function vistaCaja() {
     <div class="card-head"><div class="seg">${[['todos', 'Todos', vs.length + gs.length], ['ingresos', 'Ingresos', vs.length], ['egresos', 'Egresos', gs.length]].map(([k, l, n]) => `<button data-act="caja-filtro" data-f="${k}" class="${ui.filtro === k ? 'on' : ''}">${l} <span class="muted">${n}</span></button>`).join('')}</div></div>
     ${dias.length ? dias.map((d) => { const di = sum(d.items.filter((m) => m.tipo === 'in'), (m) => m.monto), de = sum(d.items.filter((m) => m.tipo === 'out'), (m) => m.monto);
       return `<div class="dia-mov"><div class="dia-head"><b>${esc(nombreDia(d.f))}</b><span class="small muted">${di ? `<span class="up">+${money(di)}</span>` : ''}${di && de ? ' · ' : ''}${de ? `−${money(de)}` : ''}</span></div><div class="list">${d.items.map(fila).join('')}</div></div>`; }).join('')
-      : `<div class="empty">${ui.rango === 'hoy' ? 'Hoy todavía no hay movimientos. Registra un ingreso o un egreso y aparece aquí al tiro.' : 'No hay movimientos en estas fechas.'}</div>`}
+      : `<div class="empty">${ui.rango === 'hoy' ? 'Hoy todavía no hay movimientos. Registra un ingreso o un egreso y aparecerá aquí de inmediato.' : 'No hay movimientos en estas fechas.'}</div>`}
   </div>
   ${esMes ? `<div class="card chart"><div class="card-head"><h2>${t_('ultimos_6')}</h2><div class="legend"><span><i style="background:var(--accent)"></i>${t_('ingresos')}</span><span><i style="background:var(--gold)"></i>${t_('gastos')}</span></div></div>${graficoMeses()}</div>` : ''}
   ${tablaMeses(esMes && mesVista < addMonths(mesActual(), -11) ? addMonths(mesVista, 6) : mesActual(), esMes ? mesVista : null)}`;
 }
 function formGasto(id) {
+  if (id && !db.get('gastos', id)) return render();
   const g = id ? db.get('gastos', id) : { fecha: hoy(), categoria: 'Insumos', monto: '', descripcion: '' };
   abrirSheet(id ? 'Editar egreso' : 'Registrar egreso', `<div class="form">
     <div class="form-row">${field('Monto', input('monto', g.monto, 'inputmode="numeric" required placeholder="0"'))}${field('Fecha', input('fecha', g.fecha, 'type="date" required'))}</div>
@@ -2281,7 +2319,14 @@ function formGasto(id) {
 const CITA_VIVA = ['solicitada', 'agendada', 'confirmada'];
 function proximaCita(clienteId) {
   const H = hoy(), lim = addDays(H, 30);
-  return db.all('citas').filter((c) => c.cliente_id === clienteId && CITA_VIVA.includes(c.estado) && c.fecha >= H && c.fecha <= lim).sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora))[0] || null;
+  return indice('prox:' + H, 'citas', (arr) => {
+    const m = new Map();
+    for (const c of arr) {
+      if (!CITA_VIVA.includes(c.estado) || c.fecha < H || c.fecha > lim) continue;
+      const a = m.get(c.cliente_id); if (!a || (c.fecha + c.hora) < (a.fecha + a.hora)) m.set(c.cliente_id, c);
+    }
+    return m;
+  }).get(clienteId) || null;
 }
 const inactivo = (r) => r.dias != null && r.dias > DIAS_REACTIVAR;
 const porReactivar = (r) => inactivo(r) && !proximaCita(r.c.id);
@@ -2347,7 +2392,7 @@ function verCliente(id) {
       ${o.fechadas.length ? `<div class="obs-lista">${o.fechadas.map((x) => `<div class="obs-item"><span class="small muted">${fechaCorta(x.f)} ${x.f.slice(0, 4)}</span><p>${esc(x.t)}</p></div>`).join('')}</div>` : ''}
       ${!o.general && !o.fechadas.length ? '<p class="small muted" style="margin:0">Sin observaciones todavía.</p>' : ''}
       <div class="obs-nueva"><textarea class="in" id="obs-texto" rows="2" placeholder="Ej: piel sensible, alérgica al látex, prefiere tonos nude…"></textarea><button type="button" class="btn sm" data-act="obs-add" data-id="${c.id}">${icon('plus')}Agregar observación</button></div></div>`; })()}
-    <div><h3 style="margin-bottom:6px">Últimas compras</h3><div class="list">${vs.length ? vs.map((v) => `<div class="row"><div class="grow"><div class="t" style="font-weight:500">${esc(itemsDeVenta(v.id).map((i) => i.nombre).join(', '))}</div><div class="s">${fechaCorta(v.fecha)} · ${metodoLabel(v.metodo_pago) || ''}</div></div><div class="r">${money(v.total)}</div></div>`).join('') : '<div class="empty">Sin compras registradas.</div>'}</div></div>`,
+    <div><h3 style="margin-bottom:6px">Últimas compras</h3><div class="list">${vs.length ? vs.map((v) => `<div class="row"><div class="grow"><div class="t" style="font-weight:500">${esc(itemsDeVenta(v.id).map((i) => i.nombre).join(', '))}</div><div class="s">${fechaCorta(v.fecha)} · ${esc(metodoLabel(v.metodo_pago) || '')}</div></div><div class="r">${money(v.total)}</div></div>`).join('') : '<div class="empty">Sin compras registradas.</div>'}</div></div>`,
   { pie: `<div class="sheet-foot" style="justify-content:space-between"><button type="button" class="btn danger" data-act="del-cliente" data-id="${c.id}">${icon('trash')}Eliminar</button><div class="hstack">${c.telefono && cfg().resenas_url ? `<button type="button" class="btn" data-act="pedir-resena" data-id="${c.id}">Pedir reseña</button>` : ''}${c.telefono ? `<a class="btn" target="_blank" rel="noopener" href="${waLink(c.telefono, porReactivar(r) ? msgReactivar(c, r.dias) : msg('saludo', { nombre: primerNombre(c.nombre) }))}">${icon('chat')}WhatsApp</a>` : ''}<button type="button" class="btn pri" data-act="cliente" data-id="${c.id}">${icon('edit')}Editar</button></div></div>` });
 }
 function formCliente(id, alGuardar) {
@@ -2407,7 +2452,7 @@ function formProducto(id) {
   const p = id ? db.get('productos', id) : { nombre: '', sku: '', precio_venta: '', costo: '', stock_minimo: 3, activo: true };
   const receta = tiene('produccion');
   abrirSheet(id ? 'Editar producto' : 'Nuevo producto', `<div class="form">${field('Nombre', input('nombre', p.nombre, 'required'))}
-    <div class="form-row">${field('Precio de venta', input('precio_venta', p.precio_venta, 'inputmode="numeric" required'), 'Si te dan precio etiqueta, úsalo aquí.')}${field('Costo por unidad', input('costo', p.costo, 'inputmode="numeric"'), receta ? 'Si tiene receta en Producción, el costo se calcula solo.' : 'Lo que te cuesta comprarlo.')}</div>
+    <div class="form-row">${field('Precio de venta', input('precio_venta', p.precio_venta, 'inputmode="numeric" required'), 'Precio sugerido de venta, si el proveedor lo indica.')}${field('Costo por unidad', input('costo', p.costo, 'inputmode="numeric"'), receta ? 'Si tiene receta en Producción, el costo se calcula solo.' : 'Lo que te cuesta comprarlo.')}</div>
     <div class="margen-vivo" id="prod-margen"></div>
     <div class="form-row">${field('Código (SKU)', input('sku', p.sku || ''))}${tiene('inventario') ? field('Avisar cuando queden', input('stock_minimo', p.stock_minimo, 'type="number" min="0"'), 'unidades o menos') : ''}</div>
     ${!id && tiene('inventario') ? field('Stock inicial', input('stock_inicial', '', 'type="number" min="0" placeholder="0"')) : ''}
@@ -2417,9 +2462,9 @@ function formProducto(id) {
     submit: (d) => {
       if (!d.nombre.trim() || num(d.precio_venta) <= 0) return toast('Completa nombre y precio', true);
       const prov = resolverProveedor(d); if (prov === false) return toast('Escribe el nombre del proveedor nuevo', true);
-      const row = { proveedor_id: prov, nombre: d.nombre.trim(), sku: (d.sku || '').trim(), precio_venta: num(d.precio_venta), costo: num(d.costo), stock_minimo: num(d.stock_minimo ?? p.stock_minimo), activo: !!d.activo };
+      const row = { proveedor_id: prov, nombre: d.nombre.trim(), sku: (d.sku || '').trim(), precio_venta: num(d.precio_venta), costo: num(d.costo), stock_minimo: dec(d.stock_minimo ?? p.stock_minimo), activo: !!d.activo };
       const r = id ? db.update('productos', id, row) : db.insert('productos', row);
-      if (!id && num(d.stock_inicial) > 0) db.insert('movimientos_stock', { tipo_item: 'producto', item_id: r.id, cantidad: num(d.stock_inicial), motivo: 'compra', ref_id: null, fecha: hoy(), nota: 'Stock inicial' });
+      if (!id && dec(d.stock_inicial) > 0) db.insert('movimientos_stock', { tipo_item: 'producto', item_id: r.id, cantidad: dec(d.stock_inicial), motivo: 'compra', ref_id: null, fecha: hoy(), nota: 'Stock inicial' });
       cerrarSheet(); toast('Producto guardado'); render();
     },
   });
@@ -2429,10 +2474,10 @@ function formProducto(id) {
 
 // muestra cuánto se gana por unidad mientras se escribe el precio
 function lineaMargen(pv, costo) {
-  if (!(pv > 0)) return '<span class="muted">Escribe el precio de venta para ver cuánto ganas.</span>';
-  if (!(costo > 0)) return `<span class="muted">Agrega el costo para ver tu ganancia.</span>`;
+  if (!(pv > 0)) return '<span class="muted">Ingresa el precio de venta para calcular el margen.</span>';
+  if (!(costo > 0)) return `<span class="muted">Ingresa el costo para calcular el margen.</span>`;
   const g = pv - costo; const pct = Math.round((g / pv) * 100);
-  return `Ganas <b class="num ${g < 0 ? 'down' : 'up'}">${money(g)}</b> por unidad <span class="pill ${pct >= 40 ? 'ok' : pct >= 20 ? 'warn' : 'bad'}">${pct}%</span>`;
+  return `Margen <b class="num ${g < 0 ? 'down' : 'up'}">${money(g)}</b> por unidad <span class="pill ${pct >= 40 ? 'ok' : pct >= 20 ? 'warn' : 'bad'}">${pct}%</span>`;
 }
 function escucharMargen(selPv, selCosto, selOut, costoFijo) {
   const f = $('#sheet-form'); const out = $(selOut); if (!f || !out) return;
@@ -2458,15 +2503,15 @@ function vistaInventario() {
   return `${head('Inventario', 'Productos', `<button class="btn" data-act="ajuste">Ajuste o merma</button><button class="btn pri" data-act="ingreso">${icon('plus')}Compra de mercadería</button>`)}
   <div class="grid g4">
     <div class="card kpi"><span class="lbl">Unidades en stock</span><span class="val">${qtyFmt(sum(filas, (f) => Math.max(0, f.st)))}</span><span class="sub">${filas.length} productos</span></div>
-    <div class="card kpi"><span class="lbl">Valor a precio de venta</span><span class="val">${money(sum(filas, (f) => Math.max(0, f.st) * f.p.precio_venta))}</span><span class="sub">precio etiqueta</span></div>
-    <div class="card kpi"><span class="lbl">Valor a costo</span><span class="val">${money(sum(filas, (f) => Math.max(0, f.st) * f.co))}</span><span class="sub">plata invertida</span></div>
+    <div class="card kpi"><span class="lbl">Valor a precio de venta</span><span class="val">${money(sum(filas, (f) => Math.max(0, f.st) * f.p.precio_venta))}</span><span class="sub">a precio de venta actual</span></div>
+    <div class="card kpi"><span class="lbl">Valor a costo</span><span class="val">${money(sum(filas, (f) => Math.max(0, f.st) * f.co))}</span><span class="sub">inversión en inventario</span></div>
     <div class="card kpi"><span class="lbl">Por reponer</span><span class="val ${filas.some((f) => f.st <= Number(f.p.stock_minimo || 0)) ? 'down' : ''}">${filas.filter((f) => f.st <= Number(f.p.stock_minimo || 0)).length}</span><span class="sub">${filas.filter((f) => f.st <= 0).length} agotados</span></div>
   </div>
   <div class="card">
     <div class="card-head"><div class="seg"><button data-act="inv-tab" data-tab="stock" class="${ui.tab === 'stock' ? 'on' : ''}">Stock</button><button data-act="inv-tab" data-tab="movs" class="${ui.tab === 'movs' ? 'on' : ''}">Movimientos</button></div></div>
     <div class="tbl-wrap">${ui.tab === 'stock'
       ? (filas.length ? `<table><thead><tr><th>Producto</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th>Último movimiento</th><th class="n">Última entrada</th><th class="n">Precio</th><th></th></tr></thead><tbody>${filas.map((f) => { const [e, c] = estado(f); return `<tr><td><b>${esc(f.p.nombre)}</b><div class="small muted">${esc(f.p.sku || '')}</div></td><td class="n"><b>${qtyFmt(f.st)}</b></td><td class="n muted">${qtyFmt(f.p.stock_minimo || 0)}</td><td><span class="pill ${c}">${e}</span></td>${celdasMov('producto', f.p.id)}<td class="n"><button class="link-precio ${Number(f.p.precio_venta) ? '' : 'falta'}" data-act="producto" data-id="${f.p.id}" title="Cambiar precio">${Number(f.p.precio_venta) ? money(f.p.precio_venta) : 'Poner precio'}</button>${Number(f.p.precio_venta) && f.co ? `<div class="small muted">gana ${Math.round(((f.p.precio_venta - f.co) / f.p.precio_venta) * 100)}%</div>` : ''}</td><td class="n" style="white-space:nowrap">${f.p.proveedor_id && f.st <= Number(f.p.stock_minimo || 0) && db.get('proveedores', f.p.proveedor_id) ? `<button class="btn sm icon-btn" data-act="pedido" data-id="${f.p.proveedor_id}" title="Pedir al proveedor" aria-label="Pedir al proveedor">${icon('chat')}</button>` : ''}<button class="btn sm icon-btn" data-act="ingreso" data-id="${f.p.id}" title="Compra de mercadería" aria-label="Compra de mercadería">${icon('plus')}</button></td></tr>`; }).join('')}</tbody></table>` : '<div class="empty">Agrega productos en el catálogo para controlar su stock.</div>')
-      : (movs.length ? `<table><thead><tr><th>Fecha</th><th>Producto</th><th>Motivo</th><th class="n">Cantidad</th><th>Nota</th></tr></thead><tbody>${movs.map((m) => `<tr><td class="num" style="white-space:nowrap">${fechaConAnio(m.fecha)}</td><td>${esc(pmap.get(m.item_id) || '—')}</td><td>${MOTIVOS[m.motivo] || m.motivo}</td><td class="n ${m.cantidad < 0 ? 'down' : 'up'}">${m.cantidad > 0 ? '+' : ''}${qtyFmt(m.cantidad)}</td><td class="muted small">${esc(m.nota || '')}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">Sin movimientos todavía.</div>')}
+      : (movs.length ? `<table><thead><tr><th>Fecha</th><th>Producto</th><th>Motivo</th><th class="n">Cantidad</th><th>Nota</th></tr></thead><tbody>${movs.map((m) => `<tr><td class="num" style="white-space:nowrap">${fechaConAnio(m.fecha)}</td><td>${esc(pmap.get(m.item_id) || '—')}</td><td>${esc(MOTIVOS[m.motivo] || m.motivo)}</td><td class="n ${m.cantidad < 0 ? 'down' : 'up'}">${m.cantidad > 0 ? '+' : ''}${qtyFmt(m.cantidad)}</td><td class="muted small">${esc(m.nota || '')}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">Sin movimientos todavía.</div>')}
     </div></div>`;
 }
 // Compra: el usuario anota cuánto llegó y cuánto pagó en total; el costo por unidad sale solo
@@ -2493,7 +2538,7 @@ function formIngreso(prodId) {
     ${field('Precio de venta', `<input class="in" id="f-pv" name="pv" inputmode="numeric" value="${esc(p0.precio_venta || '')}" placeholder="¿A cuánto lo vendes?">`)}
     <div class="margen-vivo" id="ing-margen"></div>
     ${field('Fecha', input('fecha', hoy(), 'type="date"'))}
-    <label class="hstack"><input type="checkbox" name="gasto" checked style="width:18px;height:18px;accent-color:var(--accent)"> Registrar el total pagado como egreso en la caja</label>
+    <label class="hstack"><input type="checkbox" name="gasto" checked style="width:18px;height:18px;accent-color:var(--accent)"> Registrar el total pagado como egreso en Movimientos</label>
     ${field('Nota', input('nota', '', 'placeholder="Ej: Factura 1234, llegada desde bodega"'))}</div>`, {
     submit: (d) => {
       const { cant, total, unit } = leerCompra(d); if (cant <= 0) return toast('Escribe cuántas unidades llegaron', true);
@@ -2519,7 +2564,7 @@ function formIngreso(prodId) {
     ${field('Motivo', input('nota', '', 'placeholder="Ej: Producto dañado, conteo mensual"'))}</div>`, {
     submit: (d) => {
       if (d.real === '') return toast('Escribe el stock contado', true);
-      const dif = num(d.real) - stockDe('producto', d.producto); if (!dif) { cerrarSheet(); return toast('El stock ya coincide'); }
+      const dif = dec(d.real) - stockDe('producto', d.producto); if (!dif) { cerrarSheet(); return toast('El stock ya coincide'); }
       db.insert('movimientos_stock', { tipo_item: 'producto', item_id: d.producto, cantidad: dif, motivo: 'ajuste', ref_id: null, fecha: hoy(), nota: d.nota.trim() });
       cerrarSheet(); toast(`Stock ajustado (${dif > 0 ? '+' : ''}${qtyFmt(dif)})`); render();
     },
@@ -2539,9 +2584,9 @@ function vistaProduccion() {
       return `<div class="card" style="background:var(--surface-2);border:0">
         <div class="between"><h3>${esc(p.nombre)}</h3>${fs.length ? `<span class="pill ${mp >= 50 ? 'ok' : mp >= 30 ? 'warn' : 'bad'}">Margen ${mp}%</span>` : '<span class="pill">Sin receta</span>'}</div>
         <div class="list" style="margin:8px 0">${fs.map((f) => { const i = db.get('insumos', f.insumo_id); return `<div class="row" style="padding:7px 0"><div class="grow"><div class="s" style="color:var(--ink)">${esc(i?.nombre || '—')}</div></div><span class="small muted num">${qtyFmt(f.cantidad)} ${esc(i?.unidad || '')}</span><span class="r small" style="min-width:70px">${money(f.cantidad * (i?.costo_unitario || 0))}</span></div>`; }).join('') || '<div class="small muted" style="padding:6px 0">Agrega los insumos que lleva una unidad.</div>'}</div>
-        <div class="between small"><span class="muted">Costo ${money(co)} · Precio ${money(p.precio_venta)}</span><b class="num">Ganas ${money(mg)} por unidad</b></div>
+        <div class="between small"><span class="muted">Costo ${money(co)} · Precio ${money(p.precio_venta)}</span><b class="num">Margen ${money(mg)} por unidad</b></div>
         ${fs.length ? `<button class="btn sm" style="margin-top:10px" data-act="receta" data-id="${p.id}" data-editar="1">${icon('edit')}Editar receta</button>` : `<button class="btn sm pri" style="margin-top:10px" data-act="receta" data-id="${p.id}">${icon('plus')}Armar receta</button>`}</div>`;
-    }).join('')}</div>` : `<div class="empty">Todavía no hay recetas. Con <b>Nueva receta</b> anotas qué lleva cada producto y MiDerno calcula cuánto te cuesta hacerlo y cuánto ganas.</div>`;
+    }).join('')}</div>` : `<div class="empty">Todavía no hay recetas. Con <b>Nueva receta</b> defines los insumos de cada producto y MiDerno calcula el costo de producción y el margen.</div>`;
   } else if (ui.tab === 'insumos') {
     cuerpo = ins.length ? `<div class="tbl-wrap"><table><thead><tr><th>Insumo</th><th class="n">Costo</th><th class="n">Stock</th><th class="n">Mínimo</th><th>Estado</th><th>Último movimiento</th><th class="n">Última entrada</th><th></th></tr></thead><tbody>${ins.map((i) => { const st = stockDe('insumo', i.id); const bajo = st <= Number(i.stock_minimo || 0); return `<tr><td><button type="button" class="link-btn" data-act="insumo" data-id="${i.id}"><b>${esc(i.nombre)}</b></button>${db.all('formulas').some((f) => f.insumo_id === i.id) ? `<div class="small muted">En ${new Set(db.all('formulas').filter((f) => f.insumo_id === i.id).map((f) => f.producto_id)).size} receta(s)</div>` : ''}</td><td class="n">${money(i.costo_unitario)} / ${esc(i.unidad)}</td><td class="n"><b>${qtyFmt(st)}</b> ${esc(i.unidad)}</td><td class="n muted">${qtyFmt(i.stock_minimo || 0)}</td><td>${bajo ? '<span class="pill warn">Reponer</span>' : '<span class="pill ok">OK</span>'}</td>${celdasMov('insumo', i.id)}<td class="n" style="white-space:nowrap">${bajo && i.proveedor_id && db.get('proveedores', i.proveedor_id) ? `<button class="btn sm" data-act="pedido" data-id="${i.proveedor_id}">${icon('chat')}Pedir</button>` : ''}<button class="btn sm" data-act="compra-insumo" data-id="${i.id}">+ Compra</button><button class="btn sm ghost" data-act="insumo" data-id="${i.id}" aria-label="Editar">${icon('edit')}</button></td></tr>`; }).join('')}</tbody></table></div>` : '<div class="empty">Registra tus materias primas: cera, frascos, esencias, harina…</div>';
   } else {
@@ -2578,7 +2623,7 @@ function formCompraInsumo(id) {
   const i = db.get('insumos', id);
   abrirSheet('Compra de ' + esc(i.nombre), `<div class="form">${camposCompra(i.unidad, i.costo_unitario)}
     ${field('Fecha', input('fecha', hoy(), 'type="date"'))}
-    <label class="hstack"><input type="checkbox" name="gasto" checked style="width:18px;height:18px;accent-color:var(--accent)"> Registrar el total pagado como egreso en la caja</label></div>`, {
+    <label class="hstack"><input type="checkbox" name="gasto" checked style="width:18px;height:18px;accent-color:var(--accent)"> Registrar el total pagado como egreso en Movimientos</label></div>`, {
     submit: (d) => {
       const { cant, total, unit } = leerCompra(d); if (!(cant > 0)) return toast('Escribe la cantidad que llegó', true);
       const fecha = d.fecha || hoy();
@@ -2597,7 +2642,7 @@ function formCompraInsumo(id) {
     ${field('Días hasta estar listo', input('dias', 0, 'type="number" min="0"'), 'Curado, secado o reposo antes de vender. 0 si está listo de inmediato.')}
     <p class="small muted">Al guardar, descontamos los insumos según la receta y sumamos las unidades al stock.</p></div>`, {
     submit: (d) => {
-      const cant = num(d.cantidad); if (cant <= 0) return toast('Escribe cuántas unidades fabricaste', true);
+      const cant = dec(d.cantidad); if (cant <= 0) return toast('Escribe cuántas unidades fabricaste', true);
       const fs = db.all('formulas').filter((f) => f.producto_id === d.producto);
       const faltan = fs.map((f) => { const i = db.get('insumos', f.insumo_id); const need = f.cantidad * cant; const st = stockDe('insumo', i.id); return st < need ? `${i.nombre} (faltan ${qtyFmt(need - st)} ${i.unidad})` : null; }).filter(Boolean);
       if (faltan.length) return toast('No alcanzan los insumos: ' + faltan.slice(0, 3).join(', ') + (faltan.length > 3 ? ` y ${faltan.length - 3} más` : ''), true);
@@ -2642,7 +2687,7 @@ function formReceta(prodId, editar = false) {
     ${editar ? `<input type="hidden" id="rec-prod" value="${esc(prodId)}">${field('Producto', `<input class="in" id="rec-p-renombrar" value="${esc(pAct.nombre)}" aria-label="Nombre del producto">`, 'Puedes cambiarle el nombre aquí mismo.')}`
     : `${field('¿Para qué producto?', `<select class="in" id="rec-prod">${sinReceta.map((p) => opt(p.id, p.nombre, sel)).join('')}<option value="__nuevo" ${sel === '__nuevo' ? 'selected' : ''}>+ Producto nuevo…</option></select>`)}
     <div id="rec-prod-nuevo" ${sel === '__nuevo' ? '' : 'hidden'}>${field('Nombre del producto', '<input class="in" id="rec-p-nombre" placeholder="Ej: Vela de coco 200 g">')}</div>`}
-    <div class="field"><label>¿Qué lleva una unidad?</label><span class="hint" style="margin-top:-2px">Elige la medida que te acomode en cada fila: por ejemplo 180 gr aunque compres la cera por kilo.${editar ? ' Toca la ✕ para sacar un insumo.' : ''}</span>
+    <div class="field"><label>¿Qué lleva una unidad?</label><span class="hint" style="margin-top:-2px">Elige la medida que te acomode en cada fila: por ejemplo 180 gr aunque compres la cera por kilo.${editar ? ' Usa la ✕ para quitar un insumo.' : ''}</span>
       <div class="stack" id="rec-filas">${editar ? fsAct.map((f) => filaReceta(ins, f)).join('') : filaReceta(ins) + filaReceta(ins)}</div>
       <button type="button" class="btn sm" id="rec-mas" style="align-self:flex-start">${icon('plus')}Agregar otro insumo</button></div>
     <div class="banner" id="rec-resumen" style="background:var(--accent-soft)">Agrega los insumos para ver cuánto te cuesta hacer una unidad.</div>
@@ -2676,7 +2721,7 @@ function formReceta(prodId, editar = false) {
     const sugHtml = costo ? [50, 60, 70].map((m) => { const p = precioVitrina(costo / (1 - m / 100)); return `<button type="button" class="chip rec-sug" data-p="${p}">Ganar ${m}% → <b class="num">${money(p)}</b></button>`; }).join('') : '';
     if ($('#rec-sugerencias').dataset.html !== sugHtml) { $('#rec-sugerencias').innerHTML = sugHtml; $('#rec-sugerencias').dataset.html = sugHtml; }
     $('#rec-sugerencias').querySelectorAll('.rec-sug').forEach((b) => b.classList.toggle('on', Number(b.dataset.p) === pv));
-    $('#rec-margen').innerHTML = costo && pv ? `Con ${money(pv)} ganas <b class="num ${pv - costo < 0 ? 'down' : ''}">${money(pv - costo)}</b> por unidad (${Math.round(((pv - costo) / pv) * 100)}% del precio).` : costo ? 'Elige una sugerencia o escribe tu propio precio.' : '';
+    $('#rec-margen').innerHTML = costo && pv ? `Con un precio de ${money(pv)}, el margen es <b class="num ${pv - costo < 0 ? 'down' : ''}">${money(pv - costo)}</b> por unidad (${Math.round(((pv - costo) / pv) * 100)}% del precio).` : costo ? 'Elige una sugerencia o escribe tu propio precio.' : '';
   };
   form.addEventListener('input', recalcular);
   form.addEventListener('change', (e) => {
@@ -2805,7 +2850,7 @@ function vistaAgenda() {
   if (ui.vista === 'mes') { titulo = nombreMes(mesDe(ui.fecha)); cuerpo = agendaMes(); paso = 'mes'; }
   else if (ui.vista === 'semana') { titulo = tituloCalendario(); cuerpo = agendaCalendario(); paso = esMovil() ? 3 : 7; }
   else { titulo = fechaLarga(ui.fecha); cuerpo = agendaDia(); paso = 1; }
-  return `${head('Agenda', esc(titulo), `<button class="btn" data-act="bloqueo-nuevo">${icon('lock')}<span class="solo-desk">Bloquear horario</span></button><button class="btn pri" data-act="agendar">${icon('plus')}Agendar</button>`)}
+  return `${head('Agenda', esc(titulo), `<button class="btn" data-act="cal-personal" title="Ver tu agenda en Google Calendar, iPhone u Outlook">${icon('upload')}<span class="solo-desk">Exportar</span></button><button class="btn" data-act="bloqueo-nuevo">${icon('lock')}<span class="solo-desk">Bloquear horario</span></button><button class="btn pri" data-act="agendar">${icon('plus')}Agendar</button>`)}
   ${pend.length ? `<div class="ag-pend-box ${ui.verPend ? 'on' : ''}"><button class="ag-pend" data-act="ag-pend" aria-expanded="${!!ui.verPend}"><span><b>${pend.length}</b> reserva${pend.length > 1 ? 's' : ''} por confirmar</span><span class="ag-pend-ver">${ui.verPend ? 'Ocultar' : 'Ver'}</span></button>
     ${ui.verPend ? `<div class="list">${pend.slice(0, 5).map((c) => { const cl = db.get('clientes', c.cliente_id); const s = db.get('servicios', c.servicio_id); return `<div class="row" style="flex-wrap:wrap"><div class="grow"><div class="t">${esc(cl?.nombre || 'Cliente')} · ${esc(s?.nombre || '')}</div><div class="s">${esc(fechaLarga(c.fecha))}, ${hhmm(c.hora)}${c.empleado_id ? ' · ' + esc(db.get('empleados', c.empleado_id)?.nombre || '') : ''}</div></div>
       <div class="hstack"><button class="btn sm" data-act="cita-estado" data-id="${c.id}" data-e="rechazada">Rechazar</button><button class="btn sm pri" data-act="confirmar-reserva" data-id="${c.id}">Confirmar</button></div></div>`; }).join('')}</div>` : ''}</div>` : ''}
@@ -2829,7 +2874,7 @@ function agendaDia() {
   <div class="card ag-dia-card"><div class="card-head"><h2>${items.filter(enAgenda).length} en agenda</h2><p class="num ag-cuentas"><span>Cobrado <b id="ag-cobrado">${money(cobrado)}</b></span>${esperado ? `<span>· ${money(esperado)} por cobrar</span>` : ''}</p></div>
     ${bloqueosDel(ui.fecha).map((b) => `<button class="ag-bloq" data-act="bloqueo" data-id="${b.id}">${icon('lock')}<span><b>Bloqueado ${esc(textoBloqueo(b))}</b>${b.titulo && b.titulo !== 'Bloqueado' ? ` · ${esc(b.titulo)}` : ''}</span><small>Nadie puede reservar</small></button>`).join('')}
     ${diaCerrado(ui.fecha) ? `<p class="small muted ag-cerrado">${icon('clock')}Según tu horario no atiendes este día. Igual puedes agendar.</p>` : ''}
-    <div class="ag-lista">${items.length ? conRayaAhora(items, items.map(filaAgendaCorta)) : `<div class="empty">Página en blanco. Toca <b>Agendar</b> para anotar una hora, una entrega o un recordatorio.</div>`}</div></div>`;
+    <div class="ag-lista">${items.length ? conRayaAhora(items, items.map(filaAgendaCorta)) : `<div class="empty">No hay nada agendado este día. Usa <b>Agendar</b> para crear una hora, una entrega o un recordatorio.</div>`}</div></div>`;
 }
 
 function filaAgenda(i) {
@@ -2862,17 +2907,6 @@ function filaAgenda(i) {
     <div class="hstack">${acciones.join('')}</div></div>`;
 }
 
-function chipAgenda(i) {
-  return `<button class="ag-chip ${KIND[i.kind].cls} ${enAgenda(i) ? '' : 'off'} ${i.estado === 'solicitada' ? 'req' : ''}" data-act="${i.kind === 'cita' ? 'cita' : 'evento'}" data-id="${i.id}" title="${esc(KIND[i.kind].label + ': ' + i.titulo)}"><span class="num">${i.hora || '•'}</span> ${esc(i.titulo)}</button>`;
-}
-function agendaSemana() {
-  const ui = S.ui.agenda; const l = lunesDe(ui.fecha);
-  return `<div class="week">${Array.from({ length: 7 }, (_, d) => {
-    const f = addDays(l, d); const items = itemsDelDia(f);
-    return `<div class="week-day ${f === hoy() ? 'today' : ''}"><button class="week-head" data-act="ag-ir-dia" data-f="${f}"><span>${DIAS_CORTOS[d]}</span><b>${Number(f.slice(8))}</b></button>
-      <div class="stack" style="gap:4px">${items.length ? items.map(chipAgenda).join('') : '<span class="small muted" style="padding:2px 4px">—</span>'}</div></div>`;
-  }).join('')}</div>`;
-}
 function agendaMes() {
   const ui = S.ui.agenda; const ym = mesDe(ui.fecha); const ini = lunesDe(ym + '-01');
   const ultimo = `${ym}-${pad(diasDelMes(ym))}`; const semanas = Math.ceil((diasEntre(ini, ultimo) + 1) / 7);
@@ -2930,7 +2964,7 @@ function formCita(id, pre = {}) {
   avisoHorarioCita();
 }
 function cobrarCita(id) {
-  const c = db.get('citas', id); const s = db.get('servicios', c.servicio_id);
+  const c = db.get('citas', id); if (!c) return render(); const s = db.get('servicios', c.servicio_id);
   S.cart = { ...nuevoCarro(), cliente_id: c.cliente_id, cita_id: c.id, fecha: c.fecha <= hoy() ? c.fecha : hoy(), lineas: s ? [{ tipo_item: 'servicio', item_id: s.id, nombre: s.nombre, cantidad: 1, precio_unitario: Number(s.precio), empleado_id: c.empleado_id }] : [] };
   S.ui.vender.tab = 'servicios'; formCobro();
 }
@@ -2941,6 +2975,7 @@ function avisarPorWhatsApp(titulo, texto, tel, nombre) {
   $('#aviso-enviar').addEventListener('click', () => setTimeout(cerrarSheet, 100));
 }
 function confirmarReserva(id) {
+  if (!db.get('citas', id)) return render();
   const c = db.update('citas', id, { estado: 'confirmada' }); const cl = db.get('clientes', c.cliente_id); const s = db.get('servicios', c.servicio_id);
   S._recien = id; if (vistaActual() === 'agenda') { S.ui.agenda.fecha = c.fecha; S.ui.agenda.vista = 'dia'; }
   render();
@@ -3011,7 +3046,7 @@ function formEmpleado(id) {
     submit: (d) => {
       if (!d.nombre.trim()) return toast('Escribe el nombre', true);
       const pct = Math.min(100, Math.max(0, Number(String(d.pct_comision).replace(',', '.')) || 0));
-      const row = { nombre: d.nombre.trim(), telefono: d.telefono.trim(), pct_comision: pct, activo: true, ...(d.fecha_nacimiento ? { fecha_nacimiento: d.fecha_nacimiento } : e.fecha_nacimiento ? { fecha_nacimiento: null } : {}) };
+      const row = { nombre: d.nombre.trim(), telefono: d.telefono.trim(), pct_comision: pct, activo: id ? e.activo !== false : true, ...(d.fecha_nacimiento ? { fecha_nacimiento: d.fecha_nacimiento } : e.fecha_nacimiento ? { fecha_nacimiento: null } : {}) };
       if (!id) { db.insert('empleados', row); cerrarSheet(); toast('Persona agregada'); return render(); }
       const antes = Number(e.pct_comision); db.update('empleados', id, row);
       const n = pct !== antes ? recalcularComisiones(id, antes, pct) : 0;
@@ -3036,7 +3071,7 @@ function eliminarEmpleado(id) {
   const futuras = db.all('citas').filter((c) => c.empleado_id === id && c.fecha >= hoy() && !INACTIVOS.includes(c.estado) && c.estado !== 'completada');
   const texto = `Se quitará a <b>${esc(e.nombre)}</b> del equipo.${pend ? ` Aún tiene <b>${money(pend)}</b> en comisiones por pagar; seguirán apareciendo hasta que las marques pagadas.` : ''}${futuras.length ? ` Sus ${futuras.length} horas agendadas quedarán sin asignar.` : ''}${historial ? ' Su historial de ventas se mantiene.' : ''}`;
   confirmar(texto, () => {
-    futuras.forEach((c) => db.update('citas', c.id, { empleado_id: null }));
+    db.updateMany('citas', futuras.map((c) => c.id), { empleado_id: null });
     if (historial) db.update('empleados', id, { activo: false }); else db.remove('empleados', id);
     if (S.ui.agenda.emp === id) S.ui.agenda.emp = 'todos';
     toast(`${primerNombre(e.nombre)} ya no está en el equipo`); render();
@@ -3410,7 +3445,7 @@ function vistaImportar() {
   if (imp.resultado) {
     const r = imp.resultado;
     return `${head('Importación lista', esc(imp.archivo))}
-    <div class="card stack"><h2>Esto quedó anotado en tu cuaderno</h2>
+    <div class="card stack"><h2>Importación completada</h2>
       <div class="list">${r.lineas.map((l) => `<div class="row"><span class="sev ok" style="align-self:center;height:22px"></span><div class="grow"><div class="t">${esc(l)}</div></div></div>`).join('')}</div>
       ${r.avisos.length ? `<div class="banner">${r.avisos.map(esc).join('<br>')}</div>` : ''}
       ${r.cmp?.length ? `<h2 style="margin-top:6px">Tu resumen vs. MiDerno</h2><p class="small muted">Comparamos los totales de tu pestaña de resumen con la suma del detalle. Si un mes dice "Revisar", tu resumen y tus filas no suman lo mismo en el Excel.</p>
@@ -3438,7 +3473,7 @@ function vistaImportar() {
     if (h.tipo === 'ninguno') return `<div class="card between"><div><h2>Hoja “${esc(h.nombre)}”</h2><p class="small muted">${h.datos.length} filas · No reconocimos qué contiene. Elige qué es o déjala fuera.</p></div>${tipoSel}</div>`;
     const campos = IMP[h.tipo].campos; const objs = datosDe(h).map((f) => filaAObjeto(h, f)); const validas = objs.filter((o) => filaValida(h.tipo, o)).length;
     const colOpts = (sel) => opt(-1, '— No usar —', sel) + h.headers.map((t, i) => opt(i, t || `Columna ${i + 1}`, sel)).join('');
-    const fmt = (f, v, o) => { const d = campos[f]; if ((v == null || v === '') && f !== 'categoria') return '<span class="muted">—</span>'; if (d.tipo === 'mes') return esc(nombreMes(v)); if (d.tipo === 'fecha') return fechaCorta(v) + (v.startsWith('2000-') && h.tipo === 'clientes' ? '' : ' ' + v.slice(0, 4)); if (d.tipo === 'num') return ['precio_venta', 'costo', 'precio', 'costo_unitario', 'total', 'monto', 'ingreso', 'egreso', 'ingresos', 'gastos', 'balance'].includes(f) ? money(v) : qtyFmt(v); if (f === 'metodo_pago') return metodoLabel(parseMetodo(v)); if (f === 'categoria') return parseCategoria(v, o.descripcion); return esc(v); };
+    const fmt = (f, v, o) => { const d = campos[f]; if ((v == null || v === '') && f !== 'categoria') return '<span class="muted">—</span>'; if (d.tipo === 'mes') return esc(nombreMes(v)); if (d.tipo === 'fecha') return fechaCorta(v) + (v.startsWith('2000-') && h.tipo === 'clientes' ? '' : ' ' + v.slice(0, 4)); if (d.tipo === 'num') return ['precio_venta', 'costo', 'precio', 'costo_unitario', 'total', 'monto', 'ingreso', 'egreso', 'ingresos', 'gastos', 'balance'].includes(f) ? money(v) : qtyFmt(v); if (f === 'metodo_pago') return metodoLabel(parseMetodo(v)); if (f === 'categoria') return esc(parseCategoria(v, o.descripcion)); return esc(v); };
     const usados = Object.keys(campos).filter((f) => h.map[f] >= 0);
     return `<div class="card stack">
       <div class="between"><div><h2>Hoja “${esc(h.nombre)}”</h2><p class="small muted">${validas} de ${objs.length} filas se pueden importar${objs.length - validas ? ` · ${objs.length - validas} sin ${Object.entries(campos).filter(([, d]) => d.req).map(([, d]) => d.label.toLowerCase()).join(' o ')} se saltan` : ''}</p></div>${tipoSel}</div>
@@ -3448,7 +3483,7 @@ function vistaImportar() {
     </div>`;
   }).join('')}
   ${hojas.some((h) => h.tipo === 'resumen') ? `<p class="small muted">${hojas.some((h) => ['ventas', 'gastos', 'caja'].includes(h.tipo)) ? 'Tu pestaña de resumen no se suma de nuevo: la usamos para comprobar que los totales de cada mes cuadren con el detalle.' : 'Como el archivo no trae el detalle, cargamos cada mes del resumen como un total de ingresos y otro de egresos (los meses que ya tienes registrados no se tocan).'}</p>` : ''}
-  ${hojas.some((h) => h.tipo === 'ventas') ? '<p class="small muted">Las ventas antiguas se suman a la caja y al historial de cada cliente, pero no descuentan stock. Si vuelves a subir el mismo archivo, las filas repetidas se saltan.</p>' : ''}`;
+  ${hojas.some((h) => h.tipo === 'ventas') ? '<p class="small muted">Las ventas antiguas se suman a Movimientos y al historial de cada cliente, pero no descuentan stock. Si vuelves a subir el mismo archivo, las filas repetidas se saltan.</p>' : ''}`;
 }
 
 async function abrirArchivo(file) {
@@ -3692,7 +3727,7 @@ function vistaBloques(h, hi) {
     <div class="between"><div><h2>Hoja “${esc(h.nombre)}”</h2><p class="small muted">Encontramos ${h.recetas.length} ${h.recetas.length === 1 ? 'receta' : 'recetas'} de producción${h.listas.length ? ' y listas de ingresos y egresos' : ''}.</p></div>
       <select class="in" style="width:auto;min-height:36px" data-change="imp-tipo" data-h="${hi}">${opt('bloques', 'Recetas y listas', h.tipo)}${opt('ninguno', 'No importar esta hoja', h.tipo)}</select></div>
     <div class="recetas-imp">${h.recetas.map((rc) => { const m = rc.precio ? Math.round(((rc.precio - rc.costo) / rc.precio) * 100) : null; return `<div class="receta-imp">
-      <div class="between"><b>${esc(rc.nombre)}</b>${rc.precio ? `<span class="pill ok">gana ${m}%</span>` : ''}</div>
+      <div class="between"><b>${esc(rc.nombre)}</b>${rc.precio ? `<span class="pill ok">margen ${m}%</span>` : ''}</div>
       <p class="small muted" style="margin:2px 0 8px">Cuesta ${money(rc.costo)}${rc.precio ? ` · se vende a ${money(rc.precio)}` : ''}</p>
       <table class="small"><tbody>${rc.lineas.map((l) => `<tr><td>${esc(titulo(l.insumo))}</td><td class="muted">${l.cant ? qtyFmt(l.cant.n) + ' ' + l.cant.u : ''}</td><td class="n">${money(l.costo)}</td></tr>`).join('')}</tbody></table></div>`; }).join('')}</div>
     ${listaHtml}</div>`;
@@ -3706,7 +3741,7 @@ function vistaBloques(h, hi) {
 
 const HORARIO_DEF = { dias: [1, 2, 3, 4, 5, 6], desde: '10:00', hasta: '19:00', intervalo: 30 };
 const DIAS_SEMANA = [[1, 'Lun'], [2, 'Mar'], [3, 'Mié'], [4, 'Jue'], [5, 'Vie'], [6, 'Sáb'], [0, 'Dom']];
-const horarioDe = (n) => ({ ...HORARIO_DEF, ...(typeof n?.horario === 'string' ? JSON.parse(n.horario) : n?.horario || {}) });
+const horarioDe = (n) => { let h = n?.horario || {}; if (typeof h === 'string') { try { h = JSON.parse(h); } catch { h = {}; } } return { ...HORARIO_DEF, ...h }; };
 // horario de un día de la semana (0 = domingo): null si está cerrado
 const horarioDia = (h, dow) => (h.dias.includes(dow) ? { desde: h.porDia?.[dow]?.desde || h.desde, hasta: h.porDia?.[dow]?.hasta || h.hasta } : null);
 const slugDe = (nombre) => norm(nombre).replace(/ /g, '-').slice(0, 40) || 'mi-negocio';
@@ -3840,7 +3875,7 @@ async function pubEnviar(d) {
     const ocupadas = await conCarga(p.api.ocupadas(p.fecha));
     const libre = horasLibres({ horario: p.info.horario, fecha: p.fecha, dur: Number(p.servicio.duracion_min || 60), ocupadas, empleados: p.info.empleados, empleadoId: p.empleado || null }).find((h) => h.hora === p.hora.hora);
     if (!libre) { p.enviando = false; p.hora = null; await pubCargarHoras(); return toast('Alguien acaba de tomar esa hora. Elige otra.', true); }
-    await p.api.reservar({ servicio_id: p.servicio.id, empleado_id: libre.empleado_id, fecha: p.fecha, hora: libre.hora, nombre: p.datos.nombre, telefono: p.datos.telefono, cumple: p.datos.cumple || null, nota: d.nota.trim() });
+    await p.api.reservar({ servicio_id: p.servicio.id, empleado_id: libre.empleado_id, fecha: p.fecha, hora: libre.hora, nombre: p.datos.nombre, telefono: p.datos.telefono, cumple: p.datos.cumple || null, nota: [ORIGENES[S.refOrigen] ? 'Vino desde ' + ORIGENES[S.refOrigen] : '', d.nota.trim()].filter(Boolean).join(' · ') });
     p.enviado = true;
   } catch (e) { toast('No se pudo reservar: ' + (e.message || e), true); }
   p.enviando = false; window.scrollTo(0, 0); render();
@@ -3848,8 +3883,8 @@ async function pubEnviar(d) {
 
 // Portada de la página pública: foto, logo y nombre del negocio (sin marca de MiDerno)
 function portadaNegocio(neg, pf) {
-  const portada = (pf.fotos || []).filter(Boolean)[0];
-  const logo = pf.logo ? `<img class="pub-logo" src="${pf.logo}" alt="Logo de ${esc(neg.nombre)}">` : `<span class="pub-logo pub-ini" aria-hidden="true">${esc(iniciales(neg.nombre))}</span>`;
+  const portada = (pf.fotos || []).map(imgSegura).filter(Boolean)[0];
+  const logo = imgSegura(pf.logo) ? `<img class="pub-logo" src="${imgSegura(pf.logo)}" alt="Logo de ${esc(neg.nombre)}">` : `<span class="pub-logo pub-ini" aria-hidden="true">${esc(iniciales(neg.nombre))}</span>`;
   return `<header class="pub-cab ${portada ? 'con-foto' : ''}">${portada ? `<div class="pub-portada"><img src="${portada}" alt="Foto de ${esc(neg.nombre)}"></div>` : ''}
     <div class="pub-ident">${logo}<div><h1>${esc(neg.nombre)}</h1><p>Reserva tu hora en línea. Te confirmamos por WhatsApp.</p></div></div></header>`;
 }
@@ -3897,14 +3932,14 @@ function guardarReservas(form) {
 
 /* ---------- perfil público, mapa y calendario ---------- */
 const enArtifact = () => /claude\.ai|claudeusercontent/.test(location.hostname) || !/^https?:/.test(location.protocol);
-const linkMapa = (pf) => pf.maps_url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(pf.direccion)}`;
+const linkMapa = (pf) => urlSegura(pf.maps_url) || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(pf.direccion)}`;
 function cabeceraNegocio(pf) {
   if (!pf) return '';
-  const fotos = (pf.fotos || []).filter(Boolean).slice(1);
+  const fotos = (pf.fotos || []).map(imgSegura).filter(Boolean).slice(1);
   return `${fotos.length ? `<div class="pub-fotos">${fotos.map((f, i) => `<img src="${f}" alt="Foto ${i + 1} del negocio" loading="lazy">`).join('')}</div>` : ''}
     ${pf.direccion || pf.maps_url ? `<div class="pub-lugar">
       ${pf.direccion ? `<div class="small">${esc(pf.direccion)}</div>` : ''}
-      <div class="hstack"><a class="btn sm" target="_blank" rel="noopener" href="${esc(linkMapa(pf))}">Cómo llegar</a>${pf.maps_url ? `<a class="btn sm" target="_blank" rel="noopener" href="${esc(pf.maps_url)}">Ver reseñas y fotos en Google</a>` : ''}</div>
+      <div class="hstack"><a class="btn sm" target="_blank" rel="noopener" href="${esc(linkMapa(pf))}">Cómo llegar</a>${urlSegura(pf.maps_url) ? `<a class="btn sm" target="_blank" rel="noopener" href="${esc(urlSegura(pf.maps_url))}">Ver reseñas y fotos en Google</a>` : ''}</div>
       ${pf.direccion && !enArtifact() ? `<iframe class="pub-mapa" title="Mapa" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${encodeURIComponent(pf.direccion)}&output=embed"></iframe>` : ''}
     </div>` : ''}`;
 }
@@ -3973,7 +4008,7 @@ function vistaProveedores() {
   };
   return `${head('Proveedores y contactos', 'A quién llamar', `<button class="btn pri" data-act="proveedor">${icon('plus')}Nuevo contacto</button>`)}
   ${reponer}
-  ${lista.length ? `<div class="grid g2">${lista.map(tarjeta).join('')}</div>` : `<div class="card empty">Anota aquí a tus proveedores y contactos clave (el técnico, la contadora, el que te trae los envases). Si les asignas productos o insumos, MiDerno te avisa cuándo pedirles y te deja el mensaje listo.</div>`}`;
+  ${lista.length ? `<div class="grid g2">${lista.map(tarjeta).join('')}</div>` : `<div class="card empty">Registra aquí a tus proveedores y contactos clave (el técnico, la contadora, el que te trae los envases). Si les asignas productos o insumos, MiDerno te avisa cuándo pedirles y te deja el mensaje listo.</div>`}`;
 }
 
 function formProveedor(id) {
@@ -4034,8 +4069,7 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.
 function eliminarProveedor(id) {
   const c = db.get('proveedores', id);
   confirmar(`Se eliminará a <b>${esc(c.nombre)}</b>. Los productos que le comprabas quedarán sin proveedor.`, () => {
-    db.all('productos').filter((p) => p.proveedor_id === id).forEach((p) => db.update('productos', p.id, { proveedor_id: null }));
-    db.all('insumos').filter((i) => i.proveedor_id === id).forEach((i) => db.update('insumos', i.id, { proveedor_id: null }));
+    for (const t of ['productos', 'insumos']) db.updateMany(t, db.all(t).filter((r) => r.proveedor_id === id).map((r) => r.id), { proveedor_id: null });
     db.remove('proveedores', id); toast('Contacto eliminado'); render();
   });
 }
@@ -4098,24 +4132,28 @@ function buscarGemelo(id, nombre, telefono) {
   const n = norm(nombre); const t = tel8(telefono);
   return db.all('clientes').find((c) => c.id !== id && ((n && norm(c.nombre) === n) || (t.length === 8 && tel8(c.telefono) === t)));
 }
+// Agrupa por nombre normalizado y por teléfono (8 dígitos) en una sola pasada; se memoriza hasta que cambien los clientes
 function gruposDuplicados() {
-  const visto = new Set(); const grupos = [];
-  for (const c of db.all('clientes')) {
-    if (visto.has(c.id)) continue;
-    const g = db.all('clientes').filter((x) => x.id === c.id || norm(x.nombre) === norm(c.nombre) || (tel8(c.telefono).length === 8 && tel8(x.telefono) === tel8(c.telefono)));
-    g.forEach((x) => visto.add(x.id));
-    if (g.length > 1) grupos.push(g);
-  }
-  return grupos;
+  return indice('duplicados', 'clientes', (arr) => {
+    const porN = new Map(), porT = new Map();
+    for (const c of arr) {
+      const n = norm(c.nombre); if (n) (porN.get(n) || porN.set(n, []).get(n)).push(c);
+      const t = tel8(c.telefono); if (t.length === 8) (porT.get(t) || porT.set(t, []).get(t)).push(c);
+    }
+    // une los grupos que comparten alguna ficha (mismo nombre o mismo teléfono)
+    const padre = new Map(arr.map((c) => [c.id, c.id]));
+    const raiz = (x) => { while (padre.get(x) !== x) { padre.set(x, padre.get(padre.get(x))); x = padre.get(x); } return x; };
+    for (const g of [...porN.values(), ...porT.values()]) for (let i = 1; i < g.length; i++) padre.set(raiz(g[i].id), raiz(g[0].id));
+    const grupos = new Map(); for (const c of arr) { const r = raiz(c.id); (grupos.get(r) || grupos.set(r, []).get(r)).push(c); }
+    return [...grupos.values()].filter((g) => g.length > 1);
+  });
 }
 const comprasDe = (id) => db.all('ventas').filter((v) => v.cliente_id === id).length;
 
 // Mueve todo el historial de "sobra" a "queda" y borra la ficha repetida
 function unificarClientes(quedaId, sobraId) {
   const queda = db.get('clientes', quedaId); const sobra = db.get('clientes', sobraId); if (!queda || !sobra || quedaId === sobraId) return;
-  db.all('ventas').filter((v) => v.cliente_id === sobraId).forEach((v) => db.update('ventas', v.id, { cliente_id: quedaId }));
-  db.all('citas').filter((c) => c.cliente_id === sobraId).forEach((c) => db.update('citas', c.id, { cliente_id: quedaId }));
-  db.all('eventos').filter((e) => e.cliente_id === sobraId).forEach((e) => db.update('eventos', e.id, { cliente_id: quedaId }));
+  for (const t of ['ventas', 'citas', 'eventos']) db.updateMany(t, db.all(t).filter((r) => r.cliente_id === sobraId).map((r) => r.id), { cliente_id: quedaId });
   const patch = {};
   if (!queda.telefono && sobra.telefono) patch.telefono = sobra.telefono;
   if (!queda.cumpleanos && sobra.cumpleanos) patch.cumpleanos = sobra.cumpleanos;
@@ -4288,14 +4326,14 @@ function ajustesPerfil() {
       ${field('Tu página en Google Maps', `<input class="in" name="maps_url" id="f-maps" inputmode="url" value="${esc(c.maps_url || '')}" placeholder="Pega el link de “Compartir” de Google Maps">`, 'En Google Maps busca tu negocio, toca Compartir y copia el link.')}
       ${field('Link para dejar reseñas', `<input class="in" name="resenas_url" id="f-resenas" inputmode="url" value="${esc(c.resenas_url || '')}" placeholder="Ej: https://g.page/r/…/review">`, 'En tu Perfil de Empresa de Google: “Pedir reseñas” → copia el link. Se envía a tus clientes por WhatsApp.')}
       <button class="btn pri" style="align-self:flex-start">Guardar</button>
-      ${c.resenas_url ? `<a class="small" target="_blank" rel="noopener" href="${esc(c.resenas_url)}">Probar mi link de reseñas</a>` : ''}
+      ${urlSegura(c.resenas_url) ? `<a class="small" target="_blank" rel="noopener" href="${esc(urlSegura(c.resenas_url))}">Probar mi link de reseñas</a>` : ''}
     </form>
     <div class="card stack"><h2>Logo y fotos</h2><p class="small muted">Se muestran en tu página de reservas, para que tus clientas reconozcan tu negocio.</p>
-      <div class="logo-fila">${c.logo ? `<img class="logo-prev" src="${c.logo}" alt="Logo de ${esc(S.negocio.nombre)}">` : `<span class="logo-prev logo-ini">${esc(iniciales(S.negocio.nombre))}</span>`}
+      <div class="logo-fila">${imgSegura(c.logo) ? `<img class="logo-prev" src="${imgSegura(c.logo)}" alt="Logo de ${esc(S.negocio.nombre)}">` : `<span class="logo-prev logo-ini">${esc(iniciales(S.negocio.nombre))}</span>`}
         <div class="stack" style="gap:6px"><b>Tu logo</b><span class="small muted">Cuadrado o redondo se ve mejor.</span>
         <div class="hstack"><label class="btn sm" for="f-logo">${icon('upload')}${c.logo ? 'Cambiar' : 'Subir logo'}<input type="file" id="f-logo" accept="image/*" hidden data-change="logo"></label>${c.logo ? '<button type="button" class="btn sm ghost" data-act="logo-del">Quitar</button>' : ''}</div></div></div>
       <b style="margin-top:6px">Fotos de tu local y tus trabajos</b><p class="small muted" style="margin-top:-8px">Hasta 6. La primera queda de portada.</p>
-      <div class="fotos">${fotos.map((f, i) => `<div class="foto"><img src="${f}" alt="Foto ${i + 1} del negocio"><button type="button" class="btn icon-btn" data-act="foto-del" data-i="${i}" aria-label="Quitar foto">${icon('x')}</button></div>`).join('')}
+      <div class="fotos">${fotos.map((f, i) => `<div class="foto"><img src="${esc(imgSegura(f))}" alt="Foto ${i + 1} del negocio"><button type="button" class="btn icon-btn" data-act="foto-del" data-i="${i}" aria-label="Quitar foto">${icon('x')}</button></div>`).join('')}
         ${fotos.length < 6 ? `<label class="foto foto-add" for="f-fotos">${icon('plus')}<span class="small">Agregar</span><input type="file" id="f-fotos" accept="image/*" multiple hidden data-change="fotos"></label>` : ''}</div></div>
   </div>`;
 }
@@ -4364,7 +4402,7 @@ document.addEventListener('submit', (e) => {
     guardarConfig({ direccion: limpio('direccion'), maps_url: url('maps_url'), resenas_url: url('resenas_url') }); toast('Perfil guardado');
   }
   if (f.id === 'form-abono') {
-    const valor = num(fd.get('valor'));
+    const valor = fd.get('tipo') === 'pct' ? Math.min(100, dec(fd.get('valor'))) : num(fd.get('valor'));
     if (fd.get('activo') && !(valor > 0)) return toast('Escribe el monto o porcentaje del abono', true);
     if (fd.get('activo') && !String(fd.get('datos') || '').trim()) return toast('Escribe los datos para transferir', true);
     guardarConfig({ abono: { activo: !!fd.get('activo'), tipo: fd.get('tipo'), valor, datos: String(fd.get('datos') || '').trim() } });
@@ -4403,7 +4441,7 @@ function tablaMeses(hasta, sel = hasta) {
 /* =========================================================
    App para el equipo: cada colaborador ve SU agenda (hora,
    cliente y servicio) y SU mes (atenciones, vendido, comisión).
-   No ve la caja, los clientes ni los datos de los demás.
+   No ve los movimientos, los clientes ni los datos de los demás.
    ========================================================= */
 
 const EquipoLocal = (empId) => ({
@@ -4450,7 +4488,7 @@ function vistaEquipoApp() {
     const hoyList = delDia(q.fecha);
     cuerpo = `<div class="chips scroll">${dias.map((f) => `<button class="pub-day ${q.fecha === f ? 'on' : ''}" data-act="eq-dia" data-f="${f}"><small>${new Date(f + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'short' })}</small><b>${Number(f.slice(8))}</b><small style="text-transform:none">${delDia(f).length} h</small></button>`).join('')}</div>
       <div class="card"><div class="card-head"><h2>${esc(fechaLarga(q.fecha))}</h2><p>${hoyList.length} ${hoyList.length === 1 ? 'hora' : 'horas'}</p></div>
-      <div class="list">${hoyList.length ? hoyList.map((c) => { const [est, cls] = ESTADOS_CITA[c.estado] || ['', '']; const fin = deMin(aMin(c.hora) + Number(c.duracion)); return `<div class="row ag-row k-cita"><div class="ag-hora num"><b>${c.hora}</b><div class="small muted">a ${fin}</div></div>
+      <div class="list">${hoyList.length ? hoyList.map((c) => { const [est, cls] = ESTADOS_CITA[c.estado] || ['', '']; const fin = deMin(aMin(c.hora) + Number(c.duracion)); return `<div class="row ag-row k-cita"><div class="ag-hora num"><b>${esc(c.hora)}</b><div class="small muted">a ${fin}</div></div>
         <div class="grow"><div class="t">${esc(c.cliente)}</div><div class="s">${esc(c.servicio)}${c.nota ? ' · ' + esc(c.nota) : ''}</div></div><span class="pill ${cls}">${est}</span></div>`; }).join('') : '<div class="empty">Día libre. No tienes horas agendadas.</div>'}</div></div>`;
   } else {
     const at = d.atenciones.filter((a) => mesDe(a.fecha) === q.mes).sort((a, b) => b.fecha.localeCompare(a.fecha));
@@ -4482,7 +4520,7 @@ function tarjetaAccesos(todos) {
   const activos = todos.filter((e) => e.activo !== false); if (!activos.length) return '';
   const nube = S.modo === 'nube'; if (nube) cargarCuentasEq();
   const faltaSql = S.cuentasEq?.error === 'sql';
-  return `<div class="card stack" id="accesos"><div><h2>Accesos del equipo</h2><p class="small muted">Crea el usuario y la contraseña de cada persona. En su celular verá solo sus horas y lo que lleva ganado; no ve la caja ni a los demás.</p></div>
+  return `<div class="card stack" id="accesos"><div><h2>Accesos del equipo</h2><p class="small muted">Crea el usuario y la contraseña de cada persona. En su celular verá solo sus horas y sus comisiones; no ve los movimientos del negocio ni a los demás.</p></div>
     ${!nube ? '<div class="banner">Para crear accesos, MiDerno debe estar conectado a la nube. Mientras tanto puedes ver cómo se ve su app.</div>' : ''}
     ${faltaSql ? '<div class="banner">Para ver quién ya tiene acceso y poder quitarlo, corre <b>supabase/actualizacion-7.sql</b> en Supabase. Crear accesos funciona igual.</div>' : ''}
     <div class="list">${activos.map((e) => {
@@ -4601,8 +4639,8 @@ aplicarSistema();
 /* ---------- textos de la interfaz ---------- */
 const I18N = {
   es: {
-    nav_inicio: 'Inicio', nav_vender: 'Registrar', nav_caja: 'Movimientos', nav_clientes: 'Clientes', nav_agenda: 'Agenda', nav_equipo: 'Equipo', nav_inventario: 'Inventario', nav_produccion: 'Producción', nav_proveedores: 'Proveedores', nav_catalogo: 'Catálogo', nav_importar: 'Importar Excel', nav_ajustes: 'Ajustes', nav_mas: 'Más',
-    hola: 'Hola', ganancia: 'Ganancia de', ingresos: 'Ingresos', gastos: 'Egresos', meta: 'Meta', faltan: 'faltan', dia: 'día',
+    nav_inicio: 'Inicio', nav_vender: 'Registrar', nav_caja: 'Movimientos', nav_clientes: 'Clientes', nav_agenda: 'Agenda', nav_equipo: 'Equipo', nav_inventario: 'Inventario', nav_produccion: 'Producción', nav_redes: 'Redes sociales', nav_proveedores: 'Proveedores', nav_catalogo: 'Catálogo', nav_importar: 'Importar Excel', nav_ajustes: 'Ajustes', nav_mas: 'Más',
+    hola: 'Hola', ganancia: 'Resultado de', ingresos: 'Ingresos', gastos: 'Egresos', meta: 'Meta', faltan: 'faltan', dia: 'día',
     ingreso: 'Ingreso', gasto: 'Egreso', agendar: 'Agendar', para_hoy: 'Para hoy', ultimos: 'Últimos movimientos', ver_todo: 'Ver todo', vacio_mov: 'Aún no hay movimientos. Registra tu primer ingreso o egreso.',
     reservas_confirmar: (n) => `${n} reserva${n > 1 ? 's' : ''} por confirmar`, agenda_hoy: (n) => `${n} pendiente${n > 1 ? 's' : ''} en la agenda de hoy`, pedir_a: 'Pedir a', stock_bajo: (n) => `${n} producto${n > 1 ? 's' : ''} por reponer`, reactivar: (n) => `${n} cliente${n > 1 ? 's' : ''} sin volver hace más de ${DIAS_REACTIVAR} días`,
     registrar: 'Registrar', cobrar_cita: 'Cobrar cita', monto: 'Monto', categoria: 'Categoría', detalle_opc: 'Detalle (opcional)', fecha: 'Fecha', proveedor: 'Proveedor', sin_proveedor: 'Sin proveedor', registrar_gasto: 'Registrar egreso', falta_monto: 'Escribe el monto', gasto_ok: 'Egreso registrado',
@@ -4610,7 +4648,7 @@ const I18N = {
     sistema: 'Apariencia', tema: 'Tema', tema_auto: 'Automático', tema_claro: 'Claro', tema_oscuro: 'Oscuro', color: 'Color de la app', personalizado: 'Otro', letra: 'Tamaño de letra', letra_normal: 'Normal', letra_grande: 'Grande', idioma: 'Idioma', sis_nota: 'Se guarda en este dispositivo.', idioma_nota: 'En inglés están traducidos el menú, Inicio, Registrar y Apariencia. El resto se irá traduciendo.',
   },
   en: {
-    nav_inicio: 'Home', nav_vender: 'Record', nav_caja: 'Transactions', nav_clientes: 'Clients', nav_agenda: 'Calendar', nav_equipo: 'Team', nav_inventario: 'Inventory', nav_produccion: 'Production', nav_proveedores: 'Suppliers', nav_catalogo: 'Catalog', nav_importar: 'Import Excel', nav_ajustes: 'Settings', nav_mas: 'More',
+    nav_inicio: 'Home', nav_vender: 'Record', nav_caja: 'Transactions', nav_clientes: 'Clients', nav_agenda: 'Calendar', nav_equipo: 'Team', nav_inventario: 'Inventory', nav_produccion: 'Production', nav_redes: 'Social media', nav_proveedores: 'Suppliers', nav_catalogo: 'Catalog', nav_importar: 'Import Excel', nav_ajustes: 'Settings', nav_mas: 'More',
     hola: 'Hi', ganancia: 'Profit in', ingresos: 'Income', gastos: 'Expenses', meta: 'Goal', faltan: 'left', dia: 'day',
     ingreso: 'Income', gasto: 'Expense', agendar: 'Schedule', para_hoy: 'Today', ultimos: 'Latest transactions', ver_todo: 'See all', vacio_mov: 'No transactions yet. Record your first income or expense.',
     reservas_confirmar: (n) => `${n} booking${n > 1 ? 's' : ''} to confirm`, agenda_hoy: (n) => `${n} pending today`, pedir_a: 'Order from', stock_bajo: (n) => `${n} product${n > 1 ? 's' : ''} to restock`, reactivar: (n) => `${n} client${n > 1 ? 's' : ''} away for over ${DIAS_REACTIVAR} days`,
@@ -4660,28 +4698,20 @@ function vistaInicio() {
   const reactivar = resumenClientes().filter((r) => porReactivar(r) && r.dias < 120).length;
   if (reactivar) alertas.push({ sev: '', t: t_('reactivar', reactivar), href: 'clientes', act: 'filtro-reactivar' });
 
-  // últimos movimientos (ingresos y egresos juntos)
-  const cli = new Map(db.all('clientes').map((c) => [c.id, c.nombre]));
-  const movs = [
-    ...db.all('ventas').map((v) => ({ f: v.fecha, monto: Number(v.total), tipo: 'in', t: itemsDeVenta(v.id).map((i) => i.nombre).join(', ') || t_('ingreso'), s: cli.get(v.cliente_id) || metodoLabel(v.metodo_pago) })),
-    ...db.all('gastos').map((g) => ({ f: g.fecha, monto: Number(g.monto), tipo: 'out', t: g.descripcion || g.categoria, s: g.categoria })),
-  ].sort((a, b) => b.f.localeCompare(a.f)).slice(0, 6);
-
   const fH = new Date(H + 'T12:00:00'); const dia = fH.toLocaleDateString('es-CL', { weekday: 'long' }); const nombre = S.usuarioNombre ? primerNombre(S.usuarioNombre) : '';
-  const porCobrar = tiene('servicios') || db.all('citas').length ? itemsDelDia(H, 'todos').filter(enAgenda).filter((i) => i.kind === 'cita' && !['completada'].includes(i.estado)).length : null;
   return `<div class="inicio">
   <div class="ini-col">
     <header class="ini-dia"><h1>${esc(dia.charAt(0).toUpperCase() + dia.slice(1))} ${fH.getDate()}</h1><p class="muted">de ${esc(fH.toLocaleDateString('es-CL', { month: 'long' }))}${nombre ? ` · Hola, ${esc(nombre)}` : ''}</p></header>
-    ${hojaDelDia()}
-    ${barraAnotar()}
+    ${panelHoy()}
   </div>
   <div class="ini-col">
     <section class="ini-mes" aria-label="Resumen del mes">
-      <a href="#caja" data-act="caja-mes-actual"><small>${esc(nombreMes(ym).split(' ')[0].replace(/^./, (c) => c.toUpperCase()))}</small><b class="num ${res < 0 ? 'down' : ''}">${money(res)}</b><span>${res < 0 && esActual && Number(H.slice(8)) <= 10 ? 'normal a inicio de mes' : 'ganancia del mes'}</span></a>
+      <a href="#caja" data-act="caja-mes-actual"><small>${esc(nombreMes(ym).split(' ')[0].replace(/^./, (c) => c.toUpperCase()))}</small><b class="num ${res < 0 ? 'down' : ''}">${money(res)}</b><span>${res < 0 && esActual && Number(H.slice(8)) <= 10 ? 'habitual a inicio de mes' : 'resultado del mes'}</span></a>
       ${avance != null ? `<a href="#ajustes"><small>${t_('meta')}</small><b class="num">${Math.floor(avance)}%</b><span>${esActual && falta ? `faltan ${money(falta)}` : 'lograda'}</span><i class="bar-fina"><i style="width:${avance}%"></i></i></a>` : `<a href="#caja"><small>${t_('ingresos')}</small><b class="num">${money(ing)}</b><span>en el mes</span></a>`}
-      ${porCobrar != null ? `<a href="#agenda" data-act="ag-hoy-nav"><small>Agenda hoy</small><b class="num">${porCobrar}</b><span>${porCobrar === 1 ? 'cita por atender' : 'citas por atender'}</span></a>` : `<a href="#caja"><small>${t_('gastos')}</small><b class="num">${money(egr)}</b><span>en el mes</span></a>`}
+      <a href="#caja"><small>${t_('gastos')}</small><b class="num">${money(egr)}</b><span>en el mes</span></a>
     </section>
     ${tarjetaIndicadores(ym)}
+    ${tarjetaRedes()}
     ${tarjetaGuia()}
     ${alertas.length ? `<section class="stack"><h2>${t_('para_hoy')}</h2><div class="stack" style="gap:8px">${alertas.map((a) => `<a class="alert-row" href="#${a.href}" ${a.act ? `data-act="${a.act}"` : ''} ${a.id ? `data-id="${a.id}"` : ''}><span class="sev ${a.sev}"></span><div class="grow"><b>${esc(a.t)}</b>${a.s ? `<small>${esc(a.s)}</small>` : ''}</div>${icon('right')}</a>`).join('')}</div></section>` : ''}
     <a class="ini-todo" href="#caja">Ver todos los movimientos ${icon('right')}</a>
@@ -4760,13 +4790,8 @@ function animarCifras(raiz = document) {
   });
 }
 
-// Cambio de pantalla suave donde el navegador lo permite (View Transitions)
-// (v24) Se pinta directo: la pantalla nueva aparece al tiro y su contenido entra suave con .entra
-function conTransicion(fn) {
-  return fn();
-  if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches || navigator.webdriver) return fn();
-  try { document.startViewTransition(fn); } catch { fn(); }
-}
+// Cambio de pantalla: se pinta directo; el contenido nuevo entra suave con la clase .entra
+function conTransicion(fn) { return fn(); }
 
 /* =========================================================
    Ordenar lo importado y empezar de cero
@@ -4881,9 +4906,9 @@ const hayHistorial = () => db.all('ventas').length + db.all('gastos').length + d
 function pasosGuia() {
   const t = (x) => db.all(x).length > 0;
   const p = [
-    { k: 'catalogo', t: 'Anota lo que vendes', s: 'Tus servicios o productos con su precio', hecho: t('servicios') || t('productos'), href: 'catalogo' },
+    { k: 'catalogo', t: 'Agrega lo que vendes', s: 'Tus servicios o productos con su precio', hecho: t('servicios') || t('productos'), href: 'catalogo' },
     { k: 'ingreso', t: 'Registra tu primer ingreso', s: 'Una venta o un servicio cobrado', hecho: t('ventas'), href: 'vender', act: 'reg-ingreso' },
-    { k: 'egreso', t: 'Registra un egreso', s: 'Arriendo, insumos, lo que salga de la caja', hecho: t('gastos'), href: 'vender', act: 'reg-gasto' },
+    { k: 'egreso', t: 'Registra un egreso', s: 'Arriendo, insumos u otro gasto del negocio', hecho: t('gastos'), href: 'vender', act: 'reg-gasto' },
     { k: 'cliente', t: 'Agrega un cliente', s: 'Para saber quién vuelve y a quién escribirle', hecho: t('clientes'), href: 'clientes' },
   ];
   if (tiene('servicios')) p.push({ k: 'cita', t: 'Agenda tu primera hora', s: 'Y envía el recordatorio por WhatsApp', hecho: t('citas'), href: 'agenda' });
@@ -4950,7 +4975,7 @@ function abrirAsistente() {
 }
 
 /* =========================================================
-   v22: la hoja del día, anotar escribiendo, hoja de cobrar
+   v22: hoja de cobrar, agenda en una línea, portada viva
    y animaciones que explican lo que pasa
    ========================================================= */
 
@@ -4958,122 +4983,6 @@ const quieto = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 const esMovil = () => matchMedia('(max-width: 860px)').matches;
 // acción que corre justo después del próximo render (para animar lo que cambió)
 function despues(fn) { S._post = fn; }
-
-/* ---------- anotar escribiendo: "manicure paula 15000 débito" ---------- */
-const PAL_EGRESO = /^(-|gast[oe]s?\b|egreso\b|pagu[eé]\b|pague\b|compr[eé]\b|compre\b|pago\b)/;
-const PAL_METODO = [[/\b(efectivo|efec|cash|plata)\b/, 'efectivo'], [/\b(debito|deb|redcompra)\b/, 'debito'], [/\b(credito|cred|tarjeta)\b/, 'credito'], [/\b(transferencia|transf|transfer|trans)\b/, 'transferencia']];
-const VACIAS = new Set(['de', 'la', 'el', 'a', 'en', 'con', 'por', 'para', 'y', 'los', 'las', 'un', 'una', 'al', 'del']);
-function leerMonto(txt) {
-  let mejor = 0, hallado = '';
-  for (const m of txt.matchAll(/\$?\s?(\d{1,3}(?:[.,]\d{3})+|\d+(?:[.,]\d+)?)\s*(k|mil|lucas?)?\b/gi)) {
-    let v = m[1].includes('.') && /\.\d{3}$/.test(m[1]) ? Number(m[1].replace(/[.,]/g, '')) : Number(m[1].replace(',', '.'));
-    if (m[2]) v *= 1000;
-    if (v > mejor) { mejor = v; hallado = m[0]; }
-  }
-  return { monto: Math.round(mejor), hallado };
-}
-function parecido(nombre, palabras) {
-  const ps = norm(nombre).split(' ').filter((w) => w.length >= 3 && !VACIAS.has(w));
-  if (!ps.length) return { s: 0, usadas: [] };
-  const usadas = ps.filter((w) => palabras.some((p) => p.length >= 3 && (p === w || (p.length >= 4 && (w.startsWith(p) || p.startsWith(w))))));
-  return { s: usadas.length / ps.length + (usadas.length ? usadas.length * 0.1 : 0), usadas };
-}
-// devuelve las palabras originales (con tildes) que quedaron sin usar
-function textoOriginal(raw, quedan) {
-  const q = [...quedan]; const out = [];
-  for (const w of raw.split(/\s+/)) { const nw = norm(w); const k = q.indexOf(nw); if (nw && k >= 0) { out.push(w.replace(/[.,;:]+$/, '')); q.splice(k, 1); } }
-  const t = out.join(' '); return t ? t.charAt(0).toUpperCase() + t.slice(1) : '';
-}
-function entenderAnotacion(texto) {
-  const raw = String(texto || '').trim(); if (raw.length < 2) return null;
-  const n = norm(raw); const egreso = PAL_EGRESO.test(n.replace(/^\$/, '')) || raw.startsWith('-');
-  const { monto, hallado } = leerMonto(raw);
-  let resto = norm(raw.replace(hallado, ' '));
-  // medio de pago (también los que el negocio agregó, como "Giftcard")
-  let metodo = null;
-  for (const [k, l] of Object.entries(metodos())) { const nl = norm(l); if (nl && new RegExp(`\\b${nl}\\b`).test(resto)) { metodo = k; resto = resto.replace(nl, ' '); break; } }
-  if (!metodo) for (const [re, k] of PAL_METODO) if (re.test(resto) && metodos()[k]) { metodo = k; resto = resto.replace(re, ' '); break; }
-  resto = resto.replace(PAL_EGRESO, ' ');
-  const palabras = resto.split(' ').filter(Boolean);
-  if (egreso) {
-    const cats = catGastos(); let cat = null, best = 0;
-    for (const c of cats) { const p = parecido(c, palabras); if (p.s > best) { best = p.s; cat = c; } }
-    return { tipo: 'egreso', monto, categoria: cat || (cats.includes('Otros') ? 'Otros' : cats[0]), descripcion: textoOriginal(raw, palabras.filter((w) => !VACIAS.has(w))) };
-  }
-  // lo que se vendió: el servicio o producto que más se parece
-  const catalogo = [...(tiene('servicios') ? db.all('servicios').filter((s) => s.activo !== false).map((s) => ({ tipo: 'servicio', x: s, precio: Number(s.precio) })) : []),
-    ...db.all('productos').filter((p) => p.activo !== false).map((p) => ({ tipo: 'producto', x: p, precio: Number(p.precio_venta) }))];
-  let item = null, bestI = 0, usadasI = [];
-  for (const c of catalogo) { const p = parecido(c.x.nombre, palabras); if (p.s > bestI && p.s >= 0.5) { bestI = p.s; item = c; usadasI = p.usadas; } }
-  const libres = palabras.filter((w) => !usadasI.some((u) => u === w || u.startsWith(w) || w.startsWith(u)));
-  // la clienta: nombre (y apellido si lo escribieron)
-  let cliente = null, bestC = 0, usadasC = [];
-  for (const c of db.all('clientes')) {
-    const ps = norm(c.nombre).split(' ').filter(Boolean); const usadas = ps.filter((w) => libres.includes(w));
-    if (!usadas.length || !libres.includes(ps[0])) continue;
-    const s = usadas.length + (usadas.length === ps.length ? 0.5 : 0);
-    if (s > bestC) { bestC = s; cliente = c; usadasC = usadas; }
-  }
-  return { tipo: 'ingreso', monto: monto || item?.precio || 0, item, cliente, metodo: metodo || nuevoCarro().metodo, descripcion: textoOriginal(raw, libres.filter((w) => !usadasC.includes(w) && !VACIAS.has(w))) };
-}
-function resumenAnotacion(a) {
-  if (!a) return '';
-  if (a.tipo === 'egreso') return `<span class="an-tipo out">Egreso</span> ${esc(a.categoria)}${a.descripcion ? ' · ' + esc(a.descripcion) : ''} · <b class="num">${a.monto ? money(a.monto) : 'falta el monto'}</b>`;
-  const que = a.item ? a.item.x.nombre : a.descripcion || 'Venta';
-  return `<span class="an-tipo in">Ingreso</span> ${esc(que)}${a.cliente ? ' · ' + esc(a.cliente.nombre) : ''} · ${esc(metodoLabel(a.metodo))} · <b class="num">${a.monto ? money(a.monto) : 'falta el monto'}</b>`;
-}
-function anotar(texto) {
-  const a = entenderAnotacion(texto);
-  if (!a) return toast('Escribe qué vendiste o qué pagaste. Ej: manicure paula 15000', true);
-  if (!(a.monto > 0)) return toast('Falta el monto. Ej: ' + (a.tipo === 'egreso' ? 'gasto algodón 3500' : 'manicure paula 15000'), true);
-  if (a.tipo === 'egreso') {
-    const g = db.insert('gastos', { fecha: hoy(), categoria: a.categoria, monto: a.monto, descripcion: a.descripcion || a.categoria });
-    S._recien = g.id; toast(`${t_('gasto_ok')}: ${money(a.monto)}`); render(); return;
-  }
-  const antes = S.cart;
-  const linea = a.item ? { tipo_item: a.item.tipo, item_id: a.item.x.id, nombre: a.item.x.nombre, cantidad: 1, precio_unitario: a.monto, empleado_id: null } : { tipo_item: 'libre', item_id: null, nombre: a.descripcion || 'Venta', cantidad: 1, precio_unitario: a.monto, empleado_id: null };
-  S.cart = { ...nuevoCarro(), cliente_id: a.cliente?.id || '', metodo: a.metodo, lineas: [linea] };
-  const n = db.all('ventas').length; cobrar();
-  const v = db.all('ventas')[n]; if (v) S._recien = v.id;
-  if (antes?.lineas?.length) S.cart = antes;
-  render();
-}
-document.addEventListener('input', (e) => {
-  if (e.target.id !== 'anota-txt') return;
-  const p = $('#anota-prev'); const a = entenderAnotacion(e.target.value);
-  p.innerHTML = a ? resumenAnotacion(a) : '<span class="muted">Escribe como en tu cuaderno: <i>manicure paula 15000 débito</i> o <i>gasto algodón 3500</i></span>';
-  p.classList.toggle('on', !!e.target.value.trim());
-});
-document.addEventListener('submit', (e) => {
-  if (e.target.id !== 'form-anota') return; e.preventDefault();
-  const t = $('#anota-txt').value; anotar(t);
-}, true);
-
-/* ---------- la hoja del día (Inicio) ---------- */
-function hojaDelDia() {
-  const H = hoy(); const cli = new Map(db.all('clientes').map((c) => [c.id, c.nombre]));
-  const vs = db.all('ventas').filter((v) => v.fecha === H); const gs = db.all('gastos').filter((g) => g.fecha === H);
-  const lineas = [
-    ...vs.map((v) => ({ id: v.id, t: itemsDeVenta(v.id).map((i) => i.nombre).join(', ') || t_('ingreso'), c: cli.get(v.cliente_id) || '', m: Number(v.total) })),
-    ...gs.map((g) => ({ id: g.id, t: g.descripcion || g.categoria, c: g.descripcion && g.descripcion !== g.categoria ? g.categoria : '', m: -Number(g.monto) })),
-  ];
-  const total = sum(lineas, (l) => l.m); const max = 8; const vis = lineas.slice(-max);
-  const ahora = new Date(); const hhmmAhora = `${pad(ahora.getHours())}:${pad(ahora.getMinutes())}`;
-  const prox = tiene('servicios') || db.all('citas').length ? itemsDelDia(H, 'todos').filter(enAgenda).find((i) => !['completada', 'entregada', 'hecha'].includes(i.estado) && (i.hora || '99') >= hhmmAhora) : null;
-  return `<section class="hoja-dia" aria-label="Lo anotado hoy">
-    ${lineas.length > max ? `<a class="hd-mas" href="#caja" data-act="caja-hoy">${lineas.length - max} anotaciones antes · ver todas</a>` : ''}
-    ${vis.length ? vis.map((l) => `<div class="hd-ln ${l.m < 0 ? 'out' : ''} ${S._recien === l.id ? 'recien' : ''}"><span class="hd-t">${esc(l.t)}${l.c ? `<small> · ${esc(l.c)}</small>` : ''}</span><b class="num">${l.m < 0 ? '−' : ''}${money(Math.abs(l.m)).replace('$', '')}</b></div>`).join('')
-      : `<div class="hd-vacia">Hoja en blanco. Anota tu primera venta del día aquí abajo o con <b>Registrar</b>.</div>`}
-    ${prox ? `<a class="hd-ln hd-prox" href="#agenda" data-act="ag-hoy-nav"><span class="hd-t">Próxima: ${prox.hora ? prox.hora + ' · ' : ''}${esc(prox.titulo)}${prox.sub ? `<small> · ${esc(prox.sub.split(' · ')[0])}</small>` : ''}</span>${icon('right')}</a>` : ''}
-    <div class="hd-total"><span>${total < 0 ? 'Hoy vas en' : 'Te quedan hoy'}</span><b class="num ${total < 0 ? 'down' : ''}" data-cuenta="${Math.round(total)}">${money(total)}</b></div>
-  </section>`;
-}
-function barraAnotar() {
-  return `<form class="anota" id="form-anota" autocomplete="off">
-    <div class="anota-prev" id="anota-prev" aria-live="polite"></div>
-    <div class="anota-fila"><input id="anota-txt" class="anota-in" placeholder="Anota: manicure paula 15000 débito" aria-label="Anotar una venta o un egreso escribiendo"><button class="anota-btn" type="submit">Anotar</button></div>
-  </form>`;
-}
 
 /* ---------- hoja de cobrar ---------- */
 function clientesRecientes(n = 4) {
@@ -5134,7 +5043,6 @@ const ACC_COBRO = {
   'caja-hoy': () => { S.ui.caja = { ...(S.ui.caja || {}), rango: 'hoy' }; },
 };
 const CAMB_COBRO = {
-  'cobro-cli-sel': (el) => { if (el.value) { S.cart.cliente_id = el.value; pintarCobro(); } },
   'cobro-fecha': (el) => { S.cart.fecha = el.value || hoy(); },
 };
 
@@ -5265,7 +5173,7 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('focusout', (e) => { if (e.target.classList?.contains('bc-in')) setTimeout(() => { const l = e.target.closest?.('.busca-cli')?.querySelector('.bc-lista'); if (l && !l.contains(document.activeElement)) l.hidden = true; }, 180); });
 Object.assign(ACC_COBRO, {
   'bc-elegir': (el) => { if (bcEsCampo(el.dataset.ctx)) return bcCampo(el.dataset.ctx, el.dataset.id); S.cart.cliente_id = el.dataset.id; bcElegido(el.dataset.ctx); },
-  'bc-nueva': (el) => { const n = el.dataset.n.trim(); if (!n) return; const c = db.insert('clientes', { nombre: n.replace(/(^|\s)\p{Ll}/gu, (x) => x.toUpperCase()), telefono: '', cumpleanos: null, notas: '', creado_en: hoy() }); if (bcEsCampo(el.dataset.ctx)) { toast(`${c.nombre} quedó en tus clientes`); return bcCampo(el.dataset.ctx, c.id); } S.cart.cliente_id = c.id; toast(`${c.nombre} quedó en tus clientes`); bcElegido(el.dataset.ctx); },
+  'bc-nueva': (el) => { const n = el.dataset.n.trim(); if (!n) return; const c = db.insert('clientes', { nombre: n.replace(/(^|\s)\p{Ll}/gu, (x) => x.toUpperCase()), telefono: '', cumpleanos: null, notas: '', creado_en: hoy() }); if (bcEsCampo(el.dataset.ctx)) { toast(`${c.nombre} se agregó a tus clientes`); return bcCampo(el.dataset.ctx, c.id); } S.cart.cliente_id = c.id; toast(`${c.nombre} se agregó a tus clientes`); bcElegido(el.dataset.ctx); },
   'bc-quitar': (el) => { if (bcEsCampo(el.dataset.ctx)) return bcCampo(el.dataset.ctx, ''); S.cart.cliente_id = ''; bcElegido(el.dataset.ctx); setTimeout(() => $('#bc-' + el.dataset.ctx)?.focus(), 30); },
 });
 // precio editable en cada línea (para descuentos o servicios con precio variable)
@@ -5310,7 +5218,7 @@ function tarjetaIndicadores(ym = mesActual()) {
     <div class="ind-grid">
       <div class="ind-k"><small>${svc ? 'Atenciones' : 'Ventas'}</small><b class="num">${a.atenciones}</b>${variacion(a.atenciones, b.atenciones)}</div>
       <div class="ind-k"><small>Ticket promedio</small><b class="num">${money(a.ticket)}</b>${variacion(a.ticket, b.ticket)}</div>
-      <div class="ind-k"><small>${svc ? 'Clientas nuevas' : 'Clientes nuevos'}</small><b class="num">${a.nuevas}</b><span class="ind-d">${a.clientes ? `de ${a.clientes} ${svc ? 'atendidas' : 'clientes'}` : 'anota a quién le vendes'}</span></div>
+      <div class="ind-k"><small>${svc ? 'Clientas nuevas' : 'Clientes nuevos'}</small><b class="num">${a.nuevas}</b><span class="ind-d">${a.clientes ? `de ${a.clientes} ${svc ? 'atendidas' : 'clientes'}` : 'asocia clientes a tus ventas'}</span></div>
       <div class="ind-k ind-ret"><small>Retención</small><b class="num">${pctInd(a.retencion)}</b><span class="ind-d">${a.base ? `${a.volvieron} de ${a.base} de ${esc(nombreMes(addMonths(ym, -1), true).replace('.', ''))} ${esActual ? 'ya' : ''} volvieron` : 'aún sin mes anterior'}</span>
         ${a.retencion != null ? `<i class="ind-barra"><i style="width:${Math.round(a.retencion * 100)}%"></i></i>` : ''}</div>
     </div>
@@ -5353,6 +5261,42 @@ Object.assign(ACC_COBRO, {
       },
     });
   },
+});
+
+/* ---------- Inicio: panel de hoy (accesos directos, agenda y movimientos del día) ---------- */
+function panelHoy() {
+  const H = hoy(); const cli = new Map(db.all('clientes').map((c) => [c.id, c.nombre]));
+  const vs = db.all('ventas').filter((v) => v.fecha === H); const gs = db.all('gastos').filter((g) => g.fecha === H);
+  const ingHoy = sum(vs, (v) => Number(v.total)); const egrHoy = sum(gs, (g) => Number(g.monto));
+  const conAgenda = tiene('servicios') || db.all('citas').length || db.all('eventos').length;
+  const ahora = new Date(); const hm = `${pad(ahora.getHours())}:${pad(ahora.getMinutes())}`;
+  const agenda = conAgenda ? itemsDelDia(H, 'todos').filter(enAgenda) : [];
+  const pendientes = agenda.filter((i) => !['completada', 'entregada', 'hecha'].includes(i.estado));
+  const proximas = pendientes.filter((i) => (i.hora || '99') >= hm).slice(0, 4);
+  const items = new Map(); for (const i of db.all('venta_items')) if (vs.some((v) => v.id === i.venta_id)) (items.get(i.venta_id) || items.set(i.venta_id, []).get(i.venta_id)).push(i);
+  const movs = [
+    ...vs.map((v) => ({ id: v.id, t: (items.get(v.id) || []).map((i) => i.nombre).join(', ') || 'Venta', s: cli.get(v.cliente_id) || metodoLabel(v.metodo_pago), m: Number(v.total) })),
+    ...gs.map((g) => ({ id: g.id, t: g.descripcion || g.categoria, s: g.categoria, m: -Number(g.monto) })),
+  ].slice(-5).reverse();
+  const accion = (act, ic, t, extra = '') => `<button class="hoy-acc" data-act="${act}" ${extra}>${icon(ic)}<span>${t}</span></button>`;
+  return `<section class="hoy" aria-label="Hoy">
+    <div class="hoy-acciones">${accion('hoy-venta', 'plus', 'Registrar venta')}${accion('hoy-egreso', 'minus', 'Registrar egreso')}${tiene('servicios') ? accion('cita', 'cal', 'Agendar hora') : accion('agendar', 'cal', 'Agendar')}${accion('cliente', 'users', 'Nuevo cliente')}</div>
+    <div class="hoy-cifras">
+      <a href="#caja" data-act="caja-hoy"><small>Ingresos de hoy</small><b class="num">${money(ingHoy)}</b><span>${vs.length} ${vs.length === 1 ? 'venta' : 'ventas'}</span></a>
+      <a href="#caja" data-act="caja-hoy"><small>Egresos de hoy</small><b class="num">${money(egrHoy)}</b><span>${gs.length} ${gs.length === 1 ? 'registro' : 'registros'}</span></a>
+      ${conAgenda ? `<a href="#agenda" data-act="ag-hoy-nav"><small>Agenda de hoy</small><b class="num">${pendientes.length}</b><span>${pendientes.length === 1 ? 'pendiente' : 'pendientes'} de ${agenda.length}</span></a>` : ''}
+    </div>
+    ${conAgenda ? `<div class="hoy-bloque"><div class="between"><h2>Próximas horas</h2><a class="link-sm" href="#agenda" data-act="ag-hoy-nav">Ver agenda</a></div>
+      ${proximas.length ? `<div class="hoy-lista">${proximas.map((i) => `<button class="hoy-fila" data-act="ag-detalle" data-id="${i.id}" data-kind="${i.kind}"><span class="num hoy-h">${i.hora || '—'}</span><span class="grow"><b>${esc(i.titulo)}</b><small>${esc(i.sub || KIND[i.kind].label)}</small></span>${i.estado === 'solicitada' ? '<span class="pill warn">Por confirmar</span>' : ''}</button>`).join('')}</div>`
+        : `<p class="muted small hoy-vacio">${pendientes.length ? 'No quedan horas por atender más tarde.' : 'No hay horas agendadas para hoy.'}</p>`}</div>` : ''}
+    <div class="hoy-bloque"><div class="between"><h2>Movimientos de hoy</h2><a class="link-sm" href="#caja" data-act="caja-hoy">Ver todos</a></div>
+      ${movs.length ? `<div class="hoy-lista">${movs.map((l) => `<div class="hoy-fila mov"><span class="grow"><b>${esc(l.t)}</b><small>${esc(l.s || '')}</small></span><b class="num ${l.m < 0 ? 'down' : ''}">${l.m < 0 ? '−' : ''}${money(Math.abs(l.m))}</b></div>`).join('')}</div>`
+        : `<p class="muted small hoy-vacio">Aún no hay movimientos registrados hoy.</p>`}</div>
+  </section>`;
+}
+Object.assign(ACC_COBRO, {
+  'hoy-venta': () => { S.ui.registro = { ...(S.ui.registro || {}), tipo: 'ingreso' }; ir('vender'); },
+  'hoy-egreso': () => { S.ui.registro = { ...(S.ui.registro || {}), tipo: 'gasto' }; ir('vender'); setTimeout(() => $('#g-monto')?.focus(), 120); },
 });
 
 /* =========================================================
@@ -5433,7 +5377,7 @@ function agendaCalendario() {
           <span class="cal-h num">${i.hora}</span><b>${esc(i.titulo)}</b>${corto ? '' : `<small>${esc(i.kind === 'cita' ? i.s?.nombre || '' : i.sub)}</small>`}${i.estado === 'solicitada' ? '<em>Por confirmar</em>' : ''}</button>`;
       }).join('')}
       ${f === hoy() && minAhora >= ini && minAhora <= fin ? `<div class="cal-ahora" style="top:${y(minAhora)}px"></div>` : ''}
-    </div>${sinHora.length ? '' : ''}`;
+    </div>`;
   };
 
   const cab = dias.map((f) => {
@@ -5526,10 +5470,229 @@ Object.assign(CAMB_COBRO, {
 });
 
 /* =========================================================
+   Agenda en el calendario personal (Google, iPhone, Outlook)
+   - Suscripción: enlace secreto que se actualiza solo (requiere la nube)
+   - Archivo .ics: una copia de las próximas horas para importar
+   ========================================================= */
+
+const icsTxt = (t) => String(t ?? '').replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+const icsFecha = (f, h) => f.replace(/-/g, '') + (h ? 'T' + h.replace(':', '') + '00' : '');
+// las líneas de más de 75 caracteres se doblan, como pide el formato
+const icsLinea = (l) => { const out = []; let s = l; while (s.length > 74) { out.push(s.slice(0, 74)); s = ' ' + s.slice(74); } out.push(s); return out.join('\r\n'); };
+
+function generarICS(desde = addDays(hoy(), -30), hasta = addDays(hoy(), 180)) {
+  const ahora = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+  const ev = [];
+  for (const c of db.all('citas')) {
+    if (c.fecha < desde || c.fecha > hasta || INACTIVOS.includes(c.estado)) continue;
+    const s = db.get('servicios', c.servicio_id); const cl = db.get('clientes', c.cliente_id); const e = db.get('empleados', c.empleado_id);
+    const ini = hhmm(c.hora); const fin = ini ? deMin(Math.min(aMin(ini) + Number(s?.duracion_min || 60), 23 * 60 + 59)) : null;
+    ev.push({ uid: 'cita-' + c.id, f: c.fecha, ini, fin, t: (cl?.nombre || 'Cliente') + (s ? ' · ' + s.nombre : ''),
+      d: [ESTADOS_CITA[c.estado]?.[0], e && 'Atiende: ' + e.nombre, cl?.telefono && 'Teléfono: ' + cl.telefono, c.nota].filter(Boolean).join('\n') });
+  }
+  for (const x of db.all('eventos')) {
+    if (x.fecha < desde || x.fecha > hasta || x.estado === 'cancelada') continue;
+    const ini = hhmm(x.hora) || null;
+    const fin = ini ? (x.tipo === 'bloqueo' && x.hasta ? hhmm(x.hasta) : deMin(Math.min(aMin(ini) + 30, 23 * 60 + 59))) : null;
+    const t = x.tipo === 'bloqueo' ? 'Bloqueado' + (x.titulo && x.titulo !== 'Bloqueado' ? ': ' + x.titulo : '') : x.tipo === 'entrega' ? 'Entrega: ' + x.titulo : x.titulo;
+    ev.push({ uid: 'ev-' + x.id, f: x.fecha, ini, fin, t, d: x.direccion || '' });
+  }
+  const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//MiDerno//Agenda//ES', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:' + icsTxt(S.negocio.nombre + ' · Agenda'), 'X-WR-TIMEZONE:America/Santiago'];
+  for (const e of ev.sort((a, b) => (a.f + (a.ini || '')).localeCompare(b.f + (b.ini || '')))) {
+    L.push('BEGIN:VEVENT', `UID:${e.uid}@miderno`, `DTSTAMP:${ahora}`,
+      e.ini ? `DTSTART;TZID=America/Santiago:${icsFecha(e.f, e.ini)}` : `DTSTART;VALUE=DATE:${icsFecha(e.f)}`,
+      e.ini ? `DTEND;TZID=America/Santiago:${icsFecha(e.f, e.fin)}` : `DTEND;VALUE=DATE:${icsFecha(addDays(e.f, 1))}`,
+      'SUMMARY:' + icsTxt(e.t), ...(e.d ? ['DESCRIPTION:' + icsTxt(e.d)] : []), 'END:VEVENT');
+  }
+  L.push('END:VCALENDAR');
+  return L.map(icsLinea).join('\r\n') + '\r\n';
+}
+function descargarICS() {
+  const blob = new Blob([generarICS()], { type: 'text/calendar;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `agenda-${slugDe(S.negocio.nombre)}.ics`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast('Archivo descargado. Ábrelo para agregarlo a tu calendario.');
+}
+const nuevoTokenICS = () => [...crypto.getRandomValues(new Uint8Array(20))].map((b) => b.toString(16).padStart(2, '0')).join('');
+const urlICS = (token) => `${CONFIG.supabaseUrl}/rest/v1/rpc/agenda_ics?token=${token}&apikey=${encodeURIComponent(CONFIG.supabaseAnonKey)}`;
+
+function formCalendarioPersonal() {
+  const nube = S.modo === 'nube';
+  if (nube && !cfg().ics_token) guardarConfig({ ics_token: nuevoTokenICS() });
+  const url = nube ? urlICS(cfg().ics_token) : ''; const webcal = url.replace(/^https:/, 'webcal:');
+  abrirSheet('Tu agenda en tu calendario', `<p class="small muted" style="margin-top:-6px">Ve tus citas, entregas y bloqueos junto a tus compromisos personales en Google Calendar, iPhone u Outlook.</p>
+    ${nube ? `<div class="cal-op"><div><b>Suscribirte</b><span class="pill ok">Se actualiza sola</span></div>
+      <p class="small muted">Cada cambio en MiDerno aparece en tu calendario. Google lo actualiza cada algunas horas; iPhone y Outlook, más seguido.</p>
+      <div class="cal-btns"><a class="btn" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?cid=${encodeURIComponent(webcal)}">${icon('cal')}Google Calendar</a>
+        <a class="btn" href="${esc(webcal)}">${icon('cal')}iPhone, Mac u Outlook</a>
+        <button type="button" class="btn ghost" data-act="ics-copiar">Copiar enlace</button></div>
+      <p class="small muted">El enlace es privado: quien lo tenga ve tu agenda. Si lo compartiste por error, <a href="#" data-act="ics-renovar">crea uno nuevo</a> y el anterior deja de funcionar.</p></div>`
+    : `<div class="banner">${icon('cal')}<span>Para que tu calendario se actualice solo, MiDerno debe estar conectado a la nube. Mientras tanto puedes descargar una copia.</span></div>`}
+    <div class="cal-op"><div><b>Descargar una copia</b></div>
+      <p class="small muted">Archivo .ics con tus próximos 6 meses. Al abrirlo se agrega a tu calendario, pero no se actualiza con cambios posteriores.</p>
+      <div class="cal-btns"><button type="button" class="btn" data-act="ics-bajar">${icon('upload')}Descargar archivo .ics</button></div></div>`);
+}
+Object.assign(ACC_COBRO, {
+  'cal-personal': () => formCalendarioPersonal(),
+  'ics-bajar': () => descargarICS(),
+  'ics-copiar': () => { navigator.clipboard?.writeText(urlICS(cfg().ics_token)).then(() => toast('Enlace copiado'), () => toast('No se pudo copiar', true)); },
+  'ics-renovar': () => confirmar('Se creará un enlace nuevo. Los calendarios suscritos con el anterior dejarán de actualizarse y tendrás que suscribirte otra vez.', () => { guardarConfig({ ics_token: nuevoTokenICS() }); formCalendarioPersonal(); toast('Enlace nuevo creado'); }, 'Crear enlace nuevo'),
+});
+
+/* =========================================================
+   Redes sociales: ideas de publicaciones hechas con los datos
+   reales del negocio (horas libres, servicios más pedidos,
+   fechas especiales) + enlace para la bio con seguimiento.
+   ========================================================= */
+
+const ORIGENES = { ig: 'Instagram', fb: 'Facebook', tt: 'TikTok', wa: 'WhatsApp', gm: 'Google Maps' };
+const reOrigen = (k) => new RegExp('desde ' + ORIGENES[k], 'i');
+
+// ciudad: lo que va después de la última coma de la dirección ("Membrillar 50, oficina 24, Rancagua")
+const ciudadNegocio = () => { const d = String(cfg().direccion || '').split(',').map((x) => x.trim()).filter(Boolean); return d.length > 1 ? d.at(-1) : ''; };
+const hashtag = (t) => '#' + norm(t).replace(/[^a-z0-9]+/g, '');
+
+function hashtagsNegocio(extra = []) {
+  const r = norm([S.negocio.rubro, S.negocio.nombre, ...db.all('servicios').map((x) => x.nombre), ...db.all('productos').slice(0, 20).map((x) => x.nombre)].join(' ')); const c = ciudadNegocio(); const base = [];
+  if (/\buna|nail|manicur|esmalt|kapping|acrilic/.test(r)) base.push('uñas', 'nails', 'manicure');
+  else if (/pelu|barber|cabello|corte/.test(r)) base.push('peluqueria', 'barberia', 'cortedepelo');
+  else if (/estetic|spa|facial|depil/.test(r)) base.push('estetica', 'skincare', 'belleza');
+  else if (/vela|aroma/.test(r)) base.push('velas', 'velasaromaticas', 'hechoamano');
+  else if (/tienda|ropa|moda/.test(r)) base.push('tiendaonline', 'moda', 'emprendimiento');
+  else base.push('emprendimiento', 'pyme');
+  if (c) base.push(c, ...base.slice(0, 2).map((b) => b + c));
+  return [...new Set([...extra, ...base])].slice(0, 8).map(hashtag).join(' ');
+}
+
+// horas libres de los próximos días, vistas desde el negocio (citas y bloqueos)
+function horasLibresProximas(dias = 6) {
+  const h = horarioDe(S.negocio); const emps = db.all('empleados').filter((e) => e.activo !== false).map((e) => ({ id: e.id }));
+  const durs = db.all('servicios').filter((s) => s.activo !== false).map((s) => Number(s.duracion_min || 60)); const dur = durs.length ? Math.min(...durs, 60) : 60;
+  const out = [];
+  for (let k = 0; k < dias; k++) {
+    const f = addDays(hoy(), k);
+    const ocupadas = [...db.all('citas').filter((c) => c.fecha === f && !INACTIVOS.includes(c.estado)).map((c) => ({ hora: hhmm(c.hora), dur: Number(db.get('servicios', c.servicio_id)?.duracion_min || 60), empleado_id: c.empleado_id })),
+      ...bloqueosDel(f).map((b) => { const [a, z] = rangoBloqueo(b); return { hora: deMin(a), dur: z - a, empleado_id: null, todos: true }; })];
+    const libres = horasLibres({ horario: h, fecha: f, dur, ocupadas, empleados: emps, empleadoId: null }).map((x) => x.hora);
+    // horas "redondas" (en punto o y media) para que el mensaje se lea limpio
+    const lindas = libres.filter((x) => /:(00|30)$/.test(x));
+    if (lindas.length) out.push({ f, horas: lindas });
+  }
+  return out;
+}
+
+function serviciosRanking(diasAtras = 45) {
+  const desde = addDays(hoy(), -diasAtras); const ventas = new Set(db.all('ventas').filter((v) => v.fecha >= desde).map((v) => v.id)); const m = new Map();
+  for (const i of db.all('venta_items')) if (ventas.has(i.venta_id) && i.item_id) { const k = i.tipo_item + ':' + i.item_id; const x = m.get(k) || { tipo: i.tipo_item, id: i.item_id, nombre: i.nombre, n: 0 }; x.n += Number(i.cantidad || 1); m.set(k, x); }
+  return [...m.values()].sort((a, b) => b.n - a.n);
+}
+
+// días de la semana con más ventas (para sugerir cuándo publicar)
+function diasFuertes() {
+  const desde = addDays(hoy(), -90); const c = [0, 0, 0, 0, 0, 0, 0];
+  for (const v of db.all('ventas')) if (v.fecha >= desde) c[new Date(v.fecha + 'T12:00:00').getDay()]++;
+  const tot = c.reduce((a, b) => a + b, 0); if (tot < 10) return null;
+  return c.map((n, d) => ({ d, n })).sort((a, b) => b.n - a.n).slice(0, 2).map((x) => x.d);
+}
+const NOMBRE_DIA = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+
+function fechasEspeciales(ventana = 40) {
+  const y = Number(hoy().slice(0, 4)); const nDom = (yy, mes, n) => { const d = new Date(yy, mes - 1, 1); const off = (7 - d.getDay()) % 7; return isoDate(new Date(yy, mes - 1, 1 + off + 7 * (n - 1))); };
+  const blackFriday = (yy) => { const d = new Date(yy, 10, 1); const off = (5 - d.getDay() + 7) % 7; return isoDate(new Date(yy, 10, 1 + off + 21)); };
+  const lista = [];
+  for (const yy of [y, y + 1]) lista.push(
+    { f: `${yy}-02-14`, t: 'San Valentín', idea: 'Regalo para San Valentín: una gift card o un servicio para compartir.' },
+    { f: `${yy}-03-08`, t: 'Día de la Mujer', idea: 'Un saludo a tus clientas y una atención especial esa semana.' },
+    { f: `${yy}-03-02`, t: 'Vuelta a la rutina', idea: 'Marzo: retomar el cuidado personal después de las vacaciones.' },
+    { f: nDom(yy, 5, 2), t: 'Día de la Madre', idea: 'Gift cards y servicios para regalar a mamá.' },
+    { f: nDom(yy, 6, 3), t: 'Día del Padre', idea: 'Una opción de regalo para papá.' },
+    { f: `${yy}-09-18`, t: 'Fiestas Patrias', idea: 'Horario especial de Fiestas Patrias y horas para llegar impecable a las celebraciones.' },
+    { f: `${yy}-10-31`, t: 'Halloween', idea: 'Un diseño o producto temático de Halloween.' },
+    { f: blackFriday(yy), t: 'Black Friday', idea: 'Un beneficio por tiempo limitado para clientas nuevas y frecuentes.' },
+    { f: `${yy}-12-24`, t: 'Navidad', idea: 'Gift cards de Navidad y horas para las fiestas de fin de año.' },
+    { f: `${yy}-12-31`, t: 'Año Nuevo', idea: 'Horas para Año Nuevo y agradecimiento a tus clientas por el año.' },
+  );
+  const H = hoy(), lim = addDays(H, ventana);
+  return lista.filter((x) => x.f >= H && x.f <= lim).sort((a, b) => a.f.localeCompare(b.f));
+}
+
+function ideasRedes() {
+  const n = S.negocio.nombre; const link = linkReservas(); const cierre = link ? 'Reserva en el enlace de la bio.' : 'Escríbenos por mensaje directo para reservar.';
+  const ideas = [];
+  if (tiene('servicios')) {
+    const libres = horasLibresProximas().slice(0, 3);
+    if (libres.length) {
+      const lineas = libres.map((x) => `${fechaLarga(x.f).split(',')[0].replace(/^./, (c) => c.toUpperCase())} ${Number(x.f.slice(8))}: ${x.horas.slice(0, 4).join(' · ')}`);
+      ideas.push({ k: 'horas', fmt: 'Historia', t: 'Publica tus horas disponibles', por: `Tienes horas libres en los próximos días. Una historia con horarios concretos convierte mejor que un "quedan horas".`,
+        txt: `Horas disponibles esta semana en ${n}:\n\n${lineas.join('\n')}\n\n${cierre}` });
+    }
+  }
+  const rank = serviciosRanking();
+  if (rank[0]) {
+    const top = rank[0]; const item = db.get(top.tipo === 'servicio' ? 'servicios' : 'productos', top.id); const precio = item ? money(item.precio ?? item.precio_venta) : '';
+    ideas.push({ k: 'estrella', fmt: top.tipo === 'servicio' ? 'Reel' : 'Publicación', t: `Muestra tu ${top.tipo === 'servicio' ? 'servicio' : 'producto'} más pedido`, por: `${top.nombre} es lo más pedido de las últimas semanas (${qtyFmt(top.n)} ${top.tipo === 'servicio' ? 'atenciones' : 'unidades'}). Muestra el proceso o el resultado final.`,
+      txt: `${top.nombre}: el favorito de nuestras clientas.${precio ? `\n\nValor: ${precio}.` : ''}\n\n${top.tipo === 'servicio' ? cierre : 'Pídelo por mensaje directo.'}\n\n${hashtagsNegocio([top.nombre])}` });
+  }
+  const menos = rank.length > 2 ? rank.at(-1) : null;
+  if (menos) ideas.push({ k: 'impulso', fmt: 'Carrusel', t: `Dale visibilidad a ${menos.nombre}`, por: `Es lo que menos se ha movido últimamente. Un carrusel que explique en qué consiste y para quién es puede despertar interés.`,
+    txt: `¿Conoces nuestro ${menos.nombre}?\n\nTe contamos en qué consiste, cuánto dura y para quién es ideal. Desliza para ver más.\n\n${cierre}` });
+  const ind = tiene('servicios') ? indicadoresMes(addMonths(mesActual(), -1), 31) : null;
+  if (ind && ind.clientes >= 5) ideas.push({ k: 'gracias', fmt: 'Publicación', t: 'Agradece a tus clientas del mes', por: `El mes pasado atendiste a ${ind.clientes} clientas${ind.nuevas ? `, ${ind.nuevas} de ellas por primera vez` : ''}. Compartir ese logro genera confianza.`,
+    txt: `En ${nombreMes(addMonths(mesActual(), -1)).split(' ')[0]} atendimos a ${ind.clientes} clientas${ind.nuevas ? `, ${ind.nuevas} de ellas por primera vez` : ''}. Gracias por confiar en ${n}.\n\n${cfg().resenas_url ? 'Si nos visitaste, nos ayudaría mucho tu reseña en Google (enlace en la bio).' : cierre}` });
+  for (const fe of fechasEspeciales().slice(0, 2)) ideas.push({ k: 'fecha-' + fe.f, fmt: 'Publicación', t: `${fe.t} (${fechaCorta(fe.f)})`, por: `Faltan ${diasEntre(hoy(), fe.f)} días. Publica con al menos una semana de anticipación. ${fe.idea}`,
+    txt: `${fe.t} se acerca. ${fe.idea}\n\n${cierre}\n\n${hashtagsNegocio([fe.t])}` });
+  if (tiene('servicios')) ideas.push({ k: 'equipo', fmt: 'Reel', t: 'Muestra quién está detrás', por: 'Las publicaciones que muestran a las personas del negocio generan cercanía y más interacción que las fotos de catálogo.',
+    txt: `Detrás de cada atención en ${n} hay un equipo que cuida cada detalle. Te mostramos cómo preparamos todo antes de recibirte.\n\n${hashtagsNegocio()}` });
+  return ideas;
+}
+
+function vistaRedes() {
+  const link = linkReservas(); const ym = mesActual();
+  const delMes = db.all('citas').filter((c) => mesDe(c.fecha) === ym || mesDe(c.creado_en || c.fecha) === ym);
+  const porOrigen = Object.keys(ORIGENES).map((k) => { const cs = delMes.filter((c) => reOrigen(k).test(c.nota || '')); return { k, n: cs.length, monto: sum(cs, (c) => Number(db.get('servicios', c.servicio_id)?.precio || 0)) }; });
+  const ig = porOrigen.find((x) => x.k === 'ig'); const otros = porOrigen.filter((x) => x.k !== 'ig' && x.n);
+  const fuertes = diasFuertes(); const ideas = ideasRedes();
+  return `${head('Redes sociales', 'Ideas para publicar, hechas con los datos de tu negocio')}
+  <div class="grid g2 redes-top">
+    <div class="card stack"><h2>Tu enlace para la bio</h2>
+      ${link ? `<p class="small muted">Pégalo en tu perfil de Instagram. Las reservas que lleguen por ahí se cuentan aquí.</p>
+        <div class="enlace-bio"><code>${esc(link)}?ref=ig</code><button class="btn sm" data-act="redes-copiar" data-t="${esc(link)}?ref=ig">Copiar</button></div>
+        <details class="mas-datos"><summary>Enlaces para otras redes</summary><div class="stack" style="gap:6px;margin-top:8px">${['fb', 'tt', 'wa', 'gm'].map((k) => `<div class="enlace-bio"><span class="small">${ORIGENES[k]}</span><code>${esc(link)}?ref=${k}</code><button class="btn sm" data-act="redes-copiar" data-t="${esc(link)}?ref=${k}">Copiar</button></div>`).join('')}</div></details>`
+      : `<p class="small muted">Activa tu página de reservas para tener un enlace que puedas poner en tu bio y medir cuántas reservas llegan desde Instagram.</p><a class="btn sm" href="#ajustes" data-act="ir-reservas-aj">Activar página de reservas</a>`}
+    </div>
+    <div class="card stack"><h2>Reservas desde redes este mes</h2>
+      <div class="redes-cifra"><b class="num">${ig.n}</b><span>desde Instagram${ig.monto ? ` · ${money(ig.monto)} en servicios` : ''}</span></div>
+      ${otros.length ? `<p class="small muted">${otros.map((x) => `${x.n} desde ${ORIGENES[x.k]}`).join(' · ')}</p>` : ''}
+      <p class="small muted">${fuertes ? `Tus días con más ventas son ${NOMBRE_DIA[fuertes[0]]} y ${NOMBRE_DIA[fuertes[1]]}. Publica tus horas disponibles uno o dos días antes.` : 'Con más ventas registradas te diremos qué días conviene publicar.'}</p>
+    </div>
+  </div>
+  <section class="stack"><div class="between"><h2>Ideas para esta semana</h2><span class="small muted">Edita el texto antes de copiarlo</span></div>
+    ${ideas.length ? `<div class="ideas">${ideas.map((x, i) => `<article class="card idea">
+      <div class="between"><span class="pill">${x.fmt}</span></div>
+      <h3>${esc(x.t)}</h3><p class="small muted">${esc(x.por)}</p>
+      <textarea class="in idea-txt" id="idea-${i}" rows="7" aria-label="Texto sugerido">${esc(x.txt)}</textarea>
+      <div class="hstack"><button class="btn sm pri" data-act="idea-copiar" data-i="${i}">Copiar texto</button><a class="btn sm ghost" href="https://www.instagram.com/" target="_blank" rel="noopener">Abrir Instagram</a></div>
+    </article>`).join('')}</div>` : '<div class="card empty">Registra algunas ventas y configura tu horario para recibir ideas con tus datos.</div>'}
+  </section>`;
+}
+Object.assign(ACC_COBRO, {
+  'redes-copiar': (el) => navigator.clipboard?.writeText(el.dataset.t).then(() => toast('Enlace copiado'), () => toast('No se pudo copiar', true)),
+  'idea-copiar': (el) => { const t = $('#idea-' + el.dataset.i)?.value || ''; navigator.clipboard?.writeText(t).then(() => toast('Texto copiado. Pégalo en tu publicación.'), () => toast('No se pudo copiar', true)); },
+  'ir-reservas-aj': () => { S.ui.ajustes = { tab: 'reservas' }; },
+});
+
+// Inicio: la idea más útil del momento para publicar
+function tarjetaRedes() {
+  if (S.negocio?.id?.startsWith('demo-') && !tiene('servicios')) return '';
+  const idea = ideasRedes()[0]; if (!idea) return '';
+  return `<a class="card redes-ini" href="#redes"><span class="redes-ico">${icon('megafono')}</span><span class="grow"><small>Idea para tus redes · ${idea.fmt}</small><b>${esc(idea.t)}</b></span>${icon('right')}</a>`;
+}
+
+/* =========================================================
    Render, eventos y arranque
    ========================================================= */
 
-const RENDER = { proveedores: vistaProveedores, importar: vistaImportar, inicio: vistaInicio, vender: vistaVender, caja: vistaCaja, clientes: vistaClientes, agenda: vistaAgenda, equipo: vistaEquipo, inventario: vistaInventario, produccion: vistaProduccion, catalogo: vistaCatalogo, ajustes: vistaAjustes };
+const RENDER = { redes: vistaRedes, proveedores: vistaProveedores, importar: vistaImportar, inicio: vistaInicio, vender: vistaVender, caja: vistaCaja, clientes: vistaClientes, agenda: vistaAgenda, equipo: vistaEquipo, inventario: vistaInventario, produccion: vistaProduccion, catalogo: vistaCatalogo, ajustes: vistaAjustes };
 let _ultimaVista = null;
 function render() {
   const app = $('#app');
@@ -5583,7 +5746,6 @@ const ACCIONES = {
   'ver-ejemplos': () => elegirEjemplo(),
   demo: (el) => { cerrarSheet(); history.replaceState(null, '', location.pathname + '#inicio'); abrirLocal(el.dataset.id); },
   abrir: (el) => { history.replaceState(null, '', location.pathname + '#inicio'); abrirLocal(el.dataset.id); },
-  'inicio-mes': (el) => { S.ui.inicio.mes = addMonths(S.ui.inicio.mes, +el.dataset.d); render(); },
   'filtro-reactivar': () => { S.ui.clientes.f = 'reactivar'; },
   // vender
   'vender-tab': (el) => { S.ui.vender.tab = el.dataset.tab; S.ui.vender.q = ''; render(); },
@@ -5606,15 +5768,15 @@ const ACCIONES = {
   'caja-rango': (el) => { const u = S.ui.caja; u.rango = el.dataset.r; if (u.rango === 'mesSel') u.mes ||= mesActual(); render(); },
   'caja-filtro': (el) => { S.ui.caja.filtro = el.dataset.f; render(); },
   gasto: (el) => formGasto(el.dataset.id),
-  'del-venta': (el) => { const v = db.get('ventas', el.dataset.id); confirmar(`Se eliminará la venta de <b>${money(v.total)}</b> del ${fechaCorta(v.fecha)}. Si tenía productos, vuelven al stock.`, () => { eliminarVenta(v.id); toast('Venta eliminada'); render(); }); },
-  'del-gasto': (el) => { const g = db.get('gastos', el.dataset.id); confirmar(`Se eliminará el egreso de <b>${money(g.monto)}</b>.`, () => { db.remove('gastos', g.id); toast('Egreso eliminado'); render(); }); },
+  'del-venta': (el) => { const v = db.get('ventas', el.dataset.id); if (!v) return render(); confirmar(`Se eliminará la venta de <b>${money(v.total)}</b> del ${fechaCorta(v.fecha)}. Si tenía productos, vuelven al stock.`, () => { eliminarVenta(v.id); toast('Venta eliminada'); render(); }); },
+  'del-gasto': (el) => { const g = db.get('gastos', el.dataset.id); if (!g) return render(); confirmar(`Se eliminará el egreso de <b>${money(g.monto)}</b>.`, () => { db.remove('gastos', g.id); toast('Egreso eliminado'); render(); }); },
   // clientes
   'cli-f': (el) => { S.ui.clientes.f = el.dataset.f; render(); },
   'ver-cliente': (el) => verCliente(el.dataset.id),
   cliente: (el) => formCliente(el.dataset.id),
-  'del-cliente': (el) => { const id = el.dataset.id; confirmar(`Se eliminará a <b>${esc(db.get('clientes', id).nombre)}</b>. Sus ventas se mantienen en la caja.`, () => {
-    db.all('ventas').filter((v) => v.cliente_id === id).forEach((v) => db.update('ventas', v.id, { cliente_id: null }));
-    db.removeWhere('citas', (c) => c.cliente_id === id); db.all('eventos').filter((e) => e.cliente_id === id).forEach((e) => db.update('eventos', e.id, { cliente_id: null })); db.remove('clientes', id); toast('Cliente eliminado'); render(); }); },
+  'del-cliente': (el) => { const id = el.dataset.id; confirmar(`Se eliminará a <b>${esc(db.get('clientes', id).nombre)}</b>. Sus ventas se mantienen en Movimientos.`, () => {
+    db.updateMany('ventas', db.all('ventas').filter((v) => v.cliente_id === id).map((v) => v.id), { cliente_id: null });
+    db.removeWhere('citas', (c) => c.cliente_id === id); db.updateMany('eventos', db.all('eventos').filter((e) => e.cliente_id === id).map((e) => e.id), { cliente_id: null }); db.remove('clientes', id); toast('Cliente eliminado'); render(); }); },
   // catálogo
   'cat-tab': (el) => { S.ui.cat.tab = el.dataset.tab; render(); },
   servicio: (el) => formServicio(el.dataset.id),
@@ -5663,7 +5825,7 @@ const ACCIONES = {
   empleado: (el) => formEmpleado(el.dataset.id),
   'pagar-com': (el) => {
     const e = db.get('empleados', el.dataset.id); const pend = db.all('comisiones').filter((c) => c.empleado_id === e.id && mesDe(c.fecha) === S.ui.equipo.mes && !c.pagada);
-    confirmar(`Marcar como pagadas las comisiones de <b>${esc(e.nombre)}</b> en ${nombreMes(S.ui.equipo.mes)}: <b>${money(sum(pend, (c) => Number(c.monto)))}</b>.`, () => { pend.forEach((c) => db.update('comisiones', c.id, { pagada: true })); toast('Comisiones pagadas'); render(); }, 'Marcar pagado');
+    confirmar(`Marcar como pagadas las comisiones de <b>${esc(e.nombre)}</b> en ${nombreMes(S.ui.equipo.mes)}: <b>${money(sum(pend, (c) => Number(c.monto)))}</b>.`, () => { db.updateMany('comisiones', pend.map((c) => c.id), { pagada: true }); toast('Comisiones pagadas'); render(); }, 'Marcar pagado');
   },
   // inventario
   'inv-tab': (el) => { S.ui.inv.tab = el.dataset.tab; render(); },
@@ -5692,7 +5854,6 @@ const ACCIONES = {
   'reg-gasto': () => { S.ui.registro = { ...(S.ui.registro || {}), tipo: 'gasto' }; setTimeout(() => $('#g-monto')?.focus(), 80); },
   'reg-tipo': (el) => { S.ui.registro = { ...(S.ui.registro || {}), tipo: el.dataset.t }; render(); if (el.dataset.t === 'gasto') setTimeout(() => $('#g-monto')?.focus(), 50); },
   'g-cat': (el) => { S.ui.registro = { ...(S.ui.registro || {}), cat: el.dataset.c }; document.querySelectorAll('[data-act="g-cat"]').forEach((b) => b.classList.toggle('on', b === el)); },
-  'agendar-ir': () => { setTimeout(() => elegirAgendar(), 80); },
   sis: (el) => guardarSis({ [el.dataset.k]: el.dataset.v }),
   'caja-ir-mes': (el) => { S.ui.caja.mes = el.dataset.m; S.ui.caja.rango = 'mesSel'; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); },
   'aj-tab': (el) => { S.ui.ajustes = { tab: el.dataset.t }; render(); },
@@ -5724,7 +5885,6 @@ const CAMBIOS = {
   'caja-desde': (el) => { S.ui.caja.desde = el.value; render(); },
   'caja-hasta': (el) => { S.ui.caja.hasta = el.value; render(); },
   'linea-emp': (el) => { S.cart.lineas[+el.dataset.i].empleado_id = el.value || null; },
-  'cart-cliente': (el) => { S.cart.cliente_id = el.value; },
   'cart-fecha': (el) => { S.cart.fecha = el.value || hoy(); },
   'imp-file': (el) => abrirArchivo(el.files[0]),
   'imp-tipo': (el) => { const h = S.imp.hojas[+el.dataset.h]; h.tipo = el.value; h.map = el.value === 'ninguno' || el.value === 'bloques' ? {} : mapear(h.headersN, el.value).map; render(); },
@@ -5734,7 +5894,6 @@ const CAMBIOS = {
   'cart-entrega': (el) => { S.cart.entrega = el.checked ? { fecha: addDays(hoy(), 1), hora: '', direccion: '' } : null; if (el.checked && tiene('inventario')) S.cart.canal = 'online'; render(); },
   'cart-ent': (el) => { S.cart.entrega[el.dataset.k] = el.value; },
   'reservas-on': (el) => { const patch = { reservas_activas: el.checked }; if (el.checked && !S.negocio.slug) patch.slug = slugDe(S.negocio.nombre); if (el.checked && !S.negocio.horario) patch.horario = { ...HORARIO_DEF }; db.negocio(patch); toast(el.checked ? 'Página de reservas activada' : 'Página de reservas apagada'); render(); },
-  'dia-chip': (el) => { el.closest('.chip').classList.toggle('on', el.checked); },
   auto: (el) => { guardarConfig({ auto: { ...(cfg().auto || {}), [el.dataset.k]: el.checked } }); toast(el.checked ? 'Activado' : 'Desactivado'); },
   fotos: (el) => agregarFotos(el.files),
   'sis-color': (el) => guardarSis({ color: el.value }),
@@ -5807,6 +5966,7 @@ function migrarClaves() {
   migrarClaves();
   // página pública: ?reservar=nombre-del-negocio
   const slug = new URLSearchParams(location.search).get('reservar') || (location.pathname.match(/\/agenda\/([a-z0-9-]+)\/?$/) || [])[1];
+  S.refOrigen = new URLSearchParams(location.search).get('ref') || '';
   if (slug && CONFIG.supabaseUrl && CONFIG.supabaseAnonKey) return abrirReservas(ReservaNube(slug), false);
   // si el enlace del correo venció o falló, Supabase lo indica en la dirección
   const err = new URLSearchParams(location.hash.slice(1)).get('error_description') || new URLSearchParams(location.search).get('error_description');
