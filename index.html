@@ -796,6 +796,148 @@ td.n, th.n { white-space: nowrap; }
 .dh-row .in{min-width:0;width:100%;padding:6px 4px;font-size:.88rem}
 @media (max-width:480px){.dh-row{gap:6px}.dh-row .toggle{transform:scale(.85);transform-origin:left center}}
 
+/* =========================================================
+   v22 · la hoja del día, anotar, hoja de cobrar, agenda corta y movimiento
+   ========================================================= */
+:root { --papel: #FFFDF8; --renglon: #E3ECEA; --sol: #FFB547; --lapiz: #B5473A; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --papel: #141516; --renglon: #24302F; --lapiz: #EE7D6A; } }
+:root[data-theme="dark"] { --papel: #141516; --renglon: #24302F; --lapiz: #EE7D6A; }
+
+/* Inicio */
+.inicio { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 28px; align-items: start; }
+.ini-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+@media (max-width: 980px) { .inicio { grid-template-columns: minmax(0, 1fr); gap: 18px; } }
+.ini-dia h1 { font: 400 clamp(2.3rem, 6vw, 3rem)/1 var(--f-serif); letter-spacing: -.01em; margin: 0; }
+.ini-dia p { margin: 4px 0 0; font-size: .92rem; }
+.hoja-dia { position: relative; background: var(--surface); border-radius: 18px; padding: 6px 16px 10px 46px; box-shadow: 0 1px 0 var(--renglon), 0 10px 30px rgba(14,124,134,.07); border: 1px solid var(--renglon);
+  background-image: repeating-linear-gradient(transparent 0 43px, var(--renglon) 43px 44px); background-position: 0 6px; }
+.hoja-dia::before { content: ""; position: absolute; left: 32px; top: 0; bottom: 0; width: 1px; background: color-mix(in srgb, var(--lapiz) 35%, transparent); }
+.hd-ln { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 44px; color: var(--ink); text-decoration: none; }
+.hd-t { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 1rem; }
+.hd-t small { color: var(--muted); font-size: .85rem; }
+.hd-ln b { font-variant-numeric: tabular-nums; font-weight: 600; }
+.hd-ln.out b { color: var(--lapiz); }
+.hd-ln.recien { animation: hd-escribe .7s var(--ease-out, ease) both; }
+.hd-ln.recien b { animation: hd-resalta 1.6s ease; border-radius: 4px; }
+@keyframes hd-escribe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes hd-resalta { 0%, 35% { background: color-mix(in srgb, var(--sol) 70%, transparent); } 100% { background: transparent; } }
+.hd-prox { color: var(--muted); font-size: .92rem; }
+.hd-prox .hd-t { color: var(--muted); }
+.hd-prox .i { width: 16px; height: 16px; flex: none; }
+.hd-vacia { min-height: 88px; display: flex; align-items: center; color: var(--muted); font-size: .95rem; }
+.hd-mas { display: block; height: 44px; line-height: 44px; font-size: .85rem; color: var(--muted); }
+.hd-total { display: flex; justify-content: space-between; align-items: baseline; border-top: 2px solid var(--ink); margin-top: 2px; padding-top: 8px; color: var(--muted); }
+.hd-total b { font-size: clamp(1.8rem, 6vw, 2.2rem); color: var(--ink); letter-spacing: -.035em; font-weight: 650; padding: 0 2px;
+  background: linear-gradient(transparent 58%, var(--sol) 58%, var(--sol) 90%, transparent 90%) no-repeat 0 0 / 100% 100%; }
+.hd-total b.down { color: var(--lapiz); background-image: none; }
+.entra .hd-total b { animation: hd-subraya .7s .55s var(--ease-out, ease) both; }
+@keyframes hd-subraya { from { background-size: 0 100%; } }
+/* anotar escribiendo */
+.anota { position: sticky; bottom: 14px; z-index: 5; display: flex; flex-direction: column; gap: 6px; }
+@media (max-width: 860px) { .anota { bottom: calc(78px + env(safe-area-inset-bottom, 0px)); } }
+.anota-fila { display: flex; gap: 6px; background: var(--ink); border-radius: 16px; padding: 6px; box-shadow: 0 12px 30px rgba(16,40,42,.22); }
+.anota-in { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--bg); font: 500 .98rem var(--f-body); padding: 8px 10px; outline: none; }
+.anota-in::placeholder { color: color-mix(in srgb, var(--bg) 60%, transparent); }
+.anota-btn { border: 0; border-radius: 11px; background: var(--sol); color: #10282A; font: 600 .92rem var(--f-body); padding: 0 16px; cursor: pointer; }
+.anota-fila:focus-within { box-shadow: 0 0 0 3px color-mix(in srgb, var(--sol) 55%, transparent), 0 12px 30px rgba(16,40,42,.22); }
+.anota-prev { font-size: .88rem; background: var(--surface); border: 1px solid var(--renglon); border-radius: 12px; padding: 0 12px; max-height: 0; opacity: 0; overflow: hidden; transition: max-height .25s var(--ease-out, ease), opacity .2s, padding .25s; }
+.anota-prev.on { max-height: 80px; opacity: 1; padding: 8px 12px; }
+.an-tipo { font-size: .75rem; font-weight: 600; border-radius: 6px; padding: 1px 6px; margin-right: 4px; }
+.an-tipo.in { background: var(--ok-soft); color: var(--ok); } .an-tipo.out { background: var(--bad-soft); color: var(--lapiz); }
+/* mes en tres datos */
+.ini-mes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.ini-mes a { display: flex; flex-direction: column; gap: 1px; padding: 12px; border-radius: 14px; background: var(--surface); border: 1px solid var(--renglon); color: var(--ink); text-decoration: none; min-width: 0; }
+.ini-mes small { color: var(--muted); font-size: .78rem; }
+.ini-mes b { font-size: 1.15rem; letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ini-mes b.down { color: var(--lapiz); }
+.ini-mes span { font-size: .74rem; color: var(--muted); line-height: 1.25; }
+.ini-mes .bar-fina { margin-top: 6px; }
+.ini-todo { display: inline-flex; align-items: center; gap: 4px; font-size: .9rem; align-self: flex-start; }
+.ini-todo .i { width: 16px; height: 16px; }
+
+/* hoja de cobrar */
+.cobro { display: flex; flex-direction: column; gap: 14px; }
+.cobro-lineas { display: flex; flex-direction: column; gap: 8px; }
+.cobro-ln { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 10px 12px; border-radius: 14px; background: var(--surface-2); }
+.cobro-ln small { display: block; color: var(--muted); }
+.cobro-chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.cobro-chips.w100 { width: 100%; }
+.cobro-chips .lbl { font-size: .78rem; color: var(--muted); margin-right: 2px; }
+.cobro-sel { width: auto; min-height: 34px; padding: 4px 8px; font-size: .88rem; max-width: 150px; }
+.cobro-fecha { display: flex; align-items: center; gap: 8px; }
+.cobro-fecha .in { width: auto; min-height: 32px; padding: 3px 8px; }
+.cobro-pie { justify-content: space-between; }
+.cobro-pie .btn.pri { flex: 1; max-width: 260px; font-size: 1rem; }
+.cobro-barra { display: none; }
+@media (max-width: 860px) {
+  .cobro-barra { display: flex; position: fixed; left: 12px; right: 12px; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); z-index: 15; justify-content: space-between; align-items: center; gap: 10px; border: 0; border-radius: 16px; padding: 13px 16px; background: var(--primary); color: var(--primary-ink, #fff); font: 500 .95rem var(--f-body); box-shadow: 0 12px 30px rgba(14,124,134,.3); animation: sube .3s var(--ease-out, ease); cursor: pointer; }
+  .cobro-barra span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: .9; }
+}
+.vuela { position: fixed; z-index: 200; font-weight: 700; color: var(--ok); pointer-events: none; background: var(--surface); border-radius: 8px; padding: 2px 8px; box-shadow: var(--shadow); transition: transform .7s cubic-bezier(.5, 0, .3, 1), opacity .7s; }
+#ag-cobrado.late { animation: late .5s var(--ease-out, ease); display: inline-block; }
+@keyframes late { 40% { transform: scale(1.18); color: var(--ok); } }
+
+/* agenda corta */
+.ag-pend-box { border: 1px solid color-mix(in srgb, var(--sol) 70%, transparent); background: color-mix(in srgb, var(--sol) 12%, var(--surface)); border-radius: 14px; overflow: hidden; }
+.ag-pend { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 10px; border: 0; background: none; padding: 11px 14px; font: 500 .95rem var(--f-body); color: var(--ink); cursor: pointer; text-align: left; }
+.ag-pend-ver { background: var(--sol); color: #10282A; border-radius: 8px; padding: 2px 9px; font-size: .82rem; font-weight: 600; }
+.ag-pend-box .list { padding: 0 14px 6px; animation: sube .3s var(--ease-out, ease); }
+.ag-cuentas { display: flex; gap: 6px; flex-wrap: wrap; }
+.ag-lista { display: flex; flex-direction: column; }
+.ag-fila { display: grid; grid-template-columns: 50px minmax(0, 1fr) auto; gap: 10px; align-items: center; min-height: 58px; padding: 6px 4px 6px 10px; border-bottom: 1px solid var(--line); cursor: pointer; position: relative; border-radius: 10px; }
+.ag-fila::before { content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px; border-radius: 3px; background: var(--primary); }
+.ag-fila.k-entrega::before { background: var(--sol); } .ag-fila.k-tarea::before { background: var(--muted); }
+.ag-fila.req::before { background: repeating-linear-gradient(var(--sol) 0 4px, transparent 4px 7px); }
+.ag-fila:hover { background: var(--surface-2); }
+.ag-fila:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
+.ag-h { font-weight: 600; font-size: .95rem; }
+.ag-q { min-width: 0; display: flex; flex-direction: column; }
+.ag-q b { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ag-q small { color: var(--muted); font-size: .82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ag-a .btn { min-width: 84px; justify-content: center; }
+.btn.sol { background: var(--sol); border-color: var(--sol); color: #10282A; }
+.ag-hecho { display: inline-block; font-size: .82rem; font-weight: 600; color: var(--ok); background: var(--ok-soft); border-radius: 9px; padding: 6px 10px; min-width: 84px; text-align: center; }
+.ag-hecho.pop { animation: pop .35s var(--ease-out, ease); }
+@keyframes pop { from { transform: scale(.7); opacity: 0; } }
+.ag-fila.apagada .ag-h, .ag-fila.apagada .ag-q { opacity: .55; }
+.ag-fila.recien { animation: aterriza .6s var(--ease-out, ease) both; background: color-mix(in srgb, var(--sol) 14%, transparent); }
+@keyframes aterriza { from { transform: translateY(-28px) scale(.96); opacity: 0; } }
+.ag-fila.pagada-ahora .ag-hecho { animation: pop .4s .55s var(--ease-out, ease) both; }
+.ag-ahora { position: relative; height: 0; border-top: 2px solid var(--lapiz); margin: 3px 0 3px 4px; }
+.ag-ahora::before { content: ""; position: absolute; left: -5px; top: -6px; width: 10px; height: 10px; border-radius: 50%; background: var(--lapiz); }
+.ag-ahora span { position: absolute; right: 0; top: -10px; font-size: .7rem; font-weight: 600; color: var(--lapiz); background: var(--surface); padding: 0 4px; }
+.ag-dia-card.entra-der { animation: desliza-der .32s var(--ease-out, ease); } .ag-dia-card.entra-izq { animation: desliza-izq .32s var(--ease-out, ease); }
+@keyframes desliza-der { from { transform: translateX(40px); opacity: 0; } } @keyframes desliza-izq { from { transform: translateX(-40px); opacity: 0; } }
+.ag-det-acc .hstack, .ag-det-acc { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 860px) { .ag-fila { grid-template-columns: 44px minmax(0, 1fr) auto; } .ag-a .btn, .ag-hecho { min-width: 76px; } }
+
+/* portada viva y entrar */
+.pp-feed { display: flex; flex-direction: column; }
+.pp-mov.nueva { animation: pp-nueva .55s var(--ease-out, ease); }
+.pp-mov.nueva b { animation: hd-resalta 1.4s ease; border-radius: 4px; padding: 0 2px; }
+@keyframes pp-nueva { from { opacity: 0; transform: translateY(-12px); } }
+.campo-err { animation: vaiven .38s; }
+.campo-err .in, input.campo-err { border-color: var(--bad) !important; }
+@keyframes vaiven { 20% { transform: translateX(-7px); } 45% { transform: translateX(6px); } 70% { transform: translateX(-3px); } }
+.err-msg { display: block; color: var(--bad); font-size: .85rem; margin-top: 4px; }
+
+/* reservas */
+.pub-horas.aparecen .pub-hora { animation: sube .35s calc(var(--i) * 35ms) var(--ease-out, ease) both; }
+.pub-opt.on { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 7%, var(--surface)); box-shadow: inset 0 0 0 1px var(--primary); }
+.pub-opt { transition: border-color .2s, background .2s, box-shadow .2s; }
+.pub-ok .stamp-ok { animation: timbre .5s cubic-bezier(.3, 1.5, .5, 1) .1s both; display: inline-block; align-self: flex-start; }
+@keyframes timbre { from { transform: rotate(-2deg) scale(2.2); opacity: 0; } 60% { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hd-ln.recien, .hd-ln.recien b, .entra .hd-total b, .ag-fila.recien, .ag-fila.pagada-ahora .ag-hecho, .ag-hecho.pop, .ag-dia-card.entra-der, .ag-dia-card.entra-izq, .pp-mov.nueva, .pp-mov.nueva b, .campo-err, .pub-horas.aparecen .pub-hora, .pub-ok .stamp-ok, .cobro-barra, #ag-cobrado.late, .anota-prev { animation: none !important; transition: none !important; }
+}
+@media (max-width: 860px) {
+  .ag-ctrl { padding: 10px 12px; gap: 8px; }
+  .ag-ctrl > .between { flex-wrap: nowrap; gap: 8px; }
+  .ag-ctrl .ag-fecha-in { display: none; }
+  .ag-ctrl .seg button { padding-inline: 10px; }
+}
+
 </style>
 </head>
 <body>
@@ -808,7 +950,7 @@ td.n, th.n { white-space: nowrap; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '21';
+const VERSION = '22';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -1401,11 +1543,11 @@ function vistaBienvenida() {
         <div class="por-panel">
           <span class="pp-k">Ganancia de ${esc(mes)}</span><b class="pp-n">$1.284.300</b><span class="pp-up">▲ 18% vs el mes anterior</span>
           <div class="pp-barras">${barras.map((h, k) => `<i style="--h:${h}%;--k:${k}" class="${k === barras.length - 1 ? 'hoy' : ''}"></i>`).join('')}</div>
-          <div class="pp-mov m1"><span>Manicure · Paula</span><b class="pp-in">+$15.000</b></div>
+          <div class="pp-feed"><div class="pp-mov m1"><span>Manicure · Paula</span><b class="pp-in">+$15.000</b></div>
           <div class="pp-mov m2"><span>Vela lavanda ×2</span><b class="pp-in">+$25.980</b></div>
-          <div class="pp-mov m3"><span>Arriendo local</span><b>−$180.000</b></div>
+          <div class="pp-mov m3"><span>Arriendo local</span><b>−$180.000</b></div></div>
         </div>
-        <div class="por-chip">Hoy: +3 ventas · $48.500</div>
+        <div class="por-chip" data-n="3">Hoy: +3 ventas</div>
       </div>
     </section>
     ${locales.length ? `<section class="por-locales"><h2>Tus negocios en este dispositivo</h2>
@@ -1436,6 +1578,15 @@ async function cargarSupabase() {
   NubeAdapter.sb = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
   NubeAdapter.sb.auth.onAuthStateChange?.((ev) => { if (ev === 'PASSWORD_RECOVERY') { S.recuperar = true; setTimeout(revisarRecuperacion, 400); } });
   return NubeAdapter.sb;
+}
+// marca el campo con error: vaivén corto y el mensaje pegado a él
+function errorCampo(sel, texto) {
+  const el = $(sel); if (!el) return toast(texto, true);
+  const caja = el.closest('.clave-wrap') || el; const f = el.closest('.field') || caja.parentNode;
+  caja.classList.remove('campo-err'); void caja.offsetWidth; caja.classList.add('campo-err');
+  let m = f.querySelector('.err-msg'); if (!m) { m = document.createElement('span'); m.className = 'err-msg'; m.setAttribute('role', 'alert'); f.appendChild(m); }
+  m.textContent = texto; el.focus();
+  el.addEventListener('input', () => { caja.classList.remove('campo-err'); m.remove(); }, { once: true });
 }
 /* ---------- recuperar contraseña ---------- */
 function formOlvide() {
@@ -1484,7 +1635,8 @@ function formLogin() {
       try { const sb = await cargarSupabase(); const { error } = await sb.auth.signInWithPassword({ email: d.email.trim(), password: d.password }); if (error) throw error; cerrarSheet(); await abrirNube(); }
       catch (e) {
         const m = e.message || String(e);
-        toast(/not confirmed/i.test(m) ? 'Falta confirmar tu correo. Toca el enlace que te llegó y vuelve a intentar.' : /invalid login|invalid credentials/i.test(m) ? 'Correo o contraseña incorrectos' : 'No pudimos iniciar sesión: ' + m, true);
+        if (/invalid login|invalid credentials/i.test(m)) return errorCampo('#f-password', 'El correo o la contraseña no coinciden. Revisa o toca “¿Olvidaste tu contraseña?”.');
+        toast(/not confirmed/i.test(m) ? 'Falta confirmar tu correo. Toca el enlace que te llegó y vuelve a intentar.' : 'No pudimos iniciar sesión: ' + m, true);
       }
     },
   });
@@ -1500,6 +1652,7 @@ async function abrirNube() {
   try { return await abrirNubeCon(sb, user); } finally { pantallaCarga(false); }
 }
 async function abrirNubeCon(sb, user) {
+  S.usuarioNombre = user?.user_metadata?.full_name || user?.user_metadata?.name || '';
   let { data: u, error } = await sb.from('usuarios').select('*').eq('id', user.id).maybeSingle();
   if (error) throw error;
   if (!u) {
@@ -1754,7 +1907,8 @@ function vistaVender() {
         <button class="btn pri block" data-act="cobrar" ${c.lineas.length ? '' : 'disabled'}>Registrar venta por ${money(total)}</button>
       </div>
     </div>
-  </div>`;
+  </div>
+  ${c.lineas.length ? `<button class="cobro-barra" data-act="cobro-abrir"><span>${c.lineas.length === 1 ? esc(c.lineas[0].nombre) : `${c.lineas.length} cosas`}</span><b class="num">Cobrar ${money(total)}</b></button>` : ''}`;
 }
 function gridCatalogo() {
   const q = S.ui.vender.q.trim().toLowerCase(); const tab = S.ui.vender.tab;
@@ -2395,13 +2549,13 @@ function vistaAgenda() {
   else if (ui.vista === 'semana') { const l = lunesDe(ui.fecha); titulo = `${fechaCorta(l)} al ${fechaCorta(addDays(l, 6))}`; cuerpo = agendaSemana(); paso = 7; }
   else { titulo = fechaLarga(ui.fecha); cuerpo = agendaDia(); paso = 1; }
   return `${head('Agenda', esc(titulo), `<button class="btn pri" data-act="agendar">${icon('plus')}Agendar</button>`)}
-  ${pend.length ? `<div class="card stack" style="border-color:var(--warn)"><div class="between"><h2>${pend.length} reserva${pend.length > 1 ? 's' : ''} por confirmar</h2><span class="small muted">Llegaron desde tu página de reservas</span></div>
-    <div class="list">${pend.slice(0, 5).map((c) => { const cl = db.get('clientes', c.cliente_id); const s = db.get('servicios', c.servicio_id); return `<div class="row" style="flex-wrap:wrap"><div class="grow"><div class="t">${esc(cl?.nombre || 'Cliente')} · ${esc(s?.nombre || '')}</div><div class="s">${esc(fechaLarga(c.fecha))}, ${hhmm(c.hora)}${c.empleado_id ? ' · ' + esc(db.get('empleados', c.empleado_id)?.nombre || '') : ''}</div></div>
-      <div class="hstack"><button class="btn sm" data-act="cita-estado" data-id="${c.id}" data-e="rechazada">Rechazar</button><button class="btn sm pri" data-act="confirmar-reserva" data-id="${c.id}">Confirmar</button></div></div>`; }).join('')}</div></div>` : ''}
-  <div class="card stack">
+  ${pend.length ? `<div class="ag-pend-box ${ui.verPend ? 'on' : ''}"><button class="ag-pend" data-act="ag-pend" aria-expanded="${!!ui.verPend}"><span><b>${pend.length}</b> reserva${pend.length > 1 ? 's' : ''} por confirmar</span><span class="ag-pend-ver">${ui.verPend ? 'Ocultar' : 'Ver'}</span></button>
+    ${ui.verPend ? `<div class="list">${pend.slice(0, 5).map((c) => { const cl = db.get('clientes', c.cliente_id); const s = db.get('servicios', c.servicio_id); return `<div class="row" style="flex-wrap:wrap"><div class="grow"><div class="t">${esc(cl?.nombre || 'Cliente')} · ${esc(s?.nombre || '')}</div><div class="s">${esc(fechaLarga(c.fecha))}, ${hhmm(c.hora)}${c.empleado_id ? ' · ' + esc(db.get('empleados', c.empleado_id)?.nombre || '') : ''}</div></div>
+      <div class="hstack"><button class="btn sm" data-act="cita-estado" data-id="${c.id}" data-e="rechazada">Rechazar</button><button class="btn sm pri" data-act="confirmar-reserva" data-id="${c.id}">Confirmar</button></div></div>`; }).join('')}</div>` : ''}</div>` : ''}
+  <div class="card stack ag-ctrl">
     <div class="between">
       <div class="hstack"><button class="btn icon-btn" data-act="ag-mover" data-d="-1" data-p="${paso}" aria-label="Anterior">${icon('left')}</button><button class="btn sm" data-act="ag-hoy">Hoy</button><button class="btn icon-btn" data-act="ag-mover" data-d="1" data-p="${paso}" aria-label="Siguiente">${icon('right')}</button>
-        <input type="date" class="in" style="width:auto;min-height:34px;padding:4px 8px" data-change="ag-fecha" value="${ui.fecha}" aria-label="Ir a una fecha"></div>
+        <input type="date" class="in ag-fecha-in" style="width:auto;min-height:34px;padding:4px 8px" data-change="ag-fecha" value="${ui.fecha}" aria-label="Ir a una fecha"></div>
       <div class="seg">${[['dia', 'Día'], ['semana', 'Semana'], ['mes', 'Mes']].map(([k, v]) => `<button data-act="ag-vista" data-v="${k}" class="${ui.vista === k ? 'on' : ''}">${v}</button>`).join('')}</div>
     </div>
     ${emps.length > 1 ? `<div class="chips scroll"><button class="chip ${ui.emp === 'todos' ? 'on' : ''}" data-act="ag-emp" data-e="todos">Todo</button>${emps.map((e) => `<button class="chip ${ui.emp === e.id ? 'on' : ''}" data-act="ag-emp" data-e="${e.id}">${esc(e.nombre.split(' ')[0])}</button>`).join('')}</div>` : ''}
@@ -2413,9 +2567,10 @@ function agendaDia() {
   const ui = S.ui.agenda; const items = itemsDelDia(ui.fecha);
   const semana = Array.from({ length: 7 }, (_, i) => addDays(ui.fecha, i - 3));
   const esperado = sum(items.filter((i) => i.kind === 'cita' && enAgenda(i)), (i) => Number(i.s?.precio || 0)) + sum(items.filter((i) => i.kind === 'entrega' && enAgenda(i) && !i.ref.pagado), (i) => Number(i.ref.monto || 0));
+  const cobrado = sum(db.all('ventas').filter((v) => v.fecha === ui.fecha), (v) => Number(v.total));
   return `<div class="chips scroll" aria-label="Días cercanos">${semana.map((f) => `<button class="chip ${f === ui.fecha ? 'on' : ''}" data-act="ag-set" data-f="${f}">${new Date(f + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric' })} · ${itemsDelDia(f).filter(enAgenda).length}</button>`).join('')}</div>
-  <div class="card"><div class="card-head"><h2>${items.filter(enAgenda).length} en agenda</h2>${esperado ? `<p class="num">${money(esperado)} por cobrar</p>` : ''}</div>
-    <div class="list">${items.length ? items.map(filaAgenda).join('') : `<div class="empty">Página en blanco. Toca <b>Agendar</b> para anotar una hora, una entrega o un recordatorio.</div>`}</div></div>`;
+  <div class="card ag-dia-card"><div class="card-head"><h2>${items.filter(enAgenda).length} en agenda</h2><p class="num ag-cuentas"><span>Cobrado <b id="ag-cobrado">${money(cobrado)}</b></span>${esperado ? `<span>· ${money(esperado)} por cobrar</span>` : ''}</p></div>
+    <div class="ag-lista">${items.length ? conRayaAhora(items, items.map(filaAgendaCorta)) : `<div class="empty">Página en blanco. Toca <b>Agendar</b> para anotar una hora, una entrega o un recordatorio.</div>`}</div></div>`;
 }
 
 function filaAgenda(i) {
@@ -2515,7 +2670,7 @@ function formCita(id, pre = {}) {
 function cobrarCita(id) {
   const c = db.get('citas', id); const s = db.get('servicios', c.servicio_id);
   S.cart = { ...nuevoCarro(), cliente_id: c.cliente_id, cita_id: c.id, fecha: c.fecha <= hoy() ? c.fecha : hoy(), lineas: s ? [{ tipo_item: 'servicio', item_id: s.id, nombre: s.nombre, cantidad: 1, precio_unitario: Number(s.precio), empleado_id: c.empleado_id }] : [] };
-  S.ui.vender.tab = 'servicios'; ir('vender');
+  S.ui.vender.tab = 'servicios'; formCobro();
 }
 function msgAbono(c, cl, s) { return msg('abono', { nombre: primerNombre(cl?.nombre || ''), servicio: s?.nombre || 'tu hora', fecha: fechaLarga(c.fecha), hora: hhmm(c.hora), abono: money(abonoDe(s?.precio || 0)), datos_pago: cfg().abono?.datos || '' }); }
 function avisarPorWhatsApp(titulo, texto, tel, nombre) {
@@ -2525,6 +2680,7 @@ function avisarPorWhatsApp(titulo, texto, tel, nombre) {
 }
 function confirmarReserva(id) {
   const c = db.update('citas', id, { estado: 'confirmada' }); const cl = db.get('clientes', c.cliente_id); const s = db.get('servicios', c.servicio_id);
+  S._recien = id; if (vistaActual() === 'agenda') { S.ui.agenda.fecha = c.fecha; S.ui.agenda.vista = 'dia'; }
   render();
   if (cl?.telefono && autoOn('confirmar')) avisarPorWhatsApp('Reserva confirmada', msg('confirmacion', { nombre: primerNombre(cl.nombre), servicio: s?.nombre || 'atención', fecha: fechaLarga(c.fecha), hora: hhmm(c.hora) }), cl.telefono, cl.nombre);
   else toast('Reserva confirmada');
@@ -2554,7 +2710,7 @@ function formEvento(tipo, id) {
 function cobrarEvento(id) {
   const e = db.get('eventos', id);
   S.cart = { ...nuevoCarro(), cliente_id: e.cliente_id || '', evento_id: e.id, canal: 'online', lineas: [{ tipo_item: 'libre', item_id: null, nombre: e.titulo || 'Pedido', cantidad: 1, precio_unitario: Number(e.monto), empleado_id: null }] };
-  ir('vender');
+  formCobro();
 }
 
 /* ---------- EQUIPO ---------- */
@@ -3357,6 +3513,7 @@ async function pubCargarHoras() {
   const p = S.pub; p.horas = null; render();
   try {
     const ocupadas = await conCarga(p.api.ocupadas(p.fecha));
+    p._horasNuevas = true; setTimeout(() => { p._horasNuevas = false; }, 0);
     p.horas = horasLibres({ horario: p.info.horario, fecha: p.fecha, dur: Number(p.servicio.duracion_min || 60), ocupadas, empleados: p.info.empleados, empleadoId: p.empleado || null });
   } catch (e) { p.horas = []; toast('No pudimos cargar las horas: ' + (e.message || e), true); }
   render();
@@ -3397,7 +3554,7 @@ function vistaReserva() {
     const dias = Array.from({ length: 21 }, (_, i) => addDays(hoy(), i));
     if (!(info.empleados.length > 1 && !p.empleado)) pasos.push(`<section class="card stack"><h2><span class="pub-n">${info.empleados.length > 1 ? 3 : 2}</span>Elige día y hora</h2>
       <div class="chips scroll">${dias.map((f) => { const abierto = info.horario.dias.includes(new Date(f + 'T12:00:00').getDay()); return `<button class="pub-day ${p.fecha === f ? 'on' : ''}" data-act="pub-dia" data-f="${f}" ${abierto ? '' : 'disabled'}><small>${new Date(f + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'short' })}</small><b>${Number(f.slice(8))}</b><small>${new Date(f + 'T12:00:00').toLocaleDateString('es-CL', { month: 'short' })}</small></button>`; }).join('')}</div>
-      ${p.fecha ? (p.horas == null ? '<div class="empty">Buscando horas libres…</div>' : p.horas.length ? `<div class="pub-horas">${p.horas.map((h, i) => `<button class="pub-hora ${p.hora?.hora === h.hora ? 'on' : ''}" data-act="pub-hora" data-i="${i}">${h.hora}</button>`).join('')}</div>` : '<div class="empty">No quedan horas libres este día. Prueba otro.</div>') : '<p class="small muted">Toca un día para ver las horas libres.</p>'}</section>`);
+      ${p.fecha ? (p.horas == null ? '<div class="empty">Buscando horas libres…</div>' : p.horas.length ? `<div class="pub-horas ${p._horasNuevas ? 'aparecen' : ''}">${p.horas.map((h, i) => `<button class="pub-hora ${p.hora?.hora === h.hora ? 'on' : ''}" style="--i:${i}" data-act="pub-hora" data-i="${i}">${h.hora}</button>`).join('')}</div>` : '<div class="empty">No quedan horas libres este día. Prueba otro.</div>') : '<p class="small muted">Toca un día para ver las horas libres.</p>'}</section>`);
   }
   if (p.hora) pasos.push(`<section class="card stack"><h2><span class="pub-n">${info.empleados.length > 1 ? 4 : 3}</span>Tus datos</h2>
     <form class="form" id="form-reserva">
@@ -4217,21 +4374,24 @@ function vistaInicio() {
     ...db.all('gastos').map((g) => ({ f: g.fecha, monto: Number(g.monto), tipo: 'out', t: g.descripcion || g.categoria, s: g.categoria })),
   ].sort((a, b) => b.f.localeCompare(a.f)).slice(0, 6);
 
-  return `<div class="hola"><div><div class="muted small">${esc(fechaLarga(H))}</div><h1>${t_('hola')}, ${esc(S.negocio.nombre)}</h1></div>${monthNav('inicio-mes', ym)}</div>
-  <section class="resumen">
-    <div class="res-main"><span class="muted small">${t_('ganancia')} ${esc(nombreMes(ym, true).replace('.', ''))}</span><b class="res-num ${res < 0 ? 'down' : ''}" data-cuenta="${Math.round(res)}">${money(res)}</b></div>
-    <div class="res-sub"><div><span class="muted small">${t_('ingresos')}</span><b class="num up">${money(ing)}</b></div><div><span class="muted small">${t_('gastos')}</span><b class="num">${money(egr)}</b></div></div>
-    ${avance != null ? `<div class="res-meta"><div class="bar-fina"><i style="width:${avance}%"></i></div><span class="small muted">${t_('meta')} ${Math.floor(avance)}%${esActual && falta ? ` · ${t_('faltan')} ${money(falta)} · ${money(falta / restantes)}/${t_('dia')}` : ''}</span></div>` : ''}
-  </section>
-  <div class="acciones">
-    <a class="accion" href="#vender" data-act="reg-ingreso"><span class="ac-ico ing">${icon('plus')}</span>${t_('ingreso')}</a>
-    <a class="accion" href="#vender" data-act="reg-gasto"><span class="ac-ico out">${icon('minus')}</span>${t_('gasto')}</a>
-    <a class="accion" href="#agenda" data-act="agendar-ir"><span class="ac-ico">${icon('cal')}</span>${t_('agendar')}</a>
+  const fH = new Date(H + 'T12:00:00'); const dia = fH.toLocaleDateString('es-CL', { weekday: 'long' }); const nombre = S.usuarioNombre ? primerNombre(S.usuarioNombre) : '';
+  const porCobrar = tiene('servicios') || db.all('citas').length ? itemsDelDia(H, 'todos').filter(enAgenda).filter((i) => i.kind === 'cita' && !['completada'].includes(i.estado)).length : null;
+  return `<div class="inicio">
+  <div class="ini-col">
+    <header class="ini-dia"><h1>${esc(dia.charAt(0).toUpperCase() + dia.slice(1))} ${fH.getDate()}</h1><p class="muted">de ${esc(fH.toLocaleDateString('es-CL', { month: 'long' }))}${nombre ? ` · Hola, ${esc(nombre)}` : ''}</p></header>
+    ${hojaDelDia()}
+    ${barraAnotar()}
   </div>
-  ${tarjetaGuia()}
-  ${alertas.length ? `<section class="stack"><h2>${t_('para_hoy')}</h2><div class="stack" style="gap:8px">${alertas.map((a) => `<a class="alert-row" href="#${a.href}" ${a.act ? `data-act="${a.act}"` : ''} ${a.id ? `data-id="${a.id}"` : ''}><span class="sev ${a.sev}"></span><div class="grow"><b>${esc(a.t)}</b>${a.s ? `<small>${esc(a.s)}</small>` : ''}</div>${icon('right')}</a>`).join('')}</div></section>` : ''}
-  <section class="stack"><div class="between"><h2>${t_('ultimos')}</h2><a class="small" href="#caja">${t_('ver_todo')}</a></div>
-    <div class="list">${movs.length ? movs.map((m) => `<div class="row"><span class="mov-ico t-${m.tipo}">${icon(m.tipo === 'in' ? 'plus' : 'minus')}</span><div class="grow"><div class="t" style="font-weight:500">${esc(m.t)}</div><div class="s">${fechaCorta(m.f)}${m.s ? ' · ' + esc(m.s) : ''}</div></div><b class="r num ${m.tipo === 'in' ? 'up' : ''}">${m.tipo === 'in' ? '+' : '−'}${money(m.monto)}</b></div>`).join('') : `<div class="empty">${t_('vacio_mov')}</div>`}</div></section>`;
+  <div class="ini-col">
+    <section class="ini-mes" aria-label="Resumen del mes">
+      <a href="#caja" data-act="caja-mes-actual"><small>${esc(nombreMes(ym).split(' ')[0].replace(/^./, (c) => c.toUpperCase()))}</small><b class="num ${res < 0 ? 'down' : ''}">${money(res)}</b><span>${res < 0 && esActual && Number(H.slice(8)) <= 10 ? 'normal a inicio de mes' : 'ganancia del mes'}</span></a>
+      ${avance != null ? `<a href="#ajustes"><small>${t_('meta')}</small><b class="num">${Math.floor(avance)}%</b><span>${esActual && falta ? `faltan ${money(falta)}` : 'lograda'}</span><i class="bar-fina"><i style="width:${avance}%"></i></i></a>` : `<a href="#caja"><small>${t_('ingresos')}</small><b class="num">${money(ing)}</b><span>en el mes</span></a>`}
+      ${porCobrar != null ? `<a href="#agenda" data-act="ag-hoy-nav"><small>Agenda hoy</small><b class="num">${porCobrar}</b><span>${porCobrar === 1 ? 'cita por atender' : 'citas por atender'}</span></a>` : `<a href="#caja"><small>${t_('gastos')}</small><b class="num">${money(egr)}</b><span>en el mes</span></a>`}
+    </section>
+    ${tarjetaGuia()}
+    ${alertas.length ? `<section class="stack"><h2>${t_('para_hoy')}</h2><div class="stack" style="gap:8px">${alertas.map((a) => `<a class="alert-row" href="#${a.href}" ${a.act ? `data-act="${a.act}"` : ''} ${a.id ? `data-id="${a.id}"` : ''}><span class="sev ${a.sev}"></span><div class="grow"><b>${esc(a.t)}</b>${a.s ? `<small>${esc(a.s)}</small>` : ''}</div>${icon('right')}</a>`).join('')}</div></section>` : ''}
+    <a class="ini-todo" href="#caja">Ver todos los movimientos ${icon('right')}</a>
+  </div></div>`;
 }
 
 /* ---------- registrar egreso rápido ---------- */
@@ -4494,6 +4654,280 @@ function abrirAsistente() {
 }
 
 /* =========================================================
+   v22: la hoja del día, anotar escribiendo, hoja de cobrar
+   y animaciones que explican lo que pasa
+   ========================================================= */
+
+const quieto = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const esMovil = () => matchMedia('(max-width: 860px)').matches;
+// acción que corre justo después del próximo render (para animar lo que cambió)
+function despues(fn) { S._post = fn; }
+
+/* ---------- anotar escribiendo: "manicure paula 15000 débito" ---------- */
+const PAL_EGRESO = /^(-|gast[oe]s?\b|egreso\b|pagu[eé]\b|pague\b|compr[eé]\b|compre\b|pago\b)/;
+const PAL_METODO = [[/\b(efectivo|efec|cash|plata)\b/, 'efectivo'], [/\b(debito|deb|redcompra)\b/, 'debito'], [/\b(credito|cred|tarjeta)\b/, 'credito'], [/\b(transferencia|transf|transfer|trans)\b/, 'transferencia']];
+const VACIAS = new Set(['de', 'la', 'el', 'a', 'en', 'con', 'por', 'para', 'y', 'los', 'las', 'un', 'una', 'al', 'del']);
+function leerMonto(txt) {
+  let mejor = 0, hallado = '';
+  for (const m of txt.matchAll(/\$?\s?(\d{1,3}(?:[.,]\d{3})+|\d+(?:[.,]\d+)?)\s*(k|mil|lucas?)?\b/gi)) {
+    let v = m[1].includes('.') && /\.\d{3}$/.test(m[1]) ? Number(m[1].replace(/[.,]/g, '')) : Number(m[1].replace(',', '.'));
+    if (m[2]) v *= 1000;
+    if (v > mejor) { mejor = v; hallado = m[0]; }
+  }
+  return { monto: Math.round(mejor), hallado };
+}
+function parecido(nombre, palabras) {
+  const ps = norm(nombre).split(' ').filter((w) => w.length >= 3 && !VACIAS.has(w));
+  if (!ps.length) return { s: 0, usadas: [] };
+  const usadas = ps.filter((w) => palabras.some((p) => p.length >= 3 && (p === w || (p.length >= 4 && (w.startsWith(p) || p.startsWith(w))))));
+  return { s: usadas.length / ps.length + (usadas.length ? usadas.length * 0.1 : 0), usadas };
+}
+// devuelve las palabras originales (con tildes) que quedaron sin usar
+function textoOriginal(raw, quedan) {
+  const q = [...quedan]; const out = [];
+  for (const w of raw.split(/\s+/)) { const nw = norm(w); const k = q.indexOf(nw); if (nw && k >= 0) { out.push(w.replace(/[.,;:]+$/, '')); q.splice(k, 1); } }
+  const t = out.join(' '); return t ? t.charAt(0).toUpperCase() + t.slice(1) : '';
+}
+function entenderAnotacion(texto) {
+  const raw = String(texto || '').trim(); if (raw.length < 2) return null;
+  const n = norm(raw); const egreso = PAL_EGRESO.test(n.replace(/^\$/, '')) || raw.startsWith('-');
+  const { monto, hallado } = leerMonto(raw);
+  let resto = norm(raw.replace(hallado, ' '));
+  // medio de pago (también los que el negocio agregó, como "Giftcard")
+  let metodo = null;
+  for (const [k, l] of Object.entries(metodos())) { const nl = norm(l); if (nl && new RegExp(`\\b${nl}\\b`).test(resto)) { metodo = k; resto = resto.replace(nl, ' '); break; } }
+  if (!metodo) for (const [re, k] of PAL_METODO) if (re.test(resto) && metodos()[k]) { metodo = k; resto = resto.replace(re, ' '); break; }
+  resto = resto.replace(PAL_EGRESO, ' ');
+  const palabras = resto.split(' ').filter(Boolean);
+  if (egreso) {
+    const cats = catGastos(); let cat = null, best = 0;
+    for (const c of cats) { const p = parecido(c, palabras); if (p.s > best) { best = p.s; cat = c; } }
+    return { tipo: 'egreso', monto, categoria: cat || (cats.includes('Otros') ? 'Otros' : cats[0]), descripcion: textoOriginal(raw, palabras.filter((w) => !VACIAS.has(w))) };
+  }
+  // lo que se vendió: el servicio o producto que más se parece
+  const catalogo = [...(tiene('servicios') ? db.all('servicios').filter((s) => s.activo !== false).map((s) => ({ tipo: 'servicio', x: s, precio: Number(s.precio) })) : []),
+    ...db.all('productos').filter((p) => p.activo !== false).map((p) => ({ tipo: 'producto', x: p, precio: Number(p.precio_venta) }))];
+  let item = null, bestI = 0, usadasI = [];
+  for (const c of catalogo) { const p = parecido(c.x.nombre, palabras); if (p.s > bestI && p.s >= 0.5) { bestI = p.s; item = c; usadasI = p.usadas; } }
+  const libres = palabras.filter((w) => !usadasI.some((u) => u === w || u.startsWith(w) || w.startsWith(u)));
+  // la clienta: nombre (y apellido si lo escribieron)
+  let cliente = null, bestC = 0, usadasC = [];
+  for (const c of db.all('clientes')) {
+    const ps = norm(c.nombre).split(' ').filter(Boolean); const usadas = ps.filter((w) => libres.includes(w));
+    if (!usadas.length || !libres.includes(ps[0])) continue;
+    const s = usadas.length + (usadas.length === ps.length ? 0.5 : 0);
+    if (s > bestC) { bestC = s; cliente = c; usadasC = usadas; }
+  }
+  return { tipo: 'ingreso', monto: monto || item?.precio || 0, item, cliente, metodo: metodo || nuevoCarro().metodo, descripcion: textoOriginal(raw, libres.filter((w) => !usadasC.includes(w) && !VACIAS.has(w))) };
+}
+function resumenAnotacion(a) {
+  if (!a) return '';
+  if (a.tipo === 'egreso') return `<span class="an-tipo out">Egreso</span> ${esc(a.categoria)}${a.descripcion ? ' · ' + esc(a.descripcion) : ''} · <b class="num">${a.monto ? money(a.monto) : 'falta el monto'}</b>`;
+  const que = a.item ? a.item.x.nombre : a.descripcion || 'Venta';
+  return `<span class="an-tipo in">Ingreso</span> ${esc(que)}${a.cliente ? ' · ' + esc(a.cliente.nombre) : ''} · ${esc(metodoLabel(a.metodo))} · <b class="num">${a.monto ? money(a.monto) : 'falta el monto'}</b>`;
+}
+function anotar(texto) {
+  const a = entenderAnotacion(texto);
+  if (!a) return toast('Escribe qué vendiste o qué pagaste. Ej: manicure paula 15000', true);
+  if (!(a.monto > 0)) return toast('Falta el monto. Ej: ' + (a.tipo === 'egreso' ? 'gasto algodón 3500' : 'manicure paula 15000'), true);
+  if (a.tipo === 'egreso') {
+    const g = db.insert('gastos', { fecha: hoy(), categoria: a.categoria, monto: a.monto, descripcion: a.descripcion || a.categoria });
+    S._recien = g.id; toast(`${t_('gasto_ok')}: ${money(a.monto)}`); render(); return;
+  }
+  const antes = S.cart;
+  const linea = a.item ? { tipo_item: a.item.tipo, item_id: a.item.x.id, nombre: a.item.x.nombre, cantidad: 1, precio_unitario: a.monto, empleado_id: null } : { tipo_item: 'libre', item_id: null, nombre: a.descripcion || 'Venta', cantidad: 1, precio_unitario: a.monto, empleado_id: null };
+  S.cart = { ...nuevoCarro(), cliente_id: a.cliente?.id || '', metodo: a.metodo, lineas: [linea] };
+  const n = db.all('ventas').length; cobrar();
+  const v = db.all('ventas')[n]; if (v) S._recien = v.id;
+  if (antes?.lineas?.length) S.cart = antes;
+  render();
+}
+document.addEventListener('input', (e) => {
+  if (e.target.id !== 'anota-txt') return;
+  const p = $('#anota-prev'); const a = entenderAnotacion(e.target.value);
+  p.innerHTML = a ? resumenAnotacion(a) : '<span class="muted">Escribe como en tu cuaderno: <i>manicure paula 15000 débito</i> o <i>gasto algodón 3500</i></span>';
+  p.classList.toggle('on', !!e.target.value.trim());
+});
+document.addEventListener('submit', (e) => {
+  if (e.target.id !== 'form-anota') return; e.preventDefault();
+  const t = $('#anota-txt').value; anotar(t);
+}, true);
+
+/* ---------- la hoja del día (Inicio) ---------- */
+function hojaDelDia() {
+  const H = hoy(); const cli = new Map(db.all('clientes').map((c) => [c.id, c.nombre]));
+  const vs = db.all('ventas').filter((v) => v.fecha === H); const gs = db.all('gastos').filter((g) => g.fecha === H);
+  const lineas = [
+    ...vs.map((v) => ({ id: v.id, t: itemsDeVenta(v.id).map((i) => i.nombre).join(', ') || t_('ingreso'), c: cli.get(v.cliente_id) || '', m: Number(v.total) })),
+    ...gs.map((g) => ({ id: g.id, t: g.descripcion || g.categoria, c: g.descripcion && g.descripcion !== g.categoria ? g.categoria : '', m: -Number(g.monto) })),
+  ];
+  const total = sum(lineas, (l) => l.m); const max = 8; const vis = lineas.slice(-max);
+  const ahora = new Date(); const hhmmAhora = `${pad(ahora.getHours())}:${pad(ahora.getMinutes())}`;
+  const prox = tiene('servicios') || db.all('citas').length ? itemsDelDia(H, 'todos').filter(enAgenda).find((i) => !['completada', 'entregada', 'hecha'].includes(i.estado) && (i.hora || '99') >= hhmmAhora) : null;
+  return `<section class="hoja-dia" aria-label="Lo anotado hoy">
+    ${lineas.length > max ? `<a class="hd-mas" href="#caja" data-act="caja-hoy">${lineas.length - max} anotaciones antes · ver todas</a>` : ''}
+    ${vis.length ? vis.map((l) => `<div class="hd-ln ${l.m < 0 ? 'out' : ''} ${S._recien === l.id ? 'recien' : ''}"><span class="hd-t">${esc(l.t)}${l.c ? `<small> · ${esc(l.c)}</small>` : ''}</span><b class="num">${l.m < 0 ? '−' : ''}${money(Math.abs(l.m)).replace('$', '')}</b></div>`).join('')
+      : `<div class="hd-vacia">Hoja en blanco. Anota tu primera venta del día aquí abajo o con <b>Registrar</b>.</div>`}
+    ${prox ? `<a class="hd-ln hd-prox" href="#agenda" data-act="ag-hoy-nav"><span class="hd-t">Próxima: ${prox.hora ? prox.hora + ' · ' : ''}${esc(prox.titulo)}${prox.sub ? `<small> · ${esc(prox.sub.split(' · ')[0])}</small>` : ''}</span>${icon('right')}</a>` : ''}
+    <div class="hd-total"><span>${total < 0 ? 'Hoy vas en' : 'Te quedan hoy'}</span><b class="num ${total < 0 ? 'down' : ''}" data-cuenta="${Math.round(total)}">${money(total)}</b></div>
+  </section>`;
+}
+function barraAnotar() {
+  return `<form class="anota" id="form-anota" autocomplete="off">
+    <div class="anota-prev" id="anota-prev" aria-live="polite"></div>
+    <div class="anota-fila"><input id="anota-txt" class="anota-in" placeholder="Anota: manicure paula 15000 débito" aria-label="Anotar una venta o un egreso escribiendo"><button class="anota-btn" type="submit">Anotar</button></div>
+  </form>`;
+}
+
+/* ---------- hoja de cobrar ---------- */
+function clientesRecientes(n = 4) {
+  const vistos = []; for (const v of [...db.all('ventas')].reverse()) { if (v.cliente_id && !vistos.includes(v.cliente_id)) vistos.push(v.cliente_id); if (vistos.length >= n) break; }
+  return vistos.map((id) => db.get('clientes', id)).filter(Boolean);
+}
+function formCobro() {
+  if (!S.cart?.lineas?.length) return;
+  abrirSheet(S.cart.cita_id ? 'Cobrar la cita' : 'Cobrar', '<div class="cobro" id="cobro"></div>', {
+    pie: `<div class="sheet-foot cobro-pie"><button type="button" class="btn" data-act="cobro-mas">${icon('plus')}Agregar algo más</button><button type="button" class="btn pri" data-act="cobro-ok" id="cobro-btn"></button></div>`,
+  });
+  pintarCobro();
+}
+function pintarCobro() {
+  const c = S.cart; const el = $('#cobro'); if (!el || !c) return;
+  const emps = tiene('servicios') ? db.all('empleados').filter((e) => e.activo !== false) : [];
+  const total = sum(c.lineas, (l) => l.cantidad * l.precio_unitario);
+  const recientes = clientesRecientes(); const sel = c.cliente_id ? db.get('clientes', c.cliente_id) : null;
+  const chipsCli = [...(sel && !recientes.some((x) => x.id === sel.id) ? [sel] : []), ...recientes].slice(0, 4);
+  const todos = [...db.all('clientes')].sort((a, b) => a.nombre.localeCompare(b.nombre));
+  el.innerHTML = `
+    <div class="cobro-lineas">${c.lineas.map((l, i) => `<div class="cobro-ln">
+      <div class="grow"><b>${esc(l.nombre)}</b><small class="num">${money(l.precio_unitario)}${l.cantidad > 1 ? ' c/u' : ''}</small></div>
+      <div class="qty"><button type="button" data-act="cobro-qty" data-i="${i}" data-d="-1" aria-label="Quitar uno">−</button><span class="num">${qtyFmt(l.cantidad)}</span><button type="button" data-act="cobro-qty" data-i="${i}" data-d="1" aria-label="Agregar uno">+</button></div>
+      ${l.tipo_item === 'servicio' && emps.length ? `<div class="cobro-chips w100"><span class="lbl">Atendió</span>${emps.map((e) => `<button type="button" class="chip ${l.empleado_id === e.id ? 'on' : ''}" data-act="cobro-emp" data-i="${i}" data-e="${e.id}">${esc(e.nombre.split(' ')[0])}</button>`).join('')}</div>` : ''}
+    </div>`).join('')}</div>
+    <div class="field"><label>Cliente</label><div class="cobro-chips">${chipsCli.map((x) => `<button type="button" class="chip ${c.cliente_id === x.id ? 'on' : ''}" data-act="cobro-cli" data-id="${x.id}">${esc(x.nombre.split(' ').slice(0, 2).join(' '))}</button>`).join('')}
+      <select class="in cobro-sel" data-change="cobro-cli-sel" aria-label="Elegir otro cliente">${opt('', c.cliente_id && !chipsCli.some((x) => x.id === c.cliente_id) ? '' : 'Otro…')}${todos.map((x) => opt(x.id, x.nombre, chipsCli.some((y) => y.id === c.cliente_id) ? '' : c.cliente_id)).join('')}</select>
+      ${c.cliente_id ? '<button type="button" class="chip" data-act="cobro-cli" data-id="">Sin cliente</button>' : ''}</div></div>
+    <div class="field"><label>¿Cómo pagó?</label><div class="cobro-chips">${Object.entries(metodos()).map(([k, v]) => `<button type="button" class="chip ${c.metodo === k ? 'on' : ''}" data-act="cobro-met" data-m="${k}">${esc(v)}</button>`).join('')}</div></div>
+    ${tiene('inventario') && c.lineas.some((l) => l.tipo_item === 'producto') ? `<div class="field"><label>Canal</label><div class="cobro-chips"><button type="button" class="chip ${c.canal === 'local' ? 'on' : ''}" data-act="cobro-canal" data-c="local">En el local</button><button type="button" class="chip ${c.canal === 'online' ? 'on' : ''}" data-act="cobro-canal" data-c="online">Online</button></div></div>` : ''}
+    <label class="cobro-fecha small muted">Fecha <input type="date" class="in" data-change="cobro-fecha" value="${c.fecha || hoy()}" max="${hoy()}"></label>`;
+  const b = $('#cobro-btn'); if (b) b.textContent = `Cobrar ${money(total)}`;
+}
+function cobroConfirmar() {
+  const c = S.cart; if (!c?.lineas?.length) return cerrarSheet();
+  const citaId = c.cita_id; const b = $('#cobro-btn')?.getBoundingClientRect(); const monto = sum(c.lineas, (l) => l.cantidad * l.precio_unitario);
+  cerrarSheet();
+  if (citaId) despues(() => { volarMonto(b, $('#ag-cobrado'), monto); const fila = document.querySelector(`.ag-fila[data-id="${citaId}"]`); fila?.classList.add('pagada-ahora'); });
+  cobrar();
+}
+// el monto cobrado viaja desde el botón hasta el total del día
+function volarMonto(desde, hacia, monto) {
+  if (!desde || !hacia || quieto()) return;
+  const h = hacia.getBoundingClientRect(); const f = document.createElement('div');
+  f.className = 'vuela num'; f.textContent = '+' + money(monto); f.style.left = desde.left + desde.width / 2 - 40 + 'px'; f.style.top = desde.top + 'px';
+  document.body.appendChild(f);
+  requestAnimationFrame(() => { f.style.transform = `translate(${h.left - desde.left - desde.width / 2 + 40}px, ${h.top - desde.top}px) scale(.85)`; f.style.opacity = '.15'; });
+  setTimeout(() => { f.remove(); hacia.classList.remove('late'); void hacia.offsetWidth; hacia.classList.add('late'); }, 720);
+}
+const ACC_COBRO = {
+  'cobro-qty': (el) => { const l = S.cart.lineas[+el.dataset.i]; l.cantidad = Math.max(0, l.cantidad + Number(el.dataset.d)); if (!l.cantidad) S.cart.lineas.splice(+el.dataset.i, 1); if (!S.cart.lineas.length) { cerrarSheet(); return render(); } pintarCobro(); },
+  'cobro-emp': (el) => { const l = S.cart.lineas[+el.dataset.i]; l.empleado_id = l.empleado_id === el.dataset.e ? null : el.dataset.e; pintarCobro(); },
+  'cobro-cli': (el) => { S.cart.cliente_id = el.dataset.id || ''; pintarCobro(); },
+  'cobro-met': (el) => { S.cart.metodo = el.dataset.m; pintarCobro(); },
+  'cobro-canal': (el) => { S.cart.canal = el.dataset.c; pintarCobro(); },
+  'cobro-mas': () => { cerrarSheet(); S.ui.vender.tab ||= 'servicios'; if (vistaActual() === 'vender') render(); else ir('vender'); },
+  'cobro-ok': () => cobroConfirmar(),
+  'cobro-abrir': () => formCobro(),
+  'caja-hoy': () => { S.ui.caja = { ...(S.ui.caja || {}), rango: 'hoy' }; },
+};
+const CAMB_COBRO = {
+  'cobro-cli-sel': (el) => { if (el.value) { S.cart.cliente_id = el.value; pintarCobro(); } },
+  'cobro-fecha': (el) => { S.cart.fecha = el.value || hoy(); },
+};
+
+/* ---------- agenda: una línea por cita y una sola acción ---------- */
+const avisadas = () => { try { return new Set(JSON.parse(localStorage.getItem('miderno:avisadas') || '[]')); } catch { return new Set(); } };
+function marcarAvisada(id) { try { const s = avisadas(); s.add(id); localStorage.setItem('miderno:avisadas', JSON.stringify([...s].slice(-400))); } catch {} }
+function yaPaso(i) { const ahora = new Date(); const h = `${pad(ahora.getHours())}:${pad(ahora.getMinutes())}`; return i.ref.fecha < hoy() || (i.ref.fecha === hoy() && (i.hora || '00:00') <= h); }
+function accionPrincipal(i) {
+  const r = i.ref; const tel = i.cl?.telefono;
+  if (i.kind === 'cita') {
+    if (i.estado === 'completada') return '<span class="ag-hecho">✓ Pagada</span>';
+    if (!enAgenda(i)) return `<span class="pill ${(ESTADOS_CITA[i.estado] || [])[1] || ''}">${(ESTADOS_CITA[i.estado] || [''])[0]}</span>`;
+    if (i.estado === 'solicitada') return `<button class="btn sm pri" data-act="confirmar-reserva" data-id="${r.id}">Confirmar</button>`;
+    if (yaPaso(i)) return `<button class="btn sm pri" data-act="cita-cobrar" data-id="${r.id}">Cobrar</button>`;
+    if (tel && !avisadas().has(r.id)) return `<a class="btn sm sol" data-act="ag-avisar" data-id="${r.id}" target="_blank" rel="noopener" href="${waLink(tel, msg('recordatorio', { nombre: primerNombre(i.cl.nombre), servicio: i.s?.nombre || 'atención', fecha: fechaLarga(r.fecha), hora: hhmm(r.hora) }))}">Recordar</a>`;
+    return tel ? '<span class="ag-hecho">✓ Avisada</span>' : `<button class="btn sm" data-act="cita-cobrar" data-id="${r.id}">Cobrar</button>`;
+  }
+  if (['entregada', 'hecha'].includes(i.estado)) return `<span class="ag-hecho">✓ ${i.estado === 'entregada' ? 'Entregada' : 'Hecho'}</span>`;
+  if (!enAgenda(i)) return '<span class="pill bad">Cancelada</span>';
+  if (i.kind === 'entrega') return !r.pagado && Number(r.monto) ? `<button class="btn sm pri" data-act="ev-cobrar" data-id="${r.id}">Cobrar</button>` : `<button class="btn sm pri" data-act="ev-estado" data-id="${r.id}" data-e="entregada">Entregada</button>`;
+  return `<button class="btn sm pri" data-act="ev-estado" data-id="${r.id}" data-e="hecha">Hecho</button>`;
+}
+function filaAgendaCorta(i) {
+  const k = KIND[i.kind]; const monto = i.kind === 'cita' ? (i.s ? money(i.s.precio) : '') : i.kind === 'entrega' && Number(i.ref.monto) ? money(i.ref.monto) : '';
+  const apagada = i.estado === 'completada' || ['entregada', 'hecha'].includes(i.estado) || !enAgenda(i);
+  return `<div class="ag-fila ${k.cls} ${apagada ? 'apagada' : ''} ${i.estado === 'solicitada' ? 'req' : ''} ${S._recien === i.id ? 'recien' : ''}" data-act="ag-detalle" data-id="${i.id}" data-kind="${i.kind}" role="button" tabindex="0">
+    <span class="ag-h num">${i.hora || '—'}</span>
+    <span class="ag-q"><b>${esc(i.titulo)}</b><small>${esc([i.kind === 'cita' ? '' : k.label, i.sub, monto].filter(Boolean).join(' · '))}</small></span>
+    <span class="ag-a">${accionPrincipal(i)}</span></div>`;
+}
+function detalleAgenda(id, kind) {
+  const it = itemsDelDia(kind === 'cita' ? db.get('citas', id)?.fecha : db.get('eventos', id)?.fecha, 'todos').find((x) => x.id === id); if (!it) return;
+  const [est, cls] = (it.kind === 'cita' ? ESTADOS_CITA : ESTADOS_EV)[it.estado] || ['', ''];
+  // reutiliza las acciones completas de la fila clásica
+  const tmp = document.createElement('div'); tmp.innerHTML = filaAgenda(it); const acc = tmp.querySelector('.hstack')?.innerHTML || '';
+  abrirSheet(esc(it.titulo), `<div class="stack"><div class="between"><span class="num"><b>${esc(fechaLarga(it.ref.fecha))}${it.hora ? ', ' + it.hora : ''}</b></span><span class="pill ${cls}">${est}</span></div>
+    ${it.sub ? `<p class="muted" style="margin:0">${esc(it.sub)}</p>` : ''}${it.ref.nota ? `<p class="small" style="margin:0">${esc(it.ref.nota)}</p>` : ''}
+    <div class="ag-det-acc">${acc}</div></div>`);
+  $('.ag-det-acc')?.addEventListener('click', (e) => { const b = e.target.closest('[data-act]'); if (!b) return; if (/Recordar/.test(b.textContent)) marcarAvisada(id); if (['cita-estado', 'ev-estado', 'confirmar-reserva', 'del-cita', 'del-evento'].includes(b.dataset.act)) cerrarSheet(false); });
+}
+// raya roja de la hora actual, entre la última cita pasada y la siguiente
+function conRayaAhora(items, html) {
+  if (S.ui.agenda.fecha !== hoy()) return html.join('');
+  const ahora = new Date(); const h = `${pad(ahora.getHours())}:${pad(ahora.getMinutes())}`;
+  const k = items.findIndex((i) => (i.hora || '99') > h); const pos = k < 0 ? html.length : k;
+  html.splice(pos, 0, `<div class="ag-ahora" aria-label="Ahora, ${h}"><span>${h}</span></div>`);
+  return html.join('');
+}
+setInterval(() => { if (S.negocio && document.visibilityState === 'visible' && vistaActual() === 'agenda' && S.ui.agenda.vista === 'dia' && S.ui.agenda.fecha === hoy() && !$('#scrim') && !document.activeElement?.matches?.('input,textarea,select')) render(); }, 60000);
+// deslizar con el dedo entre días
+let _toque = null;
+document.addEventListener('touchstart', (e) => { const z = e.target.closest?.('.ag-dia-card'); _toque = z ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : null; }, { passive: true });
+document.addEventListener('touchend', (e) => {
+  if (!_toque) return; const dx = e.changedTouches[0].clientX - _toque.x, dy = e.changedTouches[0].clientY - _toque.y; _toque = null;
+  if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) irDiaAgenda(addDays(S.ui.agenda.fecha, dx < 0 ? 1 : -1));
+}, { passive: true });
+function irDiaAgenda(f) {
+  const a = S.ui.agenda; if (f === a.fecha) return render();
+  const dir = f > a.fecha ? 1 : -1; a.fecha = f;
+  despues(() => { const c = $('.ag-dia-card'); if (c && !quieto()) { c.classList.add(dir > 0 ? 'entra-der' : 'entra-izq'); } });
+  render();
+}
+const ACC_AGENDA = {
+  'ag-detalle': (el) => detalleAgenda(el.dataset.id, el.dataset.kind),
+  'ag-avisar': (el) => { marcarAvisada(el.dataset.id); setTimeout(() => { const a = document.querySelector(`.ag-fila[data-id="${el.dataset.id}"] .ag-a`); if (a) a.innerHTML = '<span class="ag-hecho pop">✓ Avisada</span>'; }, 300); },
+  'ag-pend': () => { S.ui.agenda.verPend = !S.ui.agenda.verPend; render(); },
+};
+
+/* ---------- portada viva: el panel registra ventas solo ---------- */
+const VENTAS_PORTADA = [['Pedicure spa · Rocío', 20000], ['Retiro de esmalte', 5000], ['Uñas acrílicas · Javiera', 28000], ['Vela vainilla', 12990], ['Kapping gel · Sofía', 22000], ['Esmaltado · Camila', 9000], ['Corte y brushing', 18000]];
+let _portada = null;
+function portadaViva() {
+  if (_portada || quieto()) return; let k = 0;
+  _portada = setInterval(() => {
+    const feed = $('.pp-feed'); const tot = $('.pp-n');
+    if (!feed || !tot) { clearInterval(_portada); _portada = null; return; }
+    if (document.visibilityState !== 'visible') return;
+    const [t, m] = VENTAS_PORTADA[k++ % VENTAS_PORTADA.length];
+    const d = document.createElement('div'); d.className = 'pp-mov nueva'; d.innerHTML = `<span>${esc(t)}</span><b class="pp-in">+${money(m)}</b>`;
+    feed.prepend(d); while (feed.children.length > 3) feed.lastElementChild.remove();
+    const antes = Number(tot.dataset.v || 1284300); const despues_ = antes + m; tot.dataset.v = despues_;
+    const t0 = performance.now(); const paso = (ts) => { const x = Math.min(1, (ts - t0) / 700); tot.textContent = money(antes + m * (1 - Math.pow(1 - x, 3))); if (x < 1) requestAnimationFrame(paso); }; requestAnimationFrame(paso);
+    const chip = $('.por-chip'); if (chip) { const n = Number(chip.dataset.n || 3) + 1; chip.dataset.n = n; chip.textContent = `Hoy: +${n} ventas`; }
+  }, 3200);
+}
+
+/* =========================================================
    Render, eventos y arranque
    ========================================================= */
 
@@ -4503,12 +4937,14 @@ function render() {
   const app = $('#app');
   if (S.eq) { app.innerHTML = vistaEquipoApp(); document.title = 'Mi agenda · MiDerno'; return; }
   if (S.pub) { app.innerHTML = vistaReserva(); document.title = `Agenda ${S.pub.info?.negocio?.nombre || ''} · MiDerno`; return; }
-  if (!S.negocio) { app.innerHTML = vistaBienvenida(); _ultimaVista = null; document.title = 'MiDerno'; return; }
+  if (!S.negocio) { app.innerHTML = vistaBienvenida(); _ultimaVista = null; document.title = 'MiDerno'; portadaViva(); return; }
   const v = vistaActual(); const y = window.scrollY;
   app.innerHTML = shell(tipVista(v) + RENDER[v]());
   if (v !== _ultimaVista) { $('.main .wrap')?.classList.add('entra'); animarCifras($('.main')); }
   document.title = `${VISTAS.find((x) => x.id === v).label} · ${S.negocio.nombre} · MiDerno`;
   window.scrollTo(0, v === _ultimaVista ? y : 0); _ultimaVista = v;
+  if (S._post) { const f = S._post; S._post = null; requestAnimationFrame(() => { try { f(); } catch (e) { console.error(e); } }); }
+  if (S._recien) setTimeout(() => { S._recien = null; }, 50);
 }
 
 function guardarMeta(monto) {
@@ -4530,6 +4966,7 @@ const ACCIONES = {
   mas: () => menuMas(),
   login: () => formLogin(),
   entrar: () => elegirEntrada(),
+  'caja-mes-actual': () => { S.ui.caja = { ...(S.ui.caja || {}), rango: 'mes' }; },
   ejemplos: () => elegirEjemplo(),
   empezar: () => formNegocio(CONFIG.supabaseUrl && CONFIG.supabaseAnonKey ? 'cuenta' : 'local'),
   olvide: () => formOlvide(),
@@ -4558,6 +4995,7 @@ const ACCIONES = {
     const ya = S.cart.lineas.find((l) => l.tipo_item === tipo && l.item_id === x.id && tipo === 'producto');
     if (ya) ya.cantidad += 1; else S.cart.lineas.push({ tipo_item: tipo, item_id: x.id, nombre: x.nombre, cantidad: 1, precio_unitario: Number(tipo === 'servicio' ? x.precio : x.precio_venta), empleado_id: null });
     render();
+    if (esMovil()) formCobro();
   },
   qty: (el) => { const l = S.cart.lineas[+el.dataset.i]; l.cantidad += +el.dataset.d; if (l.cantidad <= 0) S.cart.lineas.splice(+el.dataset.i, 1); render(); },
   vaciar: () => { S.cart = nuevoCarro(); render(); },
@@ -4590,7 +5028,7 @@ const ACCIONES = {
   'del-negocio': () => confirmar(`Se borrarán <b>todos</b> los datos de ${esc(S.negocio.nombre)} de este dispositivo. No se puede deshacer.`, () => {
     LS.del('miderno:data:' + S.negocio.id); LS.set('miderno:negocios', (LS.get('miderno:negocios') || []).filter((n) => n.id !== S.negocio.id)); salir(); toast('Negocio eliminado'); }),
   // agenda
-  'ag-mover': (el) => { const a = S.ui.agenda; const d = +el.dataset.d; a.fecha = el.dataset.p === 'mes' ? addMonths(mesDe(a.fecha), d) + '-01' : addDays(a.fecha, d * +el.dataset.p); render(); },
+  'ag-mover': (el) => { const a = S.ui.agenda; const d = +el.dataset.d; if (el.dataset.p === '1') return irDiaAgenda(addDays(a.fecha, d)); a.fecha = el.dataset.p === 'mes' ? addMonths(mesDe(a.fecha), d) + '-01' : addDays(a.fecha, d * +el.dataset.p); render(); },
   'ag-vista': (el) => { S.ui.agenda.vista = el.dataset.v; render(); },
   'ag-ir-dia': (el) => { S.ui.agenda.fecha = el.dataset.f; S.ui.agenda.vista = 'dia'; render(); },
   'ag-hoy-nav': () => { S.ui.agenda.fecha = hoy(); S.ui.agenda.vista = 'dia'; },
@@ -4606,7 +5044,7 @@ const ACCIONES = {
   // página de reservas
   'pub-preview': () => { const l = S.modo === 'nube' && S.negocio.reservas_activas ? linkReservas() : ''; if (l) { window.open(l, '_blank', 'noopener'); return; } abrirReservas(ReservaLocal, true); window.scrollTo(0, 0); },
   'pub-salir': () => { S.pub = null; ir('agenda'); },
-  'pub-servicio': (el) => { const p = S.pub; p.servicio = p.info.servicios.find((s) => s.id === el.dataset.id); p.hora = null; if (p.fecha) pubCargarHoras(); else render(); },
+  'pub-servicio': (el) => { const p = S.pub; const primera = !p.servicio; p.servicio = p.info.servicios.find((s) => s.id === el.dataset.id); p.hora = null; if (p.fecha) pubCargarHoras(); else render(); if (primera) setTimeout(() => document.querySelectorAll('.pub section.card')[1]?.scrollIntoView({ behavior: quieto() ? 'auto' : 'smooth', block: 'start' }), 80); },
   'pub-emp': (el) => { const p = S.pub; p.empleado = el.dataset.id || null; p.hora = null; if (p.fecha) pubCargarHoras(); else render(); },
   'pub-dia': (el) => { const p = S.pub; p.fecha = el.dataset.f; p.hora = null; pubCargarHoras(); },
   'pub-hora': (el) => { const p = S.pub; p.hora = p.horas[+el.dataset.i]; render(); setTimeout(() => $('#form-reserva')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50); },
@@ -4614,8 +5052,8 @@ const ACCIONES = {
   'pub-comp': () => { setTimeout(() => { if (S.pub) { S.pub.compEnviado = true; render(); } }, 800); },
   'pub-otra': () => { window.scrollTo(0, 0); Object.assign(S.pub, { compEnviado: false, enviado: false, hora: null, fecha: null, horas: null, servicio: null }); render(); },
   'copiar-link': () => { const t = $('#link-reservas')?.textContent || ''; navigator.clipboard?.writeText(t).then(() => toast('Enlace copiado'), () => toast('Mantén presionado el enlace para copiarlo')); },
-  'ag-hoy': () => { S.ui.agenda.fecha = hoy(); render(); },
-  'ag-set': (el) => { S.ui.agenda.fecha = el.dataset.f; render(); },
+  'ag-hoy': () => { if (S.ui.agenda.vista === 'dia') return irDiaAgenda(hoy()); S.ui.agenda.fecha = hoy(); render(); },
+  'ag-set': (el) => irDiaAgenda(el.dataset.f),
   'ag-emp': (el) => { S.ui.agenda.emp = el.dataset.e; render(); },
   cita: (el) => formCita(el.dataset.id),
   'cita-estado': (el) => { db.update('citas', el.dataset.id, { estado: el.dataset.e }); render(); },
@@ -4682,6 +5120,7 @@ const ACCIONES = {
   },
 };
 
+Object.assign(ACCIONES, ACC_COBRO, ACC_AGENDA);
 const CAMBIOS = {
   'imp-modo': (el) => { S.imp.modo = el.value; render(); },
   'caja-desde': (el) => { S.ui.caja.desde = el.value; render(); },
@@ -4705,6 +5144,7 @@ const CAMBIOS = {
   'dh-dia': (el) => { el.closest('.dh-row').classList.toggle('off', !el.checked); },
   'prov-sel': (el) => { const b = $('#prov-inline'); if (b) { b.hidden = el.value !== '__nuevo'; if (!b.hidden) $('#f-prov_nombre')?.focus(); } },
   'obs-on': (el) => { guardarConfig({ observaciones: el.checked }); toast(`Observaciones de clientes: ${el.checked ? 'activadas' : 'desactivadas'}`); render(); },
+  ...CAMB_COBRO,
   modulo: (el) => {
     const m = el.dataset.m; const on = el.checked;
     db.modulo(m, on);
