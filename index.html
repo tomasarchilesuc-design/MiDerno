@@ -1023,6 +1023,121 @@ details > summary { cursor: pointer; }
 .cobro-ln .precio-wrap { margin-left: auto; padding: 2px 4px; background: var(--surface); border-radius: 8px 8px 0 0; }
 .bc-op small { white-space: nowrap; flex: none; } .bc-op b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+/* ---------- v24: calendario por horas y bloqueos ---------- */
+:root { --sol: #FFB547; --rayas: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--muted) 16%, transparent) 0 6px, transparent 6px 12px); }
+.solo-desk { display: inline; }
+@media (max-width: 860px) { .solo-desk { display: none; } }
+.cal-card { padding: 0; overflow: hidden; }
+.cal { display: grid; grid-template-columns: 52px repeat(var(--dias), minmax(0, 1fr)); max-height: min(72vh, 760px); overflow-y: auto; overscroll-behavior: contain; position: relative; }
+.cal-esq, .cal-cab { position: sticky; top: 0; z-index: 4; background: var(--surface); border-bottom: 1px solid var(--line-suave); }
+.cal-cab { padding: 8px 4px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; border-left: 1px solid var(--line-suave); }
+.cal-dia { border: 0; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0; color: var(--muted); padding: 2px 8px; border-radius: 12px; }
+.cal-dia span { font-size: .72rem; text-transform: capitalize; }
+.cal-dia b { font-size: 1.25rem; font-weight: 600; color: var(--ink); line-height: 1.15; }
+.cal-dia:hover { background: var(--surface-2); }
+.cal-cab.hoy .cal-dia b { background: var(--accent); color: var(--accent-ink, #fff); border-radius: 99px; min-width: 32px; padding: 0 6px; }
+.cal-nota { font-size: .68rem; color: var(--muted); }
+.cal-todo { width: 100%; border: 0; border-radius: 6px; padding: 2px 6px; font-size: .72rem; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; background: var(--gold-soft); }
+.cal-horas { position: relative; }
+.cal-horas span { position: absolute; right: 8px; transform: translateY(-50%); font-size: .68rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.cal-horas span:first-child { display: none; }
+.cal-col { position: relative; border-left: 1px solid var(--line-suave); cursor: copy;
+  background-image: linear-gradient(to bottom, var(--line-suave) 1px, transparent 1px); background-size: 100% calc(60px * 1.1); }
+.cal-col:hover { background-color: color-mix(in srgb, var(--accent) 3%, transparent); }
+.cal-fuera { position: absolute; left: 0; right: 0; background: var(--surface-2); opacity: .75; pointer-events: none; }
+.cal-col.cerrado .cal-fuera { background: var(--rayas), var(--surface-2); }
+.cal-bloq { position: absolute; left: 2px; right: 2px; z-index: 1; border: 1px dashed color-mix(in srgb, var(--muted) 50%, transparent); border-radius: 8px; background: var(--rayas), var(--surface); color: var(--muted); text-align: left; padding: 4px 6px; font-size: .72rem; cursor: pointer; display: flex; flex-direction: column; overflow: hidden; }
+.cal-bloq b { font-weight: 600; color: var(--ink); }
+.cal-ev { position: absolute; z-index: 2; border: 0; border-radius: 8px; padding: 4px 6px 4px 8px; text-align: left; cursor: pointer; overflow: hidden; display: flex; flex-direction: column; gap: 0; font-size: .75rem; line-height: 1.25;
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface)); color: var(--ink); box-shadow: inset 3px 0 0 var(--accent);
+  transition: transform .15s var(--ease-out), box-shadow .2s; }
+.cal-ev:hover { transform: translateY(-1px); box-shadow: inset 3px 0 0 var(--accent), 0 4px 12px rgba(0,0,0,.08); z-index: 3; }
+.cal-ev b { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cal-ev small { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cal-ev .cal-h { font-size: .68rem; color: var(--muted); }
+.cal-ev.corto { flex-direction: row; gap: 4px; align-items: center; padding-top: 2px; padding-bottom: 2px; }
+.cal-ev em { font-style: normal; font-size: .66rem; font-weight: 600; color: var(--warn); }
+.cal-ev.req { background: var(--warn-soft); box-shadow: inset 3px 0 0 var(--sol); outline: 1px dashed color-mix(in srgb, var(--warn) 55%, transparent); outline-offset: -1px; }
+.cal-ev.hecho { background: var(--surface-2); box-shadow: inset 3px 0 0 var(--ok); opacity: .75; }
+.cal-ev.k-entrega { background: var(--gold-soft); box-shadow: inset 3px 0 0 var(--gold); }
+.cal-ev.k-tarea { background: var(--surface-2); box-shadow: inset 3px 0 0 var(--muted); }
+.cal-ahora { position: absolute; left: -1px; right: 0; height: 2px; background: var(--margin); z-index: 3; pointer-events: none; }
+.cal-ahora::before { content: ""; position: absolute; left: -4px; top: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--margin); }
+.cal-ley { padding: 10px 16px 14px; border-top: 1px solid var(--line-suave); flex-wrap: wrap; gap: 6px 16px; display: flex; font-size: .78rem; }
+.cal-ley i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -2px; }
+.ley-conf { background: color-mix(in srgb, var(--accent) 30%, var(--surface)); }
+.ley-req { background: var(--warn-soft); outline: 1px dashed var(--warn); outline-offset: -1px; }
+.ley-bloq { background: var(--rayas), var(--surface); border: 1px dashed var(--muted); }
+.ley-fuera { background: var(--surface-2); }
+.ag-bloq { display: flex; align-items: center; gap: 10px; width: 100%; border: 1px dashed var(--line); border-radius: 12px; background: var(--rayas); padding: 10px 12px; margin-bottom: 8px; text-align: left; cursor: pointer; color: var(--ink); }
+.ag-bloq span { flex: 1; min-width: 0; } .ag-bloq small { color: var(--muted); }
+.ag-cerrado { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; } .ag-cerrado .i { width: 16px; height: 16px; }
+.month-cell.cerrado { background: var(--surface-2); }
+.month-cell.bloq { background: var(--rayas), var(--surface); }
+.hueco-op { border: 0; width: 100%; text-align: left; cursor: pointer; }
+.banner.warn-soft { background: var(--warn-soft); justify-content: flex-start; gap: 10px; flex-wrap: nowrap; align-items: flex-start; }
+.banner.warn-soft .i { flex: none; color: var(--warn); margin-top: 2px; }
+.cita-aviso { font-size: .85rem; }
+@media (max-width: 600px) {
+  .cal { grid-template-columns: 40px repeat(var(--dias), minmax(0, 1fr)); max-height: 66vh; }
+  .cal-horas span { right: 4px; font-size: .62rem; }
+  .cal-ev { font-size: .7rem; padding: 3px 4px 3px 6px; }
+  .cal-ley span.muted { flex-basis: 100%; }
+}
+
+/* ---------- v24: página pública con identidad del negocio ---------- */
+.pub-preview { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 10px 16px; background: var(--ink); color: var(--bg); font-size: .85rem; }
+.pub-preview span { display: flex; align-items: center; gap: 8px; } .pub-preview .i { width: 18px; height: 18px; }
+.pub-preview .btn { background: transparent; color: var(--bg); border-color: color-mix(in srgb, var(--bg) 35%, transparent); }
+.pub-cab { display: flex; flex-direction: column; gap: 0; margin-bottom: 4px; }
+.pub-portada { aspect-ratio: 16 / 7; border-radius: 22px; overflow: hidden; background: var(--surface-2); }
+.pub-portada img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pub-ident { display: flex; align-items: center; gap: 14px; padding: 4px 2px; }
+.pub-cab.con-foto .pub-ident { padding-left: 16px; align-items: flex-start; }
+.pub-cab.con-foto .pub-logo { margin-top: -36px; }
+.pub-cab.con-foto .pub-ident > div { padding-top: 10px; }
+.pub-logo { width: 72px; height: 72px; border-radius: 20px; object-fit: contain; background: var(--surface); flex: none; box-shadow: 0 0 0 4px var(--fondo, var(--bg)), 0 6px 18px rgba(0,0,0,.10); }
+.pub-ini { display: grid; place-items: center; font: 600 1.5rem var(--f-display); color: var(--accent-ink, #fff); background: var(--accent); letter-spacing: -.02em; }
+.pub-ident h1 { font-size: clamp(1.5rem, 5vw, 2rem); letter-spacing: -.02em; }
+.pub-ident p { color: var(--muted); font-size: .9rem; margin-top: 2px; }
+.pub-pie { text-align: center; margin-top: 28px; font-size: .75rem; color: var(--muted); opacity: .7; }
+.btn-wa { background: #1FA855; border-color: #1FA855; color: #fff; min-height: 50px; font-size: 1rem; }
+.btn-wa:hover { background: #18914A; }
+.pub-fin { display: flex; gap: 8px; flex-wrap: wrap; }
+.pub-fotos img { height: 150px; }
+/* esqueleto mientras carga (en vez de "Cargando…") */
+.sk { display: block; border-radius: 14px; background: linear-gradient(90deg, var(--surface-2) 0%, color-mix(in srgb, var(--surface-2) 50%, var(--surface)) 50%, var(--surface-2) 100%); background-size: 200% 100%; animation: brillo 1.2s ease-in-out infinite; }
+@keyframes brillo { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+.pub-esqueleto { display: flex; flex-direction: column; gap: 14px; }
+.sk-portada { aspect-ratio: 16 / 7; border-radius: 22px; } .sk-titulo { height: 30px; width: 55%; } .sk-linea { height: 14px; width: 75%; }
+.sk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } .sk-grid .sk { height: 64px; }
+.logo-fila { display: flex; gap: 14px; align-items: center; }
+.logo-prev { width: 64px; height: 64px; border-radius: 18px; object-fit: contain; background: var(--surface-2); flex: none; }
+.logo-ini { display: grid; place-items: center; font-weight: 600; font-size: 1.3rem; background: var(--accent); color: var(--accent-ink, #fff); }
+@media (prefers-reduced-motion: reduce) { .sk { animation: none; } }
+@media (max-width: 600px) { .pub-logo { width: 60px; height: 60px; border-radius: 17px; } .pub-portada { border-radius: 18px; aspect-ratio: 16 / 9; } }
+.btn-wa-sm { color: #138A45; border-color: color-mix(in srgb, #1FA855 35%, var(--line)); }
+.btn-wa-sm:hover { background: color-mix(in srgb, #1FA855 10%, var(--surface)); }
+.btn-wa .i, .btn-wa-sm .i { color: currentColor; }
+
+/* ---------- v24: movimiento más ágil (responde al tiro, sin esperas) ---------- */
+.wrap.entra > * { animation: entra .28s var(--ease-suave) both; }
+.wrap.entra > :nth-child(2) { animation-delay: .03s; } .wrap.entra > :nth-child(3) { animation-delay: .06s; } .wrap.entra > :nth-child(n+4) { animation-delay: .09s; }
+@keyframes entra { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.sheet { animation-duration: .3s; }
+.scrim { animation-duration: .16s; }
+@media (max-width: 600px) { .sheet { animation: sheet-sube .32s var(--ease-suave) both; } }
+.ind-barra i { animation: none; }
+.wrap.entra .ind-barra i { animation: crece .8s .15s var(--ease-out) both; }
+.splash-txt { animation-delay: .35s; } .splash-bar { animation-delay: .3s; }
+/* el contenido nuevo dentro de una tarjeta aparece suave en vez de saltar */
+.pub-horas, .bc-lista:not([hidden]) { animation: aparece .18s ease both; }
+.row.click:hover { background: color-mix(in srgb, var(--surface-2) 60%, transparent); }
+.nav a { position: relative; }
+.nav a.on::before { content: ""; position: absolute; left: -14px; top: 9px; bottom: 9px; width: 3px; border-radius: 0 3px 3px 0; background: var(--accent); }
+@media (prefers-reduced-motion: reduce) { .wrap.entra > *, .sheet, .scrim, .pub-horas, .bc-lista { animation: none !important; } }
+.sk-hora { height: 42px; border-radius: 12px; }
+
 </style>
 </head>
 <body>
@@ -1035,7 +1150,7 @@ details > summary { cursor: pointer; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '23';
+const VERSION = '24';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -1108,10 +1223,10 @@ const S = {
   negocio: null,     // { id, nombre, rubro, moneda }
   modulos: [],       // ['servicios', ...]
   t: {},             // filas por tabla
-  ui: { caja: { mes: null, rango: 'hoy', filtro: 'todos' }, agenda: { fecha: null, emp: 'todos', vista: 'dia' }, clientes: { q: '', f: 'todos' }, inv: { tab: 'stock' }, prod: { tab: 'recetas' }, cat: { tab: null }, equipo: { mes: null }, vender: { q: '' } },
+  ui: { caja: { mes: null, rango: 'hoy', filtro: 'todos' }, agenda: { fecha: null, emp: 'todos', vista: null }, clientes: { q: '', f: 'todos' }, inv: { tab: 'stock' }, prod: { tab: 'recetas' }, cat: { tab: null }, equipo: { mes: null }, vender: { q: '' } },
   cart: null,
 };
-function resetUI() { S.cuentasEq = undefined; S.imp = null; S.pub = null; S.eq = null; S.ui.registro = { tipo: 'ingreso' }; Object.assign(S.ui, { inicio: null, caja: { mes: null, rango: 'hoy', filtro: 'todos' }, agenda: { fecha: null, emp: 'todos', vista: 'dia' }, clientes: { q: '', f: 'todos' }, inv: { tab: 'stock' }, prod: { tab: 'recetas' }, cat: { tab: null }, equipo: { mes: null }, vender: { q: '' } }); }
+function resetUI() { S.cuentasEq = undefined; S.imp = null; S.pub = null; S.eq = null; S.ui.registro = { tipo: 'ingreso' }; Object.assign(S.ui, { inicio: null, caja: { mes: null, rango: 'hoy', filtro: 'todos' }, agenda: { fecha: null, emp: 'todos', vista: null }, clientes: { q: '', f: 'todos' }, inv: { tab: 'stock' }, prod: { tab: 'recetas' }, cat: { tab: null }, equipo: { mes: null }, vender: { q: '' } }); }
 const tiene = (m) => !m || S.modulos.includes(m);
 
 /* ---------- adaptadores de datos ---------- */
@@ -1140,19 +1255,24 @@ const NubeAdapter = {
   sb: null,
   // las escrituras van en fila, en orden, para que una venta exista antes que sus ítems
   cola: Promise.resolve(),
+  // mientras se confirma la sesión (apertura instantánea desde la copia guardada) las escrituras esperan aquí
+  listo: Promise.resolve(),
+  tocados: {},
+  marcar(t, ids, borrado = false) { const m = (this.tocados[t] ||= new Map()); for (const id of [].concat(ids)) if (id) m.set(id, borrado ? 'del' : 'ok'); this.cachear(); },
+  cachear() { clearTimeout(this._tc); this._tc = setTimeout(() => guardarCacheNube(), 1200); },
   enviar(fn) {
-    this.cola = this.cola.then(fn).then(({ error } = {}) => {
+    this.cola = this.cola.then(() => this.listo).then(fn).then(({ error } = {}) => {
       if (error) { console.error(error); const dup = /duplicate|unique/i.test(error.message || '') && /slug/i.test(error.message || ''); toast(dup ? 'Esa dirección de página ya la usa otro negocio. Elige otra en Ajustes.' : 'No se pudo guardar en la nube: ' + (error.message || error), true); }
     }).catch((e) => toast('Sin conexión: el último cambio no se guardó (' + (e.message || e) + ')', true));
   },
-  insert(t, row) { const nid = S.negocio.id; this.enviar(() => this.sb.from(t).insert({ ...row, negocio_id: nid })); },
-  insertMany(t, rows) { const nid = S.negocio.id; for (let i = 0; i < rows.length; i += 500) { const parte = rows.slice(i, i + 500).map((r) => ({ ...r, negocio_id: nid })); this.enviar(() => this.sb.from(t).insert(parte)); } },
-  update(t, id, patch) { this.enviar(() => this.sb.from(t).update(patch).eq('id', id)); },
-  remove(t, id) { this.enviar(() => this.sb.from(t).delete().eq('id', id)); },
+  insert(t, row) { const nid = S.negocio.id; this.marcar(t, row.id); this.enviar(() => this.sb.from(t).insert({ ...row, negocio_id: nid })); },
+  insertMany(t, rows) { const nid = S.negocio.id; this.marcar(t, rows.map((r) => r.id)); for (let i = 0; i < rows.length; i += 500) { const parte = rows.slice(i, i + 500).map((r) => ({ ...r, negocio_id: nid })); this.enviar(() => this.sb.from(t).insert(parte)); } },
+  update(t, id, patch) { this.marcar(t, id); this.enviar(() => this.sb.from(t).update(patch).eq('id', id)); },
+  remove(t, id) { this.marcar(t, id, true); this.enviar(() => this.sb.from(t).delete().eq('id', id)); },
   // cambios en bloque: 200 filas por envío en vez de una por una
-  updateMany(t, ids, patch) { for (let i = 0; i < ids.length; i += 200) { const parte = ids.slice(i, i + 200); this.enviar(() => this.sb.from(t).update(patch).in('id', parte)); } },
-  removeMany(t, ids) { for (let i = 0; i < ids.length; i += 200) { const parte = ids.slice(i, i + 200); this.enviar(() => this.sb.from(t).delete().in('id', parte)); } },
-  guardarNegocio(patch) { const nid = S.negocio.id; this.enviar(() => this.sb.from('negocios').update(patch).eq('id', nid)); },
+  updateMany(t, ids, patch) { this.marcar(t, ids); for (let i = 0; i < ids.length; i += 200) { const parte = ids.slice(i, i + 200); this.enviar(() => this.sb.from(t).update(patch).in('id', parte)); } },
+  removeMany(t, ids) { this.marcar(t, ids, true); for (let i = 0; i < ids.length; i += 200) { const parte = ids.slice(i, i + 200); this.enviar(() => this.sb.from(t).delete().in('id', parte)); } },
+  guardarNegocio(patch) { const nid = S.negocio.id; this._negLocal = { ...(this._negLocal || {}), ...patch }; this.cachear(); this.enviar(() => this.sb.from('negocios').update(patch).eq('id', nid)); },
   guardarModulo(modulo, activo) { const nid = S.negocio.id; this.enviar(() => this.sb.from('negocio_modulos').upsert({ negocio_id: nid, modulo, activo })); },
   async traerTodo(t) {
     const filas = []; const paso = 1000;
@@ -1169,6 +1289,19 @@ const NubeAdapter = {
 };
 
 let adapter = LocalAdapter;
+
+/* ---------- copia local de la nube (IndexedDB) para abrir al instante ---------- */
+const CacheNube = {
+  _db: null,
+  abrir() { return (this._db ||= new Promise((ok, fail) => { const r = indexedDB.open('miderno', 1); r.onupgradeneeded = () => r.result.createObjectStore('nube'); r.onsuccess = () => ok(r.result); r.onerror = () => fail(r.error); })); },
+  async get(k) { try { const d = await this.abrir(); return await new Promise((ok) => { const q = d.transaction('nube').objectStore('nube').get(k); q.onsuccess = () => ok(q.result || null); q.onerror = () => ok(null); }); } catch { return null; } },
+  async set(k, v) { try { const d = await this.abrir(); d.transaction('nube', 'readwrite').objectStore('nube').put(v, k); } catch {} },
+  async borrar() { try { const d = await this.abrir(); d.transaction('nube', 'readwrite').objectStore('nube').clear(); } catch {} },
+};
+function guardarCacheNube() {
+  const uid = S.usuarioId; if (S.modo !== 'nube' || !uid || !S.negocio) return;
+  CacheNube.set('u:' + uid, { negocio: S.negocio, modulos: S.modulos, t: S.t, nombre: S.usuarioNombre || '', at: Date.now() });
+}
 
 const db = {
   all: (t) => S.t[t] || (S.t[t] = []),
@@ -1433,6 +1566,8 @@ const DEMOS = {
    ========================================================= */
 
 const ICONS = {
+  lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
   home: '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
   minus: '<path d="M5 12h14"/>',
@@ -1529,7 +1664,7 @@ function shell(contenido) {
       </nav>
       <div class="grow"></div>
       <button class="ayuda-side" data-act="ayuda">${icon('help')}<span>¿Necesitas ayuda?</span></button>
-      <div class="mode-pill"><span class="dot ${S.modo === 'nube' ? 'cloud' : ''}"></span>${S.modo === 'nube' ? 'Sincronizado en la nube' : 'Guardado en este dispositivo'} · v${VERSION}</div>
+      <div class="mode-pill"><span class="dot ${S.modo === 'nube' ? 'cloud' : ''}"></span>${S.modo === 'nube' ? (S.sincronizando ? 'Poniéndose al día…' : 'Sincronizado en la nube') : 'Guardado en este dispositivo'} · v${VERSION}</div>
     </aside>
     <main class="main"><div class="wrap">
       <div class="mobile-top"><div class="brand">${MARCA}<b>${esc(S.negocio.nombre)}</b></div><div class="hstack" style="gap:2px"><button class="btn sm ghost" data-act="ayuda" aria-label="Ayuda">${icon('help')}</button><a class="btn sm ghost" href="#ajustes" aria-label="Ajustes">${icon('gear')}</a></div></div>
@@ -1734,17 +1869,27 @@ function formLogin() {
     },
   });
 }
-async function abrirNube() {
+async function abrirNube({ fondo = false } = {}) {
   const sb = await cargarSupabase();
   // getSession espera a que Supabase termine de leer el enlace del correo (si venimos de ahí)
   const { data: { session } } = await sb.auth.getSession();
   const user = session?.user || (await sb.auth.getUser()).data?.user;
   limpiarUrlAuth();
   if (!user) return false;
-  pantallaCarga(true);
-  try { return await abrirNubeCon(sb, user); } finally { pantallaCarga(false); }
+  if (!fondo) pantallaCarga(true, 'Abriendo tu cuaderno…');
+  try { return await abrirNubeCon(sb, user, { fondo }); } finally { pantallaCarga(false); }
 }
-async function abrirNubeCon(sb, user) {
+// abre al tiro con la última copia guardada en este dispositivo; después se pone al día con la nube
+async function abrirDesdeCache() {
+  const uid = LS.get('miderno:nube-uid'); if (!uid) return false;
+  const c = await CacheNube.get('u:' + uid); if (!c?.negocio || !c.t) return false;
+  NubeAdapter.listo = new Promise((ok) => { NubeAdapter._listo = ok; });
+  adapter = NubeAdapter; S.modo = 'nube'; S.usuarioId = uid; S.usuarioNombre = c.nombre || '';
+  S.negocio = c.negocio; S.modulos = c.modulos || []; S.t = c.t; _fmt = null; S.cart = null; resetUI(); S.sincronizando = true;
+  render(); return true;
+}
+async function abrirNubeCon(sb, user, { fondo = false } = {}) {
+  NubeAdapter._negLocal = {};
   S.usuarioNombre = user?.user_metadata?.full_name || user?.user_metadata?.name || '';
   let { data: u, error } = await sb.from('usuarios').select('*').eq('id', user.id).maybeSingle();
   if (error) throw error;
@@ -1755,11 +1900,28 @@ async function abrirNubeCon(sb, user) {
     toast('Tu cuenta aún no tiene un negocio. Créalo para continuar.'); formNegocio('solo-nube'); return false;
   }
   if (u.rol === 'empleado') { await abrirEquipo(EquipoNube(), false); return true; }
+  // la sesión es la misma de la copia guardada: los cambios hechos mientras tanto ya pueden enviarse
+  if (fondo && S.modo === 'nube' && S.negocio?.id === u.negocio_id) { NubeAdapter._listo?.(); NubeAdapter.listo = Promise.resolve(); }
   const [{ data: neg }, { data: mods }] = await Promise.all([sb.from('negocios').select('*').eq('id', u.negocio_id).single(), sb.from('negocio_modulos').select('*').eq('negocio_id', u.negocio_id)]);
-  const t = {}; for (const x of TABLAS) t[x] = await NubeAdapter.traerTodo(x);
-  adapter = NubeAdapter; S.modo = 'nube';
-  S.negocio = neg; S.modulos = (mods || []).filter((m) => m.activo).map((m) => m.modulo); S.t = t; _fmt = null; S.cart = null; resetUI();
-  render(); return true;
+  // todas las tablas a la vez (antes iban una por una y la carga se sentía pegada)
+  const mismo = fondo && S.modo === 'nube' && S.negocio?.id === neg.id;
+  if (mismo) { NubeAdapter._listo?.(); NubeAdapter.listo = Promise.resolve(); }
+  NubeAdapter.tocados = {};
+  const t = {}; await Promise.all(TABLAS.map(async (x) => { t[x] = await NubeAdapter.traerTodo(x); }));
+  if (mismo) {
+    // lo que se cambió mientras cargaba manda sobre lo que llegó de la nube
+    for (const [tb, m] of Object.entries(NubeAdapter.tocados)) {
+      const porId = new Map((t[tb] || []).map((r) => [r.id, r]));
+      for (const [id, e] of m) { if (e === 'del') porId.delete(id); else { const l = (S.t[tb] || []).find((r) => r.id === id); if (l) porId.set(id, l); } }
+      t[tb] = [...porId.values()];
+    }
+    S.negocio = { ...neg, ...(NubeAdapter._negLocal || {}) };
+  } else { S.negocio = neg; S.cart = null; resetUI(); }
+  adapter = NubeAdapter; S.modo = 'nube'; S.usuarioId = user.id; LS.set('miderno:nube-uid', user.id);
+  S.modulos = (mods || []).filter((m) => m.activo).map((m) => m.modulo); S.t = t; _fmt = null; S.sincronizando = false;
+  // si hay una hoja abierta (formulario a medio llenar) no se repinta encima; se verá al cerrarla
+  if (!mismo || !document.getElementById('scrim')) render(); else $('.mode-pill') && ($('.mode-pill').lastChild.textContent = 'Sincronizado en la nube · v' + VERSION);
+  guardarCacheNube(); return true;
 }
 // quita del enlace los datos que deja el correo de confirmación
 function limpiarUrlAuth() {
@@ -1768,6 +1930,7 @@ function limpiarUrlAuth() {
 }
 async function salir() {
   if (S.modo === 'nube' && NubeAdapter.sb) await NubeAdapter.sb.auth.signOut();
+  LS.del('miderno:nube-uid'); CacheNube.borrar(); S.usuarioId = null;
   S.negocio = null; S.modo = null; S.eq = null; S.pub = null; LS.del('miderno:ultimo'); history.replaceState(null, '', location.pathname); render();
 }
 
@@ -2142,12 +2305,13 @@ function vistaClientes() {
       <button class="chip ${ui.f === 'cumple' ? 'on' : ''}" data-act="cli-f" data-f="cumple">Cumpleaños del mes (${nCumple})</button>
       <button class="chip ${ui.f === 'top' ? 'on' : ''}" data-act="cli-f" data-f="top">Los que más compran</button></div>
       <input class="in" id="q-clientes" placeholder="Buscar por nombre o teléfono" value="${esc(ui.q)}" style="max-width:280px" autocomplete="off"></div>
-    ${ui.f === 'reactivar' ? `<p class="small muted">Clientes que no han vuelto en más de ${DIAS_REACTIVAR} días. Toca WhatsApp para enviarles un mensaje ya escrito.</p>${nAgendadas ? `<div class="banner ok-soft">${icon('cal')}<span>${nAgendadas === 1 ? '1 clienta no aparece aquí porque ya tiene' : `${nAgendadas} clientas no aparecen aquí porque ya tienen`} hora agendada este mes. No necesitan reactivación.</span></div>` : ''}` : ''}
+    ${ui.f === 'reactivar' ? `<p class="small muted">Clientes que no han vuelto en más de ${DIAS_REACTIVAR} días. Toca WhatsApp para enviarles un mensaje ya escrito.${(() => { const sin = rs.filter((r) => !r.c.telefono).length; return sin ? ` ${sin === rs.length ? 'Ninguna tiene' : `${sin} no tienen`} teléfono guardado: toca <b>Agregar WhatsApp</b>, escribe su número y se abre el mensaje.` : ''; })()}</p>${nAgendadas ? `<div class="banner ok-soft">${icon('cal')}<span>${nAgendadas === 1 ? '1 clienta no aparece aquí porque ya tiene' : `${nAgendadas} clientas no aparecen aquí porque ya tienen`} hora agendada este mes. No necesitan reactivación.</span></div>` : ''}` : ''}
     <div class="list" id="lista-clientes">${rs.length ? rs.map((r) => `<div class="row click" data-act="ver-cliente" data-id="${r.c.id}">
         <div class="avatar">${esc(iniciales(r.c.nombre))}</div>
         <div class="grow"><div class="t">${esc(r.c.nombre)}</div><div class="s">${r.visitas} compras · ${r.ultima ? 'última ' + fechaCorta(r.ultima) : 'sin compras'}${ui.f === 'cumple' ? ' · cumple ' + fechaCorta('2000' + r.c.cumpleanos.slice(4)) : ''}</div></div>
         <div class="r"><div class="num"><b>${money(r.total)}</b></div>${estado(r)}</div>
-        ${r.c.telefono && (ui.f === 'reactivar' || ui.f === 'cumple') ? `<a class="btn sm" href="${waLink(r.c.telefono, ui.f === 'cumple' ? msgCumple(r.c) : msgReactivar(r.c, r.dias))}" target="_blank" rel="noopener" data-stop>${icon('chat')}WhatsApp</a>` : ''}
+        ${ui.f === 'reactivar' || ui.f === 'cumple' ? (r.c.telefono ? `<a class="btn sm btn-wa-sm" href="${waLink(r.c.telefono, ui.f === 'cumple' ? msgCumple(r.c) : msgReactivar(r.c, r.dias))}" target="_blank" rel="noopener" data-stop>${icon('chat')}WhatsApp</a>`
+          : `<button class="btn sm" data-act="cli-wa-tel" data-id="${r.c.id}" data-f="${ui.f}" data-d="${r.dias ?? ''}" title="Esta clienta no tiene teléfono guardado">${icon('chat')}Agregar WhatsApp</button>`) : ''}
       </div>`).join('') : '<div class="empty">No hay clientes que coincidan.</div>'}</div>
   </div>`;
 }
@@ -2624,7 +2788,7 @@ function itemsDelDia(f, emp = S.ui.agenda.emp) {
     out.push({ kind: 'cita', id: c.id, hora: hhmm(c.hora), titulo: cli(c.cliente_id)?.nombre || 'Cliente', sub: [s?.nombre, e?.nombre].filter(Boolean).join(' · '), estado: c.estado, ref: c, s, cl: cli(c.cliente_id) });
   }
   if (emp === 'todos') for (const ev of db.all('eventos')) {
-    if (ev.fecha !== f) continue; const cl = cli(ev.cliente_id);
+    if (ev.fecha !== f || ev.tipo === 'bloqueo') continue; const cl = cli(ev.cliente_id);
     out.push({ kind: ev.tipo, id: ev.id, hora: hhmm(ev.hora), titulo: ev.tipo === 'entrega' ? (cl?.nombre || ev.titulo || 'Entrega') : ev.titulo, sub: ev.tipo === 'entrega' ? [ev.titulo && cl ? ev.titulo : '', ev.direccion].filter(Boolean).join(' · ') : (ev.nota || ''), estado: ev.estado, ref: ev, cl });
   }
   return out.sort((a, b) => (a.hora || '99').localeCompare(b.hora || '99'));
@@ -2634,14 +2798,14 @@ const KIND = { cita: { label: 'Cita', cls: 'k-cita' }, entrega: { label: 'Entreg
 
 /* ---------- AGENDA ---------- */
 function vistaAgenda() {
-  const ui = S.ui.agenda; ui.fecha ||= hoy(); ui.vista ||= 'dia';
+  const ui = S.ui.agenda; ui.fecha ||= hoy(); ui.vista ||= esMovil() ? 'dia' : 'semana';
   const emps = db.all('empleados').filter((e) => e.activo !== false);
   const pend = db.all('citas').filter((c) => c.estado === 'solicitada' && c.fecha >= hoy()).sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora));
   let titulo, cuerpo, paso;
   if (ui.vista === 'mes') { titulo = nombreMes(mesDe(ui.fecha)); cuerpo = agendaMes(); paso = 'mes'; }
-  else if (ui.vista === 'semana') { const l = lunesDe(ui.fecha); titulo = `${fechaCorta(l)} al ${fechaCorta(addDays(l, 6))}`; cuerpo = agendaSemana(); paso = 7; }
+  else if (ui.vista === 'semana') { titulo = tituloCalendario(); cuerpo = agendaCalendario(); paso = esMovil() ? 3 : 7; }
   else { titulo = fechaLarga(ui.fecha); cuerpo = agendaDia(); paso = 1; }
-  return `${head('Agenda', esc(titulo), `<button class="btn pri" data-act="agendar">${icon('plus')}Agendar</button>`)}
+  return `${head('Agenda', esc(titulo), `<button class="btn" data-act="bloqueo-nuevo">${icon('lock')}<span class="solo-desk">Bloquear horario</span></button><button class="btn pri" data-act="agendar">${icon('plus')}Agendar</button>`)}
   ${pend.length ? `<div class="ag-pend-box ${ui.verPend ? 'on' : ''}"><button class="ag-pend" data-act="ag-pend" aria-expanded="${!!ui.verPend}"><span><b>${pend.length}</b> reserva${pend.length > 1 ? 's' : ''} por confirmar</span><span class="ag-pend-ver">${ui.verPend ? 'Ocultar' : 'Ver'}</span></button>
     ${ui.verPend ? `<div class="list">${pend.slice(0, 5).map((c) => { const cl = db.get('clientes', c.cliente_id); const s = db.get('servicios', c.servicio_id); return `<div class="row" style="flex-wrap:wrap"><div class="grow"><div class="t">${esc(cl?.nombre || 'Cliente')} · ${esc(s?.nombre || '')}</div><div class="s">${esc(fechaLarga(c.fecha))}, ${hhmm(c.hora)}${c.empleado_id ? ' · ' + esc(db.get('empleados', c.empleado_id)?.nombre || '') : ''}</div></div>
       <div class="hstack"><button class="btn sm" data-act="cita-estado" data-id="${c.id}" data-e="rechazada">Rechazar</button><button class="btn sm pri" data-act="confirmar-reserva" data-id="${c.id}">Confirmar</button></div></div>`; }).join('')}</div>` : ''}</div>` : ''}
@@ -2649,7 +2813,7 @@ function vistaAgenda() {
     <div class="between">
       <div class="hstack"><button class="btn icon-btn" data-act="ag-mover" data-d="-1" data-p="${paso}" aria-label="Anterior">${icon('left')}</button><button class="btn sm" data-act="ag-hoy">Hoy</button><button class="btn icon-btn" data-act="ag-mover" data-d="1" data-p="${paso}" aria-label="Siguiente">${icon('right')}</button>
         <input type="date" class="in ag-fecha-in" style="width:auto;min-height:34px;padding:4px 8px" data-change="ag-fecha" value="${ui.fecha}" aria-label="Ir a una fecha"></div>
-      <div class="seg">${[['dia', 'Día'], ['semana', 'Semana'], ['mes', 'Mes']].map(([k, v]) => `<button data-act="ag-vista" data-v="${k}" class="${ui.vista === k ? 'on' : ''}">${v}</button>`).join('')}</div>
+      <div class="seg">${[['dia', 'Día'], ['semana', esMovil() ? '3 días' : 'Semana'], ['mes', 'Mes']].map(([k, v]) => `<button data-act="ag-vista" data-v="${k}" class="${ui.vista === k ? 'on' : ''}">${v}</button>`).join('')}</div>
     </div>
     ${emps.length > 1 ? `<div class="chips scroll"><button class="chip ${ui.emp === 'todos' ? 'on' : ''}" data-act="ag-emp" data-e="todos">Todo</button>${emps.map((e) => `<button class="chip ${ui.emp === e.id ? 'on' : ''}" data-act="ag-emp" data-e="${e.id}">${esc(e.nombre.split(' ')[0])}</button>`).join('')}</div>` : ''}
   </div>
@@ -2663,6 +2827,8 @@ function agendaDia() {
   const cobrado = sum(db.all('ventas').filter((v) => v.fecha === ui.fecha), (v) => Number(v.total));
   return `<div class="chips scroll" aria-label="Días cercanos">${semana.map((f) => `<button class="chip ${f === ui.fecha ? 'on' : ''}" data-act="ag-set" data-f="${f}">${new Date(f + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric' })} · ${itemsDelDia(f).filter(enAgenda).length}</button>`).join('')}</div>
   <div class="card ag-dia-card"><div class="card-head"><h2>${items.filter(enAgenda).length} en agenda</h2><p class="num ag-cuentas"><span>Cobrado <b id="ag-cobrado">${money(cobrado)}</b></span>${esperado ? `<span>· ${money(esperado)} por cobrar</span>` : ''}</p></div>
+    ${bloqueosDel(ui.fecha).map((b) => `<button class="ag-bloq" data-act="bloqueo" data-id="${b.id}">${icon('lock')}<span><b>Bloqueado ${esc(textoBloqueo(b))}</b>${b.titulo && b.titulo !== 'Bloqueado' ? ` · ${esc(b.titulo)}` : ''}</span><small>Nadie puede reservar</small></button>`).join('')}
+    ${diaCerrado(ui.fecha) ? `<p class="small muted ag-cerrado">${icon('clock')}Según tu horario no atiendes este día. Igual puedes agendar.</p>` : ''}
     <div class="ag-lista">${items.length ? conRayaAhora(items, items.map(filaAgendaCorta)) : `<div class="empty">Página en blanco. Toca <b>Agendar</b> para anotar una hora, una entrega o un recordatorio.</div>`}</div></div>`;
 }
 
@@ -2714,7 +2880,7 @@ function agendaMes() {
     ${Array.from({ length: semanas * 7 }, (_, k) => {
       const f = addDays(ini, k); const items = itemsDelDia(f).filter(enAgenda); const fuera = mesDe(f) !== ym;
       const kinds = ['cita', 'entrega', 'tarea'].filter((x) => items.some((i) => i.kind === x));
-      return `<button class="month-cell ${fuera ? 'out' : ''} ${f === hoy() ? 'today' : ''}" data-act="ag-ir-dia" data-f="${f}" aria-label="${fechaLarga(f)}: ${items.length} en agenda">
+      return `<button class="month-cell ${fuera ? 'out' : ''} ${f === hoy() ? 'today' : ''} ${diaCerrado(f) ? 'cerrado' : ''} ${bloqueoTotal(f) ? 'bloq' : ''}" data-act="ag-ir-dia" data-f="${f}" aria-label="${fechaLarga(f)}: ${items.length} en agenda">
         <span class="month-num">${Number(f.slice(8))}</span>
         <span class="month-items">${items.slice(0, 3).map((i) => `<span class="m-item ${KIND[i.kind].cls}">${i.hora ? i.hora + ' ' : ''}${esc(i.titulo)}</span>`).join('')}${items.length > 3 ? `<span class="m-more">+${items.length - 3} más</span>` : ''}</span>
         ${items.length ? `<span class="month-dots">${kinds.map((x) => `<i class="${KIND[x].cls}"></i>`).join('')}<small>${items.length}</small></span>` : ''}
@@ -2728,8 +2894,9 @@ function elegirAgendar() {
     tiene('servicios') && ['cita', 'cal', 'Hora para un cliente', 'Un servicio con fecha, hora y quién atiende'],
     ['entrega', 'box', 'Entrega o pedido', 'Despacho o retiro con dirección y monto'],
     ['tarea', 'edit', 'Recordatorio', 'Pagar, comprar, llamar… lo que no se te puede olvidar'],
+    tiene('servicios') && ['bloqueo', 'lock', 'Bloquear horario', 'Almuerzo, trámite o vacaciones: nadie puede reservar en ese rato'],
   ].filter(Boolean);
-  abrirSheet('¿Qué quieres agendar?', `<div class="stack">${ops.map(([k, ic, t, d]) => `<button type="button" class="alert-row" style="border:0;width:100%;text-align:left;cursor:pointer" data-act="${k === 'cita' ? 'cita' : 'evento-nuevo'}" data-tipo="${k}">${icon(ic)}<div class="grow"><b>${t}</b><small>${d}</small></div>${icon('right')}</button>`).join('')}</div>`);
+  abrirSheet('¿Qué quieres agendar?', `<div class="stack">${ops.map(([k, ic, t, d]) => `<button type="button" class="alert-row" style="border:0;width:100%;text-align:left;cursor:pointer" data-act="${k === 'cita' ? 'cita' : k === 'bloqueo' ? 'bloqueo-nuevo' : 'evento-nuevo'}" data-tipo="${k}">${icon(ic)}<div class="grow"><b>${t}</b><small>${d}</small></div>${icon('right')}</button>`).join('')}</div>`);
 }
 
 function formCita(id, pre = {}) {
@@ -2743,6 +2910,7 @@ function formCita(id, pre = {}) {
     ${field('Servicio', `<select class="in" name="servicio_id" id="f-servicio_id">${servs.map((s) => opt(s.id, `${s.nombre} · ${money(s.precio)}`, c.servicio_id)).join('')}</select>`)}
     ${emps.length ? field('Atiende', `<select class="in" name="empleado_id" id="f-empleado_id">${opt('', 'Sin asignar', c.empleado_id)}${emps.map((e) => opt(e.id, e.nombre, c.empleado_id)).join('')}</select>`) : ''}
     <div class="form-row">${field('Fecha', input('fecha', c.fecha, 'type="date" required'))}${field('Hora', selHora('hora', hhmm(c.hora) || '10:00', { attrs: 'required' }))}</div>
+    <div class="banner warn-soft cita-aviso" id="cita-aviso" hidden></div>
     ${id ? field('Estado', `<select class="in" name="estado" id="f-estado">${Object.entries(ESTADOS_CITA).map(([k, [l]]) => opt(k, l, c.estado)).join('')}</select>`) : ''}
     ${field('Nota', input('nota', c.nota || '', 'placeholder="Opcional"'))}</div>`, {
     pie: `<div class="sheet-foot" style="justify-content:space-between">${id ? `<button type="button" class="btn danger" data-act="del-cita" data-id="${id}">Eliminar</button>` : '<span></span>'}<div class="hstack"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri">Guardar</button></div></div>`,
@@ -2759,6 +2927,7 @@ function formCita(id, pre = {}) {
       if (!id && cl?.telefono && autoOn('agendar')) avisarPorWhatsApp('Hora agendada', msg('agendada', { nombre: primerNombre(cl.nombre), servicio: sv?.nombre || 'atención', fecha: fechaLarga(row.fecha), hora: row.hora }), cl.telefono, cl.nombre);
     },
   });
+  avisoHorarioCita();
 }
 function cobrarCita(id) {
   const c = db.get('citas', id); const s = db.get('servicios', c.servicio_id);
@@ -3553,6 +3722,7 @@ function horasLibres({ horario, fecha, dur, ocupadas, empleados, empleadoId }) {
   for (let m = ini; m + dur <= fin; m += paso) {
     if (m < minimo) continue;
     const cruzan = ocupadas.filter((o) => m < aMin(o.hora) + Number(o.dur) && aMin(o.hora) < m + dur);
+    if (cruzan.some((o) => o.todos)) continue; // horario bloqueado por el negocio
     if (!ids.length) { if (!cruzan.length) out.push({ hora: deMin(m), empleado_id: null }); continue; }
     // cada hora sin persona asignada ocupa a alguien del equipo
     const sinAsignar = cruzan.filter((o) => o.empleado_id == null).length;
@@ -3570,13 +3740,14 @@ const ReservaLocal = {
   async info() {
     if (!S.negocio) throw new Error('Negocio no encontrado');
     return { negocio: { nombre: S.negocio.nombre, telefono: S.negocio.telefono || '' }, horario: horarioDe(S.negocio),
-      perfil: { direccion: cfg().direccion || '', maps_url: cfg().maps_url || '', resenas_url: cfg().resenas_url || '', fotos: cfg().fotos || [] },
+      perfil: { logo: cfg().logo || '', direccion: cfg().direccion || '', maps_url: cfg().maps_url || '', resenas_url: cfg().resenas_url || '', fotos: cfg().fotos || [] },
       config: { abono: cfg().abono || null, mensajes: { abono: plantilla('abono'), comprobante: plantilla('comprobante') }, auto_abono: autoOn('abono') },
       servicios: db.all('servicios').filter((s) => s.activo !== false).map(({ id, nombre, duracion_min, precio }) => ({ id, nombre, duracion_min, precio })),
       empleados: db.all('empleados').filter((e) => e.activo !== false).map((e) => ({ id: e.id, nombre: e.nombre.split(' ')[0] })) };
   },
   async ocupadas(fecha) {
-    return db.all('citas').filter((c) => c.fecha === fecha && !INACTIVOS.includes(c.estado)).map((c) => ({ hora: hhmm(c.hora), dur: Number(db.get('servicios', c.servicio_id)?.duracion_min || 60), empleado_id: c.empleado_id }));
+    return [...db.all('citas').filter((c) => c.fecha === fecha && !INACTIVOS.includes(c.estado)).map((c) => ({ hora: hhmm(c.hora), dur: Number(db.get('servicios', c.servicio_id)?.duracion_min || 60), empleado_id: c.empleado_id })),
+      ...bloqueosDel(fecha).map((b) => ({ hora: b.hora ? hhmm(b.hora) : '00:00', dur: rangoBloqueo(b)[1] - rangoBloqueo(b)[0], empleado_id: null, todos: true }))];
   },
   async reservar(r) {
     const tel = telLimpio(r.telefono);
@@ -3613,12 +3784,12 @@ async function pubCargarHoras() {
 }
 
 function vistaReserva() {
-  const p = S.pub; const marca = `<div class="brand">${MARCA}<b>${esc(p.info?.negocio?.nombre || 'Reservas')}</b></div>`;
-  const barra = p.preview ? `<div class="banner" style="margin-bottom:16px"><span><b>Vista previa.</b> Así ven tus clientes tu página de reservas. Lo que reserves aquí llega a tu agenda.</span><button class="btn sm" data-act="pub-salir">Volver a MiDerno</button></div>` : '';
-  const pie = `<p class="small muted" style="text-align:center;margin-top:26px">Reservas con <b>MiDerno</b></p>`;
-  const marco = (c) => `<div class="pub">${barra}${marca}${c}${pie}</div>`;
-  if (p.cargando) return marco('<div class="empty">Cargando…</div>');
-  if (p.error) return marco(`<div class="card"><h2>No encontramos esta página</h2><p class="muted" style="margin-top:6px">${esc(p.error)}</p></div>`);
+  const p = S.pub; const neg = p.info?.negocio; const pf = p.info?.perfil || {};
+  const barra = p.preview ? `<div class="pub-preview"><span>${icon('ojo')}<b>Vista previa.</b> Así ven tus clientas tu página. Lo que reserves aquí llega a tu agenda.</span><button class="btn sm" data-act="pub-salir">Salir de la vista previa</button></div>` : '';
+  const pie = `<p class="pub-pie">Reservas con MiDerno</p>`;
+  const marco = (c, cab = true) => `${barra}<div class="pub">${cab && neg ? portadaNegocio(neg, pf) : ''}${c}${pie}</div>`;
+  if (p.cargando) return marco(`<div class="pub-esqueleto" aria-label="Cargando"><i class="sk sk-portada"></i><i class="sk sk-titulo"></i><i class="sk sk-linea"></i><div class="sk-grid"><i class="sk"></i><i class="sk"></i><i class="sk"></i><i class="sk"></i></div></div>`, false);
+  if (p.error) return marco(`<div class="card"><h2>No encontramos esta página</h2><p class="muted" style="margin-top:6px">${esc(p.error)}</p></div>`, false);
   const { info } = p; const fmtP = (v) => '$' + Math.round(v).toLocaleString('es-CL');
   if (p.enviado) {
     const tel = info.negocio.telefono; const c = info.config || {};
@@ -3632,10 +3803,11 @@ function vistaReserva() {
         <p style="white-space:pre-line">${esc(textoAbono)}</p>
         <div class="hstack"><button class="btn sm" data-act="pub-copiar" data-t="${esc(c.abono.datos)}">Copiar datos de transferencia</button></div></div>` : ''}
       ${p.compEnviado ? `<div class="banner ok-soft">${icon('ok')}<span>¡Gracias! Cuando ${esc(info.negocio.nombre)} confirme tu hora te llegará un WhatsApp.</span></div>` : ''}
-      ${tel ? `<a class="btn ${conAbono && !p.compEnviado ? 'pri' : ''}" data-act="pub-comp" target="_blank" rel="noopener" href="${waLink(tel, conAbono ? textoComp : `Hola, acabo de reservar ${p.servicio.nombre} el ${fechaLarga(p.fecha)} a las ${p.hora.hora}. Soy ${p.datos.nombre}.`)}">${icon('chat')}${conAbono ? 'Enviar comprobante por WhatsApp' : 'Escribir a ' + esc(info.negocio.nombre)}</a><p class="small muted">Teléfono: <span class="num">${esc(tel)}</span></p>` : ''}
+      ${tel ? `<a class="btn btn-wa block" data-act="pub-comp" target="_blank" rel="noopener" href="${waLink(tel, conAbono ? textoComp : `Hola, acabo de reservar ${p.servicio.nombre} el ${fechaLarga(p.fecha)} a las ${p.hora.hora}. Soy ${p.datos.nombre}.`)}">${icon('chat')}${conAbono ? 'Enviar comprobante por WhatsApp' : 'Avisar por WhatsApp a ' + esc(info.negocio.nombre)}</a>`
+        : p.preview ? `<div class="banner warn-soft">${icon('chat')}<span><b>Aquí tus clientas verían el botón para escribirte por WhatsApp</b>, pero falta el WhatsApp de tu negocio. Agrégalo en Ajustes → Reservas.<br><button class="btn sm" data-act="pub-ir-reservas" style="margin-top:8px">Agregar mi WhatsApp</button></span></div>` : ''}
       ${botonesCalendario(p, info)}
       ${info.perfil?.direccion ? `<p class="small">Te esperamos en <a target="_blank" rel="noopener" href="${esc(linkMapa(info.perfil))}">${esc(info.perfil.direccion)}</a></p>` : ''}
-      <div class="pub-fin">${p.preview ? `<button class="btn ${p.compEnviado || !conAbono ? 'pri' : ''}" data-act="pub-salir">${icon('left')}Volver a la agenda</button>` : `<button class="btn ${p.compEnviado || !conAbono ? 'pri' : ''}" data-act="pub-otra">${icon('left')}Listo, volver al inicio</button>`}${p.preview ? '<button class="btn ghost" data-act="pub-otra">Reservar otra hora</button>' : ''}</div></div>`);
+      <div class="pub-fin"><button class="btn ghost" data-act="pub-otra">Reservar otra hora</button></div></div>`);
   }
   const pasos = [];
   // 1. servicio
@@ -3647,7 +3819,7 @@ function vistaReserva() {
     const dias = Array.from({ length: 21 }, (_, i) => addDays(hoy(), i));
     if (!(info.empleados.length > 1 && !p.empleado)) pasos.push(`<section class="card stack"><h2><span class="pub-n">${info.empleados.length > 1 ? 3 : 2}</span>Elige día y hora</h2>
       <div class="chips scroll">${dias.map((f) => { const abierto = info.horario.dias.includes(new Date(f + 'T12:00:00').getDay()); return `<button class="pub-day ${p.fecha === f ? 'on' : ''}" data-act="pub-dia" data-f="${f}" ${abierto ? '' : 'disabled'}><small>${new Date(f + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'short' })}</small><b>${Number(f.slice(8))}</b><small>${new Date(f + 'T12:00:00').toLocaleDateString('es-CL', { month: 'short' })}</small></button>`; }).join('')}</div>
-      ${p.fecha ? (p.horas == null ? '<div class="empty">Buscando horas libres…</div>' : p.horas.length ? `<div class="pub-horas ${p._horasNuevas ? 'aparecen' : ''}">${p.horas.map((h, i) => `<button class="pub-hora ${p.hora?.hora === h.hora ? 'on' : ''}" style="--i:${i}" data-act="pub-hora" data-i="${i}">${h.hora}</button>`).join('')}</div>` : '<div class="empty">No quedan horas libres este día. Prueba otro.</div>') : '<p class="small muted">Toca un día para ver las horas libres.</p>'}</section>`);
+      ${p.fecha ? (p.horas == null ? `<div class="pub-horas" aria-label="Buscando horas libres">${'<i class="sk sk-hora"></i>'.repeat(8)}</div>` : p.horas.length ? `<div class="pub-horas ${p._horasNuevas ? 'aparecen' : ''}">${p.horas.map((h, i) => `<button class="pub-hora ${p.hora?.hora === h.hora ? 'on' : ''}" style="--i:${i}" data-act="pub-hora" data-i="${i}">${h.hora}</button>`).join('')}</div>` : '<div class="empty">No quedan horas libres este día. Prueba otro.</div>') : '<p class="small muted">Toca un día para ver las horas libres.</p>'}</section>`);
   }
   if (p.hora) pasos.push(`<section class="card stack"><h2><span class="pub-n">${info.empleados.length > 1 ? 4 : 3}</span>Tus datos</h2>
     <form class="form" id="form-reserva">
@@ -3657,7 +3829,7 @@ function vistaReserva() {
       <div class="pub-resumen"><span>${esc(p.servicio.nombre)} · ${esc(fechaLarga(p.fecha))}, ${p.hora.hora}</span><b class="num">${fmtP(p.servicio.precio)}</b></div>
       <button class="btn pri block" ${p.enviando ? 'disabled' : ''}>${p.enviando ? 'Enviando…' : 'Reservar hora'}</button>
     </form></section>`);
-  return marco(`${cabeceraNegocio(info.perfil)}<p class="muted" style="margin:-4px 0 4px">Reserva tu hora en línea. Te confirmamos por WhatsApp.</p>${pasos.join('')}`);
+  return marco(`${cabeceraNegocio(info.perfil)}${pasos.join('')}`);
 }
 async function pubEnviar(d) {
   const p = S.pub;
@@ -3672,6 +3844,14 @@ async function pubEnviar(d) {
     p.enviado = true;
   } catch (e) { toast('No se pudo reservar: ' + (e.message || e), true); }
   p.enviando = false; window.scrollTo(0, 0); render();
+}
+
+// Portada de la página pública: foto, logo y nombre del negocio (sin marca de MiDerno)
+function portadaNegocio(neg, pf) {
+  const portada = (pf.fotos || []).filter(Boolean)[0];
+  const logo = pf.logo ? `<img class="pub-logo" src="${pf.logo}" alt="Logo de ${esc(neg.nombre)}">` : `<span class="pub-logo pub-ini" aria-hidden="true">${esc(iniciales(neg.nombre))}</span>`;
+  return `<header class="pub-cab ${portada ? 'con-foto' : ''}">${portada ? `<div class="pub-portada"><img src="${portada}" alt="Foto de ${esc(neg.nombre)}"></div>` : ''}
+    <div class="pub-ident">${logo}<div><h1>${esc(neg.nombre)}</h1><p>Reserva tu hora en línea. Te confirmamos por WhatsApp.</p></div></div></header>`;
 }
 
 /* ---------- configuración en Ajustes ---------- */
@@ -3689,7 +3869,8 @@ function tarjetaReservas() {
         <div class="dias-horario">${DIAS_SEMANA.map(([d, l]) => { const on = h.dias.includes(d); const hd = { desde: h.porDia?.[d]?.desde || h.desde, hasta: h.porDia?.[d]?.hasta || h.hasta };
           return `<div class="dh-row ${on ? '' : 'off'}"><label class="toggle" aria-label="Abierto el ${l}"><input type="checkbox" name="dia" value="${d}" ${on ? 'checked' : ''} data-change="dh-dia"><span></span></label><b>${l}</b>
             ${selHora('desde_' + d, hd.desde, { id: 'f-desde_' + d, desde: '05:00', hasta: '23:00', attrs: `aria-label="${l}: abre"` })}<span class="muted small">a</span>${selHora('hasta_' + d, hd.hasta, { id: 'f-hasta_' + d, desde: '06:00', hasta: '23:50', attrs: `aria-label="${l}: cierra"` })}<span class="dh-cerrado small muted">Cerrado</span></div>`; }).join('')}</div></div>
-      <div class="form-row">${field('Mostrar horas cada', `<select class="in" name="intervalo" id="f-intervalo">${[10, 15, 20, 30, 60].map((m) => opt(m, m + ' minutos', h.intervalo)).join('')}</select>`)}${field('WhatsApp del negocio', telInput('telefono', n.telefono || ''), 'Aparece al cliente después de reservar')}</div>
+      <div class="form-row">${field('Mostrar horas cada', `<select class="in" name="intervalo" id="f-intervalo">${[10, 15, 20, 30, 60].map((m) => opt(m, m + ' minutos', h.intervalo)).join('')}</select>`)}${field('WhatsApp del negocio', telInput('telefono', n.telefono || ''), n.telefono ? 'Después de reservar, tu clienta te avisa con un toque.' : '<b style="color:var(--warn)">Agrégalo:</b> sin él tus clientas no pueden avisarte por WhatsApp al reservar.')}</div>
+      <p class="small"><a href="#" data-act="ir-perfil">${icon('upload')} Logo y fotos de tu página</a></p>
       ${field('Dirección de tu página', `<div class="hstack" style="flex-wrap:nowrap"><span class="muted small" style="white-space:nowrap">?reservar=</span>${input('slug', n.slug || slugDe(n.nombre), 'pattern="[a-z0-9-]+" placeholder="mi-negocio"')}</div>`, 'Solo minúsculas, números y guiones.')}
       <div class="hstack"><button class="btn pri">Guardar horario</button><button type="button" class="btn" data-act="pub-preview">Ver mi página</button></div>
     </form>
@@ -3719,7 +3900,7 @@ const enArtifact = () => /claude\.ai|claudeusercontent/.test(location.hostname) 
 const linkMapa = (pf) => pf.maps_url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(pf.direccion)}`;
 function cabeceraNegocio(pf) {
   if (!pf) return '';
-  const fotos = (pf.fotos || []).filter(Boolean);
+  const fotos = (pf.fotos || []).filter(Boolean).slice(1);
   return `${fotos.length ? `<div class="pub-fotos">${fotos.map((f, i) => `<img src="${f}" alt="Foto ${i + 1} del negocio" loading="lazy">`).join('')}</div>` : ''}
     ${pf.direccion || pf.maps_url ? `<div class="pub-lugar">
       ${pf.direccion ? `<div class="small">${esc(pf.direccion)}</div>` : ''}
@@ -4033,7 +4214,7 @@ function abonoDe(precio, c = cfg()) {
 /* ---------- AJUSTES (con pestañas) ---------- */
 function vistaAjustes() {
   S.ui.ajustes ||= { tab: 'general' };
-  const tabs = [['general', 'General'], ['sistema', t_('sistema')], ['perfil', 'Perfil y reseñas'], ['mensajes', 'Mensajes'], ['listas', 'Categorías y listas'], ...(tiene('servicios') ? [['reservas', 'Reservas']] : [])];
+  const tabs = [['general', 'General'], ['sistema', t_('sistema')], ['perfil', 'Logo, fotos y reseñas'], ['mensajes', 'Mensajes'], ['listas', 'Categorías y listas'], ...(tiene('servicios') ? [['reservas', 'Reservas']] : [])];
   if (!tabs.some(([k]) => k === S.ui.ajustes.tab)) S.ui.ajustes.tab = 'general';
   const t = S.ui.ajustes.tab;
   const cuerpo = t === 'sistema' ? ajustesSistema() : t === 'perfil' ? ajustesPerfil() : t === 'mensajes' ? ajustesMensajes() : t === 'listas' ? ajustesListas() : t === 'reservas' ? ajustesReservas() : ajustesGeneral();
@@ -4109,7 +4290,11 @@ function ajustesPerfil() {
       <button class="btn pri" style="align-self:flex-start">Guardar</button>
       ${c.resenas_url ? `<a class="small" target="_blank" rel="noopener" href="${esc(c.resenas_url)}">Probar mi link de reseñas</a>` : ''}
     </form>
-    <div class="card stack"><h2>Fotos de tu negocio</h2><p class="small muted">Hasta 6. Se muestran arriba en tu página de reservas: tu local, tus trabajos, tus productos.</p>
+    <div class="card stack"><h2>Logo y fotos</h2><p class="small muted">Se muestran en tu página de reservas, para que tus clientas reconozcan tu negocio.</p>
+      <div class="logo-fila">${c.logo ? `<img class="logo-prev" src="${c.logo}" alt="Logo de ${esc(S.negocio.nombre)}">` : `<span class="logo-prev logo-ini">${esc(iniciales(S.negocio.nombre))}</span>`}
+        <div class="stack" style="gap:6px"><b>Tu logo</b><span class="small muted">Cuadrado o redondo se ve mejor.</span>
+        <div class="hstack"><label class="btn sm" for="f-logo">${icon('upload')}${c.logo ? 'Cambiar' : 'Subir logo'}<input type="file" id="f-logo" accept="image/*" hidden data-change="logo"></label>${c.logo ? '<button type="button" class="btn sm ghost" data-act="logo-del">Quitar</button>' : ''}</div></div></div>
+      <b style="margin-top:6px">Fotos de tu local y tus trabajos</b><p class="small muted" style="margin-top:-8px">Hasta 6. La primera queda de portada.</p>
       <div class="fotos">${fotos.map((f, i) => `<div class="foto"><img src="${f}" alt="Foto ${i + 1} del negocio"><button type="button" class="btn icon-btn" data-act="foto-del" data-i="${i}" aria-label="Quitar foto">${icon('x')}</button></div>`).join('')}
         ${fotos.length < 6 ? `<label class="foto foto-add" for="f-fotos">${icon('plus')}<span class="small">Agregar</span><input type="file" id="f-fotos" accept="image/*" multiple hidden data-change="fotos"></label>` : ''}</div></div>
   </div>`;
@@ -4121,6 +4306,18 @@ function achicarFoto(file, max = 900) {
     img.onload = () => { const k = Math.min(1, max / Math.max(img.width, img.height)); const cv = document.createElement('canvas'); cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k); cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height); URL.revokeObjectURL(url); ok(cv.toDataURL('image/jpeg', 0.72)); };
     img.onerror = () => fail(new Error('No pudimos leer esa imagen')); img.src = url;
   });
+}
+// logo: cuadrado, PNG para respetar fondos transparentes
+function achicarLogo(file, lado = 320) {
+  return new Promise((ok, fail) => {
+    const img = new Image(); const url = URL.createObjectURL(file);
+    img.onload = () => { const k = Math.min(1, lado / Math.max(img.width, img.height)); const cv = document.createElement('canvas'); cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k); cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height); URL.revokeObjectURL(url); const png = cv.toDataURL('image/png'); ok(png.length > 180000 ? cv.toDataURL('image/jpeg', 0.85) : png); };
+    img.onerror = () => fail(new Error('No pudimos leer esa imagen')); img.src = url;
+  });
+}
+async function subirLogo(files) {
+  const f = files?.[0]; if (!f) return;
+  try { guardarConfig({ logo: await achicarLogo(f) }); toast('Logo guardado'); render(); } catch (e) { toast(e.message, true); }
 }
 async function agregarFotos(files) {
   const nuevas = [];
@@ -4564,7 +4761,9 @@ function animarCifras(raiz = document) {
 }
 
 // Cambio de pantalla suave donde el navegador lo permite (View Transitions)
+// (v24) Se pinta directo: la pantalla nueva aparece al tiro y su contenido entra suave con .entra
 function conTransicion(fn) {
+  return fn();
   if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches || navigator.webdriver) return fn();
   try { document.startViewTransition(fn); } catch { fn(); }
 }
@@ -5134,6 +5333,198 @@ function detalleIndicadores(ym) {
 const ultimaCompra = (id) => db.all('ventas').filter((v) => v.cliente_id === id).reduce((m, v) => (v.fecha > m ? v.fecha : m), '');
 Object.assign(ACC_COBRO, { 'ind-ver': (el) => detalleIndicadores(el.dataset.ym || mesActual()) });
 
+Object.assign(ACC_COBRO, { 'logo-del': () => { guardarConfig({ logo: '' }); toast('Logo quitado'); render(); } });
+Object.assign(CAMB_COBRO, { logo: (el) => subirLogo(el.files) });
+Object.assign(ACC_COBRO, {
+  'pub-ir-reservas': () => { S.pub = null; S.ui.ajustes = { tab: 'reservas' }; ir('ajustes'); despues(() => $('#form-reservas [name=telefono]')?.focus()); },
+  'ir-perfil': () => { S.ui.ajustes = { tab: 'perfil' }; ir('ajustes'); render(); },
+});
+// clienta sin teléfono en "Por reactivar" o "Cumpleaños": se agrega el número y se abre WhatsApp con el mensaje listo
+Object.assign(ACC_COBRO, {
+  'cli-wa-tel': (el) => {
+    const c = db.get('clientes', el.dataset.id); if (!c) return; const f = el.dataset.f; const dias = +el.dataset.d || 0;
+    abrirSheet(`WhatsApp de ${esc(primerNombre(c.nombre))}`, `<p class="small muted" style="margin-top:-6px">Queda guardado en su ficha y se abre WhatsApp con el mensaje ya escrito.</p>${field('Número', telInput('telefono', '', { req: true }))}`, {
+      pie: `<div class="sheet-foot"><button type="button" class="btn" data-close>Cancelar</button><button class="btn btn-wa" type="submit">${icon('chat')}Guardar y abrir WhatsApp</button></div>`,
+      submit: (d) => {
+        if (telLimpio(d.telefono || '').length < 8) return errorCampo('#f-telefono', 'Escribe un número válido');
+        db.update('clientes', c.id, { telefono: d.telefono.trim() }); const cc = db.get('clientes', c.id);
+        window.open(waLink(cc.telefono, f === 'cumple' ? msgCumple(cc) : msgReactivar(cc, dias)), '_blank', 'noopener');
+        cerrarSheet(); toast('Teléfono guardado'); render();
+      },
+    });
+  },
+});
+
+/* =========================================================
+   Calendario por horas + horarios bloqueados
+   - La vista "Semana" muestra cada día como una columna con sus horas:
+     citas, reservas por confirmar, entregas y bloqueos en su lugar.
+   - Tocar un espacio vacío permite agendar ahí o bloquear ese horario.
+   - Fuera del horario de atención se ve sombreado, pero igual se puede
+     agendar (el dueño manda; solo la página pública respeta el horario).
+   ========================================================= */
+
+const MIN_PX = 1.1; // alto de un minuto en el calendario
+const bloqueosDel = (f) => db.all('eventos').filter((e) => e.tipo === 'bloqueo' && e.fecha === f && e.estado !== 'cancelada');
+// [inicio, fin] en minutos; sin hora = todo el día
+const rangoBloqueo = (b) => (b.hora ? [aMin(b.hora), b.hasta ? aMin(b.hasta) : aMin(b.hora) + 60] : [0, 24 * 60]);
+const textoBloqueo = (b) => (b.hora ? `${hhmm(b.hora)}–${b.hasta ? hhmm(b.hasta) : ''}` : 'Todo el día');
+const diaCerrado = (f) => !horarioDia(horarioDe(S.negocio), new Date(f + 'T12:00:00').getDay());
+const bloqueoTotal = (f) => bloqueosDel(f).some((b) => !b.hora);
+
+function duracionItem(i) {
+  if (i.kind === 'cita') return Number(i.s?.duracion_min || 60);
+  return 30;
+}
+// reparte en carriles los que se cruzan, para que no queden uno encima del otro
+function carriles(items) {
+  const orden = [...items].sort((a, b) => a.ini - b.ini || b.fin - a.fin); let grupo = []; let finGrupo = -1;
+  const cerrar = () => { const n = Math.max(...grupo.map((x) => x.carril)) + 1; grupo.forEach((x) => { x.de = n; }); grupo = []; };
+  for (const it of orden) {
+    if (grupo.length && it.ini >= finGrupo) cerrar();
+    const usados = grupo.filter((x) => x.fin > it.ini).map((x) => x.carril);
+    let c = 0; while (usados.includes(c)) c++;
+    it.carril = c; grupo.push(it); finGrupo = Math.max(finGrupo, it.fin);
+  }
+  if (grupo.length) cerrar();
+  return orden;
+}
+
+function diasCalendario() {
+  const ui = S.ui.agenda;
+  if (esMovil()) return Array.from({ length: 3 }, (_, k) => addDays(ui.fecha, k));
+  const l = lunesDe(ui.fecha); return Array.from({ length: 7 }, (_, k) => addDays(l, k));
+}
+function tituloCalendario() {
+  const d = diasCalendario(); return `${fechaCorta(d[0])} al ${fechaCorta(d.at(-1))}`;
+}
+
+function agendaCalendario() {
+  const h = horarioDe(S.negocio); const dias = diasCalendario();
+  // rango visible: el horario de atención más amplio y cualquier cosa agendada fuera de él
+  let ini = 24 * 60, fin = 0;
+  for (const f of dias) {
+    const hd = horarioDia(h, new Date(f + 'T12:00:00').getDay()); if (hd) { ini = Math.min(ini, aMin(hd.desde)); fin = Math.max(fin, aMin(hd.hasta)); }
+    for (const i of itemsDelDia(f).filter(enAgenda)) if (i.hora) { const m = aMin(i.hora); ini = Math.min(ini, m); fin = Math.max(fin, m + duracionItem(i)); }
+    for (const b of bloqueosDel(f)) if (b.hora) { const [a, z] = rangoBloqueo(b); ini = Math.min(ini, a); fin = Math.max(fin, z); }
+  }
+  if (fin <= ini) { ini = 9 * 60; fin = 20 * 60; }
+  ini = Math.max(0, Math.floor(ini / 60) * 60 - 60); fin = Math.min(24 * 60, Math.ceil(fin / 60) * 60 + 60);
+  const alto = (fin - ini) * MIN_PX; const y = (m) => (m - ini) * MIN_PX;
+  const horas = []; for (let m = ini; m < fin; m += 60) horas.push(m);
+  const ahora = new Date(); const minAhora = ahora.getHours() * 60 + ahora.getMinutes();
+
+  const col = (f) => {
+    const dow = new Date(f + 'T12:00:00').getDay(); const hd = horarioDia(h, dow);
+    const items = itemsDelDia(f).filter(enAgenda);
+    const sinHora = items.filter((i) => !i.hora);
+    const conHora = carriles(items.filter((i) => i.hora).map((i) => { const a = aMin(i.hora); return { i, ini: a, fin: a + duracionItem(i) }; }));
+    const bloq = bloqueosDel(f);
+    // zonas sombreadas fuera del horario
+    const sombras = hd ? [[ini, aMin(hd.desde)], [aMin(hd.hasta), fin]].filter(([a, z]) => z > a) : [[ini, fin]];
+    return `<div class="cal-col ${f === hoy() ? 'hoy' : ''} ${hd ? '' : 'cerrado'}" data-f="${f}" data-ini="${ini}" style="height:${alto}px">
+      ${sombras.map(([a, z]) => `<div class="cal-fuera" style="top:${y(a)}px;height:${(z - a) * MIN_PX}px"></div>`).join('')}
+      ${bloq.map((b) => { const [a, z] = rangoBloqueo(b); const ta = Math.max(a, ini), tz = Math.min(z, fin); return tz > ta ? `<button class="cal-bloq" data-act="bloqueo" data-id="${b.id}" style="top:${y(ta)}px;height:${(tz - ta) * MIN_PX}px"><b>Bloqueado</b><small>${esc(b.titulo && b.titulo !== 'Bloqueado' ? b.titulo : textoBloqueo(b))}</small></button>` : ''; }).join('')}
+      ${conHora.map(({ i, ini: a, fin: z, carril, de }) => {
+        const [est] = (i.kind === 'cita' ? ESTADOS_CITA : ESTADOS_EV)[i.estado] || [''];
+        const corto = (z - a) * MIN_PX < 52;
+        return `<button class="cal-ev ${KIND[i.kind].cls} ${i.estado === 'solicitada' ? 'req' : ''} ${['completada', 'entregada', 'hecha'].includes(i.estado) ? 'hecho' : ''} ${corto ? 'corto' : ''}" data-act="ag-detalle" data-id="${i.id}" data-kind="${i.kind}"
+          style="top:${y(a)}px;height:${Math.max(22, (z - a) * MIN_PX - 2)}px;left:calc(${(carril / de) * 100}% + 2px);width:calc(${100 / de}% - 4px)" title="${esc(`${i.hora} ${i.titulo} · ${i.sub} · ${est}`)}">
+          <span class="cal-h num">${i.hora}</span><b>${esc(i.titulo)}</b>${corto ? '' : `<small>${esc(i.kind === 'cita' ? i.s?.nombre || '' : i.sub)}</small>`}${i.estado === 'solicitada' ? '<em>Por confirmar</em>' : ''}</button>`;
+      }).join('')}
+      ${f === hoy() && minAhora >= ini && minAhora <= fin ? `<div class="cal-ahora" style="top:${y(minAhora)}px"></div>` : ''}
+    </div>${sinHora.length ? '' : ''}`;
+  };
+
+  const cab = dias.map((f) => {
+    const d = new Date(f + 'T12:00:00'); const sinHora = itemsDelDia(f).filter(enAgenda).filter((i) => !i.hora);
+    return `<div class="cal-cab ${f === hoy() ? 'hoy' : ''}"><button class="cal-dia" data-act="ag-ir-dia" data-f="${f}"><span>${d.toLocaleDateString('es-CL', { weekday: 'short' })}</span><b>${d.getDate()}</b></button>
+      ${diaCerrado(f) ? '<small class="cal-nota">Cerrado</small>' : bloqueoTotal(f) ? '<small class="cal-nota">Bloqueado</small>' : ''}
+      ${sinHora.map((i) => `<button class="cal-todo ${KIND[i.kind].cls}" data-act="ag-detalle" data-id="${i.id}" data-kind="${i.kind}">${esc(i.titulo)}</button>`).join('')}</div>`;
+  }).join('');
+
+  return `<div class="card cal-card"><div class="cal" style="--dias:${dias.length}">
+    <div class="cal-esq"></div>${cab}
+    <div class="cal-horas" style="height:${alto}px">${horas.map((m) => `<span style="top:${y(m)}px">${deMin(m)}</span>`).join('')}</div>
+    ${dias.map(col).join('')}
+  </div>
+  <div class="legend cal-ley"><span><i class="ley-conf"></i>Agendada</span><span><i class="ley-req"></i>Por confirmar</span><span><i class="ley-bloq"></i>Bloqueado</span><span><i class="ley-fuera"></i>Fuera de tu horario</span><span class="muted">Toca un espacio libre para agendar o bloquear</span></div></div>`;
+}
+
+// tocar un espacio libre del calendario
+document.addEventListener('click', (e) => {
+  const c = e.target.closest?.('.cal-col'); if (!c || e.target.closest('button')) return;
+  const r = c.getBoundingClientRect(); const paso = 10;
+  const m = Math.floor(((e.clientY - r.top) / MIN_PX + Number(c.dataset.ini)) / paso) * paso;
+  elegirEnHueco(c.dataset.f, deMin(Math.max(0, Math.min(m, 23 * 60 + 50))));
+});
+function elegirEnHueco(f, hora) {
+  const h = horarioDe(S.negocio); const hd = horarioDia(h, new Date(f + 'T12:00:00').getDay());
+  const fuera = !hd || aMin(hora) < aMin(hd.desde) || aMin(hora) >= aMin(hd.hasta);
+  const bq = bloqueosDel(f).find((b) => { const [a, z] = rangoBloqueo(b); return aMin(hora) >= a && aMin(hora) < z; });
+  const ops = [
+    tiene('servicios') && ['cita', 'cal', 'Agendar una hora aquí', fuera ? 'Para una clienta, aunque sea fuera de tu horario' : 'Para una clienta, con servicio y quién atiende'],
+    ['bloqueo-aqui', 'lock', 'Bloquear este horario', 'Nadie podrá reservar en tu página a esta hora'],
+    ['tarea', 'edit', 'Recordatorio', 'Algo que tienes que hacer a esta hora'],
+  ].filter(Boolean);
+  abrirSheet(`${fechaLarga(f)}, ${hora}`, `${fuera ? `<div class="banner warn-soft">${icon('clock')}<span>${hd ? `Atiendes de ${hd.desde} a ${hd.hasta}.` : 'Este día no atiendes según tu horario de reservas.'} Tú puedes agendar igual; tu página pública no lo ofrece.</span></div>` : ''}
+    ${bq ? `<div class="banner">${icon('lock')}<span>Este horario está bloqueado (${esc(textoBloqueo(bq))}). Puedes agendar igual o <a href="#" data-act="bloqueo" data-id="${bq.id}">editar el bloqueo</a>.</span></div>` : ''}
+    <div class="stack">${ops.map(([k, ic, t, d]) => `<button type="button" class="alert-row hueco-op" data-act="hueco" data-k="${k}" data-f="${f}" data-h="${hora}">${icon(ic)}<div class="grow"><b>${t}</b><small>${d}</small></div>${icon('right')}</button>`).join('')}</div>`);
+}
+
+/* ---------- bloquear horarios ---------- */
+function formBloqueo(id, pre = {}) {
+  const b = id ? db.get('eventos', id) : { fecha: pre.fecha || S.ui.agenda.fecha || hoy(), hora: pre.hora || '13:00', hasta: pre.hasta || '', titulo: '', ...pre };
+  const todo = id ? !b.hora : !!pre.todo;
+  const hasta = b.hasta ? hhmm(b.hasta) : deMin(Math.min(aMin(hhmm(b.hora) || '13:00') + 60, 23 * 60 + 50));
+  abrirSheet(id ? 'Editar bloqueo' : 'Bloquear horario', `<p class="small muted" style="margin-top:-6px">En ese horario tu página de reservas no ofrece horas. Tú igual puedes agendar si lo necesitas.</p>
+    ${field('Motivo', `<input class="in" name="titulo" id="f-bq-titulo" value="${esc(b.titulo && b.titulo !== 'Bloqueado' ? b.titulo : '')}" placeholder="Almuerzo, trámite, vacaciones… (opcional)">`)}
+    <div class="form-row">${field('Fecha', `<input class="in" type="date" name="fecha" id="f-bq-fecha" value="${b.fecha}" required>`)}${id ? '<span></span>' : field('Repetir hasta', `<input class="in" type="date" name="repetir" id="f-bq-rep" min="${b.fecha}">`, 'Opcional. Para vacaciones o varios días seguidos.')}</div>
+    <label class="hstack" style="gap:10px"><span class="toggle"><input type="checkbox" name="todo" id="f-bq-todo" ${todo ? 'checked' : ''} data-change="bq-todo"><span></span></span><span>Todo el día</span></label>
+    <div class="form-row bq-horas" ${todo ? 'hidden' : ''}>${field('Desde', selHora('hora', hhmm(b.hora) || '13:00', { id: 'f-bq-desde', desde: '05:00', hasta: '23:40' }))}${field('Hasta', selHora('hasta', hasta, { id: 'f-bq-hasta', desde: '05:10', hasta: '23:50' }))}</div>
+    ${id ? `<button type="button" class="btn ghost danger" data-act="del-bloqueo" data-id="${id}" style="align-self:flex-start">${icon('trash')}Quitar bloqueo</button>` : ''}`, {
+    submit: (d) => {
+      const todoDia = !!d.todo; const desde = todoDia ? null : d.hora; const hastaH = todoDia ? null : d.hasta;
+      if (!todoDia && aMin(hastaH) <= aMin(desde)) return errorCampo('#f-bq-hasta', 'Tiene que terminar después de que empieza');
+      const row = { tipo: 'bloqueo', titulo: d.titulo.trim() || 'Bloqueado', fecha: d.fecha, hora: desde, hasta: hastaH, cliente_id: null, direccion: '', monto: 0, pagado: false, nota: '' };
+      if (id) { db.update('eventos', id, row); toast('Bloqueo actualizado'); }
+      else {
+        const fin = d.repetir && d.repetir > d.fecha ? d.repetir : d.fecha; let f = d.fecha; let n = 0;
+        while (f <= fin && n < 62) { db.insert('eventos', { ...row, fecha: f, estado: 'pendiente', venta_id: null }); f = addDays(f, 1); n++; }
+        toast(n > 1 ? `${n} días bloqueados` : 'Horario bloqueado');
+      }
+      cerrarSheet(); S.ui.agenda.fecha = d.fecha; render();
+    },
+  });
+}
+
+// ¿la hora elegida para una cita cae fuera del horario o en un bloqueo? se avisa, pero se deja agendar
+function avisoHorarioCita() {
+  const f = $('#sheet-form [name=fecha]')?.value; const hora = $('#f-hora')?.value; const box = $('#cita-aviso'); if (!box || !f || !hora) return;
+  const hd = horarioDia(horarioDe(S.negocio), new Date(f + 'T12:00:00').getDay());
+  const bq = bloqueosDel(f).find((b) => { const [a, z] = rangoBloqueo(b); return aMin(hora) >= a && aMin(hora) < z; });
+  const txt = !hd ? 'Este día no atiendes según tu horario. Se agenda igual, solo tú la ves.'
+    : aMin(hora) < aMin(hd.desde) || aMin(hora) >= aMin(hd.hasta) ? `Queda fuera de tu horario (${hd.desde} a ${hd.hasta}). Se agenda igual.`
+    : bq ? `Ese horario está bloqueado (${esc(bq.titulo !== 'Bloqueado' ? bq.titulo : textoBloqueo(bq))}). Se agenda igual.` : '';
+  box.hidden = !txt; box.innerHTML = txt ? `${icon('clock')}<span>${txt}</span>` : '';
+}
+document.addEventListener('change', (e) => { if (e.target.closest?.('#sheet-form') && ['fecha', 'hora'].includes(e.target.name) && $('#cita-aviso')) avisoHorarioCita(); });
+
+Object.assign(ACC_COBRO, {
+  bloqueo: (el) => formBloqueo(el.dataset.id),
+  'bloqueo-nuevo': () => formBloqueo(null),
+  'del-bloqueo': (el) => { db.remove('eventos', el.dataset.id); cerrarSheet(); toast('Bloqueo quitado'); render(); },
+  hueco: (el) => {
+    const { k, f, h } = el.dataset;
+    if (k === 'cita') return formCita(null, { fecha: f, hora: h });
+    if (k === 'bloqueo-aqui') return formBloqueo(null, { fecha: f, hora: h, hasta: deMin(Math.min(aMin(h) + 60, 23 * 60 + 50)) });
+    S.ui.agenda.fecha = f; formEvento('tarea'); const fe = $('#sheet-form [name=fecha]'); if (fe) fe.value = f; const ho = $('#sheet-form [name=hora]'); if (ho) ho.value = h;
+  },
+});
+Object.assign(CAMB_COBRO, {
+  'bq-todo': (el) => { const box = $('.bq-horas'); if (box) box.hidden = el.checked; },
+});
+
 /* =========================================================
    Render, eventos y arranque
    ========================================================= */
@@ -5422,6 +5813,16 @@ function migrarClaves() {
   if (err) setTimeout(() => toast(/expired|invalid/i.test(err) ? 'El enlace del correo venció o ya se usó. Inicia sesión con tu correo y contraseña.' : 'Problema con el enlace: ' + err, true), 300);
   if (/type=recovery/.test(location.hash + location.search)) S.recuperar = true;
   if (CONFIG.supabaseUrl && CONFIG.supabaseAnonKey) {
+    // apertura instantánea: se muestra lo último guardado y la nube se pone al día por detrás
+    const vieneDeCorreo = S.recuperar || /access_token|refresh_token|[?&]code=/.test(location.href);
+    if (!vieneDeCorreo && await abrirDesdeCache()) {
+      abrirNube({ fondo: true }).then((ok) => {
+        if (ok) return revisarRecuperacion();
+        LS.del('miderno:nube-uid'); CacheNube.borrar(); S.negocio = null; S.modo = null; S.sincronizando = false; adapter = LocalAdapter; render();
+        toast('Tu sesión se cerró. Vuelve a entrar para ver tus datos.', true);
+      }).catch((e) => { console.error(e); S.sincronizando = false; render(); toast('Sin conexión: estás viendo lo último guardado en este dispositivo. Los cambios se enviarán al volver la conexión.', true); });
+      return;
+    }
     try { if (await abrirNube()) { revisarRecuperacion(); return; } } catch (e) { console.error(e); pantallaCarga(false); toast('No pudimos conectar con la nube: ' + (e.message || e), true); }
   }
   const ultimo = LS.get('miderno:ultimo');
