@@ -1153,6 +1153,48 @@ details > summary { cursor: pointer; }
 @media (max-width: 600px) { .ideas { grid-template-columns: 1fr; } }
 .hoy-fila .grow { flex: 1; } .hoy-fila > b.num { flex: none; }
 
+/* ---------- v26: Crecer ---------- */
+.crecer-tabs { margin-bottom: 4px; align-self: flex-start; }
+.crecer-res { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.crecer-res > div { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; border-radius: 14px; background: var(--surface-2); min-width: 0; }
+.crecer-res small, .crecer-res span { color: var(--muted); font-size: .76rem; } .crecer-res b { font-size: 1.35rem; letter-spacing: -.02em; } .crecer-res em { font-style: normal; font-size: .9rem; color: var(--muted); font-weight: 500; }
+.crecer-lead { margin: 4px 0; }
+.acciones { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 14px; align-items: start; }
+.accion-c { display: flex; flex-direction: column; gap: 10px; }
+.accion-cab { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.accion-cab h2 { font-size: 1.02rem; margin-bottom: 4px; }
+.accion-valor { text-align: right; flex: none; display: flex; flex-direction: column; } .accion-valor b { font-size: 1.05rem; color: var(--ok); } .accion-valor small { color: var(--muted); font-size: .72rem; }
+.accion-lista { display: flex; flex-direction: column; }
+.accion-fila { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line-suave); transition: opacity .3s; }
+.accion-fila:first-child { border-top: 0; }
+.accion-fila .grow { min-width: 0; } .accion-fila b { display: block; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .accion-fila small { display: block; color: var(--muted); font-size: .78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.accion-fila.hecha { opacity: .55; }
+.avatar.sm { width: 32px; height: 32px; font-size: .72rem; flex: none; }
+.ciclos-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px 18px; margin-top: 10px; }
+.ciclo-fila { display: flex; align-items: center; justify-content: space-between; gap: 10px; } .ciclo-fila .in { width: 80px; min-height: 36px; padding: 6px 10px; }
+.google-pasos { display: flex; flex-direction: column; }
+.google-paso { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-top: 1px solid var(--line-suave); cursor: pointer; }
+.google-paso:first-child { border-top: 0; }
+.google-paso input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--accent); flex: none; }
+.google-paso b { display: block; } .google-paso small { color: var(--muted); font-size: .82rem; }
+.google-paso.ok b { text-decoration: line-through; color: var(--muted); }
+.crecer-ini { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); padding: 14px 16px; }
+.crecer-ini small { display: block; color: var(--muted); font-size: .76rem; } .crecer-ini b { display: block; font-weight: 600; } .crecer-ini .small { display: block; }
+.prox-ops { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.prox-op { display: flex; flex-direction: column; gap: 2px; padding: 14px 10px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; text-align: center; }
+.prox-op small { color: var(--muted); } .prox-op.on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+@media (max-width: 600px) { .acciones { grid-template-columns: 1fr; } .crecer-res b { font-size: 1.1rem; } .crecer-res { gap: 6px; } .crecer-res > div { padding: 10px; } }
+/* v26: ajustes Crecer */
+.accion-fila .grow { flex: 1; min-width: 0; }
+.accion-fila .grow small { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.crecer-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
+.crecer-tabs button { white-space: nowrap; }
+@media (max-width: 600px) {
+  .crecer-tabs button { padding: 8px 12px; font-size: .88rem; }
+  .crecer-res { grid-template-columns: 1fr 1fr; }
+  .crecer-res > div:last-child { grid-column: 1 / -1; }
+}
+
 </style>
 </head>
 <body>
@@ -1165,7 +1207,7 @@ details > summary { cursor: pointer; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '25';
+const VERSION = '26';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -1601,6 +1643,7 @@ const DEMOS = {
    ========================================================= */
 
 const ICONS = {
+  crece: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
   megafono: '<path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 9a3.5 3.5 0 0 1 0 6"/><path d="M18 6.5a7 7 0 0 1 0 11"/>',
   lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
   clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
@@ -1670,7 +1713,7 @@ const VISTAS = [
   { id: 'equipo', label: 'Equipo', icon: 'team', modulo: 'servicios', grupo: 'Servicios' },
   { id: 'inventario', label: 'Inventario', icon: 'box', modulo: 'inventario', grupo: 'Productos' },
   { id: 'produccion', label: 'Producción', icon: 'flask', modulo: 'produccion', grupo: 'Productos' },
-  { id: 'redes', label: 'Redes sociales', icon: 'megafono', modulo: null },
+  { id: 'crecer', label: 'Crecer', icon: 'crece', modulo: null },
   { id: 'proveedores', label: 'Proveedores', icon: 'truck', modulo: null },
   { id: 'catalogo', label: 'Catálogo', icon: 'tag', modulo: null },
   { id: 'importar', label: 'Importar Excel', icon: 'upload', modulo: null },
@@ -1712,7 +1755,7 @@ function shell(contenido) {
       ${tab(VISTAS[0])}${tab(VISTAS[2])}
       <a href="#vender" class="sell ${cur === 'vender' ? 'on' : ''}"><span class="plus">${icon('plus')}</span><span>${t_('nav_vender')}</span></a>
       ${principal && principal.id !== 'clientes' ? tab(principal) : tab(VISTAS[3])}
-      <button data-act="mas" class="${['proveedores', 'catalogo', 'importar', 'ajustes', 'equipo', 'produccion', 'clientes', 'inventario', 'redes'].includes(cur) && cur !== principal?.id ? 'on' : ''}">${icon('more')}<span>${t_('nav_mas')}</span></button>
+      <button data-act="mas" class="${['proveedores', 'catalogo', 'importar', 'ajustes', 'equipo', 'produccion', 'clientes', 'inventario', 'crecer'].includes(cur) && cur !== principal?.id ? 'on' : ''}">${icon('more')}<span>${t_('nav_mas')}</span></button>
     </nav>
   </div>`;
 }
@@ -2234,7 +2277,8 @@ function cobrar() {
   const volver = c.cita_id || c.evento_id ? 'agenda' : null;
   S.cart = nuevoCarro(); toast(`Venta registrada: ${money(v.total)}`);
   volver ? ir(volver) : render();
-  if (autoOn('resena') && v.cliente_id) setTimeout(() => pedirResena(db.get('clientes', v.cliente_id)), 150);
+  // primero se ofrece dejar agendada la próxima hora; si no corresponde, se pide la reseña
+  if (v.cliente_id) setTimeout(() => { if (!ofrecerProximaCita(v) && autoOn('resena')) pedirResena(db.get('clientes', v.cliente_id)); }, 150);
 }
 
 /* ---------- MOVIMIENTOS (caja) ---------- */
@@ -4206,6 +4250,8 @@ const MENSAJES_DEF = {
   entrega: 'Hola {nombre}, te escribimos de {negocio}. Tu pedido ({pedido}) llega el {fecha}{hora_txt}.',
   saludo: 'Hola {nombre}, te escribimos de {negocio}.',
   resena: 'Hola {nombre}, gracias por elegir {negocio}. ¿Nos ayudas con una reseña en Google? Te toma un minuto y nos ayuda muchísimo: {link_resena}',
+  mantencion: 'Hola {nombre}, ya pasaron {semanas} semanas desde tu {servicio} en {negocio}. ¿Te reservo una hora esta semana para mantenerlo?',
+  posventa: 'Hola {nombre}, ¿cómo te fue con tu {servicio}? Si necesitas cualquier ajuste, escríbenos. Gracias por elegir {negocio}.',
   pedido: 'Hola {contacto}, te escribo de {negocio}. Quiero hacer un pedido:\n{lista}\n¿Me confirmas disponibilidad, total y cuándo llega? ¡Gracias!',
 };
 const MENSAJES_INFO = {
@@ -4219,6 +4265,8 @@ const MENSAJES_INFO = {
   entrega: ['Aviso de entrega', 'Botón "Avisar" en entregas', 'nombre, pedido, fecha, hora_txt, direccion, negocio'],
   saludo: ['Saludo general', 'Botón WhatsApp en la ficha del cliente', 'nombre, negocio'],
   resena: ['Pedir reseña en Google', 'Después de cobrar y en la ficha del cliente', 'nombre, negocio, link_resena'],
+  mantencion: ['Recordatorio de mantención', 'Crecer → Acciones de hoy, cuando se cumple el ciclo del servicio', 'nombre, servicio, semanas, negocio'],
+  posventa: ['Seguimiento después de la primera visita', 'Crecer → Acciones de hoy', 'nombre, servicio, negocio'],
   pedido: ['Pedido a proveedor', 'Proveedores → Hacer pedido', 'contacto, lista, negocio'],
 };
 const AUTO_INFO = {
@@ -4639,7 +4687,7 @@ aplicarSistema();
 /* ---------- textos de la interfaz ---------- */
 const I18N = {
   es: {
-    nav_inicio: 'Inicio', nav_vender: 'Registrar', nav_caja: 'Movimientos', nav_clientes: 'Clientes', nav_agenda: 'Agenda', nav_equipo: 'Equipo', nav_inventario: 'Inventario', nav_produccion: 'Producción', nav_redes: 'Redes sociales', nav_proveedores: 'Proveedores', nav_catalogo: 'Catálogo', nav_importar: 'Importar Excel', nav_ajustes: 'Ajustes', nav_mas: 'Más',
+    nav_inicio: 'Inicio', nav_vender: 'Registrar', nav_caja: 'Movimientos', nav_clientes: 'Clientes', nav_agenda: 'Agenda', nav_equipo: 'Equipo', nav_inventario: 'Inventario', nav_produccion: 'Producción', nav_crecer: 'Crecer', nav_proveedores: 'Proveedores', nav_catalogo: 'Catálogo', nav_importar: 'Importar Excel', nav_ajustes: 'Ajustes', nav_mas: 'Más',
     hola: 'Hola', ganancia: 'Resultado de', ingresos: 'Ingresos', gastos: 'Egresos', meta: 'Meta', faltan: 'faltan', dia: 'día',
     ingreso: 'Ingreso', gasto: 'Egreso', agendar: 'Agendar', para_hoy: 'Para hoy', ultimos: 'Últimos movimientos', ver_todo: 'Ver todo', vacio_mov: 'Aún no hay movimientos. Registra tu primer ingreso o egreso.',
     reservas_confirmar: (n) => `${n} reserva${n > 1 ? 's' : ''} por confirmar`, agenda_hoy: (n) => `${n} pendiente${n > 1 ? 's' : ''} en la agenda de hoy`, pedir_a: 'Pedir a', stock_bajo: (n) => `${n} producto${n > 1 ? 's' : ''} por reponer`, reactivar: (n) => `${n} cliente${n > 1 ? 's' : ''} sin volver hace más de ${DIAS_REACTIVAR} días`,
@@ -4648,7 +4696,7 @@ const I18N = {
     sistema: 'Apariencia', tema: 'Tema', tema_auto: 'Automático', tema_claro: 'Claro', tema_oscuro: 'Oscuro', color: 'Color de la app', personalizado: 'Otro', letra: 'Tamaño de letra', letra_normal: 'Normal', letra_grande: 'Grande', idioma: 'Idioma', sis_nota: 'Se guarda en este dispositivo.', idioma_nota: 'En inglés están traducidos el menú, Inicio, Registrar y Apariencia. El resto se irá traduciendo.',
   },
   en: {
-    nav_inicio: 'Home', nav_vender: 'Record', nav_caja: 'Transactions', nav_clientes: 'Clients', nav_agenda: 'Calendar', nav_equipo: 'Team', nav_inventario: 'Inventory', nav_produccion: 'Production', nav_redes: 'Social media', nav_proveedores: 'Suppliers', nav_catalogo: 'Catalog', nav_importar: 'Import Excel', nav_ajustes: 'Settings', nav_mas: 'More',
+    nav_inicio: 'Home', nav_vender: 'Record', nav_caja: 'Transactions', nav_clientes: 'Clients', nav_agenda: 'Calendar', nav_equipo: 'Team', nav_inventario: 'Inventory', nav_produccion: 'Production', nav_crecer: 'Grow', nav_proveedores: 'Suppliers', nav_catalogo: 'Catalog', nav_importar: 'Import Excel', nav_ajustes: 'Settings', nav_mas: 'More',
     hola: 'Hi', ganancia: 'Profit in', ingresos: 'Income', gastos: 'Expenses', meta: 'Goal', faltan: 'left', dia: 'day',
     ingreso: 'Income', gasto: 'Expense', agendar: 'Schedule', para_hoy: 'Today', ultimos: 'Latest transactions', ver_todo: 'See all', vacio_mov: 'No transactions yet. Record your first income or expense.',
     reservas_confirmar: (n) => `${n} booking${n > 1 ? 's' : ''} to confirm`, agenda_hoy: (n) => `${n} pending today`, pedir_a: 'Order from', stock_bajo: (n) => `${n} product${n > 1 ? 's' : ''} to restock`, reactivar: (n) => `${n} client${n > 1 ? 's' : ''} away for over ${DIAS_REACTIVAR} days`,
@@ -4711,7 +4759,7 @@ function vistaInicio() {
       <a href="#caja"><small>${t_('gastos')}</small><b class="num">${money(egr)}</b><span>en el mes</span></a>
     </section>
     ${tarjetaIndicadores(ym)}
-    ${tarjetaRedes()}
+    ${tarjetaCrecer()}
     ${tarjetaGuia()}
     ${alertas.length ? `<section class="stack"><h2>${t_('para_hoy')}</h2><div class="stack" style="gap:8px">${alertas.map((a) => `<a class="alert-row" href="#${a.href}" ${a.act ? `data-act="${a.act}"` : ''} ${a.id ? `data-id="${a.id}"` : ''}><span class="sev ${a.sev}"></span><div class="grow"><b>${esc(a.t)}</b>${a.s ? `<small>${esc(a.s)}</small>` : ''}</div>${icon('right')}</a>`).join('')}</div></section>` : ''}
     <a class="ini-todo" href="#caja">Ver todos los movimientos ${icon('right')}</a>
@@ -5646,13 +5694,13 @@ function ideasRedes() {
   return ideas;
 }
 
-function vistaRedes() {
+function vistaRedes(embebido = false) {
   const link = linkReservas(); const ym = mesActual();
   const delMes = db.all('citas').filter((c) => mesDe(c.fecha) === ym || mesDe(c.creado_en || c.fecha) === ym);
   const porOrigen = Object.keys(ORIGENES).map((k) => { const cs = delMes.filter((c) => reOrigen(k).test(c.nota || '')); return { k, n: cs.length, monto: sum(cs, (c) => Number(db.get('servicios', c.servicio_id)?.precio || 0)) }; });
   const ig = porOrigen.find((x) => x.k === 'ig'); const otros = porOrigen.filter((x) => x.k !== 'ig' && x.n);
   const fuertes = diasFuertes(); const ideas = ideasRedes();
-  return `${head('Redes sociales', 'Ideas para publicar, hechas con los datos de tu negocio')}
+  return `${embebido ? '' : head('Redes sociales', 'Ideas para publicar, hechas con los datos de tu negocio')}
   <div class="grid g2 redes-top">
     <div class="card stack"><h2>Tu enlace para la bio</h2>
       ${link ? `<p class="small muted">Pégalo en tu perfil de Instagram. Las reservas que lleguen por ahí se cuentan aquí.</p>
@@ -5685,14 +5733,261 @@ Object.assign(ACC_COBRO, {
 function tarjetaRedes() {
   if (S.negocio?.id?.startsWith('demo-') && !tiene('servicios')) return '';
   const idea = ideasRedes()[0]; if (!idea) return '';
-  return `<a class="card redes-ini" href="#redes"><span class="redes-ico">${icon('megafono')}</span><span class="grow"><small>Idea para tus redes · ${idea.fmt}</small><b>${esc(idea.t)}</b></span>${icon('right')}</a>`;
+  return `<a class="card redes-ini" href="#crecer" data-act="crecer-tab" data-t="redes"><span class="redes-ico">${icon('megafono')}</span><span class="grow"><small>Idea para tus redes · ${idea.fmt}</small><b>${esc(idea.t)}</b></span>${icon('right')}</a>`;
+}
+
+/* =========================================================
+   Crecer: el ayudante comercial del negocio.
+   Cada día arma una lista corta de acciones concretas con los
+   datos del negocio (a quién escribir hoy y por qué), deja el
+   mensaje listo y mide qué resultó.
+   ========================================================= */
+
+/* ---------- registro de contactos (en este dispositivo) ---------- */
+const claveAcc = () => 'miderno:acciones:' + (S.negocio?.id || '');
+const logAcc = () => { try { return JSON.parse(localStorage.getItem(claveAcc()) || '[]'); } catch { return []; } };
+function registrarAcc(tipo, clienteId) {
+  try { const l = logAcc(); l.push({ t: tipo, c: clienteId, f: hoy() }); localStorage.setItem(claveAcc(), JSON.stringify(l.slice(-600))); } catch {}
+}
+// ¿se le escribió a este cliente por este motivo en los últimos N días?
+const contactado = (tipo, clienteId, dias) => { const lim = addDays(hoy(), -dias); return logAcc().some((x) => x.c === clienteId && x.t === tipo && x.f >= lim); };
+
+/* ---------- ciclo de cada servicio (cada cuántos días conviene volver) ---------- */
+function cicloSugerido(nombre) {
+  const n = norm(nombre);
+  if (/retiro/.test(n)) return 0;
+  if (/permanente|semipermanente|esmalt|kapping|gel|acrilic|softgel|polygel|manicur|nail/.test(n)) return 21;
+  if (/pedicur/.test(n)) return 30;
+  if (/corte|barba|fade/.test(n)) return 35;
+  if (/tint|color|mecha|balayage|decolor/.test(n)) return 49;
+  if (/depil|cera|laser/.test(n)) return 28;
+  if (/facial|limpieza|peeling/.test(n)) return 30;
+  if (/pestan|ceja|lifting|lash/.test(n)) return 28;
+  if (/masaje/.test(n)) return 21;
+  return 30;
+}
+const cicloDe = (s) => { if (!s) return 0; const c = cfg().ciclos?.[s.id]; return c != null && c !== '' ? Number(c) : cicloSugerido(s.nombre); };
+
+/* ---------- lectura de los datos para las acciones ---------- */
+function historialClientes() {
+  // por cliente: fechas de compra (sin repetir), total, último servicio
+  const m = new Map();
+  const ventas = [...db.all('ventas')].filter((v) => v.cliente_id).sort((a, b) => a.fecha.localeCompare(b.fecha));
+  for (const v of ventas) {
+    const x = m.get(v.cliente_id) || { fechas: [], total: 0, ultServ: null, ultServFecha: null };
+    if (x.fechas.at(-1) !== v.fecha) x.fechas.push(v.fecha);
+    x.total += Number(v.total);
+    for (const i of itemsDeVenta(v.id)) if (i.tipo_item === 'servicio' && i.item_id && cicloDe(db.get('servicios', i.item_id)) > 0) { x.ultServ = i.item_id; x.ultServFecha = v.fecha; }
+    m.set(v.cliente_id, x);
+  }
+  return m;
+}
+// cada cuántos días vuelve normalmente (mediana de sus intervalos)
+function frecuenciaDe(fechas) {
+  if (fechas.length < 3) return null;
+  const d = []; for (let i = 1; i < fechas.length; i++) d.push(diasEntre(fechas[i - 1], fechas[i]));
+  d.sort((a, b) => a - b); return d[Math.floor(d.length / 2)];
+}
+function ticketReciente() {
+  const desde = addDays(hoy(), -90); const vs = db.all('ventas').filter((v) => v.fecha >= desde);
+  return vs.length ? sum(vs, (v) => Number(v.total)) / vs.length : 0;
+}
+
+function accionesDeHoy() {
+  const H = hoy(); const man = addDays(H, 1); const ticket = ticketReciente(); const acc = [];
+  const cli = (id) => db.get('clientes', id); const hist = historialClientes(); const usados = new Set();
+  const fila = (c, detalle, texto, tipo, extra = {}) => ({ c, detalle, texto, tipo, ...extra });
+
+  // 1. recordar las horas de mañana (menos inasistencias)
+  if (tiene('servicios')) {
+    const yaAv = avisadas();
+    const citas = db.all('citas').filter((c) => c.fecha === man && ['agendada', 'confirmada', 'solicitada'].includes(c.estado) && !yaAv.has(c.id))
+      .sort((a, b) => hhmm(a.hora).localeCompare(hhmm(b.hora)));
+    const filas = citas.map((c) => { const cl = cli(c.cliente_id); const s = db.get('servicios', c.servicio_id); return cl ? fila(cl, `${hhmm(c.hora)} · ${s?.nombre || 'Cita'}`, msg('recordatorio', { nombre: primerNombre(cl.nombre), servicio: s?.nombre || 'atención', fecha: fechaLarga(c.fecha), hora: hhmm(c.hora) }), 'recordatorio', { citaId: c.id }) : null; }).filter(Boolean);
+    if (filas.length) acc.push({ k: 'recordar', t: 'Confirma las horas de mañana', por: 'Un recordatorio el día anterior reduce las inasistencias y te deja tiempo para llenar la hora si alguien cancela.', filas, valor: sum(citas, (c) => Number(db.get('servicios', c.servicio_id)?.precio || 0)), etiqueta: 'en citas de mañana' });
+  }
+
+  // 2. mantención: se cumplió el ciclo del último servicio
+  if (tiene('servicios')) {
+    const filas = [];
+    for (const [id, x] of hist) {
+      const c = cli(id); if (!c || !x.ultServ || proximaCita(id)) continue;
+      const s = db.get('servicios', x.ultServ); const ciclo = cicloDe(s); const dias = diasEntre(x.ultServFecha, H);
+      if (dias < ciclo - 2 || dias > ciclo + 10 || contactado('mantencion', id, ciclo)) continue;
+      filas.push(fila(c, `${s.nombre} hace ${dias} días`, msg('mantencion', { nombre: primerNombre(c.nombre), servicio: s.nombre, semanas: Math.max(1, Math.round(dias / 7)) }), 'mantencion', { orden: -x.total }));
+      usados.add(id);
+    }
+    if (filas.length) acc.push({ k: 'mantencion', t: 'A estas clientas les toca su mantención', por: 'Se cumplió el ciclo de su último servicio y no tienen hora. Es el mejor momento para escribirles.', filas: filas.sort((a, b) => a.orden - b.orden), valor: filas.length * ticket, etiqueta: 'si vuelven' });
+  }
+
+  // 3. reactivar según la frecuencia propia de cada cliente
+  {
+    const filas = [];
+    for (const [id, x] of hist) {
+      if (usados.has(id) || proximaCita(id)) continue; const c = cli(id); if (!c) continue;
+      const dias = diasEntre(x.fechas.at(-1), H); const fr = frecuenciaDe(x.fechas) || DIAS_REACTIVAR;
+      const limite = Math.max(14, Math.round(fr * 1.4));
+      if (dias < limite || dias > 240 || contactado('reactivar', id, 30)) continue;
+      filas.push(fila(c, `Cada ${fr} días · última hace ${dias}`, msg('reactivar', { nombre: primerNombre(c.nombre), dias }), 'reactivar', { orden: -x.total }));
+    }
+    if (filas.length) acc.push({ k: 'reactivar', t: 'Clientes que se están demorando más de lo normal', por: 'Cada cliente tiene su propio ritmo. Estos ya pasaron bastante de su frecuencia habitual; primero los que más te compran.', filas: filas.sort((a, b) => a.orden - b.orden), valor: filas.length * ticket, etiqueta: 'si vuelven' });
+  }
+
+  // 4. seguimiento a quienes vinieron por primera vez
+  {
+    const prim = primerasCompras(); const filas = [];
+    for (const [id, f] of prim) {
+      const d = diasEntre(f, H); if (d < 3 || d > 7 || contactado('posventa', id, 60)) continue; const c = cli(id); if (!c) continue;
+      const v = db.all('ventas').find((x) => x.cliente_id === id && x.fecha === f); const it = v ? itemsDeVenta(v.id)[0] : null;
+      filas.push(fila(c, `Primera visita hace ${d} días`, msg('posventa', { nombre: primerNombre(c.nombre), servicio: it?.nombre || 'compra' }), 'posventa'));
+    }
+    if (filas.length) acc.push({ k: 'posventa', t: 'Pregunta cómo les fue a las clientas nuevas', por: 'Un mensaje unos días después de la primera visita aumenta la probabilidad de que vuelvan y detecta problemas antes de una mala reseña.', filas });
+  }
+
+  // 5. pedir reseña a quienes compraron estos días
+  if (urlSegura(cfg().resenas_url)) {
+    const desde = addDays(H, -3); const vistos = new Set(); const filas = [];
+    for (const v of db.all('ventas')) {
+      if (v.fecha < desde || !v.cliente_id || vistos.has(v.cliente_id) || contactado('resena', v.cliente_id, 120)) continue;
+      const c = cli(v.cliente_id); if (!c) continue; vistos.add(c.id);
+      filas.push(fila(c, `Compró el ${fechaCorta(v.fecha)}`, msg('resena', { nombre: primerNombre(c.nombre), link_resena: cfg().resenas_url }), 'resena'));
+    }
+    if (filas.length) acc.push({ k: 'resena', t: 'Pide una reseña en Google', por: 'Las reseñas recientes son lo que más pesa cuando alguien te encuentra en Google Maps. Pídela mientras la experiencia está fresca.', filas });
+  }
+
+  // 6. cumpleaños de los próximos 7 días
+  {
+    const proximos = Array.from({ length: 8 }, (_, i) => addDays(H, i).slice(5)); const filas = [];
+    for (const c of db.all('clientes')) {
+      if (!c.cumpleanos) continue; const k = proximos.indexOf(c.cumpleanos.slice(5)); if (k < 0 || contactado('cumple', c.id, 300)) continue;
+      filas.push(fila(c, k === 0 ? 'Cumple hoy' : `Cumple el ${fechaCorta(addDays(H, k))}`, msg('cumple', { nombre: primerNombre(c.nombre) }), 'cumple', { orden: k }));
+    }
+    if (filas.length) acc.push({ k: 'cumple', t: 'Cumpleaños de esta semana', por: 'Un saludo con un beneficio para usar este mes es una razón natural para volver.', filas: filas.sort((a, b) => a.orden - b.orden) });
+  }
+
+  // 7. productos sin ventas en 60 días (capital detenido)
+  if (tiene('inventario')) {
+    const desde = addDays(H, -60); const vendidos = new Set();
+    const vIds = new Set(db.all('ventas').filter((v) => v.fecha >= desde).map((v) => v.id));
+    for (const i of db.all('venta_items')) if (vIds.has(i.venta_id) && i.tipo_item === 'producto') vendidos.add(i.item_id);
+    const quietos = db.all('productos').filter((p) => p.activo !== false && !vendidos.has(p.id) && stockDe('producto', p.id) > 0);
+    if (quietos.length) acc.push({ k: 'stock', t: `${quietos.length} ${quietos.length === 1 ? 'producto no se ha vendido' : 'productos no se han vendido'} en 60 días`, por: 'Es capital detenido. Arma un pack, ponlos junto a la caja o publícalos esta semana.', productos: quietos.slice(0, 8),
+      valor: sum(quietos, (p) => stockDe('producto', p.id) * Number(costoProducto(p) || 0)), etiqueta: 'invertidos en ese stock' });
+  }
+  return acc;
+}
+
+/* ---------- resultados: quién volvió después de un mensaje ---------- */
+function resultadosAcc(dias = 30) {
+  const desde = addDays(hoy(), -dias); const log = logAcc().filter((x) => x.f >= desde && x.t !== 'recordatorio' && x.t !== 'resena');
+  const porCliente = new Map(); for (const x of log) if (!porCliente.has(x.c) || x.f < porCliente.get(x.c)) porCliente.set(x.c, x.f);
+  let volvieron = 0, monto = 0;
+  for (const [id, f] of porCliente) {
+    const vs = db.all('ventas').filter((v) => v.cliente_id === id && v.fecha >= f); const cs = db.all('citas').filter((c) => c.cliente_id === id && c.fecha >= f && !INACTIVOS.includes(c.estado));
+    if (vs.length || cs.length) { volvieron++; monto += sum(vs, (v) => Number(v.total)); }
+  }
+  return { enviados: logAcc().filter((x) => x.f >= desde).length, contactados: porCliente.size, volvieron, monto };
+}
+
+/* ---------- vista ---------- */
+const PASOS_GOOGLE = [
+  ['cat', 'Categoría principal exacta', 'Por ejemplo "Salón de manicura y pedicura" en vez de solo "Salón de belleza". Agrega categorías secundarias.'],
+  ['datos', 'Horario, teléfono y dirección al día', 'El mismo nombre, dirección y teléfono que en Instagram y en tu página de reservas.'],
+  ['reserva', 'Enlace de reservas', 'En tu perfil: Editar perfil → Reservas → agrega el enlace de tu página de reservas de MiDerno.'],
+  ['servicios', 'Servicios o productos con precio', 'Cárgalos con un precio desde. Ayudan a aparecer cuando buscan ese servicio.'],
+  ['fotos', 'Al menos 10 fotos reales', 'Local, trabajos y equipo. Suma una foto nueva cada semana.'],
+  ['resenas', 'Enlace para pedir reseñas', 'Copia el enlace "Pedir reseñas" y guárdalo en Ajustes → Logo, fotos y reseñas.'],
+  ['responder', 'Responde todas las reseñas', 'Agradece las positivas y ofrece una solución en las negativas, dentro de la semana.'],
+];
+
+function vistaCrecer() {
+  S.ui.crecer ||= { tab: 'hoy' }; const tab = S.ui.crecer.tab;
+  const tabs = [['hoy', 'Acciones de hoy'], ['redes', 'Redes sociales'], ['google', 'Google']];
+  const cuerpo = tab === 'redes' ? vistaRedes(true) : tab === 'google' ? crecerGoogle() : crecerHoy();
+  return `${head('Crecer', 'Lo que conviene hacer hoy para vender y agendar más')}
+  <div class="seg seg-grande crecer-tabs">${tabs.map(([k, l]) => `<button data-act="crecer-tab" data-t="${k}" class="${tab === k ? 'on' : ''}">${l}</button>`).join('')}</div>
+  ${cuerpo}`;
+}
+
+function crecerHoy() {
+  const acc = accionesDeHoy(); const r = resultadosAcc(); const total = sum(acc, (a) => a.filas?.length || 0);
+  const tarjeta = (a, idx) => {
+    const conTel = (a.filas || []).filter((f) => f.c.telefono); const sinTel = (a.filas || []).length - conTel.length;
+    return `<article class="card accion-c" data-k="${a.k}">
+      <div class="accion-cab"><div><h2>${esc(a.t)}</h2><p class="small muted">${esc(a.por)}</p></div>
+        ${a.valor ? `<div class="accion-valor"><b class="num">${money(a.valor)}</b><small>${esc(a.etiqueta || '')}</small></div>` : ''}</div>
+      ${a.filas ? `<div class="accion-lista">${conTel.slice(0, S.ui.crecer['mas_' + a.k] ? 50 : 6).map((f, i) => `<div class="accion-fila">
+          <span class="avatar sm">${esc(iniciales(f.c.nombre))}</span><span class="grow"><b>${esc(f.c.nombre)}</b><small>${esc(f.detalle)}</small></span>
+          <a class="btn sm btn-wa-sm" target="_blank" rel="noopener" href="${waLink(f.c.telefono, f.texto)}" data-act="acc-enviado" data-t="${f.tipo}" data-c="${f.c.id}" ${f.citaId ? `data-cita="${f.citaId}"` : ''}>${icon('chat')}Enviar</a></div>`).join('')}</div>
+        ${conTel.length > 6 && !S.ui.crecer['mas_' + a.k] ? `<button class="btn sm ghost" data-act="acc-mas" data-k="${a.k}">Ver ${conTel.length - 6} más</button>` : ''}
+        ${sinTel ? `<p class="small muted">${sinTel} ${sinTel === 1 ? 'cliente no tiene' : 'clientes no tienen'} teléfono guardado. <a href="#clientes">Agrégalo en su ficha</a> para poder escribirle.</p>` : ''}`
+      : `<div class="chips">${a.productos.map((p) => `<span class="chip">${esc(p.nombre)} · ${qtyFmt(stockDe('producto', p.id))} u.</span>`).join('')}</div>
+        <div class="hstack"><button class="btn sm" data-act="crecer-tab" data-t="redes">Ver ideas para publicar</button></div>`}
+    </article>`;
+  };
+  return `<div class="crecer-res">
+      <div><small>Últimos 30 días</small><b class="num">${r.enviados}</b><span>mensajes enviados desde aquí</span></div>
+      <div><small>Volvieron</small><b class="num">${r.volvieron}${r.contactados ? `<em> de ${r.contactados}</em>` : ''}</b><span>agendaron o compraron después</span></div>
+      <div><small>Ventas de quienes volvieron</small><b class="num">${money(r.monto)}</b><span>después del mensaje</span></div>
+    </div>
+    ${acc.length ? `<p class="muted crecer-lead">${total ? `Hoy tienes <b>${total}</b> ${total === 1 ? 'persona a quien escribir' : 'personas a quienes escribir'}. Cada botón abre WhatsApp con el mensaje listo; puedes editarlo antes de enviarlo.` : 'Revisa estas sugerencias.'}</p>
+      <div class="acciones">${acc.map(tarjeta).join('')}</div>`
+    : `<div class="card empty">Por hoy no hay acciones pendientes. A medida que registres ventas con cliente, aquí aparecerá a quién escribir y por qué.</div>`}
+    ${tiene('servicios') ? `<details class="card mas-datos ciclos"><summary>Cada cuánto vuelve una clienta por servicio</summary>
+      <p class="small muted">MiDerno avisa cuando se cumple este plazo desde el último servicio. Ajústalo a tu experiencia; 0 = no avisar.</p>
+      <div class="ciclos-lista">${db.all('servicios').filter((s) => s.activo !== false).map((s) => `<label class="ciclo-fila"><span>${esc(s.nombre)}</span><span class="hstack" style="gap:6px"><input class="in" type="number" min="0" max="365" step="1" value="${cicloDe(s)}" data-change="ciclo" data-id="${s.id}" aria-label="Días para ${esc(s.nombre)}"><small class="muted">días</small></span></label>`).join('')}</div></details>` : ''}`;
+}
+
+function crecerGoogle() {
+  const hechos = cfg().google_pasos || {}; const n = PASOS_GOOGLE.filter(([k]) => hechos[k]).length; const link = linkReservas();
+  return `<div class="grid g2"><div class="card stack"><h2>Tu ficha en Google</h2>
+      <p class="small muted">Cuando alguien busca tu servicio en tu ciudad, en Google, en Maps o en un asistente con IA, la respuesta sale sobre todo de tu Perfil de Empresa y de tus reseñas. Una ficha completa y activa te pone delante.</p>
+      <div class="bar-fina"><i style="width:${Math.round((n / PASOS_GOOGLE.length) * 100)}%"></i></div><p class="small">${n} de ${PASOS_GOOGLE.length} listos</p>
+      <div class="hstack"><a class="btn sm" target="_blank" rel="noopener" href="https://business.google.com/">Abrir mi Perfil de Empresa</a>${link ? `<button class="btn sm ghost" data-act="redes-copiar" data-t="${esc(link)}?ref=gm">Copiar enlace de reservas para Google</button>` : ''}</div></div>
+    <div class="card"><div class="google-pasos">${PASOS_GOOGLE.map(([k, t, d]) => `<label class="google-paso ${hechos[k] ? 'ok' : ''}"><input type="checkbox" data-change="google-paso" data-k="${k}" ${hechos[k] ? 'checked' : ''}><span><b>${t}</b><small>${d}</small></span></label>`).join('')}</div></div></div>`;
+}
+
+/* ---------- después de cobrar un servicio: dejar agendada la próxima ---------- */
+function ofrecerProximaCita(venta) {
+  if (!tiene('servicios') || !venta?.cliente_id || proximaCita(venta.cliente_id)) return false;
+  const it = itemsDeVenta(venta.id).find((i) => i.tipo_item === 'servicio'); const s = it && db.get('servicios', it.item_id); const ciclo = cicloDe(s);
+  if (!s || !ciclo) return false;
+  const c = db.get('clientes', venta.cliente_id); const ops = [ciclo - 7, ciclo, ciclo + 7].filter((d) => d >= 7);
+  abrirSheet(`¿Agendamos la próxima hora de ${esc(primerNombre(c?.nombre || 'tu clienta'))}?`, `<p class="muted" style="margin-top:-6px">Dejar la próxima visita agendada antes de que se vaya es lo que más asegura que vuelva. ${esc(s.nombre)} se repite normalmente cada ${ciclo} días.</p>
+    <div class="prox-ops">${ops.map((d) => `<button type="button" class="prox-op ${d === ciclo ? 'on' : ''}" data-act="prox-cita" data-f="${addDays(hoy(), d)}" data-s="${s.id}" data-c="${venta.cliente_id}"><b>${fechaLarga(addDays(hoy(), d)).split(',')[0].replace(/^./, (x) => x.toUpperCase())} ${Number(addDays(hoy(), d).slice(8))}</b><small>en ${Math.round(d / 7)} semanas</small></button>`).join('')}</div>`,
+    { pie: `<div class="sheet-foot"><button type="button" class="btn" data-close>Ahora no</button></div>` });
+  return true;
+}
+
+Object.assign(ACC_COBRO, {
+  'crecer-tab': (el) => { S.ui.crecer = { ...(S.ui.crecer || {}), tab: el.dataset.t }; if (vistaActual() !== 'crecer') ir('crecer'); else render(); },
+  'acc-mas': (el) => { S.ui.crecer['mas_' + el.dataset.k] = true; render(); },
+  'acc-enviado': (el) => {
+    window.open(el.href, '_blank', 'noopener');
+    registrarAcc(el.dataset.t, el.dataset.c); if (el.dataset.cita) marcarAvisada(el.dataset.cita);
+    // el enlace abre WhatsApp; la fila se marca como hecha sin recargar la pantalla
+    setTimeout(() => { const f = el.closest('.accion-fila'); if (f) { f.classList.add('hecha'); el.outerHTML = '<span class="ag-hecho pop">✓ Enviado</span>'; } }, 200);
+  },
+  'prox-cita': (el) => { cerrarSheet(false); formCita(null, { cliente_id: el.dataset.c, servicio_id: el.dataset.s, fecha: el.dataset.f, hora: '10:00' }); },
+});
+Object.assign(CAMB_COBRO, {
+  ciclo: (el) => { const v = Math.max(0, Math.min(365, parseInt(el.value) || 0)); guardarConfig({ ciclos: { ...(cfg().ciclos || {}), [el.dataset.id]: v } }); toast('Guardado'); },
+  'google-paso': (el) => { guardarConfig({ google_pasos: { ...(cfg().google_pasos || {}), [el.dataset.k]: el.checked } }); render(); },
+});
+
+// Inicio: resumen de lo que conviene hacer hoy
+function tarjetaCrecer() {
+  if (!S.negocio) return '';
+  const acc = accionesDeHoy().filter((a) => a.filas?.length); if (!acc.length) return tarjetaRedes();
+  const n = sum(acc, (a) => a.filas.length); const v = sum(acc, (a) => (a.k === 'recordar' ? 0 : a.valor || 0));
+  return `<a class="card crecer-ini" href="#crecer" data-act="crecer-tab" data-t="hoy"><span class="redes-ico">${icon('chat')}</span><span class="grow"><small>Crecer · acciones de hoy</small><b>${n} ${n === 1 ? 'persona a quien escribir' : 'personas a quienes escribir'}</b><span class="small muted">${acc.slice(0, 2).map((a) => esc(a.t)).join(' · ')}${v ? ` · potencial ${money(v)}` : ''}</span></span>${icon('right')}</a>`;
 }
 
 /* =========================================================
    Render, eventos y arranque
    ========================================================= */
 
-const RENDER = { redes: vistaRedes, proveedores: vistaProveedores, importar: vistaImportar, inicio: vistaInicio, vender: vistaVender, caja: vistaCaja, clientes: vistaClientes, agenda: vistaAgenda, equipo: vistaEquipo, inventario: vistaInventario, produccion: vistaProduccion, catalogo: vistaCatalogo, ajustes: vistaAjustes };
+const RENDER = { crecer: vistaCrecer, proveedores: vistaProveedores, importar: vistaImportar, inicio: vistaInicio, vender: vistaVender, caja: vistaCaja, clientes: vistaClientes, agenda: vistaAgenda, equipo: vistaEquipo, inventario: vistaInventario, produccion: vistaProduccion, catalogo: vistaCatalogo, ajustes: vistaAjustes };
 let _ultimaVista = null;
 function render() {
   const app = $('#app');
