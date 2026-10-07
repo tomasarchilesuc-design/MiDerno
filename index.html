@@ -3,7 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0E7C86">
+<meta name="theme-color" content="#F7F7F5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E0E0F" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%20aria-hidden%3D%22true%22%3E%3Crect%20class%3D%22lm-bg%22%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%230E7C86%22/%3E%3Cpath%20class%3D%22lm-cinta%22%20d%3D%22M19%202.5h5.6v8.5l-2.8-2.2-2.8%202.2z%22%20fill%3D%22%23FFB547%22/%3E%3Crect%20class%3D%22lm-hoja%22%20x%3D%224.5%22%20y%3D%227%22%20width%3D%2223%22%20height%3D%2221%22%20rx%3D%224%22%20fill%3D%22%23FFF4E2%22/%3E%3Cpath%20class%3D%22lm-cinta%20lm-cinta2%22%20d%3D%22M19%207h5.6v4l-2.8-2.2-2.8%202.2z%22%20fill%3D%22%23FFB547%22/%3E%3Cpath%20class%3D%22lm-m%22%20d%3D%22M17.71%2015.94Q18.50%2014.81%2019.50%2014.10Q20.50%2013.40%2021.42%2013.40Q22.39%2013.40%2022.95%2014.02Q23.52%2014.64%2023.52%2015.81Q23.52%2016.06%2023.46%2016.48Q23.41%2016.89%2022.23%2023.78L23.75%2024.07L23.64%2024.6H20.15L21.35%2017.84Q21.61%2016.44%2021.61%2015.91Q21.61%2015.39%2021.37%2015.07Q21.13%2014.75%2020.60%2014.75Q20.09%2014.75%2019.39%2015.24Q18.68%2015.73%2018.10%2016.49Q17.53%2017.25%2017.41%2017.91L16.26%2024.6H14.34L15.52%2017.84Q15.81%2016.32%2015.81%2015.91Q15.81%2015.39%2015.56%2015.07Q15.30%2014.75%2014.75%2014.75Q14.24%2014.75%2013.50%2015.27Q12.76%2015.79%2012.19%2016.52Q11.62%2017.26%2011.52%2017.91L10.37%2024.6H8.44L10.22%2014.50L8.85%2014.21L8.94%2013.69H12.17L11.84%2015.94Q12.65%2014.79%2013.66%2014.09Q14.67%2013.40%2015.57%2013.40Q16.59%2013.40%2017.15%2014.04Q17.71%2014.68%2017.71%2015.94Z%22%20fill%3D%22%230E7C86%22/%3E%3C/svg%3E">
@@ -77,7 +79,7 @@ h1 { font-size: 1.7rem; }
 h2 { font-size: 1.15rem; }
 h3 { font-size: 1rem; }
 p { margin: 0; }
-a { color: var(--accent); }
+a { color: var(--accent-txt); }
 button, input, select, textarea { font: inherit; color: inherit; }
 .num, td.n, .money { font-variant-numeric: tabular-nums; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -96,7 +98,7 @@ svg.i { width: 20px; height: 20px; flex: none; stroke: currentColor; fill: none;
 .nav-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 12px 10px 4px; }
 .nav a { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: var(--r-sm); color: var(--ink); text-decoration: none; font-weight: 500; }
 .nav a:hover { background: var(--surface-2); }
-.nav a.on { background: var(--accent-soft); color: var(--accent); }
+.nav a.on { background: var(--accent-soft); color: var(--accent-txt); }
 .side .grow { flex: 1; }
 .mode-pill { font-size: .75rem; color: var(--muted); padding: 0 10px; display: flex; gap: 6px; align-items: center; }
 .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); display: inline-block; }
@@ -117,7 +119,7 @@ svg.i { width: 20px; height: 20px; flex: none; stroke: currentColor; fill: none;
   h1 { font-size: 1.45rem; }
   .tabbar { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--surface); border-top: 1px solid var(--line); padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px)); }
   .tabbar a, .tabbar button { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: .68rem; font-weight: 500; color: var(--muted); text-decoration: none; background: none; border: 0; padding: 4px 0; cursor: pointer; }
-  .tabbar .on { color: var(--accent); }
+  .tabbar .on { color: var(--accent-txt); }
   .tabbar .sell span.plus { width: 44px; height: 44px; margin-top: -18px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; box-shadow: var(--shadow); }
   .mobile-top { display: flex !important; }
 }
@@ -162,7 +164,7 @@ svg.i { width: 20px; height: 20px; flex: none; stroke: currentColor; fill: none;
 .row .r { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .row.click { cursor: pointer; }
 .row.click:hover { background: var(--surface-2); }
-.avatar { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; font-size: .85rem; background: var(--accent-soft); color: var(--accent); flex: none; }
+.avatar { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; font-size: .85rem; background: var(--accent-soft); color: var(--accent-txt); flex: none; }
 .tbl-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: .9rem; }
 th { text-align: left; font-weight: 500; font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
@@ -174,7 +176,7 @@ tr:last-child td { border-bottom: 0; }
 .pill.ok { background: var(--ok-soft); color: var(--ok); }
 .pill.warn { background: var(--warn-soft); color: var(--warn); }
 .pill.bad { background: var(--bad-soft); color: var(--bad); }
-.pill.acc { background: var(--accent-soft); color: var(--accent); }
+.pill.acc { background: var(--accent-soft); color: var(--accent-txt); }
 .empty { padding: 26px 12px; text-align: center; color: var(--muted); font-size: .9rem; }
 
 /* controls */
@@ -273,7 +275,7 @@ tr:last-child td { border-bottom: 0; }
 .drop { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 34px 20px; min-height: 240px; border: 2px dashed var(--rule); border-radius: var(--r); cursor: pointer;
   background-color: var(--paper); background-image: repeating-linear-gradient(to bottom, transparent 0 31px, color-mix(in srgb, var(--rule) 45%, transparent) 31px 32px); }
 .drop:hover, .drop.over { border-color: var(--accent); }
-.drop svg.i { width: 34px; height: 34px; color: var(--accent); }
+.drop svg.i { width: 34px; height: 34px; color: var(--accent-txt); }
 .drop b { font: 650 1.15rem var(--f-display); }
 .map-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
 .que-vende { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
@@ -301,7 +303,7 @@ tr:last-child td { border-bottom: 0; }
 .tel-group .tel-pref { padding-inline: 8px; }
 .msg-edit { padding-top: 14px; border-top: 1px solid var(--line); }
 .msg-edit:first-of-type { border-top: 0; padding-top: 0; }
-.var-chip { display: inline-flex; gap: 5px; align-items: baseline; color: var(--accent); }
+.var-chip { display: inline-flex; gap: 5px; align-items: baseline; color: var(--accent-txt); }
 .var-chip b { font-weight: 700; } .var-chip b::before { content: "{"; } .var-chip b::after { content: "}"; }
 .var-chip span { color: var(--muted); font-weight: 500; font-size: .74rem; }
 .msg-preview { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; }
@@ -335,7 +337,7 @@ tr:last-child td { border-bottom: 0; }
 .land-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 36px; align-items: center; }
 .hero h1 { font-size: clamp(2.2rem, 5.5vw, 3.6rem); letter-spacing: -.035em; line-height: 1.02; }
-.hero h1 em { font-style: normal; color: var(--accent); }
+.hero h1 em { font-style: normal; color: var(--accent-txt); }
 .hero p { font-size: 1.08rem; color: var(--muted); max-width: 46ch; margin-top: 16px; }
 .eyebrow-hand { font: 600 1.35rem/1 var(--f-hand); color: var(--margin); margin-bottom: 10px; transform: rotate(-1.5deg); display: inline-block; }
 .hero mark { background: linear-gradient(transparent 58%, var(--hl) 58%, var(--hl) 92%, transparent 92%); color: inherit; padding: 0 .06em; }
@@ -348,7 +350,7 @@ tr:last-child td { border-bottom: 0; }
   background: radial-gradient(circle at 7px 7px, var(--bg) 0 4.5px, var(--line) 4.5px 5.5px, transparent 6px) 0 0 / 14px 30px repeat-y; }
 .nb-date { font: 600 1.15rem/30px var(--f-hand); color: var(--muted); height: 30px; text-align: right; margin-bottom: -2px; }
 .nb-line { display: grid; grid-template-columns: minmax(0, 1fr) auto 84px; gap: 10px; align-items: end; height: 40px; padding-bottom: 3px; }
-.nb-line .hand { font: 500 1.45rem/1 var(--f-hand); color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nb-line .hand { font: 500 1.45rem/1 var(--f-hand); color: var(--accent-txt); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .nb-line .tag { justify-self: start; font: 600 .7rem/1 var(--f-body); letter-spacing: .02em; padding: 5px 8px; border-radius: 6px; background: var(--surface-2); color: var(--ink); white-space: nowrap;
   animation: tag-in .45s cubic-bezier(.2, .8, .2, 1) backwards; }
 .nb-line .tag.acc { background: var(--accent); color: var(--accent-ink); }
@@ -388,7 +390,7 @@ tr:last-child td { border-bottom: 0; }
 .week-day.today { border-color: var(--accent); }
 .week-head { display: flex; align-items: baseline; gap: 6px; border: 0; background: none; padding: 2px 4px; cursor: pointer; color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; }
 .week-head b { font: 650 1.2rem var(--f-display); color: var(--ink); letter-spacing: 0; }
-.week-day.today .week-head b { color: var(--accent); }
+.week-day.today .week-head b { color: var(--accent-txt); }
 .ag-chip { display: block; width: 100%; text-align: left; border: 0; border-left: 3px solid var(--accent); background: var(--accent-soft); color: var(--ink); border-radius: 6px; padding: 5px 7px; font-size: .78rem; line-height: 1.25; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ag-chip.k-entrega { border-left-color: var(--gold); background: var(--gold-soft); } .ag-chip.k-tarea { border-left-color: var(--muted); background: var(--surface-2); }
 .ag-chip.req { outline: 1.5px dashed var(--warn); } .ag-chip.off { opacity: .45; text-decoration: line-through; }
@@ -401,7 +403,7 @@ tr:last-child td { border-bottom: 0; }
 .month-cell.out { opacity: .45; }
 .month-cell.today { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
 .month-num { font: 650 .9rem var(--f-display); }
-.month-cell.today .month-num { color: var(--accent); }
+.month-cell.today .month-num { color: var(--accent-txt); }
 .month-items { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .m-item { font-size: .7rem; line-height: 1.2; padding: 2px 4px; border-radius: 4px; background: var(--accent-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .m-item.k-entrega { background: var(--gold-soft); } .m-item.k-tarea { background: var(--surface-2); }
@@ -763,7 +765,7 @@ td.n, th.n { white-space: nowrap; }
 .por-chip { position: absolute; right: -6px; bottom: -22px; background: var(--sol); color: #10282A; font-weight: 600; font-size: .85rem; padding: 10px 14px; border-radius: 14px; box-shadow: 0 10px 24px rgba(0,0,0,.2); transform: rotate(3deg); animation: pp-chip .5s 1.6s var(--ease-out, ease) both; }
 .por-locales { max-width: 1120px; width: 100%; margin: 10px auto 0; color: var(--ink); }
 .por-locales h2 { color: #fff; font-size: 1rem; margin: 0 0 10px; }
-.por-ver { text-align: center; font-size: .75rem; color: rgba(255,255,255,.6); margin: 26px 0 0; }
+.por-ver { text-align: center; font-size: .78rem; color: rgba(255,255,255,.78); margin: 26px 0 0; }
 .por-ver a { color: rgba(255,255,255,.75); }
 @keyframes pp-entra { from { opacity: 0; transform: translateY(18px) rotate(-5deg); } }
 @keyframes pp-barra { from { transform: scaleY(0); } }
@@ -921,7 +923,7 @@ td.n, th.n { white-space: nowrap; }
 .bc-op { display: flex; justify-content: space-between; align-items: center; gap: 10px; width: 100%; border: 0; background: none; padding: 10px 12px; border-radius: 10px; font: inherit; color: var(--ink); text-align: left; cursor: pointer; }
 .bc-op small { color: var(--muted); }
 .bc-op.act, .bc-op:hover { background: var(--surface-2); }
-.bc-nueva { justify-content: flex-start; color: var(--primary); font-weight: 600; }
+.bc-nueva { justify-content: flex-start; color: var(--accent-txt); font-weight: 600; }
 .bc-nueva .i { width: 16px; height: 16px; }
 .precio-wrap { display: inline-flex; align-items: center; gap: 2px; border-bottom: 1px dashed color-mix(in srgb, var(--muted) 60%, transparent); }
 .precio-ln { border: 0 !important; background: transparent !important; padding: 2px 0 !important; min-height: 0 !important; width: 8ch; font: inherit; color: inherit; box-shadow: none !important; }
@@ -939,7 +941,7 @@ td.n, th.n { white-space: nowrap; }
 .ind { background: var(--surface); border: 1px solid var(--renglon); border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
 .ind-head { display: flex; justify-content: space-between; align-items: center; border: 0; background: none; padding: 0; cursor: pointer; color: var(--ink); font: inherit; text-align: left; }
 .ind-head h2 { margin: 0; font-size: 1.05rem; }
-.ind-head span { display: inline-flex; align-items: center; gap: 2px; font-size: .85rem; color: var(--primary); font-weight: 600; }
+.ind-head span { display: inline-flex; align-items: center; gap: 2px; font-size: .85rem; color: var(--accent-txt); font-weight: 600; }
 .ind-head .i { width: 15px; height: 15px; }
 .ind-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .ind-k { display: flex; flex-direction: column; gap: 1px; padding: 10px 12px; border-radius: 12px; background: var(--surface-2); min-width: 0; }
@@ -1115,7 +1117,7 @@ details > summary { cursor: pointer; }
 .hoy { display: flex; flex-direction: column; gap: 14px; }
 .hoy-acciones { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 .hoy-acc { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px; border-radius: 16px; border: 1px solid var(--line-suave); background: var(--surface); box-shadow: var(--sombra-card); cursor: pointer; text-align: left; font-weight: 600; font-size: .9rem; color: var(--ink); transition: transform .15s var(--ease-suave), border-color .2s; }
-.hoy-acc .i { width: 32px; height: 32px; padding: 7px; border-radius: 10px; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
+.hoy-acc .i { width: 32px; height: 32px; padding: 7px; border-radius: 10px; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent-txt); }
 .hoy-acc:first-child { background: var(--accent); color: var(--accent-ink, #fff); border-color: var(--accent); }
 .hoy-acc:first-child .i { background: color-mix(in srgb, #fff 20%, transparent); color: inherit; }
 @media (hover: hover) { .hoy-acc:hover { transform: translateY(-2px); border-color: var(--line); } }
@@ -1131,7 +1133,7 @@ details > summary { cursor: pointer; }
 .hoy-fila.mov { cursor: default; }
 .hoy-fila b { display: block; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .hoy-fila .grow { min-width: 0; }
 .hoy-fila small { color: var(--muted); font-size: .8rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.hoy-h { font-weight: 600; color: var(--accent); min-width: 44px; }
+.hoy-h { font-weight: 600; color: var(--accent-txt); min-width: 44px; }
 .hoy-vacio { padding: 4px 0 2px; }
 @media (max-width: 600px) { .hoy-acciones { grid-template-columns: repeat(2, minmax(0, 1fr)); } .hoy-acc { flex-direction: row; align-items: center; padding: 12px; } .hoy-cifras b { font-size: 1.05rem; } }
 .cal-op { display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 16px; background: var(--surface-2); }
@@ -1149,7 +1151,7 @@ details > summary { cursor: pointer; }
 .idea-txt { font-size: .88rem; line-height: 1.45; resize: vertical; }
 .redes-ini { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); padding: 14px 16px; }
 .redes-ini small { display: block; color: var(--muted); font-size: .76rem; } .redes-ini b { display: block; font-weight: 600; }
-.redes-ico { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; flex: none; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
+.redes-ico { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; flex: none; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent-txt); }
 @media (max-width: 600px) { .ideas { grid-template-columns: 1fr; } }
 .hoy-fila .grow { flex: 1; } .hoy-fila > b.num { flex: none; }
 
@@ -1195,6 +1197,71 @@ details > summary { cursor: pointer; }
   .crecer-res > div:last-child { grid-column: 1 / -1; }
 }
 
+/* ---------- v27: portada con secciones (jerarquía: promesa → qué hace → para quién → acción) ---------- */
+.portada { min-height: 0; }
+.por-hero { min-height: calc(100vh - 140px); min-height: calc(100dvh - 140px); }
+.por-sec { background: var(--fondo); color: var(--ink); margin: 56px calc(-1 * var(--por-pad, 24px)) 0; padding: clamp(56px, 8vw, 104px) var(--por-pad, 24px); }
+.por-sec-in { max-width: 1120px; margin: 0 auto; }
+.por-sec h2 { font: 400 clamp(2rem, 4.2vw, 3.1rem)/1.05 var(--f-serif); letter-spacing: -.02em; max-width: 18ch; margin: 0 0 clamp(32px, 5vw, 56px); color: var(--ink); }
+.por-filas { margin: 0; display: grid; }
+.por-filas > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 8px 48px; padding: 26px 0; border-top: 1px solid var(--line); align-items: baseline; }
+.por-filas > div:last-child { border-bottom: 1px solid var(--line); }
+.por-filas dt { font: 400 clamp(1.8rem, 3.4vw, 2.6rem)/1 var(--f-serif); letter-spacing: -.02em; color: var(--accent-txt, var(--ink)); }
+.por-filas dd { margin: 0; }
+.por-filas dd p { font-size: 1.08rem; line-height: 1.55; max-width: 52ch; color: var(--ink); }
+.por-filas dd small { display: block; margin-top: 10px; color: var(--muted); font-size: .85rem; }
+.por-para { margin: 40px 0 0; max-width: 60ch; color: var(--muted); font-size: 1rem; }
+.por-fin { text-align: center; padding: clamp(56px, 8vw, 96px) 0 8px; }
+.por-fin h2 { font: 400 clamp(2rem, 4.6vw, 3.3rem)/1.05 var(--f-serif); letter-spacing: -.02em; color: #fff; margin: 0 0 12px; }
+.por-fin p { color: rgba(255,255,255,.86); margin: 0 auto 26px; max-width: 46ch; }
+.por-fin .por-btns { justify-content: center; }
+@media (max-width: 860px) {
+  .por-hero { min-height: 0; }
+  .por-vis { order: 0; max-width: 380px; }
+  .por-filas > div { grid-template-columns: minmax(0, 1fr); padding: 22px 0; }
+  .por-sec { margin-top: 48px; }
+}
+
+.portada { --por-pad: clamp(16px, 5vw, 56px); background: radial-gradient(1100px 560px at 82% 360px, #14919C 0%, #0B6870 58%, #095961 100%) #095961; }
+
+/* ---------- v27: accesibilidad y contraste (auditoría WCAG AA) ---------- */
+/* El color de la app se usa tal cual en fondos; para TEXTO se oscurece (claro) o aclara (oscuro) hasta pasar 4.5:1 */
+:root { --accent-txt: color-mix(in srgb, var(--accent) 78%, #000); --accent-soft: color-mix(in srgb, var(--accent) 10%, var(--surface)); --muted: #5F5F5F; --wa-txt: #0E6F37; }
+:root[data-theme="dark"] { --accent-txt: color-mix(in srgb, var(--accent) 50%, #fff); --accent-soft: color-mix(in srgb, var(--accent) 22%, var(--surface)); --muted: #A3A3A8; --wa-txt: #5BD08A; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent-txt: color-mix(in srgb, var(--accent) 50%, #fff); --accent-soft: color-mix(in srgb, var(--accent) 22%, var(--surface)); --muted: #A3A3A8; --wa-txt: #5BD08A; } }
+.btn-wa-sm { color: var(--wa-txt); }
+/* rellenos sólidos con el color de la app: texto según su luminosidad (--primary-ink) */
+.hoy-acc:first-child, .cal-cab.hoy .cal-dia b, .logo-ini, .pub-ini { background: var(--primary); color: var(--primary-ink); }
+.hoy-acc:first-child .i { color: inherit; }
+
+/* objetivos táctiles de 44 px en pantallas táctiles (Apple HIG / WCAG 2.5.5) */
+@media (pointer: coarse) {
+  .btn, .btn.sm, .chip, .seg button, .icon-btn { min-height: 44px; }
+  .btn.icon-btn, .btn.sm[aria-label] { min-width: 44px; }
+  .swatch { width: 44px; height: 44px; }
+  .link-sm, .ini-todo, .ind-head, .link-precio { padding-block: 10px; margin-block: -10px; }
+  .qty button { position: relative; } .qty button::after { content: ""; position: absolute; inset: -8px; }
+}
+/* táctil: sin demora de doble toque; hojas sin arrastrar la página de fondo */
+html { touch-action: manipulation; -webkit-tap-highlight-color: transparent; scroll-padding-bottom: 96px; }
+.sheet, .bc-lista, .cal { overscroll-behavior: contain; }
+/* foco visible y consistente en todo control */
+:focus-visible { outline: 2px solid var(--accent-txt); outline-offset: 2px; border-radius: 6px; }
+.in:focus-visible { outline: none; }
+/* selección y caret con el color de la marca */
+::selection { background: color-mix(in srgb, var(--accent) 24%, transparent); }
+input, textarea { caret-color: var(--accent-txt); }
+/* enlace para saltar al contenido */
+.saltar { position: absolute; left: 12px; top: -60px; z-index: 300; background: var(--ink); color: var(--bg); padding: 10px 14px; border-radius: 10px; text-decoration: none; font-weight: 600; }
+.saltar:focus { top: 12px; }
+/* preferencias del sistema: menos transparencia y más contraste */
+@media (prefers-reduced-transparency: reduce) { .tabbar, .pub-preview { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: var(--surface) !important; } }
+@media (prefers-contrast: more) { :root { --line: #8A8A8A; --line-suave: #8A8A8A; --muted: #3A3A3A; } .card, .hoy-bloque, .in { border: 1px solid var(--line); } }
+/* tipografía: números tabulares en cifras; títulos equilibrados */
+.num, .hoy-cifras b, .crecer-res b, .ind-k b, .kpi .val, .accion-valor b, .cal-h, .hoy-h { font-variant-numeric: tabular-nums; }
+h1, h2, h3, .por-sec h2, .por-fin h2 { text-wrap: balance; }
+p, dd, .small { text-wrap: pretty; }
+
 </style>
 </head>
 <body>
@@ -1207,7 +1274,7 @@ details > summary { cursor: pointer; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '26';
+const VERSION = '27';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -1746,7 +1813,8 @@ function shell(contenido) {
       <button class="ayuda-side" data-act="ayuda">${icon('help')}<span>¿Necesitas ayuda?</span></button>
       <div class="mode-pill"><span class="dot ${S.modo === 'nube' ? 'cloud' : ''}"></span>${S.modo === 'nube' ? (S.sincronizando ? 'Poniéndose al día…' : 'Sincronizado en la nube') : 'Guardado en este dispositivo'} · v${VERSION}</div>
     </aside>
-    <main class="main"><div class="wrap">
+    <button class="saltar" data-act="saltar">Saltar al contenido</button>
+    <main class="main" id="contenido" tabindex="-1"><div class="wrap">
       <div class="mobile-top"><div class="brand">${MARCA}<b>${esc(S.negocio.nombre)}</b></div><div class="hstack" style="gap:2px"><button class="btn sm ghost" data-act="ayuda" aria-label="Ayuda">${icon('help')}</button><a class="btn sm ghost" href="#ajustes" aria-label="Ajustes">${icon('gear')}</a></div></div>
       ${S.negocio.id.startsWith('demo-') ? `<div class="banner"><span>Ejemplo: pruébalo todo, nada se guarda.</span><button class="btn sm" data-act="ver-ejemplos">Ver otros ejemplos</button></div>` : ''}
       ${contenido}
@@ -1857,6 +1925,23 @@ function vistaBienvenida() {
         </div>
         <div class="por-chip" data-n="3">Hoy: +3 ventas</div>
       </div>
+    </section>
+    <section class="por-sec" aria-labelledby="por-que">
+      <div class="por-sec-in">
+        <h2 id="por-que">Todo lo que pasa en tu negocio, en un solo lugar.</h2>
+        <dl class="por-filas">
+          <div><dt>Registra.</dt><dd><p>Cada venta, servicio y egreso en segundos, con el cliente y el medio de pago. El resultado del mes se calcula solo.</p><small>Movimientos · Ticket promedio · Metas</small></dd></div>
+          <div><dt>Agenda.</dt><dd><p>Tus clientas reservan en tu página, con tu logo y tus horarios. Tú confirmas, bloqueas horas y ves todo en tu calendario.</p><small>Página de reservas · Recordatorios por WhatsApp · Google Calendar</small></dd></div>
+          <div><dt>Crece.</dt><dd><p>Cada día te dice a quién escribir y por qué: quién está por volver, a quién le toca su mantención y qué publicar en redes.</p><small>Acciones de hoy · Retención · Ideas para Instagram</small></dd></div>
+          <div><dt>Controla.</dt><dd><p>Stock que se descuenta solo, costo de cada producto según su receta y pedidos a proveedores listos para enviar.</p><small>Inventario · Producción · Proveedores</small></dd></div>
+        </dl>
+        <p class="por-para">Pensado para salones de uñas, peluquerías, barberías, centros de estética, tiendas y emprendimientos que producen lo que venden.</p>
+      </div>
+    </section>
+    <section class="por-fin">
+      <h2>Empieza hoy con lo que ya tienes.</h2>
+      <p>Importa tu Excel o parte desde cero. Funciona en el celular y en el computador.</p>
+      <div class="por-btns"><button class="btn sol" data-act="${empezar}">Empezar gratis</button><button class="btn claro" data-act="ver-ejemplos">Ver un ejemplo</button></div>
     </section>
     ${locales.length ? `<section class="por-locales"><h2>Tus negocios en este dispositivo</h2>
       <div class="card list">${locales.map((n) => `<button class="row click" data-act="abrir" data-id="${esc(n.id)}" style="border-left:0;border-right:0;border-bottom:0;background:none;width:100%;text-align:left"><div class="avatar">${esc(iniciales(n.nombre))}</div><div class="grow"><div class="t">${esc(n.nombre)}</div><div class="s">${esc(rubroTexto(n))}</div></div>${icon('right')}</button>`).join('')}</div></section>` : ''}
@@ -2219,7 +2304,7 @@ function vistaVender() {
         ${tabs.length > 1 ? `<div class="seg">${tabs.map((t) => `<button data-act="vender-tab" data-tab="${t}" class="${S.ui.vender.tab === t ? 'on' : ''}">${t === 'servicios' ? 'Servicios' : 'Productos'}</button>`).join('')}</div>` : `<h2>${tabs[0] === 'servicios' ? 'Servicios' : tabs[0] === 'productos' ? 'Productos' : 'Agrega lo que vendiste'}</h2>`}
         <button class="btn sm" data-act="item-libre">${icon('plus')}Agregar nuevo</button>
       </div>
-      ${tabs.length ? `<input class="in" id="q-vender" placeholder="Buscar…" value="${esc(S.ui.vender.q)}" autocomplete="off">` : ''}
+      ${tabs.length ? `<input class="in" id="q-vender" type="search" aria-label="Buscar en el catálogo" autocomplete="off" placeholder="Buscar…" value="${esc(S.ui.vender.q)}" autocomplete="off">` : ''}
       <div class="catalog" id="catalogo-grid">${gridCatalogo()}</div>
     </div>
     <div class="card cart">
@@ -2393,7 +2478,7 @@ function vistaClientes() {
       <button class="chip ${ui.f === 'reactivar' ? 'on' : ''}" data-act="cli-f" data-f="reactivar">Por reactivar (${nReact})</button>
       <button class="chip ${ui.f === 'cumple' ? 'on' : ''}" data-act="cli-f" data-f="cumple">Cumpleaños del mes (${nCumple})</button>
       <button class="chip ${ui.f === 'top' ? 'on' : ''}" data-act="cli-f" data-f="top">Los que más compran</button></div>
-      <input class="in" id="q-clientes" placeholder="Buscar por nombre o teléfono" value="${esc(ui.q)}" style="max-width:280px" autocomplete="off"></div>
+      <input class="in" id="q-clientes" type="search" aria-label="Buscar clientes por nombre o teléfono" placeholder="Buscar por nombre o teléfono" value="${esc(ui.q)}" style="max-width:280px" autocomplete="off"></div>
     ${ui.f === 'reactivar' ? `<p class="small muted">Clientes que no han vuelto en más de ${DIAS_REACTIVAR} días. Toca WhatsApp para enviarles un mensaje ya escrito.${(() => { const sin = rs.filter((r) => !r.c.telefono).length; return sin ? ` ${sin === rs.length ? 'Ninguna tiene' : `${sin} no tienen`} teléfono guardado: toca <b>Agregar WhatsApp</b>, escribe su número y se abre el mensaje.` : ''; })()}</p>${nAgendadas ? `<div class="banner ok-soft">${icon('cal')}<span>${nAgendadas === 1 ? '1 clienta no aparece aquí porque ya tiene' : `${nAgendadas} clientas no aparecen aquí porque ya tienen`} hora agendada este mes. No necesitan reactivación.</span></div>` : ''}` : ''}
     <div class="list" id="lista-clientes">${rs.length ? rs.map((r) => `<div class="row click" data-act="ver-cliente" data-id="${r.c.id}">
         <div class="avatar">${esc(iniciales(r.c.nombre))}</div>
@@ -3928,8 +4013,8 @@ async function pubEnviar(d) {
 // Portada de la página pública: foto, logo y nombre del negocio (sin marca de MiDerno)
 function portadaNegocio(neg, pf) {
   const portada = (pf.fotos || []).map(imgSegura).filter(Boolean)[0];
-  const logo = imgSegura(pf.logo) ? `<img class="pub-logo" src="${imgSegura(pf.logo)}" alt="Logo de ${esc(neg.nombre)}">` : `<span class="pub-logo pub-ini" aria-hidden="true">${esc(iniciales(neg.nombre))}</span>`;
-  return `<header class="pub-cab ${portada ? 'con-foto' : ''}">${portada ? `<div class="pub-portada"><img src="${portada}" alt="Foto de ${esc(neg.nombre)}"></div>` : ''}
+  const logo = imgSegura(pf.logo) ? `<img class="pub-logo" width="72" height="72" src="${imgSegura(pf.logo)}" alt="Logo de ${esc(neg.nombre)}">` : `<span class="pub-logo pub-ini" aria-hidden="true">${esc(iniciales(neg.nombre))}</span>`;
+  return `<header class="pub-cab ${portada ? 'con-foto' : ''}">${portada ? `<div class="pub-portada"><img src="${portada}" width="900" height="394" fetchpriority="high" alt="Foto de ${esc(neg.nombre)}"></div>` : ''}
     <div class="pub-ident">${logo}<div><h1>${esc(neg.nombre)}</h1><p>Reserva tu hora en línea. Te confirmamos por WhatsApp.</p></div></div></header>`;
 }
 
@@ -3980,7 +4065,7 @@ const linkMapa = (pf) => urlSegura(pf.maps_url) || `https://www.google.com/maps/
 function cabeceraNegocio(pf) {
   if (!pf) return '';
   const fotos = (pf.fotos || []).map(imgSegura).filter(Boolean).slice(1);
-  return `${fotos.length ? `<div class="pub-fotos">${fotos.map((f, i) => `<img src="${f}" alt="Foto ${i + 1} del negocio" loading="lazy">`).join('')}</div>` : ''}
+  return `${fotos.length ? `<div class="pub-fotos">${fotos.map((f, i) => `<img src="${f}" width="190" height="150" alt="Foto ${i + 1} del negocio" loading="lazy">`).join('')}</div>` : ''}
     ${pf.direccion || pf.maps_url ? `<div class="pub-lugar">
       ${pf.direccion ? `<div class="small">${esc(pf.direccion)}</div>` : ''}
       <div class="hstack"><a class="btn sm" target="_blank" rel="noopener" href="${esc(linkMapa(pf))}">Cómo llegar</a>${urlSegura(pf.maps_url) ? `<a class="btn sm" target="_blank" rel="noopener" href="${esc(urlSegura(pf.maps_url))}">Ver reseñas y fotos en Google</a>` : ''}</div>
@@ -4359,9 +4444,9 @@ function ajustesMensajes() {
 function ajustesListas() {
   const ml = Object.values(metodos());
   return `<form class="grid g3" id="form-listas">
-    <div class="card stack"><h2>Categorías de egreso</h2><p class="small muted">Una por línea. Aparecen al registrar un egreso.</p><textarea class="in" name="categorias_gasto" id="l-cat" rows="9">${esc(catGastos().join('\n'))}</textarea></div>
-    <div class="card stack"><h2>Medios de pago</h2><p class="small muted">Una por línea. Ej: Mercado Pago, Webpay, Junaeb.</p><textarea class="in" name="metodos" id="l-met" rows="9">${esc(ml.join('\n'))}</textarea></div>
-    <div class="card stack"><h2>Unidades de medida</h2><p class="small muted">Para insumos y recetas. Ej: kg, gr, ml, docena.</p><textarea class="in" name="unidades" id="l-uni" rows="9">${esc(unidades().join('\n'))}</textarea></div>
+    <div class="card stack"><h2>Categorías de egreso</h2><p class="small muted">Una por línea. Aparecen al registrar un egreso.</p><textarea class="in" name="categorias_gasto" id="l-cat" aria-label="Categorías de egreso, una por línea" rows="9">${esc(catGastos().join('\n'))}</textarea></div>
+    <div class="card stack"><h2>Medios de pago</h2><p class="small muted">Una por línea. Ej: Mercado Pago, Webpay, Junaeb.</p><textarea class="in" name="metodos" id="l-met" aria-label="Medios de pago, uno por línea" rows="9">${esc(ml.join('\n'))}</textarea></div>
+    <div class="card stack"><h2>Unidades de medida</h2><p class="small muted">Para insumos y recetas. Ej: kg, gr, ml, docena.</p><textarea class="in" name="unidades" id="l-uni" aria-label="Unidades de medida, una por línea" rows="9">${esc(unidades().join('\n'))}</textarea></div>
     <div class="span2 hstack" style="grid-column:1/-1"><button class="btn pri">Guardar listas</button><button type="button" class="btn" data-act="listas-reset">Volver a las originales</button></div>
   </form>`;
 }
@@ -4773,7 +4858,7 @@ function vistaGastoRapido() {
   return `<form class="gasto-rapido stack" id="form-gasto-rapido">
     <label class="monto-grande"><span class="muted">$</span><input id="g-monto" name="monto" inputmode="numeric" placeholder="0" autocomplete="off" aria-label="${t_('monto')}"></label>
     <div class="chips" role="radiogroup" aria-label="${t_('categoria')}">${catGastos().map((c) => `<button type="button" class="chip ${c === cat ? 'on' : ''}" data-act="g-cat" data-c="${esc(c)}">${esc(c)}</button>`).join('')}</div>
-    <input class="in" name="descripcion" id="g-desc" placeholder="${t_('detalle_opc')}">
+    <input class="in" name="descripcion" id="g-desc" aria-label="Detalle del egreso (opcional)" autocomplete="off" placeholder="${t_('detalle_opc')}">
     <div class="form-row"><input class="in" type="date" name="fecha" id="g-fecha" value="${hoy()}" max="${hoy()}" aria-label="${t_('fecha')}">${provs.length ? `<select class="in" name="proveedor" id="g-prov" aria-label="${t_('proveedor')}">${opt('', t_('sin_proveedor'))}${provs.map((p) => opt(p.id, p.nombre)).join('')}</select>` : ''}</div>
     <button class="btn pri block grande">${t_('registrar_gasto')}</button>
   </form>`;
@@ -5346,6 +5431,7 @@ Object.assign(ACC_COBRO, {
   'hoy-venta': () => { S.ui.registro = { ...(S.ui.registro || {}), tipo: 'ingreso' }; ir('vender'); },
   'hoy-egreso': () => { S.ui.registro = { ...(S.ui.registro || {}), tipo: 'gasto' }; ir('vender'); setTimeout(() => $('#g-monto')?.focus(), 120); },
 });
+Object.assign(ACC_COBRO, { saltar: () => { const m = $('#contenido'); m?.focus(); m?.scrollIntoView({ block: 'start' }); } });
 
 /* =========================================================
    Calendario por horas + horarios bloqueados
