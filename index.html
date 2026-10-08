@@ -1267,6 +1267,18 @@ p, dd, .small { text-wrap: pretty; }
 .cobro-fecha label { display: inline-flex; align-items: center; gap: 8px; }
 .imp-export { margin-top: 16px; gap: 12px; flex-wrap: wrap; }
 
+/* v29: unificar servicios y aviso de versión nueva */
+.unir-serv { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: 12px; background: var(--accent-soft); cursor: pointer; }
+.unir-serv input { margin-top: 3px; width: 18px; height: 18px; flex: none; accent-color: var(--primary); }
+.unir-serv span { display: flex; flex-direction: column; gap: 3px; }
+.unir-serv small { color: var(--muted); line-height: 1.4; }
+.version-nueva { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 90; display: flex; align-items: center; gap: 14px; padding: 10px 10px 10px 18px; border-radius: 999px; background: var(--primary); color: var(--primary-ink); box-shadow: 0 10px 30px rgb(0 0 0 / .22); font-size: 14px; max-width: calc(100vw - 32px); animation: vn-in .3s ease-out; }
+.version-nueva .btn { background: var(--primary-ink); color: var(--primary); border-color: transparent; min-height: 34px; padding: 4px 14px; border-radius: 999px; }
+.version-nueva .vn-x { background: none; border: 0; color: inherit; opacity: .7; padding: 6px; cursor: pointer; font-size: 18px; line-height: 1; }
+@keyframes vn-in { from { opacity: 0; transform: translate(-50%, 12px); } }
+@media (max-width: 860px) { .version-nueva { bottom: calc(84px + env(safe-area-inset-bottom)); } }
+@media (prefers-reduced-motion: reduce) { .version-nueva { animation: none; } }
+
 </style>
 </head>
 <body>
@@ -1279,7 +1291,7 @@ p, dd, .small { text-wrap: pretty; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '28';
+const VERSION = '29';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -2559,13 +2571,14 @@ function vistaCatalogo() {
   const tab = S.ui.cat.tab;
   let cuerpo = '';
   if (tab === 'servicios') {
-    const s = db.all('servicios');
-    cuerpo = s.length ? `<table><thead><tr><th>Servicio</th><th class="n">Duración</th><th class="n">Precio</th><th>Estado</th><th></th></tr></thead><tbody>${s.map((x) => `<tr><td><b>${esc(x.nombre)}</b></td><td class="n">${x.duracion_min} min</td><td class="n">${money(x.precio)}</td><td>${x.activo !== false ? '<span class="pill ok">A la venta</span>' : '<span class="pill">Pausado</span>'}</td><td class="n"><button class="btn sm ghost" data-act="servicio" data-id="${x.id}" aria-label="Editar">${icon('edit')}</button></td></tr>`).join('')}</tbody></table>` : '<div class="empty">Agrega tu primer servicio: nombre, duración y precio. Si tienes tu lista en Excel, <a href="#importar">impórtala</a>.</div>';
+    const s = db.all('servicios'); const rep = new Set(servRepetidos().flat().map((x) => x.id));
+    cuerpo = s.length ? `<table><thead><tr><th>Servicio</th><th class="n">Duración</th><th class="n">Precio</th><th>Estado</th><th></th></tr></thead><tbody>${s.map((x) => `<tr><td><b>${esc(x.nombre)}</b>${rep.has(x.id) ? ' <span class="pill warn">Repetido</span>' : ''}</td><td class="n">${x.duracion_min} min</td><td class="n">${money(x.precio)}</td><td>${x.activo !== false ? '<span class="pill ok">A la venta</span>' : '<span class="pill">Pausado</span>'}</td><td class="n"><button class="btn sm ghost" data-act="servicio" data-id="${x.id}" aria-label="Editar">${icon('edit')}</button></td></tr>`).join('')}</tbody></table>` : '<div class="empty">Agrega tu primer servicio: nombre, duración y precio. Si tienes tu lista en Excel, <a href="#importar">impórtala</a>.</div>';
   } else {
     const p = db.all('productos'); const conReceta = tiene('produccion');
     cuerpo = p.length ? `<table><thead><tr><th>Producto</th><th>Código</th><th class="n">Precio</th><th class="n">Costo</th><th class="n">Margen</th>${tiene('inventario') ? '<th class="n">Stock</th>' : ''}<th></th></tr></thead><tbody>${p.map((x) => { const co = costoProducto(x); const mg = Number(x.precio_venta) ? Math.round(((x.precio_venta - co) / x.precio_venta) * 100) : 0; return `<tr><td><b>${esc(x.nombre)}</b>${x.activo === false ? ' <span class="pill">Pausado</span>' : ''}</td><td class="muted">${esc(x.sku || '')}</td><td class="n">${money(x.precio_venta)}</td><td class="n">${money(co)}${conReceta && db.all('formulas').some((f) => f.producto_id === x.id) ? ' <span class="pill acc">receta</span>' : ''}</td><td class="n"><span class="pill ${mg >= 40 ? 'ok' : mg >= 20 ? 'warn' : 'bad'}">${mg}%</span></td>${tiene('inventario') ? `<td class="n">${qtyFmt(stockDe('producto', x.id))}</td>` : ''}<td class="n"><button class="btn sm ghost" data-act="producto" data-id="${x.id}" aria-label="Editar">${icon('edit')}</button></td></tr>`; }).join('')}</tbody></table>` : '<div class="empty">Agrega tu primer producto con su precio de venta. Si tienes tu lista en Excel, <a href="#importar">impórtala</a>.</div>';
   }
   return `${head('Catálogo', 'Lo que vendes', `<button class="btn pri" data-act="${tab === 'servicios' ? 'servicio' : 'producto'}">${icon('plus')}${tab === 'servicios' ? 'Nuevo servicio' : 'Nuevo producto'}</button>`)}
+  ${tab === 'servicios' && servRepetidos().length ? `<div class="banner" style="flex-wrap:wrap;gap:10px"><span>Tienes servicios con el mismo nombre (${servRepetidos().map((g) => esc(g[0].nombre)).join(', ')}). Unifícalos para que sus ventas y citas se cuenten juntas.</span><button class="btn sm" data-act="serv-unificar-todo">Unificar</button></div>` : ''}
   ${conceptosLibres().length ? `<div class="banner" style="flex-wrap:wrap;gap:10px"><span>Tienes ventas importadas sin ordenar (${conceptosLibres().length} nombres distintos).</span><button class="btn sm" data-act="ordenar">Ordenar</button></div>` : ''}
   <div class="card">${tabs.length > 1 ? `<div class="card-head"><div class="seg">${tabs.map((t) => `<button data-act="cat-tab" data-tab="${t}" class="${tab === t ? 'on' : ''}">${t === 'servicios' ? 'Servicios' : 'Productos'}</button>`).join('')}</div></div>` : ''}<div class="tbl-wrap">${cuerpo}</div></div>`;
 }
@@ -2573,14 +2586,19 @@ function formServicio(id) {
   const s = id ? db.get('servicios', id) : { nombre: '', duracion_min: 60, precio: '', activo: true };
   abrirSheet(id ? 'Editar servicio' : 'Nuevo servicio', `<div class="form">${field('Nombre', input('nombre', s.nombre, 'required placeholder="Ej: Manicure permanente"'))}
     <div class="form-row">${field('Precio', input('precio', s.precio, 'inputmode="numeric" required'))}${field('Duración (minutos)', input('duracion_min', s.duracion_min, 'type="number" min="5" step="5"'))}</div>
-    <label class="hstack"><span class="toggle"><input type="checkbox" name="activo" ${s.activo !== false ? 'checked' : ''}><span></span></span>Disponible para vender y agendar</label></div>`, {
+    <label class="hstack"><span class="toggle"><input type="checkbox" name="activo" ${s.activo !== false ? 'checked' : ''}><span></span></span>Disponible para vender y agendar</label>
+    <div id="serv-unir" hidden></div></div>`, {
     pie: `<div class="sheet-foot" style="justify-content:space-between">${id ? `<button type="button" class="btn danger" data-act="del-servicio" data-id="${id}">Eliminar</button>` : '<span></span>'}<div class="hstack"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri">Guardar</button></div></div>`,
     submit: (d) => {
       if (!d.nombre.trim() || num(d.precio) <= 0) return toast('Completa nombre y precio', true);
       const row = { nombre: d.nombre.trim(), precio: num(d.precio), duracion_min: Math.max(5, parseInt(d.duracion_min) || 60), activo: !!d.activo };
-      id ? db.update('servicios', id, row) : db.insert('servicios', row); cerrarSheet(); toast('Servicio guardado'); render();
+      const r = id ? db.update('servicios', id, row) : db.insert('servicios', row);
+      // unificar: los repetidos y las ventas sueltas con el mismo nombre pasan a este servicio
+      const u = d.unificar ? unificarServicio(id || r.id) : (id ? unificarNombreHistorial(id) : null);
+      cerrarSheet(); toast(u && (u.servicios || u.libres || u.citas) ? 'Servicio guardado · ' + textoUnion(u) : 'Servicio guardado'); render();
     },
   });
+  pintarUnirServicio(id); $('#sheet-form [name=nombre]')?.addEventListener('input', () => pintarUnirServicio(id));
 }
 function formProducto(id) {
   const p = id ? db.get('productos', id) : { nombre: '', sku: '', precio_venta: '', costo: '', stock_minimo: 3, activo: true };
@@ -6417,6 +6435,121 @@ Object.assign(CAMB_COBRO, {
   'imp-sf-fecha': (el) => { S.imp.sfFecha = el.value || hoy(); },
   'cobro-sinfecha': (el) => { S.cart.sinFecha = el.checked; if ($('#cobro')) pintarCobro(); else render(); },
 });
+
+/* =========================================================
+   v29: servicios repetidos y nombres sueltos del historial
+   Al editar un servicio en Catálogo, todo lo que se llama igual
+   (otros servicios repetidos y ventas sueltas del historial)
+   se puede unir en ese servicio.
+   ========================================================= */
+
+// "Soft gel", "soft  gel " y "Softgel" son el mismo nombre
+const claveNombre = (n) => norm(n).replace(/ /g, '');
+
+function parecidosServicio(id, nombre) {
+  const k = claveNombre(nombre); if (!k) return { dup: [], libres: [], usos: 0 };
+  const dup = db.all('servicios').filter((s) => s.id !== id && claveNombre(s.nombre) === k);
+  const dupIds = new Set(dup.map((s) => s.id));
+  const libres = db.all('venta_items').filter((i) => !i.item_id && i.tipo_item === 'libre' && claveNombre(i.nombre) === k);
+  const deDup = db.all('venta_items').filter((i) => dupIds.has(i.item_id)).length;
+  const citas = db.all('citas').filter((c) => dupIds.has(c.servicio_id)).length;
+  return { dup, libres, usos: libres.length + deDup, citas };
+}
+
+// mueve ventas, citas y ciclo de los repetidos al servicio que queda, y borra los repetidos
+function unificarServicio(keepId) {
+  const keep = db.get('servicios', keepId); if (!keep) return null;
+  const { dup, libres } = parecidosServicio(keepId, keep.nombre); const dupIds = new Set(dup.map((s) => s.id));
+  const items = db.all('venta_items').filter((i) => (dupIds.has(i.item_id) || i.item_id === keepId) && i.nombre !== keep.nombre).map((i) => i.id);
+  const todos = [...new Set([...items, ...libres.map((i) => i.id)])];
+  if (todos.length) db.updateMany('venta_items', todos, { tipo_item: 'servicio', item_id: keepId, nombre: keep.nombre });
+  const citas = db.all('citas').filter((c) => dupIds.has(c.servicio_id)).map((c) => c.id);
+  if (citas.length) db.updateMany('citas', citas, { servicio_id: keepId });
+  // si el que queda no tenía ciclo propio, hereda el de un repetido
+  const ciclos = cfg().ciclos || {}; const heredado = dup.map((s) => ciclos[s.id]).find((c) => c != null && c !== '');
+  if (dupIds.size && ciclos[keepId] == null && heredado != null) guardarConfig({ ciclos: { ...ciclos, [keepId]: heredado } });
+  if (dupIds.size) db.removeMany('servicios', [...dupIds]);
+  return { servicios: dupIds.size, ventas: todos.length, libres: libres.length, citas: citas.length };
+}
+// al renombrar un servicio, su historial pasa a llamarse igual (es el mismo servicio)
+function unificarNombreHistorial(id) {
+  const s = db.get('servicios', id); const ids = db.all('venta_items').filter((i) => i.item_id === id && i.nombre !== s.nombre).map((i) => i.id);
+  if (ids.length) db.updateMany('venta_items', ids, { nombre: s.nombre });
+  return null;
+}
+const textoUnion = (r) => [r.servicios ? `${r.servicios} servicio${r.servicios > 1 ? 's' : ''} repetido${r.servicios > 1 ? 's' : ''} unido${r.servicios > 1 ? 's' : ''}` : '', r.libres ? `${r.libres} venta${r.libres > 1 ? 's' : ''} del historial ${r.libres > 1 ? 'quedaron' : 'quedó'} con este servicio` : '', r.citas ? `${r.citas} cita${r.citas > 1 ? 's' : ''} actualizada${r.citas > 1 ? 's' : ''}` : ''].filter(Boolean).join(' · ');
+
+// aviso dentro del formulario: se actualiza mientras escribes el nombre
+function pintarUnirServicio(id) {
+  const box = $('#serv-unir'); const inp = $('#sheet-form [name=nombre]'); if (!box || !inp) return;
+  const p = parecidosServicio(id, inp.value);
+  if (!p.dup.length && !p.libres.length) { box.innerHTML = ''; box.hidden = true; return; }
+  const partes = [p.dup.length ? `<b>${p.dup.length} servicio${p.dup.length > 1 ? 's' : ''} más</b> con este nombre${p.dup.some((s) => s.nombre !== inp.value.trim()) ? ` (${[...new Set(p.dup.map((s) => '“' + esc(s.nombre.trim()) + '”'))].join(', ')})` : ''}` : '', p.libres.length ? `<b>${p.libres.length} venta${p.libres.length > 1 ? 's' : ''}</b> en tu historial anotada${p.libres.length > 1 ? 's' : ''} con este nombre sin estar unida${p.libres.length > 1 ? 's' : ''} al catálogo` : ''].filter(Boolean);
+  box.hidden = false;
+  box.innerHTML = `<label class="unir-serv"><input type="checkbox" name="unificar" checked><span><b>Unificar todo en este servicio</b><small>Encontramos ${partes.join(' y ')}. Al guardar, ${p.dup.length ? 'los repetidos se juntan en uno solo con todas sus ventas y citas' : 'esas ventas quedan unidas a este servicio'}, así tus reportes lo cuentan como uno.</small></span></label>`;
+}
+function servRepetidos() {
+  const g = new Map(); for (const s of db.all('servicios')) { const k = claveNombre(s.nombre); if (k) (g.get(k) || g.set(k, []).get(k)).push(s); }
+  return [...g.values()].filter((x) => x.length > 1);
+}
+// une todos los grupos de repetidos: queda el que más se usa (y si empatan, el activo)
+function unificarTodosServicios() {
+  const usos = (s) => db.all('venta_items').filter((i) => i.item_id === s.id).length + db.all('citas').filter((c) => c.servicio_id === s.id).length;
+  let n = 0;
+  for (const g of servRepetidos()) { const keep = [...g].sort((a, b) => usos(b) - usos(a) || (b.activo !== false) - (a.activo !== false))[0]; const r = unificarServicio(keep.id); n += r?.servicios || 0; }
+  render(); toast(n ? `Listo: ${n} servicio${n > 1 ? 's' : ''} repetido${n > 1 ? 's' : ''} unido${n > 1 ? 's' : ''}, con todo su historial` : 'No hay servicios repetidos');
+}
+Object.assign(ACC_COBRO, {
+  'serv-unificar-todo': () => { const g = servRepetidos(); confirmar(`Se juntarán ${g.length} grupo${g.length > 1 ? 's' : ''} de servicios con el mismo nombre (${g.map((x) => esc(x[0].nombre)).join(', ')}). Sus ventas y citas pasan al que queda.`, unificarTodosServicios, 'Unificar'); },
+});
+
+/* =========================================================
+   v29: versiones nuevas llegan solas
+   Cada vez que publicas MiDerno, build.py deja un version.json
+   con un código único. La app lo revisa cada pocos minutos y al
+   volver a la pestaña: si cambió, avisa (o se recarga sola si
+   nadie está escribiendo nada).
+   ========================================================= */
+
+const BUILD = '47b8d7b8b589'; // build.py lo reemplaza por el código de cada publicación
+const VERSION_CADA = 5 * 60 * 1000;
+let versionNueva = null, ocultaDesde = 0;
+
+async function revisarVersion() {
+  if (BUILD === 'dev' || versionNueva || !/^https?:$/.test(location.protocol)) return;
+  try {
+    const r = await fetch(appUrl() + 'version.json?t=' + Date.now(), { cache: 'no-store' }); if (!r.ok) return;
+    const v = await r.json(); if (v?.build && v.build !== BUILD) { versionNueva = v; avisarVersion(); }
+  } catch { /* sin conexión o sin version.json: se intenta más tarde */ }
+}
+// nadie está a mitad de algo: sin formulario abierto, sin importación ni reserva en curso
+const sePuedeRecargar = () => !document.querySelector('#scrim, dialog[open]') && !S.imp && !(S.pub && S.pub.servicio) && !S.cart?.lineas?.length;
+async function recargarVersion() {
+  const b = document.querySelector('.version-nueva .btn'); if (b) { b.disabled = true; b.textContent = 'Actualizando…'; }
+  // primero termina de guardar en la nube lo que esté pendiente
+  if (S.modo === 'nube') await Promise.race([NubeAdapter.cola, new Promise((ok) => setTimeout(ok, 8000))]);
+  try { guardarCacheNube?.(); } catch {}
+  // la dirección cambia un poco (?v=...) para que el navegador no use la copia vieja guardada
+  const u = new URL(location.href); u.searchParams.set('v', versionNueva?.build || Date.now()); location.replace(u.toString());
+}
+function avisarVersion() {
+  if (document.querySelector('.version-nueva')) return;
+  const el = document.createElement('div'); el.className = 'version-nueva'; el.setAttribute('role', 'status');
+  el.innerHTML = `<span>Hay una versión nueva de MiDerno${versionNueva.version ? ' (v' + esc(versionNueva.version) + ')' : ''}</span><button type="button" class="btn sm">Actualizar</button><button type="button" class="vn-x" aria-label="Más tarde">×</button>`;
+  el.querySelector('.btn').onclick = recargarVersion;
+  el.querySelector('.vn-x').onclick = () => el.remove();
+  document.body.appendChild(el);
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { ocultaDesde = Date.now(); return; }
+  // al volver después de un rato, si hay versión nueva y no estabas haciendo nada, se actualiza sola
+  if (versionNueva && ocultaDesde && Date.now() - ocultaDesde > 60 * 1000 && sePuedeRecargar()) return recargarVersion();
+  revisarVersion();
+});
+setTimeout(revisarVersion, 20 * 1000);
+// después de actualizar, se limpia el ?v= de la dirección
+try { const u = new URL(location.href); if (u.searchParams.has('v')) { u.searchParams.delete('v'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } } catch {}
+setInterval(() => { if (!document.hidden) revisarVersion(); }, VERSION_CADA);
 
 /* =========================================================
    Render, eventos y arranque
