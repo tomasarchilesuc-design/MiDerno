@@ -1,10 +1,59 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Política de privacidad · MiDerno</title><link rel="icon" href="icon-192.png">
-<style>:root{--ink:#10282A;--muted:#5E7477;--bg:#FAFAF7;--marca:#0B6870}@media (prefers-color-scheme:dark){:root{--ink:#EDEDED;--muted:#A3B0B2;--bg:#0E0E0F;--marca:#5CC8C9}}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}main{max-width:680px;margin:0 auto;padding:40px 16px 64px}h1{font-size:1.8rem;margin:0 0 4px}h2{font-size:1.1rem;margin:28px 0 6px}p,li{color:var(--ink)}.muted{color:var(--muted);font-size:.9rem}a{color:var(--marca)}</style></head>
-<body><main><p><a href="./">← Volver a MiDerno</a></p><h1>Política de privacidad</h1><p class="muted">Última actualización: 3 de octubre de 2026</p><p>MiDerno es una herramienta para que pequeños negocios lleven sus ventas, egresos, clientes, agenda e inventario. Esta política explica qué datos guardamos y cómo los usamos.</p>
-<h2>Qué datos guardamos</h2><ul><li><b>Datos de tu cuenta:</b> correo electrónico y, si entras con Google, tu nombre y foto de perfil que Google comparte. No recibimos tu contraseña de Google.</li><li><b>Datos de tu negocio:</b> lo que tú anotas en la app (ventas, egresos, productos, clientes, citas y observaciones).</li></ul>
-<h2>Para qué los usamos</h2><p>Solo para que la app funcione: identificarte, guardar tu información y mostrártela en tus dispositivos. No vendemos ni compartimos tus datos con terceros para publicidad.</p>
-<h2>Dónde se guardan</h2><p>Los datos se guardan en Supabase, nuestro proveedor de base de datos. Cada negocio solo puede ver su propia información. Si usas MiDerno sin cuenta, los datos quedan solo en tu navegador.</p>
-<h2>Datos de tus clientes</h2><p>Lo que anotas de tus clientes (nombre, teléfono, observaciones) es tuyo. Eres responsable de contar con su autorización para guardarlo.</p>
-<h2>Tus derechos</h2><p>Puedes borrar tus datos desde Ajustes (“Empezar de cero”) o pedirnos eliminar tu cuenta escribiendo a <a href="mailto:tomasarchilesuc@gmail.com">tomasarchilesuc@gmail.com</a>.</p>
-<h2>Contacto</h2><p>Dudas sobre privacidad: <a href="mailto:tomasarchilesuc@gmail.com">tomasarchilesuc@gmail.com</a>.</p></main></body></html>
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Política de privacidad · MiDerno</title><meta name="description" content="Cómo MiDerno cuida y usa los datos de tu cuenta y tu negocio.">
+<link rel="icon" href="icon-192.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap">
+<style>
+:root{--ink:#141414;--muted:#5F6362;--bg:#F7F7F5;--surface:#fff;--line:#E6E8E7;--marca:#0B6870;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--ink:#EDEDEB;--muted:#A3A6A5;--bg:#0E0F0F;--surface:#161818;--line:#262A29;--marca:#5CC8C9}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.65 "Geist","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:0 16px}
+.top{max-width:760px;margin:0 auto;padding:22px 0;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.marca{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font:700 1.3rem/1 "Geist",system-ui,sans-serif;letter-spacing:-.04em}.marca i{font-style:normal;font-weight:500;color:var(--marca)}
+.marca svg{width:32px;height:32px}
+.top a.vol{color:var(--marca);font-weight:600;text-decoration:none;font-size:.94rem}
+main{max-width:760px;margin:0 auto 64px;background:var(--surface);border-radius:20px;padding:clamp(22px,5vw,48px)}
+h1{font:700 clamp(1.9rem,5vw,2.5rem)/1.1 "Geist",system-ui,sans-serif;letter-spacing:-.035em;margin:0 0 6px}
+.fecha{color:var(--muted);margin:0 0 28px;font-size:.94rem}
+h2{font:650 1.25rem/1.25 "Geist",system-ui,sans-serif;letter-spacing:-.02em;margin:34px 0 10px}
+p,li{max-width:68ch}ul{padding-left:20px}li{margin:6px 0}a{color:var(--marca)}
+.resumen{background:color-mix(in srgb,var(--marca) 9%,var(--surface));border-radius:14px;padding:16px 18px;margin:0 0 8px}
+footer{max-width:760px;margin:0 auto;padding:0 0 40px;color:var(--muted);font-size:.875rem;display:flex;gap:16px;flex-wrap:wrap}
+footer a{color:var(--muted)}
+</style></head><body>
+<header class="top"><a class="marca" href="./"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0B6870"/><rect x="5" y="7" width="22" height="20" rx="4" fill="#FFF4E2"/><path d="M19.5 5h5v8l-2.5-2-2.5 2z" fill="#E9A23B"/><path d="M10 23v-6.2a2.3 2.3 0 0 1 4.6 0V23m0-6.2a2.3 2.3 0 0 1 4.6 0V23" fill="none" stroke="#0B6870" stroke-width="2.2" stroke-linecap="round"/></svg><span><i>mi</i>derno</span></a><a class="vol" href="./">Ir a MiDerno</a></header>
+<main><h1>Política de privacidad</h1><p class="fecha">Vigente desde el 9 de octubre de 2026</p>
+<div class="resumen"><p><b>En corto:</b> usamos tus datos solo para que MiDerno funcione. No los vendemos, no los usamos para publicidad y puedes pedir que los borremos cuando quieras.</p></div>
+<h2>Quiénes somos</h2>
+<p>MiDerno es una aplicación web para que pequeños negocios anoten sus ventas, egresos, agenda, clientes e inventario. El responsable del servicio es Tomás, fundador de MiDerno, en Chile. Para cualquier consulta sobre tus datos escríbenos a <a href="mailto:hola@miderno.cl">hola@miderno.cl</a>.</p>
+<h2>Qué datos recogemos</h2>
+<ul>
+<li><b>Tu cuenta:</b> correo electrónico y contraseña (guardada cifrada; nunca la vemos). Si entras con Google, recibimos tu nombre, correo y foto de perfil.</li>
+<li><b>Tu negocio:</b> lo que tú anotas en MiDerno: ventas, egresos, servicios, productos, agenda, horarios, equipo, logo y fotos.</li>
+<li><b>Los clientes de tu negocio:</b> nombres, teléfonos, cumpleaños, notas e historial de compras que tú ingresas o que ellos dejan al reservar en tu página de reservas.</li>
+<li><b>Sin cuenta:</b> si usas MiDerno sin crear cuenta, todo queda solo en tu navegador y no llega a nuestros servidores.</li>
+<li><b>Datos técnicos mínimos:</b> el navegador guarda en tu dispositivo una copia de tus datos y tus preferencias (tema, color, tamaño de letra) para que la app abra rápido y funcione sin conexión. No usamos cookies de publicidad ni herramientas de seguimiento de terceros.</li>
+</ul>
+<h2>Para qué los usamos</h2>
+<ul>
+<li>Crear tu cuenta, iniciar sesión y mantenerla segura (por ejemplo, confirmar tu correo o recuperar tu contraseña).</li>
+<li>Guardar y mostrarte la información de tu negocio en cualquier dispositivo.</li>
+<li>Mostrar tu página de reservas y avisarte de nuevas reservas.</li>
+<li>Enviarte correos de servicio: confirmación de cuenta, recuperación de contraseña y avisos importantes. No enviamos publicidad sin tu permiso.</li>
+</ul>
+<h2>Datos de Google</h2>
+<p>Si eliges “Continuar con Google”, solo pedimos tu nombre, correo y foto de perfil, y los usamos únicamente para crear tu cuenta e identificarte al entrar. No accedemos a tu Gmail, tus contactos, tu calendario ni tus archivos. El uso que MiDerno hace de la información recibida de las API de Google cumple con la <a href="https://developers.google.com/terms/api-services-user-data-policy" rel="noopener">Política de datos de usuario de los servicios de API de Google</a>, incluidos los requisitos de uso limitado. No transferimos esos datos a terceros, no los usamos para publicidad y no los usamos para entrenar modelos de inteligencia artificial.</p>
+<h2>Datos de los clientes de tu negocio</h2>
+<p>Los datos de tus clientes te pertenecen a ti y a ellos. Tú decides qué anotar y eres responsable de contar con su autorización. MiDerno los guarda solo para prestarte el servicio, no los contacta por su cuenta y no los comparte.</p>
+<h2>Con quién compartimos datos</h2>
+<p>Solo con los proveedores necesarios para que MiDerno funcione, que tratan los datos por encargo nuestro y bajo sus propias medidas de seguridad:</p>
+<ul><li><b>Supabase:</b> base de datos y cuentas de usuario.</li><li><b>GitHub Pages:</b> publicación de la aplicación.</li><li><b>Servicio de envío de correos:</b> para los correos de cuenta y contraseña.</li><li><b>Google:</b> solo si eliges entrar con Google.</li></ul>
+<p>No vendemos ni arrendamos datos personales. Solo los entregaríamos a una autoridad si la ley lo exige.</p>
+<h2>Cuánto tiempo los guardamos</h2>
+<p>Mientras tu cuenta esté activa. Si pides eliminarla, borramos tu cuenta y los datos de tu negocio dentro de 30 días, salvo lo que la ley nos obligue a conservar.</p>
+<h2>Tus derechos</h2>
+<p>Conforme a la legislación chilena sobre protección de datos personales, puedes pedir acceso, rectificación, eliminación, oposición y portabilidad de tus datos. Desde MiDerno puedes descargar tu información en Excel en cualquier momento. Para todo lo demás, escríbenos a <a href="mailto:hola@miderno.cl">hola@miderno.cl</a> y respondemos en un plazo máximo de 15 días hábiles.</p>
+<h2>Seguridad</h2>
+<p>La conexión con MiDerno va cifrada (HTTPS), las contraseñas se guardan cifradas y cada negocio solo puede ver sus propios datos. Ningún sistema es infalible: si detectamos un problema que afecte tus datos, te avisaremos.</p>
+<h2>Menores de edad</h2><p>MiDerno está pensado para personas mayores de 18 años que administran un negocio.</p>
+<h2>Cambios a esta política</h2><p>Si cambiamos algo importante, lo avisaremos en la app o por correo antes de que empiece a regir.</p></main>
+<footer><span>MiDerno · Chile</span><a href="privacidad.html">Política de privacidad</a><a href="terminos.html">Términos de uso</a><a href="mailto:{CORREO}">{CORREO}</a></footer>
+</body></html>
