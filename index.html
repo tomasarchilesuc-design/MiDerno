@@ -1403,6 +1403,50 @@ p, dd, .small { text-wrap: pretty; }
   .por-shot-m { right: -6px; width: 34%; border-width: 4px; border-radius: 18px; }
 }
 
+/* ===== v32: estado de la cita ===== */
+:root { --e-agendada: #8A8F8E; --e-confirmada: var(--marca); --e-asistio: #6A4FC9; --e-pagada: var(--ok); }
+:root[data-theme="dark"] { --e-agendada: #8E9493; --e-asistio: #B39DF6; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --e-agendada: #8E9493; --e-asistio: #B39DF6; } }
+.cal-est { display: inline-block; width: 9px; height: 9px; border-radius: 50%; flex: none; vertical-align: middle; background: var(--c, var(--e-agendada)); }
+.cal-est.e-agendada { --c: transparent; box-shadow: inset 0 0 0 1.75px var(--e-agendada); }
+.cal-est.e-confirmada { --c: var(--e-confirmada); }
+.cal-est.e-asistio { --c: var(--e-asistio); }
+.cal-est.e-completada { --c: var(--e-pagada); }
+.cal-est.e-no_asistio, .cal-est.e-cancelada, .cal-est.e-rechazada { --c: var(--bad); }
+/* en la semana: punto arriba a la derecha y el estado junto a la hora */
+.cal-ev > .cal-est { position: absolute; top: 5px; right: 5px; }
+.cal-ev.corto > .cal-est { position: static; order: -1; }
+.cal-ev:not(.corto) .cal-h { padding-right: 12px; }
+.cal-est-t { font-weight: 600; }
+.cal-ev:not(.corto) .cal-h { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cal-ev.e-confirmada .cal-est-t { color: var(--e-confirmada); }
+.cal-ev.e-asistio .cal-est-t { color: var(--e-asistio); }
+.cal-ev.e-completada .cal-est-t { color: var(--e-pagada); }
+/* agendada sin confirmar: un poco más clara para que se note la diferencia */
+.cal-ev.k-cita.e-agendada { background-image: repeating-linear-gradient(135deg, transparent 0 6px, color-mix(in srgb, var(--surface) 55%, transparent) 6px 9px); }
+.cal-ley .cal-est { margin-right: 6px; }
+/* en la lista del día */
+.est-cita { display: inline-flex; align-items: center; gap: 5px; font-weight: 600; }
+.est-cita .cal-est { width: 8px; height: 8px; }
+.est-cita.e-agendada { color: var(--muted); }
+.est-cita.e-confirmada { color: var(--e-confirmada); }
+.est-cita.e-asistio { color: var(--e-asistio); }
+.est-cita.e-completada { color: var(--e-pagada); }
+.est-cita.e-no_asistio, .est-cita.e-cancelada, .est-cita.e-rechazada { color: var(--bad); }
+.pill.asis { background: color-mix(in srgb, var(--e-asistio) 13%, var(--surface)); color: var(--e-asistio); }
+/* pasos al abrir una cita */
+.cita-pasos { display: flex; align-items: center; gap: 4px; padding: 4px; border-radius: 14px; background: var(--surface-2); }
+.cita-pasos .paso { flex: 1 1 0; min-width: 0; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; padding: 6px 8px; border: 0; border-radius: 10px; background: transparent; color: var(--muted); font: 600 .875rem/1.1 var(--f-ui, inherit); cursor: pointer; white-space: nowrap; }
+.cita-pasos .paso:hover:not(:disabled) { background: var(--surface); color: var(--ink); }
+.cita-pasos .paso:focus-visible { outline: 2px solid var(--marca); outline-offset: 1px; }
+.cita-pasos .paso.hecho { color: var(--ink); }
+.cita-pasos .paso.on { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 0 1px var(--line); cursor: default; }
+.cita-pasos .paso.on.e-confirmada { color: var(--e-confirmada); }
+.cita-pasos .paso.on.e-asistio { color: var(--e-asistio); }
+.cita-pasos .paso-sep { width: 8px; height: 1.5px; background: var(--line); flex: none; }
+.cita-pasos-ayuda { margin: -2px 2px 0; }
+@media (max-width: 380px) { .cita-pasos .paso { font-size: .8125rem; gap: 4px; padding: 6px 4px; } .cita-pasos .paso-sep { display: none; } }
+
 </style>
 </head>
 <body>
@@ -1415,7 +1459,7 @@ p, dd, .small { text-wrap: pretty; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '31';
+const VERSION = '32';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -3125,7 +3169,7 @@ function borrarReceta(prodId) {
    - Recordatorios: cualquier cosa que haya que hacer un día
    ========================================================= */
 
-const ESTADOS_CITA = { solicitada: ['Por confirmar', 'warn'], agendada: ['Agendada', ''], confirmada: ['Confirmada', 'acc'], completada: ['Pagada', 'ok'], no_asistio: ['No vino', 'bad'], cancelada: ['Cancelada', 'bad'], rechazada: ['Rechazada', 'bad'] };
+const ESTADOS_CITA = { solicitada: ['Por confirmar', 'warn'], agendada: ['Agendada', ''], confirmada: ['Confirmada', 'acc'], asistio: ['Asistió', 'asis'], completada: ['Pagada', 'ok'], no_asistio: ['No vino', 'bad'], cancelada: ['Cancelada', 'bad'], rechazada: ['Rechazada', 'bad'] };
 const ESTADOS_EV = { pendiente: ['Pendiente', ''], entregada: ['Entregada', 'ok'], hecha: ['Hecha', 'ok'], cancelada: ['Cancelada', 'bad'] };
 const INACTIVOS = ['cancelada', 'rechazada', 'no_asistio'];
 const DIAS_CORTOS = ['lun', 'mar', 'mié', 'jue', 'vie', 'sáb', 'dom'];
@@ -3196,7 +3240,7 @@ function filaAgenda(i) {
     if (abierta && tel) acciones.push(`<a class="btn sm" target="_blank" rel="noopener" href="${waLink(tel, msg('recordatorio', { nombre: primerNombre(i.cl.nombre), servicio: i.s?.nombre || 'atención', fecha: fechaLarga(r.fecha), hora: hhmm(r.hora) }))}">${icon('chat')}Recordar</a>`);
     if (i.estado === 'solicitada' && tel && cfg().abono?.activo) acciones.push(`<a class="btn sm" target="_blank" rel="noopener" href="${waLink(tel, msgAbono(r, i.cl, i.s))}">Pedir abono</a>`);
     if (i.estado === 'solicitada') acciones.push(`<button class="btn sm" data-act="cita-estado" data-id="${r.id}" data-e="rechazada">Rechazar</button><button class="btn sm pri" data-act="confirmar-reserva" data-id="${r.id}">Confirmar</button>`);
-    else if (abierta) acciones.push(`${i.estado === 'agendada' ? `<button class="btn sm" data-act="cita-estado" data-id="${r.id}" data-e="confirmada">Confirmar</button>` : ''}<button class="btn sm" data-act="cita-estado" data-id="${r.id}" data-e="no_asistio">No vino</button><button class="btn sm pri" data-act="cita-cobrar" data-id="${r.id}">Cobrar</button>`);
+    else if (abierta) acciones.push(`${i.estado === 'agendada' ? `<button class="btn sm" data-act="cita-estado" data-id="${r.id}" data-e="confirmada">Confirmar</button>` : ''}${i.estado !== 'asistio' ? `<button class="btn sm" data-act="cita-estado" data-id="${r.id}" data-e="asistio">Asistió</button><button class="btn sm" data-act="cita-estado" data-id="${r.id}" data-e="no_asistio">No vino</button>` : ''}<button class="btn sm pri" data-act="cita-cobrar" data-id="${r.id}">Cobrar</button>`);
     acciones.push(`<button class="btn sm ghost" data-act="cita" data-id="${r.id}" aria-label="Editar">${icon('edit')}</button>`);
   } else if (i.kind === 'entrega') {
     if (abierta && tel) acciones.push(`<a class="btn sm" target="_blank" rel="noopener" href="${waLink(tel, msg('entrega', { nombre: primerNombre(i.cl.nombre), pedido: r.titulo || '', fecha: fechaLarga(r.fecha), hora: hhmm(r.hora), hora_txt: r.hora ? ' cerca de las ' + hhmm(r.hora) : '', direccion: r.direccion || '', monto: money(r.monto) }))}">${icon('chat')}Avisar</a>`);
@@ -5519,7 +5563,7 @@ function accionPrincipal(i) {
     if (i.estado === 'completada') return '<span class="ag-hecho">✓ Pagada</span>';
     if (!enAgenda(i)) return `<span class="pill ${(ESTADOS_CITA[i.estado] || [])[1] || ''}">${(ESTADOS_CITA[i.estado] || [''])[0]}</span>`;
     if (i.estado === 'solicitada') return `<button class="btn sm pri" data-act="confirmar-reserva" data-id="${r.id}">Confirmar</button>`;
-    if (yaPaso(i)) return `<button class="btn sm pri" data-act="cita-cobrar" data-id="${r.id}">Cobrar</button>`;
+    if (i.estado === 'asistio' || yaPaso(i)) return `<button class="btn sm pri" data-act="cita-cobrar" data-id="${r.id}">Cobrar</button>`;
     if (tel && !avisadas().has(r.id)) return `<a class="btn sm sol" data-act="ag-avisar" data-id="${r.id}" target="_blank" rel="noopener" href="${waLink(tel, msg('recordatorio', { nombre: primerNombre(i.cl.nombre), servicio: i.s?.nombre || 'atención', fecha: fechaLarga(r.fecha), hora: hhmm(r.hora) }))}">Recordar</a>`;
     return tel ? '<span class="ag-hecho">✓ Avisada</span>' : `<button class="btn sm" data-act="cita-cobrar" data-id="${r.id}">Cobrar</button>`;
   }
@@ -5533,17 +5577,19 @@ function filaAgendaCorta(i) {
   const apagada = i.estado === 'completada' || ['entregada', 'hecha'].includes(i.estado) || !enAgenda(i);
   return `<div class="ag-fila ${k.cls} ${apagada ? 'apagada' : ''} ${i.estado === 'solicitada' ? 'req' : ''} ${S._recien === i.id ? 'recien' : ''}" data-act="ag-detalle" data-id="${i.id}" data-kind="${i.kind}" role="button" tabindex="0">
     <span class="ag-h num">${i.hora || '—'}</span>
-    <span class="ag-q"><b>${esc(i.titulo)}</b><small>${esc([i.kind === 'cita' ? '' : k.label, i.sub, monto].filter(Boolean).join(' · '))}</small></span>
+    <span class="ag-q"><b>${esc(i.titulo)}</b><small>${i.kind === 'cita' ? estadoCita(i.estado) : ''}${esc([i.kind === 'cita' ? '' : k.label, i.sub, monto].filter(Boolean).join(' · '))}</small></span>
     <span class="ag-a">${accionPrincipal(i)}</span></div>`;
 }
 function detalleAgenda(id, kind) {
   const it = itemsDelDia(kind === 'cita' ? db.get('citas', id)?.fecha : db.get('eventos', id)?.fecha, 'todos').find((x) => x.id === id); if (!it) return;
   const [est, cls] = (it.kind === 'cita' ? ESTADOS_CITA : ESTADOS_EV)[it.estado] || ['', ''];
   // reutiliza las acciones completas de la fila clásica
-  const tmp = document.createElement('div'); tmp.innerHTML = filaAgenda(it); const acc = tmp.querySelector('.hstack')?.innerHTML || '';
+  const tmp = document.createElement('div'); tmp.innerHTML = filaAgenda(it); tmp.querySelectorAll('[data-act="cita-estado"][data-e="confirmada"], [data-act="cita-estado"][data-e="asistio"]').forEach((b) => b.remove()); const acc = tmp.querySelector('.hstack')?.innerHTML || '';
   abrirSheet(esc(it.titulo), `<div class="stack"><div class="between"><span class="num"><b>${esc(fechaLarga(it.ref.fecha))}${it.hora ? ', ' + it.hora : ''}</b></span><span class="pill ${cls}">${est}</span></div>
     ${it.sub ? `<p class="muted" style="margin:0">${esc(it.sub)}</p>` : ''}${it.ref.nota ? `<p class="small" style="margin:0">${esc(it.ref.nota)}</p>` : ''}
+    ${it.kind === 'cita' && enAgenda(it) && it.estado !== 'completada' ? pasosCita(it) : ''}
     <div class="ag-det-acc">${acc}</div></div>`);
+  $('.cita-pasos')?.addEventListener('click', (e) => { if (e.target.closest('[data-act]')) cerrarSheet(false); });
   $('.ag-det-acc')?.addEventListener('click', (e) => { const b = e.target.closest('[data-act]'); if (!b) return; if (/Recordar/.test(b.textContent)) marcarAvisada(id); if (['cita-estado', 'ev-estado', 'confirmar-reserva', 'del-cita', 'del-evento'].includes(b.dataset.act)) cerrarSheet(false); });
 }
 // raya roja de la hora actual, entre la última cita pasada y la siguiente
@@ -5850,9 +5896,9 @@ function agendaCalendario() {
         const [est] = (i.kind === 'cita' ? ESTADOS_CITA : ESTADOS_EV)[i.estado] || [''];
         const corto = (z - a) * MIN_PX < 52; const col = i.kind === 'cita' ? colorEmpleado(i.ref.empleado_id) : '';
         const nom = de >= 3 ? iniciales(i.titulo) : de === 2 ? primerNombre(i.titulo) : i.titulo;
-        return `<button class="cal-ev ${KIND[i.kind].cls} ${i.estado === 'solicitada' ? 'req' : ''} ${['completada', 'entregada', 'hecha'].includes(i.estado) ? 'hecho' : ''} ${corto ? 'corto' : ''} ${de >= 2 ? 'estrecho' : ''} ${de >= 3 ? 'muy-estrecho' : ''}" data-act="ag-detalle" data-id="${i.id}" data-kind="${i.kind}"
+        return `<button class="cal-ev ${KIND[i.kind].cls} ${i.kind === 'cita' ? 'e-' + i.estado : ''} ${i.estado === 'solicitada' ? 'req' : ''} ${['completada', 'entregada', 'hecha'].includes(i.estado) ? 'hecho' : ''} ${corto ? 'corto' : ''} ${de >= 2 ? 'estrecho' : ''} ${de >= 3 ? 'muy-estrecho' : ''}" data-act="ag-detalle" data-id="${i.id}" data-kind="${i.kind}"
           style="${col ? `--ev:${col};` : ''}top:${y(a)}px;height:${Math.max(22, (z - a) * MIN_PX - 2)}px;left:calc(${(carril / de) * 100}% + 2px);width:calc(${100 / de}% - 4px)" title="${esc(`${i.hora} ${i.titulo} · ${i.sub} · ${est}`)}">
-          <span class="cal-h num">${i.hora}</span><b>${esc(nom)}</b>${corto ? '' : `<small>${esc(i.kind === 'cita' ? i.s?.nombre || '' : i.sub)}</small>`}${i.estado === 'solicitada' ? '<em>Por confirmar</em>' : ''}</button>`;
+          ${i.kind === 'cita' && i.estado !== 'solicitada' ? `<i class="cal-est e-${i.estado}" aria-hidden="true"></i>` : ''}<span class="cal-h num">${i.hora}${i.kind === 'cita' && i.estado !== 'solicitada' && !corto ? ` · <span class="cal-est-t">${est}</span>` : ''}</span><b>${esc(nom)}</b>${corto ? '' : `<small>${esc(i.kind === 'cita' ? i.s?.nombre || '' : i.sub)}</small>`}${i.estado === 'solicitada' ? '<em>Por confirmar</em>' : ''}</button>`;
       }).join('')}
       ${f === hoy() && minAhora >= ini && minAhora <= fin ? `<div class="cal-ahora" style="top:${y(minAhora)}px"></div>` : ''}
     </div>`;
@@ -5870,7 +5916,7 @@ function agendaCalendario() {
     <div class="cal-horas" style="height:${alto}px">${horas.map((m) => `<span style="top:${y(m)}px">${deMin(m)}</span>`).join('')}</div>
     ${dias.map(col).join('')}
   </div>
-  <div class="legend cal-ley"><span><i class="ley-conf"></i>Agendada</span><span><i class="ley-req"></i>Por confirmar</span><span><i class="ley-bloq"></i>Bloqueado</span><span><i class="ley-fuera"></i>Fuera de tu horario</span><span class="muted">Toca un espacio libre para agendar o bloquear</span></div></div>`;
+  <div class="legend cal-ley"><span><i class="cal-est e-agendada"></i>Agendada</span><span><i class="cal-est e-confirmada"></i>Confirmada</span><span><i class="cal-est e-asistio"></i>Asistió</span><span><i class="cal-est e-completada"></i>Pagada</span><span><i class="ley-req"></i>Por confirmar</span><span><i class="ley-bloq"></i>Bloqueado</span><span><i class="ley-fuera"></i>Fuera de tu horario</span><span class="muted">Toca un espacio libre para agendar o bloquear</span></div></div>`;
 }
 
 // tocar un espacio libre del calendario
@@ -6710,6 +6756,33 @@ function enlaceVencido(tipo) {
 }
 
 /* =========================================================
+   v32: estado de cada cita a la vista
+   Agendada → Confirmada → Asistió → Pagada
+   - En la lista del día: punto de color + nombre del estado
+   - En la semana: punto en la esquina y el estado junto a la hora
+   - Al tocar una cita: los pasos para marcarla con un toque
+   ========================================================= */
+
+// punto + nombre, para la línea pequeña bajo el nombre del cliente
+function estadoCita(e) {
+  const [txt] = ESTADOS_CITA[e] || [];
+  if (!txt || e === 'solicitada') return '';
+  return `<span class="est-cita e-${e}"><i class="cal-est e-${e}" aria-hidden="true"></i>${txt}</span> · `;
+}
+
+// los tres pasos de una cita; el actual queda marcado y los anteriores con ✓
+const PASOS_CITA = [['agendada', 'Agendada'], ['confirmada', 'Confirmada'], ['asistio', 'Asistió']];
+function pasosCita(it) {
+  const k = PASOS_CITA.findIndex(([e]) => e === it.estado);
+  return `<div class="cita-pasos" role="group" aria-label="Estado de la cita">${PASOS_CITA.map(([e, l], n) => {
+    const actual = n === k, hecho = k >= 0 && n < k;
+    return `<button type="button" class="paso ${actual ? 'on' : ''} ${hecho ? 'hecho' : ''} e-${e}" ${actual ? 'aria-current="step" disabled' : `data-act="cita-estado" data-id="${it.id}" data-e="${e}"`}>
+      <i class="cal-est e-${e}" aria-hidden="true"></i>${l}</button>`;
+  }).join('<span class="paso-sep" aria-hidden="true"></span>')}</div>
+  <p class="small muted cita-pasos-ayuda">${it.estado === 'asistio' ? 'Ya llegó. Cuando termine, toca <b>Cobrar</b>.' : it.estado === 'confirmada' ? 'Cuando llegue, márcala como <b>Asistió</b>.' : 'Toca <b>Confirmada</b> cuando el cliente te confirme la hora.'}</p>`;
+}
+
+/* =========================================================
    v29: servicios repetidos y nombres sueltos del historial
    Al editar un servicio en Catálogo, todo lo que se llama igual
    (otros servicios repetidos y ventas sueltas del historial)
@@ -6784,7 +6857,7 @@ Object.assign(ACC_COBRO, {
    nadie está escribiendo nada).
    ========================================================= */
 
-const BUILD = '4478347cf556'; // build.py lo reemplaza por el código de cada publicación
+const BUILD = '514e4983b8f1'; // build.py lo reemplaza por el código de cada publicación
 const VERSION_CADA = 5 * 60 * 1000;
 let versionNueva = null, ocultaDesde = 0;
 
