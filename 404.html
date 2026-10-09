@@ -7,6 +7,10 @@
 <meta name="theme-color" content="#0E0E0F" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MiDerno">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%20aria-hidden%3D%22true%22%3E%3Crect%20class%3D%22lm-bg%22%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%230B6870%22/%3E%3Crect%20class%3D%22lm-hoja%22%20x%3D%225%22%20y%3D%227%22%20width%3D%2222%22%20height%3D%2220%22%20rx%3D%224%22%20fill%3D%22%23FFF4E2%22/%3E%3Cpath%20class%3D%22lm-cinta%22%20d%3D%22M19.5%205h5v8l-2.5-2-2.5%202z%22%20fill%3D%22%23E9A23B%22/%3E%3Cpath%20class%3D%22lm-m%22%20d%3D%22M10%2023v-6.2a2.3%202.3%200%200%201%204.6%200V23m0-6.2a2.3%202.3%200%200%201%204.6%200V23%22%20fill%3D%22none%22%20stroke%3D%22%230B6870%22%20stroke-width%3D%222.2%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -1447,6 +1451,103 @@ p, dd, .small { text-wrap: pretty; }
 .cita-pasos-ayuda { margin: -2px 2px 0; }
 @media (max-width: 380px) { .cita-pasos .paso { font-size: .8125rem; gap: 4px; padding: 6px 4px; } .cita-pasos .paso-sep { display: none; } }
 
+/* ===== v33: vitrina de servicios e información del negocio ===== */
+/* formulario del servicio */
+.vitrina-edit { display: flex; flex-direction: column; gap: 14px; }
+.vitrina-fotos { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
+.vf { position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--surface-2); }
+.vf img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vf-btn { position: absolute; top: 5px; width: 28px; height: 28px; border-radius: 50%; border: 0; display: grid; place-items: center; cursor: pointer;
+  background: color-mix(in srgb, #111 62%, transparent); color: #fff; }
+.vf-btn .i { width: 15px; height: 15px; } .vf-x { right: 5px; } .vf-izq { left: 5px; }
+.vf-btn:focus-visible { outline: 2px solid #fff; outline-offset: 1px; }
+.vf-add { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; color: var(--muted); font-size: .8125rem; font-weight: 600;
+  border: 1.5px dashed var(--line); background: transparent; }
+.vf-add:hover, .vf-add:focus-within { color: var(--marca); border-color: var(--marca); }
+.vf-cargando .sk { position: absolute; inset: 0; border-radius: 0; }
+
+/* página de reservas: datos del negocio bajo el nombre */
+.pub-datos { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 12px 2px 2px; }
+.pub-cab.con-foto .pub-datos { padding-left: 16px; padding-right: 16px; }
+.pub-dato { display: inline-flex; align-items: center; gap: 6px; font-size: .875rem; color: var(--muted); min-width: 0; }
+.pub-dato .i { width: 16px; height: 16px; flex: none; }
+.pub-dato.abierto { color: var(--ok); font-weight: 600; }
+.pub-info-btn { margin-left: auto; }
+@media (max-width: 600px) { .pub-datos { flex-direction: column; align-items: flex-start; } .pub-info-btn { margin-left: 0; margin-top: 4px; } }
+
+/* lista de servicios con foto */
+.pub-servs { display: flex; flex-direction: column; gap: 8px; }
+.pub-serv { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); transition: border-color .2s, box-shadow .2s; }
+.pub-serv:hover { border-color: color-mix(in srgb, var(--marca) 45%, var(--line)); }
+.pub-serv.on { border-color: var(--marca); box-shadow: inset 0 0 0 1px var(--marca); background: color-mix(in srgb, var(--marca) 5%, var(--surface)); }
+.pub-serv-main { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border: 0; background: none; text-align: left; color: var(--ink); cursor: pointer; border-radius: 16px; font: inherit; }
+.pub-servs.con-foto .pub-serv-main { grid-template-columns: 72px minmax(0, 1fr) auto; padding: 10px 14px 10px 10px; }
+.pub-serv-main:focus-visible { outline: 2px solid var(--marca); outline-offset: 2px; }
+.pub-serv-main:active { transform: scale(.995); }
+.pub-serv-img { width: 72px; height: 72px; border-radius: 12px; object-fit: cover; display: block; background: var(--surface-2); }
+.pub-serv-img.vacio { display: grid; place-items: center; color: color-mix(in srgb, var(--muted) 70%, transparent); }
+.pub-serv-img.vacio .i { width: 24px; height: 24px; }
+.pub-serv-txt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.pub-serv-txt b { font-weight: 600; font-size: 1rem; line-height: 1.25; }
+.pub-serv-desc { color: var(--muted); font-size: .8125rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.pub-serv-meta { display: flex; gap: 10px; font-size: .875rem; font-weight: 600; margin-top: 2px; }
+.pub-serv-meta span { color: var(--muted); font-weight: 500; }
+.pub-serv-check { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--line); color: transparent; transition: background .2s, border-color .2s, color .2s; }
+.pub-serv-check .i { width: 15px; height: 15px; }
+.pub-serv.on .pub-serv-check { background: var(--marca); border-color: var(--marca); color: #fff; }
+.pub-serv-mas { display: inline-flex; align-items: center; gap: 6px; margin: -4px 0 10px 14px; padding: 4px 8px; border: 0; background: none; color: var(--marca); font: 600 .8125rem/1.2 inherit; cursor: pointer; border-radius: 8px; }
+.pub-servs.con-foto .pub-serv-mas { margin-left: 92px; }
+.pub-serv-mas .i { width: 15px; height: 15px; }
+.pub-serv-mas:hover { background: color-mix(in srgb, var(--marca) 9%, transparent); }
+.pub-serv-mas:focus-visible { outline: 2px solid var(--marca); }
+
+/* detalle del servicio */
+.serv-det { display: flex; flex-direction: column; gap: 12px; }
+.serv-fotos { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -2px; padding: 0 2px; scrollbar-width: none; overscroll-behavior-x: contain; }
+.serv-fotos::-webkit-scrollbar { display: none; }
+.serv-fotos img { flex: none; width: 86%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; scroll-snap-align: start; background: var(--surface-2); }
+.serv-fotos.una img { width: 100%; }
+.serv-fotos:focus-visible { outline: 2px solid var(--marca); outline-offset: 2px; }
+.serv-det-meta { display: flex; align-items: center; gap: 14px; font-size: 1.125rem; margin: 0; }
+.serv-det-meta span { display: inline-flex; align-items: center; gap: 5px; font-size: .9375rem; color: var(--muted); }
+.serv-det-meta .i { width: 16px; height: 16px; }
+.serv-det-desc { margin: 0; white-space: pre-line; line-height: 1.55; color: var(--ink); max-width: 60ch; }
+
+/* hoja de información del negocio */
+.neg-info { display: flex; flex-direction: column; gap: 18px; }
+.neg-info section { display: flex; flex-direction: column; gap: 8px; }
+.neg-info h3 { display: flex; align-items: center; gap: 8px; font-size: .9375rem; font-weight: 600; margin: 0; }
+.neg-info h3 .i { width: 18px; height: 18px; color: var(--marca); }
+.neg-desc { margin: 0; line-height: 1.55; white-space: pre-line; }
+.neg-dir { margin: 0; font-weight: 500; }
+.neg-fotos { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.neg-fotos::-webkit-scrollbar { display: none; }
+.neg-fotos img { flex: none; height: 150px; width: auto; max-width: 78%; object-fit: cover; border-radius: 12px; scroll-snap-align: start; }
+.neg-horario { margin: 0; max-width: 380px; display: flex; flex-direction: column; font-size: .9375rem; }
+.nh-fila { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--line-suave, var(--line)); }
+.nh-fila:last-child { border-bottom: 0; }
+.nh-d { color: var(--muted); } .nh-h { text-align: right; white-space: nowrap; }
+.nh-fila.es-hoy .nh-d, .nh-fila.es-hoy .nh-h { color: var(--ink); font-weight: 600; }
+.nh-fila.es-hoy .nh-d span { color: var(--marca); font-weight: 500; }
+@media (prefers-reduced-motion: reduce) { .pub-serv, .pub-serv-check { transition: none; } .pub-serv-main:active { transform: none; } }
+
+/* ===== v33: instalar la app ===== */
+.instalar-side { color: var(--marca); }
+.aviso-instalar { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 10px; padding: 12px 8px 12px 12px; margin-bottom: 14px;
+  border-radius: 16px; background: color-mix(in srgb, var(--marca) 9%, var(--surface)); border: 1px solid color-mix(in srgb, var(--marca) 22%, transparent); }
+.ai-ico { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; background: var(--marca); color: #fff; }
+.ai-ico .i { width: 20px; height: 20px; }
+.ai-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ai-txt b { font-size: .9375rem; } .ai-txt small { color: var(--muted); font-size: .8125rem; line-height: 1.35; }
+.ai-x { width: 32px; height: 32px; border: 0; background: none; color: var(--muted); border-radius: 8px; display: grid; place-items: center; cursor: pointer; }
+.ai-x:hover { background: var(--surface-2); color: var(--ink); } .ai-x .i { width: 16px; height: 16px; }
+.instalar-guia { display: flex; flex-direction: column; gap: 14px; }
+.instalar-guia ol { margin: 0; padding: 0; list-style: none; counter-reset: paso; display: flex; flex-direction: column; gap: 12px; }
+.instalar-guia li { counter-increment: paso; display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; line-height: 1.45; }
+.instalar-guia li::before { content: counter(paso); width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--marca) 12%, var(--surface)); color: var(--marca); font-weight: 700; font-size: .875rem; }
+.instalar-guia li .i { width: 18px; height: 18px; vertical-align: -3px; color: var(--marca); }
+@media (display-mode: standalone) { .mobile-top { padding-top: env(safe-area-inset-top); } }
+
 </style>
 </head>
 <body>
@@ -1459,7 +1560,7 @@ p, dd, .small { text-wrap: pretty; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '32';
+const VERSION = '33';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -1495,7 +1596,8 @@ const num = (v) => { const n = Number(String(v ?? '').replace(/\./g, '').replace
 // cantidades con decimales (campos type=number): "1.5" o "1,5" → 1.5
 const dec = (v) => { const n = Number(String(v ?? '').trim().replace(',', '.')); return Number.isFinite(n) ? n : 0; };
 // solo imágenes guardadas como data:image (logo y fotos) y enlaces http(s)
-const imgSegura = (u) => (/^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(u || '') ? u : '');
+const FOTO_NUBE = /^https:\/\/[a-z0-9]+\.supabase\.co\/storage\/v1\/object\/public\/fotos\/[\w\-/.]+$/;
+const imgSegura = (u) => (/^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(u || '') || FOTO_NUBE.test(u || '') ? u : '');
 const urlSegura = (u) => (/^https?:\/\//i.test(String(u || '').trim()) ? String(u).trim() : '');
 const pad = (n) => String(n).padStart(2, '0');
 const isoDate = (d = new Date()) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
@@ -1900,6 +2002,12 @@ const ICONS = {
   mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/>',
   lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
   clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  pin: '<path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0-6 0"/><path d="M17.66 16.66l-4.25 4.24a2 2 0 0 1-2.82 0l-4.25-4.24a8 8 0 1 1 11.32 0z"/>',
+  app: '<rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 4h2M12 17v.01"/>',
+  compartir: '<path d="M8 9H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1"/><path d="M12 14V3"/><path d="M9 6l3-3 3 3"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 8h.01"/><path d="M11 12h1v4h1"/>',
+  foto: '<path d="M15 8h.01"/><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 16l5-5c.93-.89 2.07-.89 3 0l5 5"/><path d="M14 14l1-1c.93-.89 2.07-.89 3 0l3 3"/>',
+  insta: '<rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3"/><path d="M16.5 7.5v.01"/>',
   home: '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
   minus: '<path d="M5 12h14"/>',
@@ -2002,6 +2110,7 @@ function shell(contenido) {
         ${grupos.map((g) => `<div class="nav-label">${g}</div>${visibles.filter((v) => v.grupo === g).map(link).join('')}`).join('')}
       </nav>
       <div class="grow"></div>
+      ${botonInstalarSide()}
       <button class="ayuda-side" data-act="ayuda">${icon('help')}<span>¿Necesitas ayuda?</span></button>
       <div class="mode-pill"><span class="dot ${S.modo === 'nube' ? 'cloud' : ''}"></span>${S.modo === 'nube' ? (S.sincronizando ? 'Poniéndose al día…' : 'Sincronizado en la nube') : 'Guardado en este dispositivo'} · v${VERSION}</div>
     </aside>
@@ -2787,12 +2896,14 @@ function formServicio(id) {
   const s = id ? db.get('servicios', id) : { nombre: '', duracion_min: 60, precio: '', activo: true };
   abrirSheet(id ? 'Editar servicio' : 'Nuevo servicio', `<div class="form">${field('Nombre', input('nombre', s.nombre, 'required placeholder="Ej: Manicure permanente"'))}
     <div class="form-row">${field('Precio', input('precio', s.precio, 'inputmode="numeric" required'))}${field('Duración (minutos)', input('duracion_min', s.duracion_min, 'type="number" min="5" step="5"'))}</div>
+    ${tiene('servicios') ? camposVitrina(s) : ''}
     <label class="hstack"><span class="toggle"><input type="checkbox" name="activo" ${s.activo !== false ? 'checked' : ''}><span></span></span>Disponible para vender y agendar</label>
     <div id="serv-unir" hidden></div></div>`, {
     pie: `<div class="sheet-foot" style="justify-content:space-between">${id ? `<button type="button" class="btn danger" data-act="del-servicio" data-id="${id}">Eliminar</button>` : '<span></span>'}<div class="hstack"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri">Guardar</button></div></div>`,
     submit: (d) => {
       if (!d.nombre.trim() || num(d.precio) <= 0) return toast('Completa nombre y precio', true);
-      const row = { nombre: d.nombre.trim(), precio: num(d.precio), duracion_min: Math.max(5, parseInt(d.duracion_min) || 60), activo: !!d.activo };
+      if (_vitrina?.subiendo) return toast('Espera a que terminen de subir las fotos', true);
+      const row = { nombre: d.nombre.trim(), precio: num(d.precio), duracion_min: Math.max(5, parseInt(d.duracion_min) || 60), activo: !!d.activo, ...datosVitrina(d, s) };
       const r = id ? db.update('servicios', id, row) : db.insert('servicios', row);
       // unificar: los repetidos y las ventas sueltas con el mismo nombre pasan a este servicio
       const u = d.unificar ? unificarServicio(id || r.id) : (id ? unificarNombreHistorial(id) : null);
@@ -2800,6 +2911,7 @@ function formServicio(id) {
     },
   });
   pintarUnirServicio(id); $('#sheet-form [name=nombre]')?.addEventListener('input', () => pintarUnirServicio(id));
+  if (tiene('servicios')) pintarVitrina();
 }
 function formProducto(id) {
   const p = id ? db.get('productos', id) : { nombre: '', sku: '', precio_venta: '', costo: '', stock_minimo: 3, activo: true };
@@ -4290,9 +4402,9 @@ const ReservaLocal = {
   async info() {
     if (!S.negocio) throw new Error('Negocio no encontrado');
     return { negocio: { nombre: S.negocio.nombre, telefono: S.negocio.telefono || '' }, horario: horarioDe(S.negocio),
-      perfil: { logo: cfg().logo || '', direccion: cfg().direccion || '', maps_url: cfg().maps_url || '', resenas_url: cfg().resenas_url || '', fotos: cfg().fotos || [] },
+      perfil: { logo: cfg().logo || '', direccion: cfg().direccion || '', maps_url: cfg().maps_url || '', resenas_url: cfg().resenas_url || '', fotos: cfg().fotos || [], descripcion: cfg().descripcion || '', indicaciones: cfg().indicaciones || '', instagram: cfg().instagram || '' },
       config: { abono: cfg().abono || null, mensajes: { abono: plantilla('abono'), comprobante: plantilla('comprobante') }, auto_abono: autoOn('abono') },
-      servicios: db.all('servicios').filter((s) => s.activo !== false).map(({ id, nombre, duracion_min, precio }) => ({ id, nombre, duracion_min, precio })),
+      servicios: db.all('servicios').filter((s) => s.activo !== false).map(({ id, nombre, duracion_min, precio, descripcion, fotos, miniatura }) => ({ id, nombre, duracion_min, precio, descripcion: descripcion || '', fotos: fotos || [], miniatura: miniatura || '' })),
       empleados: db.all('empleados').filter((e) => e.activo !== false).map((e) => ({ id: e.id, nombre: e.nombre.split(' ')[0] })) };
   },
   async ocupadas(fecha) {
@@ -4362,7 +4474,7 @@ function vistaReserva() {
   const pasos = [];
   // 1. servicio
   pasos.push(`<section class="card stack"><h2><span class="pub-n">1</span>Elige el servicio</h2>
-    ${info.servicios.length ? `<div class="pub-grid">${info.servicios.map((s) => `<button class="pub-opt ${p.servicio?.id === s.id ? 'on' : ''}" data-act="pub-servicio" data-id="${s.id}"><b>${esc(s.nombre)}</b><small>${fmtP(s.precio)} · ${s.duracion_min} min</small></button>`).join('')}</div>` : '<p class="muted">Este negocio aún no publica servicios.</p>'}</section>`);
+    ${info.servicios.length ? listaServiciosPub(info.servicios, p.servicio?.id, fmtP) : '<p class="muted">Este negocio aún no publica servicios.</p>'}</section>`);
   if (info.empleados.length === 1) p.empleado = info.empleados[0].id;
   if (p.servicio) {
     if (info.empleados.length > 1) pasos.push(`<section class="card stack"><h2><span class="pub-n">2</span>¿Con quién quieres atenderte?</h2><div class="chips">${info.empleados.map((e) => `<button class="chip ${p.empleado === e.id ? 'on' : ''}" data-act="pub-emp" data-id="${e.id}">${esc(e.nombre)}</button>`).join('')}</div></section>`);
@@ -4379,7 +4491,7 @@ function vistaReserva() {
       <div class="pub-resumen"><span>${esc(p.servicio.nombre)} · ${esc(fechaLarga(p.fecha))}, ${p.hora.hora}</span><b class="num">${fmtP(p.servicio.precio)}</b></div>
       <button class="btn pri block" ${p.enviando ? 'disabled' : ''}>${p.enviando ? 'Enviando…' : 'Reservar hora'}</button>
     </form></section>`);
-  return marco(`${cabeceraNegocio(info.perfil)}${pasos.join('')}`);
+  return marco(pasos.join(''));
 }
 async function pubEnviar(d) {
   const p = S.pub;
@@ -4401,7 +4513,8 @@ function portadaNegocio(neg, pf) {
   const portada = (pf.fotos || []).map(imgSegura).filter(Boolean)[0];
   const logo = imgSegura(pf.logo) ? `<img class="pub-logo" width="72" height="72" src="${imgSegura(pf.logo)}" alt="Logo de ${esc(neg.nombre)}">` : `<span class="pub-logo pub-ini" aria-hidden="true">${esc(iniciales(neg.nombre))}</span>`;
   return `<header class="pub-cab ${portada ? 'con-foto' : ''}">${portada ? `<div class="pub-portada"><img src="${portada}" width="900" height="394" fetchpriority="high" alt="Foto de ${esc(neg.nombre)}"></div>` : ''}
-    <div class="pub-ident">${logo}<div><h1>${esc(neg.nombre)}</h1><p>Reserva tu hora en línea. Te confirmamos por WhatsApp.</p></div></div></header>`;
+    <div class="pub-ident">${logo}<div><h1>${esc(neg.nombre)}</h1><p>Reserva tu hora en línea. Te confirmamos por WhatsApp.</p></div></div>
+    ${datosNegocioPub(pf)}</header>`;
 }
 
 /* ---------- configuración en Ajustes ---------- */
@@ -4843,6 +4956,9 @@ function ajustesPerfil() {
     <form class="card stack" id="form-perfil"><h2>Dónde te encuentran</h2>
       ${field('Dirección', `<input class="in" name="direccion" id="f-direccion" value="${esc(c.direccion || '')}" placeholder="Ej: Membrillar 50, oficina 24, Rancagua">`, 'Aparece en tu página de reservas con el botón “Cómo llegar”.')}
       ${field('Tu página en Google Maps', `<input class="in" name="maps_url" id="f-maps" inputmode="url" value="${esc(c.maps_url || '')}" placeholder="Pega el link de “Compartir” de Google Maps">`, 'En Google Maps busca tu negocio, toca Compartir y copia el link.')}
+      ${field('Cómo llegar', `<input class="in" name="indicaciones" id="f-indicaciones" value="${esc(c.indicaciones || '')}" placeholder="Ej: Segundo piso, toca el timbre 24">`, 'Opcional. Referencias para encontrarte: piso, timbre, estacionamiento.')}
+      ${field('Sobre tu negocio', `<textarea class="in" name="descripcion" id="f-desc-neg" rows="3" maxlength="400" placeholder="Ej: Estudio de uñas en Rancagua. Trabajamos con productos veganos y atención con hora.">${esc(c.descripcion || '')}</textarea>`, 'Opcional. Se muestra en “Información” de tu página de reservas.')}
+      ${field('Instagram', `<input class="in" name="instagram" id="f-insta" value="${esc(c.instagram || '')}" placeholder="@tunegocio">`)}
       ${field('Link para dejar reseñas', `<input class="in" name="resenas_url" id="f-resenas" inputmode="url" value="${esc(c.resenas_url || '')}" placeholder="Ej: https://g.page/r/…/review">`, 'En tu Perfil de Empresa de Google: “Pedir reseñas” → copia el link. Se envía a tus clientes por WhatsApp.')}
       <button class="btn pri" style="align-self:flex-start">Guardar</button>
       ${urlSegura(c.resenas_url) ? `<a class="small" target="_blank" rel="noopener" href="${esc(urlSegura(c.resenas_url))}">Probar mi link de reseñas</a>` : ''}
@@ -4918,7 +5034,7 @@ document.addEventListener('submit', (e) => {
   if (f.id === 'form-perfil') {
     const limpio = (k) => String(fd.get(k) || '').trim();
     const url = (k) => { const v = limpio(k); return v && !/^https?:\/\//i.test(v) ? 'https://' + v : v; };
-    guardarConfig({ direccion: limpio('direccion'), maps_url: url('maps_url'), resenas_url: url('resenas_url') }); toast('Perfil guardado');
+    guardarConfig({ direccion: limpio('direccion'), maps_url: url('maps_url'), resenas_url: url('resenas_url'), indicaciones: limpio('indicaciones'), descripcion: limpio('descripcion').slice(0, 400), instagram: limpio('instagram').replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/^@/, '').replace(/\/.*$/, '') }); toast('Perfil guardado');
   }
   if (f.id === 'form-abono') {
     const valor = fd.get('tipo') === 'pct' ? Math.min(100, dec(fd.get('valor'))) : num(fd.get('valor'));
@@ -5210,6 +5326,7 @@ function vistaInicio() {
   return `<div class="inicio">
   <div class="ini-col">
     <header class="ini-dia"><h1>${esc(dia.charAt(0).toUpperCase() + dia.slice(1))} ${fH.getDate()}</h1><p class="muted">de ${esc(fH.toLocaleDateString('es-CL', { month: 'long' }))}${nombre ? ` · Hola, ${esc(nombre)}` : ''}</p></header>
+    ${avisoInstalar()}
     ${panelHoy()}
   </div>
   <div class="ini-col">
@@ -6447,7 +6564,6 @@ Object.assign(ACC_COBRO, {
   'crecer-tab': (el) => { S.ui.crecer = { ...(S.ui.crecer || {}), tab: el.dataset.t }; if (vistaActual() !== 'crecer') ir('crecer'); else render(); },
   'acc-mas': (el) => { S.ui.crecer['mas_' + el.dataset.k] = true; render(); },
   'acc-enviado': (el) => {
-    window.open(el.href, '_blank', 'noopener');
     registrarAcc(el.dataset.t, el.dataset.c); if (el.dataset.cita) marcarAvisada(el.dataset.cita);
     // el enlace abre WhatsApp; la fila se marca como hecha sin recargar la pantalla
     setTimeout(() => { const f = el.closest('.accion-fila'); if (f) { f.classList.add('hecha'); el.outerHTML = '<span class="ag-hecho pop">✓ Enviado</span>'; } }, 200);
@@ -6783,6 +6899,57 @@ function pasosCita(it) {
 }
 
 /* =========================================================
+   v33: MiDerno instalable en el celular y el computador
+   - Service worker (sw.js): abre aunque no haya internet
+   - Botón "Instalar MiDerno": en Android y computador usa el aviso
+     del navegador; en iPhone muestra los 2 pasos de Safari
+   ========================================================= */
+
+let _avisoInstalar = null;
+const esIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const yaInstalada = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const sePuedeInstalar = () => !yaInstalada() && /^https:$/.test(location.protocol) && !enArtifact() && (!!_avisoInstalar || esIOS() || esMovil());
+const instalarCerrado = () => { try { return Number(localStorage.getItem('miderno:instalar-cerrado') || 0) > Date.now(); } catch { return false; } };
+
+if ('serviceWorker' in navigator && location.protocol === 'https:' && !enArtifact()) {
+  addEventListener('load', () => navigator.serviceWorker.register(appUrl() + 'sw.js').catch(() => {}));
+}
+addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); _avisoInstalar = e; if (S.negocio && !S.pub) render(); });
+addEventListener('appinstalled', () => { _avisoInstalar = null; toast('MiDerno quedó instalado. Ábrelo desde tu pantalla de inicio.'); if (S.negocio && !S.pub) render(); });
+
+function botonInstalarSide() {
+  return sePuedeInstalar() ? `<button class="ayuda-side instalar-side" data-act="instalar">${icon('app')}<span>Instalar MiDerno</span></button>` : '';
+}
+function avisoInstalar() {
+  if (!sePuedeInstalar() || !esMovil() || instalarCerrado() || S.negocio?.id?.startsWith('demo-')) return '';
+  return `<div class="aviso-instalar" role="note">
+    <span class="ai-ico" aria-hidden="true">${icon('app')}</span>
+    <span class="ai-txt"><b>Ten MiDerno como app</b><small>Ábrelo con un toque desde tu pantalla de inicio, sin buscar el link.</small></span>
+    <button class="btn sm pri" data-act="instalar">Instalar</button>
+    <button class="ai-x" data-act="instalar-cerrar" aria-label="Ahora no">${icon('x')}</button></div>`;
+}
+async function instalarApp() {
+  if (_avisoInstalar) {
+    const e = _avisoInstalar; _avisoInstalar = null;
+    try { await e.prompt(); const r = await e.userChoice; if (r?.outcome !== 'accepted') _avisoInstalar = e; } catch {}
+    return render();
+  }
+  const ios = esIOS(); const safari = ios && !/crios|fxios|edgios/i.test(navigator.userAgent);
+  const pasos = ios
+    ? [`Toca el botón <b>Compartir</b> ${icon('compartir')} ${safari ? 'abajo en Safari' : 'arriba, junto a la dirección'}.`, 'Baja y elige <b>“Agregar a inicio”</b>.', 'Toca <b>Agregar</b>. MiDerno aparece con su ícono junto a tus apps.']
+    : ['Abre el menú del navegador (los tres puntos <b>⋮</b>).', 'Elige <b>“Instalar aplicación”</b> o <b>“Agregar a la pantalla principal”</b>.', 'Confirma. MiDerno aparece con su ícono junto a tus apps.'];
+  abrirSheet('Instala MiDerno', `<div class="instalar-guia">
+    <p class="muted" style="margin:0">Funciona como una app: se abre a pantalla completa y sigue disponible aunque se corte internet.</p>
+    <ol>${pasos.map((p) => `<li>${p}</li>`).join('')}</ol>
+    ${ios && !safari ? '<p class="small muted" style="margin:0">Si no ves la opción, abre este link en <b>Safari</b>.</p>' : ''}</div>`,
+  { pie: '<div class="sheet-foot"><button type="button" class="btn pri" data-close>Entendido</button></div>' });
+}
+Object.assign(ACC_COBRO, {
+  instalar: () => instalarApp(),
+  'instalar-cerrar': () => { try { localStorage.setItem('miderno:instalar-cerrado', String(Date.now() + 14 * 864e5)); } catch {} render(); },
+});
+
+/* =========================================================
    v29: servicios repetidos y nombres sueltos del historial
    Al editar un servicio en Catálogo, todo lo que se llama igual
    (otros servicios repetidos y ventas sueltas del historial)
@@ -6857,7 +7024,7 @@ Object.assign(ACC_COBRO, {
    nadie está escribiendo nada).
    ========================================================= */
 
-const BUILD = '514e4983b8f1'; // build.py lo reemplaza por el código de cada publicación
+const BUILD = 'ebe752f62a1e'; // build.py lo reemplaza por el código de cada publicación
 const VERSION_CADA = 5 * 60 * 1000;
 let versionNueva = null, ocultaDesde = 0;
 
@@ -6896,6 +7063,165 @@ setTimeout(revisarVersion, 20 * 1000);
 // después de actualizar, se limpia el ?v= de la dirección
 try { const u = new URL(location.href); if (u.searchParams.has('v')) { u.searchParams.delete('v'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } } catch {}
 setInterval(() => { if (!document.hidden) revisarVersion(); }, VERSION_CADA);
+
+/* =========================================================
+   v33: vitrina de servicios e información del negocio
+   - Cada servicio puede tener descripción y hasta 4 fotos.
+     En la nube las fotos van a Supabase Storage (carpeta del negocio);
+     sin cuenta se guardan achicadas en el dispositivo (máx. 2).
+   - La página de reservas muestra fotos, descripción y una hoja
+     "Información" con dirección, mapa, horario y contacto.
+   ========================================================= */
+
+const FOTOS_MAX = () => (S.modo === 'nube' ? 4 : 2);
+let _vitrina = null; // fotos del servicio mientras se edita: [{ url, mini }]
+
+/* ---------- achicar y subir ---------- */
+function achicarBlob(file, max, calidad) {
+  return new Promise((ok, fail) => {
+    const img = new Image(); const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const k = Math.min(1, max / Math.max(img.width, img.height)); const cv = document.createElement('canvas');
+      cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+      const g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height); g.drawImage(img, 0, 0, cv.width, cv.height);
+      URL.revokeObjectURL(url); cv.toBlob((b) => (b ? ok(b) : fail(new Error('No pudimos procesar esa imagen'))), 'image/jpeg', calidad);
+    };
+    img.onerror = () => fail(new Error('No pudimos leer esa imagen')); img.src = url;
+  });
+}
+const blobADataUrl = (b) => new Promise((ok) => { const r = new FileReader(); r.onload = () => ok(r.result); r.readAsDataURL(b); });
+// la miniatura de una foto de la nube vive al lado, con "-m" antes de la extensión
+const miniDe = (url) => (FOTO_NUBE.test(url) ? url.replace(/\.jpg$/, '-m.jpg') : url);
+
+async function subirFotoServicio(file) {
+  if (S.modo === 'nube' && NubeAdapter.sb) {
+    const [grande, mini] = await Promise.all([achicarBlob(file, 1200, 0.8), achicarBlob(file, 360, 0.72)]);
+    const base = `${S.negocio.id}/servicios/${uid()}`; const st = NubeAdapter.sb.storage.from('fotos');
+    const sube = async (ruta, blob) => { const { error } = await st.upload(ruta, blob, { contentType: 'image/jpeg', cacheControl: '31536000', upsert: false }); if (error) throw error; return st.getPublicUrl(ruta).data.publicUrl; };
+    const [url, urlMini] = await Promise.all([sube(base + '.jpg', grande), sube(base + '-m.jpg', mini)]);
+    return { url, mini: urlMini };
+  }
+  const [g, m] = await Promise.all([achicarBlob(file, 640, 0.7), achicarBlob(file, 240, 0.7)]);
+  return { url: await blobADataUrl(g), mini: await blobADataUrl(m) };
+}
+function borrarFotoNube(url) {
+  if (!FOTO_NUBE.test(url) || S.modo !== 'nube' || !NubeAdapter.sb) return;
+  const ruta = url.split('/object/public/fotos/')[1]; if (!ruta) return;
+  NubeAdapter.sb.storage.from('fotos').remove([ruta, ruta.replace(/\.jpg$/, '-m.jpg')]).catch(() => {});
+}
+
+/* ---------- en el formulario del servicio ---------- */
+function camposVitrina(s) {
+  _vitrina = { fotos: (s.fotos || []).filter(imgSegura).map((url) => ({ url, mini: miniDe(url) })), subiendo: 0, quitadas: [] };
+  return `<div class="vitrina-edit">
+    ${field('Descripción', `<textarea class="in" name="descripcion" id="f-serv-desc" rows="3" maxlength="500" placeholder="Ej: Esmaltado que dura hasta 3 semanas. Incluye limado, cutícula y diseño simple.">${esc(s.descripcion || '')}</textarea>`, 'Opcional. Tus clientas la ven al reservar.')}
+    <div class="field"><label>Fotos del servicio</label><div class="vitrina-fotos" id="vitrina-fotos"></div>
+      <span class="hint">Hasta ${FOTOS_MAX()}. La primera es la que se ve en la lista.${S.modo === 'nube' ? '' : ' Con tu cuenta en la nube puedes subir más.'}</span></div></div>`;
+}
+function pintarVitrina() {
+  const box = $('#vitrina-fotos'); if (!box || !_vitrina) return;
+  const v = _vitrina; const quedan = FOTOS_MAX() - v.fotos.length - v.subiendo;
+  box.innerHTML = v.fotos.map((f, i) => `<div class="vf"><img src="${esc(imgSegura(f.mini) || imgSegura(f.url))}" alt="Foto ${i + 1} del servicio">
+      ${i ? `<button type="button" class="vf-btn vf-izq" data-vf="primera" data-i="${i}" aria-label="Usar como primera foto">${icon('left')}</button>` : ''}
+      <button type="button" class="vf-btn vf-x" data-vf="quitar" data-i="${i}" aria-label="Quitar foto">${icon('x')}</button></div>`).join('')
+    + '<div class="vf vf-cargando" aria-label="Subiendo foto"><i class="sk"></i></div>'.repeat(v.subiendo)
+    + (quedan > 0 ? `<label class="vf vf-add" for="f-serv-fotos">${icon('foto')}<span>Agregar</span><input type="file" id="f-serv-fotos" accept="image/*" multiple hidden></label>` : '');
+  box.querySelector('#f-serv-fotos')?.addEventListener('change', (e) => agregarFotosServicio(e.target.files));
+  box.querySelectorAll('[data-vf]').forEach((b) => b.addEventListener('click', () => {
+    const i = +b.dataset.i;
+    if (b.dataset.vf === 'quitar') v.quitadas.push(...v.fotos.splice(i, 1).map((f) => f.url));
+    else v.fotos.unshift(...v.fotos.splice(i, 1));
+    pintarVitrina();
+  }));
+}
+async function agregarFotosServicio(files) {
+  const v = _vitrina; if (!v) return;
+  const lista = [...files].slice(0, FOTOS_MAX() - v.fotos.length - v.subiendo); if (!lista.length) return;
+  v.subiendo += lista.length; pintarVitrina();
+  await Promise.all(lista.map(async (f) => {
+    try { const r = await subirFotoServicio(f); if (_vitrina === v) v.fotos.push(r); }
+    catch (e) { toast(/bucket|not found|policy|row-level/i.test(e.message || '') ? 'Falta activar las fotos en la nube (actualización 11).' : 'No pudimos subir la foto: ' + (e.message || e), true); }
+    finally { v.subiendo--; if (_vitrina === v) pintarVitrina(); }
+  }));
+}
+// lo que se guarda en la fila del servicio
+function datosVitrina(d, antes) {
+  if (!tiene('servicios') || !_vitrina) return {};
+  const v = _vitrina; v.quitadas.forEach(borrarFotoNube); v.quitadas = [];
+  const fotos = v.fotos.map((f) => f.url);
+  const out = { descripcion: String(d.descripcion || '').trim().slice(0, 500), fotos, miniatura: v.fotos[0]?.mini || '' };
+  // sin cambios: no se envía nada nuevo (sirve también si la nube aún no tiene estas columnas)
+  if (out.descripcion === (antes.descripcion || '') && JSON.stringify(fotos) === JSON.stringify(antes.fotos || [])) return {};
+  return out;
+}
+
+/* ---------- página de reservas: lista de servicios ---------- */
+function listaServiciosPub(servicios, elegido, fmtP) {
+  const conFoto = servicios.some((s) => imgSegura(s.miniatura) || (s.fotos || []).some(imgSegura));
+  return `<div class="pub-servs ${conFoto ? 'con-foto' : ''}">${servicios.map((s) => {
+    const mini = imgSegura(s.miniatura) || (s.fotos || []).map(imgSegura).find(Boolean) || '';
+    const nFotos = (s.fotos || []).filter(imgSegura).length; const desc = (s.descripcion || '').trim();
+    const detalle = nFotos || desc.length > 70;
+    return `<div class="pub-serv ${elegido === s.id ? 'on' : ''}">
+      <button class="pub-serv-main" data-act="pub-servicio" data-id="${s.id}" aria-pressed="${elegido === s.id}">
+        ${conFoto ? (mini ? `<img class="pub-serv-img" src="${esc(mini)}" width="72" height="72" alt="" loading="lazy">` : `<span class="pub-serv-img vacio" aria-hidden="true">${icon('foto')}</span>`) : ''}
+        <span class="pub-serv-txt"><b>${esc(s.nombre)}</b>${desc ? `<small class="pub-serv-desc">${esc(desc)}</small>` : ''}<span class="pub-serv-meta num">${fmtP(s.precio)}<span>${s.duracion_min} min</span></span></span>
+        <span class="pub-serv-check" aria-hidden="true">${icon('ok')}</span>
+      </button>
+      ${detalle ? `<button class="pub-serv-mas" data-act="pub-serv-ver" data-id="${s.id}">${nFotos ? `${icon('foto')}Ver ${nFotos === 1 ? 'foto' : nFotos + ' fotos'}` : 'Ver detalle'}</button>` : ''}
+    </div>`;
+  }).join('')}</div>`;
+}
+function verServicioPub(id) {
+  const p = S.pub; const s = p?.info?.servicios.find((x) => x.id === id); if (!s) return;
+  const fotos = (s.fotos || []).map(imgSegura).filter(Boolean); const fmtP = (v) => '$' + Math.round(v).toLocaleString('es-CL');
+  abrirSheet(esc(s.nombre), `<div class="serv-det">
+    ${fotos.length ? `<div class="serv-fotos ${fotos.length === 1 ? 'una' : ''}" tabindex="0" aria-label="Fotos de ${esc(s.nombre)}">${fotos.map((f, i) => `<img src="${esc(f)}" alt="${esc(s.nombre)}, foto ${i + 1} de ${fotos.length}" ${i ? 'loading="lazy"' : ''}>`).join('')}</div>` : ''}
+    <p class="serv-det-meta num"><b>${fmtP(s.precio)}</b><span>${icon('clock')}${s.duracion_min} min</span></p>
+    ${s.descripcion ? `<p class="serv-det-desc">${esc(s.descripcion)}</p>` : ''}</div>`, {
+    pie: `<div class="sheet-foot"><button type="button" class="btn" data-close>Volver</button><button type="button" class="btn pri" data-act="pub-serv-elegir" data-id="${s.id}">${p.servicio?.id === s.id ? 'Seguir con este servicio' : 'Elegir este servicio'}</button></div>`,
+  });
+}
+
+/* ---------- página de reservas: datos del negocio ---------- */
+function estadoHorario(h, ahora = new Date()) {
+  const dow = ahora.getDay(); const m = ahora.getHours() * 60 + ahora.getMinutes(); const hd = horarioDia(h, dow);
+  if (hd && m < aMin(hd.hasta)) return m >= aMin(hd.desde) ? { abierto: true, txt: `Abierto hoy hasta las ${hhmm(hd.hasta)}` } : { abierto: false, txt: `Hoy abre a las ${hhmm(hd.desde)}` };
+  for (let i = 1; i <= 7; i++) { const d = (dow + i) % 7; const x = horarioDia(h, d); if (x) return { abierto: false, txt: `Cerrado ahora. Abre ${i === 1 ? 'mañana' : 'el ' + NOMBRE_DIA[d]} a las ${hhmm(x.desde)}` }; }
+  return { abierto: false, txt: 'Sin horario publicado' };
+}
+const lineaDireccion = (pf) => (pf.direccion || '').split(',').slice(0, 2).join(',').trim();
+function datosNegocioPub(pf) {
+  const h = S.pub?.info?.horario; if (!h) return '';
+  const e = estadoHorario(h); const dir = lineaDireccion(pf || {});
+  return `<div class="pub-datos">
+    <span class="pub-dato ${e.abierto ? 'abierto' : ''}">${icon('clock')}${esc(e.txt)}</span>
+    ${dir ? `<span class="pub-dato">${icon('pin')}${esc(dir)}</span>` : ''}
+    <button type="button" class="btn sm pub-info-btn" data-act="pub-info">${icon('info')}Información${pf?.direccion ? ' y cómo llegar' : ''}</button></div>`;
+}
+function infoNegocioPub() {
+  const info = S.pub?.info; if (!info) return; const pf = info.perfil || {}; const h = info.horario; const hoyDow = new Date().getDay();
+  const fotos = (pf.fotos || []).map(imgSegura).filter(Boolean); const tel = info.negocio.telefono; const ig = String(pf.instagram || '').replace(/[^\w.]/g, '');
+  const filas = [1, 2, 3, 4, 5, 6, 0].map((d) => { const x = horarioDia(h, d); return `<div class="nh-fila ${d === hoyDow ? 'es-hoy' : ''}"><span class="nh-d">${NOMBRE_DIA[d][0].toUpperCase() + NOMBRE_DIA[d].slice(1)}${d === hoyDow ? ' <span>(hoy)</span>' : ''}</span><span class="nh-h num">${x ? `${hhmm(x.desde)} a ${hhmm(x.hasta)}` : 'Cerrado'}</span></div>`; }).join('');
+  abrirSheet(esc(info.negocio.nombre), `<div class="neg-info">
+    ${pf.descripcion ? `<p class="neg-desc">${esc(pf.descripcion)}</p>` : ''}
+    ${fotos.length ? `<div class="neg-fotos">${fotos.map((f, i) => `<img src="${esc(f)}" alt="Foto ${i + 1} de ${esc(info.negocio.nombre)}" loading="lazy">`).join('')}</div>` : ''}
+    ${pf.direccion || pf.maps_url ? `<section><h3>${icon('pin')}Dónde estamos</h3>
+      ${pf.direccion ? `<p class="neg-dir">${esc(pf.direccion)}</p>` : ''}${pf.indicaciones ? `<p class="small muted">${esc(pf.indicaciones)}</p>` : ''}
+      ${pf.direccion && !enArtifact() ? `<iframe class="pub-mapa" title="Mapa de ${esc(info.negocio.nombre)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${encodeURIComponent(pf.direccion)}&output=embed"></iframe>` : ''}
+      <div class="hstack"><a class="btn sm pri" target="_blank" rel="noopener" href="${esc(linkMapa(pf))}">Cómo llegar</a>${urlSegura(pf.maps_url) ? `<a class="btn sm" target="_blank" rel="noopener" href="${esc(urlSegura(pf.maps_url))}">Reseñas en Google</a>` : ''}</div></section>` : ''}
+    <section><h3>${icon('clock')}Horario</h3><div class="neg-horario" role="list">${filas}</div></section>
+    ${tel || ig ? `<section><h3>${icon('chat')}Contacto</h3><div class="hstack">
+      ${tel ? `<a class="btn sm btn-wa-sm" target="_blank" rel="noopener" href="${waLink(tel, 'Hola, tengo una consulta')}">${icon('chat')}WhatsApp</a>` : ''}
+      ${ig ? `<a class="btn sm" target="_blank" rel="noopener" href="https://instagram.com/${encodeURIComponent(ig)}">${icon('insta')}@${esc(ig)}</a>` : ''}</div></section>` : ''}
+  </div>`, { pie: `<div class="sheet-foot"><button type="button" class="btn pri" data-close>Volver a reservar</button></div>` });
+}
+
+Object.assign(ACC_COBRO, {
+  'pub-serv-ver': (el) => verServicioPub(el.dataset.id),
+  'pub-serv-elegir': (el) => { cerrarSheet(false); const b = document.querySelector(`.pub-serv-main[data-id="${el.dataset.id}"]`); if (b && !b.closest('.pub-serv.on')) b.click(); },
+  'pub-info': () => infoNegocioPub(),
+});
 
 /* =========================================================
    Render, eventos y arranque
@@ -7127,7 +7453,9 @@ document.addEventListener('click', (e) => {
   if (cerrar) { if (cerrar.tagName !== 'A') e.preventDefault(); cerrarSheet(); if (cerrar.tagName === 'A') return; }
   const el = e.target.closest('[data-act]'); if (!el) return;
   const fn = ACCIONES[el.dataset.act]; if (!fn) return;
-  if (el.tagName !== 'A' || !el.getAttribute('href')?.startsWith('#') || el.getAttribute('href') === '#') e.preventDefault();
+  // los enlaces externos (WhatsApp, mapas) se abren igual; la acción solo anota lo que pasó
+  const externo = el.tagName === 'A' && /^(https?:|mailto:|tel:)/.test(el.getAttribute('href') || '');
+  if (!externo && (el.tagName !== 'A' || !el.getAttribute('href')?.startsWith('#') || el.getAttribute('href') === '#')) e.preventDefault();
   try { fn(el); } catch (err) { console.error(err); toast('Algo falló: ' + err.message, true); }
 });
 document.addEventListener('change', (e) => { const el = e.target.closest('[data-change]'); if (el && CAMBIOS[el.dataset.change]) CAMBIOS[el.dataset.change](el); });

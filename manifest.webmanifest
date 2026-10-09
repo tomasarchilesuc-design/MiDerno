@@ -1,7 +1,7 @@
 {
   "name": "MiDerno",
   "short_name": "MiDerno",
-  "description": "Tu cuaderno de negocio, ahora se ordena solo.",
+  "description": "Ventas, agenda y clientes de tu negocio en un solo lugar.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -9,7 +9,49 @@
   "theme_color": "#0B6870",
   "lang": "es",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "id": "./",
+  "display_override": [
+    "standalone"
+  ],
+  "orientation": "any",
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "shortcuts": [
+    {
+      "name": "Registrar venta",
+      "short_name": "Registrar",
+      "url": "./#vender",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Agenda",
+      "url": "./#agenda",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
   ]
 }
