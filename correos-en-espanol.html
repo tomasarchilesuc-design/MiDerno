@@ -1,0 +1,20 @@
+<!-- Plantillas para Supabase → Authentication → Emails (Templates).
+     Copia el asunto y el cuerpo de cada una. {{ .ConfirmationURL }} lo reemplaza Supabase. -->
+
+<!-- 1) "Confirm signup"
+Asunto: Confirma tu correo para entrar a MiDerno -->
+<div style="font-family:Segoe UI,Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;color:#161616">
+  <h2 style="margin:0 0 12px">Confirma tu correo</h2>
+  <p style="line-height:1.5">Hola, gracias por crear tu cuenta en MiDerno. Toca el botón para confirmar tu correo y dejar listo tu negocio.</p>
+  <p style="margin:24px 0"><a href="{{ .ConfirmationURL }}" style="background:#0B6870;color:#fff;padding:12px 22px;border-radius:999px;text-decoration:none;font-weight:600">Confirmar mi correo</a></p>
+  <p style="color:#626260;font-size:13px;line-height:1.5">Si no creaste esta cuenta, ignora este mensaje. El enlace vence en 24 horas y sirve una sola vez.</p>
+</div>
+
+<!-- 2) "Reset password"
+Asunto: Crea tu nueva contraseña de MiDerno -->
+<div style="font-family:Segoe UI,Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;color:#161616">
+  <h2 style="margin:0 0 12px">¿Olvidaste tu contraseña?</h2>
+  <p style="line-height:1.5">Toca el botón para volver a MiDerno y elegir una contraseña nueva.</p>
+  <p style="margin:24px 0"><a href="{{ .ConfirmationURL }}" style="background:#0B6870;color:#fff;padding:12px 22px;border-radius:999px;text-decoration:none;font-weight:600">Crear contraseña nueva</a></p>
+  <p style="color:#626260;font-size:13px;line-height:1.5">Si no lo pediste tú, ignora este mensaje: tu contraseña actual sigue funcionando.</p>
+</div>
