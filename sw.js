@@ -1,6 +1,6 @@
 /* MiDerno: abre aunque no haya internet. La app se pide primero a la red
    (así cada versión nueva llega al tiro); si no hay conexión, usa la copia guardada. */
-const V = 'miderno-aeb84339536b';
+const V = 'miderno-33cc79cf3dae';
 const BASE = ['./', './manifest.webmanifest', './logo-192.png', './logo-512.png', './logo-apple.png'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(V).then((c) => c.addAll(BASE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (e) => {
