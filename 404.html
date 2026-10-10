@@ -779,7 +779,7 @@ td.n, th.n { white-space: nowrap; }
 @media (max-width: 820px) {
   .por-hero { grid-template-columns: minmax(0, 1fr); padding: 26px 0 10px; gap: 40px; }
   .por-vis { order: -1; max-width: 420px; width: 100%; margin: 0 auto; }
-  .por-nav > button[data-act="ejemplos"], .por-nav .btn { display: none; }
+  .por-nav > button[data-act="ejemplos"] { display: none; }
   .pp-barras { height: 64px; }
   .pp-mov.m2 { display: none; }
   .por-mini li + li::before { display: none; } .por-mini { gap: 6px 14px; }
@@ -1547,6 +1547,59 @@ p, dd, .small { text-wrap: pretty; }
 .instalar-guia li::before { content: counter(paso); width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--marca) 12%, var(--surface)); color: var(--marca); font-weight: 700; font-size: .875rem; }
 .instalar-guia li .i { width: 18px; height: 18px; vertical-align: -3px; color: var(--marca); }
 @media (display-mode: standalone) { .mobile-top { padding-top: env(safe-area-inset-top); } }
+.mode-pill[data-act] { cursor: pointer; border-radius: 8px; } .mode-pill[data-act]:hover { color: var(--ink); }
+
+/* ===== v35: aviso de reserva nueva ===== */
+.aviso-reserva { position: fixed; z-index: 60; left: 50%; top: calc(14px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); width: min(460px, calc(100% - 24px));
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 10px; padding: 10px 8px 10px 12px; border-radius: 16px;
+  background: var(--surface); border: 1px solid color-mix(in srgb, var(--marca) 35%, var(--line)); box-shadow: 0 12px 32px rgba(0,0,0,.16); animation: ar-entra .35s var(--ease-out, ease) both; }
+.aviso-reserva.quieto { box-shadow: 0 6px 16px rgba(0,0,0,.1); }
+@keyframes ar-entra { from { opacity: 0; transform: translate(-50%, -14px); } }
+.ar-ico { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; background: var(--marca); color: #fff; } .ar-ico .i { width: 19px; height: 19px; }
+.ar-txt { display: flex; flex-direction: column; min-width: 0; } .ar-txt small { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ar-x { width: 30px; height: 30px; border: 0; background: none; color: var(--muted); border-radius: 8px; display: grid; place-items: center; cursor: pointer; } .ar-x .i { width: 15px; height: 15px; }
+.avisos-fila { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-radius: 14px; background: color-mix(in srgb, var(--marca) 7%, var(--surface)); }
+.avisos-fila > span { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; align-items: center; min-width: 0; }
+.avisos-fila > span .i { grid-row: span 2; width: 20px; height: 20px; color: var(--marca); }
+.avisos-fila small { color: var(--muted); grid-column: 2; }
+@media (prefers-reduced-motion: reduce) { .aviso-reserva { animation: none; } }
+
+/* ===== v35: celular más fluido (sobre todo iPhone) ===== */
+/* iPhone hace zoom al escribir en campos con letra menor a 16px y la página salta */
+@media (pointer: coarse) { input, select, textarea, .in { font-size: 16px !important; } }
+@media (max-width: 860px) {
+  /* la agenda ya no tiene su propio scroll adentro: se desplaza con la página */
+  .cal { max-height: none !important; overflow: visible !important; }
+  .cal-card { overflow: visible; }
+  /* el desenfoque detrás de las hojas es caro en iPhone */
+  .scrim { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: rgba(8, 14, 12, .5); }
+  .sheet { max-height: 92dvh; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+  .cal-ev.muy-estrecho b { font-size: .75rem; letter-spacing: 0; }
+  .cal-cab .cal-dia span { font-size: .6875rem; }
+}
+/* Registrar en el celular: el servicio elegido queda marcado en la lista */
+.item-btn { position: relative; }
+.item-btn.en-venta { border-color: var(--marca); box-shadow: inset 0 0 0 1px var(--marca); background: color-mix(in srgb, var(--marca) 6%, var(--surface)); }
+.item-n { position: absolute; top: 8px; right: 8px; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 999px; display: grid; place-items: center; background: var(--marca); color: #fff; font: 700 .75rem/1 var(--f-ui, inherit); }
+.item-n .i { width: 14px; height: 14px; }
+.item-btn.en-venta b { padding-right: 28px; }
+.cobro-barra.late { animation: barra-late .45s var(--ease-out, ease); }
+@keyframes barra-late { 40% { transform: translateY(-4px) scale(1.02); } }
+#detalle-venta { scroll-margin-top: 12px; }
+#detalle-venta.resalta { animation: resalta 1.2s ease; }
+@keyframes resalta { 0%, 60% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--marca) 45%, transparent); } }
+@media (max-width: 860px) { .sell { padding-bottom: 72px; } }
+@media (prefers-reduced-motion: reduce) { .cobro-barra.late, #detalle-venta.resalta { animation: none; } }
+.por-nav .btn.claro { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.35); color: #fff; }
+.por-nav .btn.claro:hover { background: rgba(255,255,255,.2); }
+@media (max-width: 600px) {
+  .ag-ctrl > .between { flex-direction: column; align-items: stretch; gap: 10px; }
+  .ag-ctrl > .between > .hstack { flex-wrap: nowrap; }
+  .ag-ctrl .ag-fecha-in { flex: 1; min-width: 0; }
+  .ag-ctrl .seg { display: grid; grid-template-columns: repeat(3, 1fr); }
+}
+.cobro-barra.oculta { opacity: 0; transform: translateY(12px); pointer-events: none; }
+.cobro-barra { transition: opacity .2s, transform .2s; }
 
 </style>
 </head>
@@ -1560,7 +1613,7 @@ p, dd, .small { text-wrap: pretty; }
 
 // Para conectar a la nube, pega aquí los datos de tu proyecto Supabase
 // (Project Settings → API). Si quedan vacíos, la app funciona en modo local.
-const VERSION = '33';
+const VERSION = '35';
 const CONFIG = {
   supabaseUrl: 'https://bszgtliphyxmskkmufbl.supabase.co',
   supabaseAnonKey: 'sb_publishable_aewlWELSwqurE7tqpoHZUA_3va4B4Fl',
@@ -1609,6 +1662,8 @@ const addMonths = (ym, n) => { const [y, m] = ym.split('-').map(Number); const d
 const diasEntre = (a, b) => Math.round((new Date(b + 'T12:00:00') - new Date(a + 'T12:00:00')) / 86400000);
 const diasDelMes = (ym) => { const [y, m] = ym.split('-').map(Number); return new Date(y, m, 0).getDate(); };
 const nombreMes = (ym, corto = false) => { const [y, m] = ym.split('-').map(Number); return new Date(y, m - 1, 1).toLocaleDateString('es-CL', corto ? { month: 'short' } : { month: 'long', year: 'numeric' }); };
+// fecha de nacimiento posible: existe, no es futura y no es de hace más de 120 años
+const cumpleValido = (f) => !f || (/^\d{4}-\d{2}-\d{2}$/.test(f) && !isNaN(new Date(f + 'T12:00:00')) && new Date(f + 'T12:00:00').toISOString().slice(0, 10) === f && f <= hoy() && f >= String(new Date().getFullYear() - 120) + '-01-01');
 const fechaLarga = (iso) => new Date(iso + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' });
 const fechaCorta = (iso) => new Date(iso + 'T12:00:00').toLocaleDateString('es-CL', { day: 'numeric', month: 'short' });
 const iniciales = (n) => String(n || '?').trim().split(/\s+/).slice(0, 2).map((p) => p[0]).join('').toUpperCase();
@@ -2112,7 +2167,7 @@ function shell(contenido) {
       <div class="grow"></div>
       ${botonInstalarSide()}
       <button class="ayuda-side" data-act="ayuda">${icon('help')}<span>¿Necesitas ayuda?</span></button>
-      <div class="mode-pill"><span class="dot ${S.modo === 'nube' ? 'cloud' : ''}"></span>${S.modo === 'nube' ? (S.sincronizando ? 'Poniéndose al día…' : 'Sincronizado en la nube') : 'Guardado en este dispositivo'} · v${VERSION}</div>
+      <div class="mode-pill" ${S.modo === 'nube' ? 'role="button" tabindex="0" data-act="al-dia" title="Traer lo último de la nube"' : ''}><span class="dot ${S.modo === 'nube' ? 'cloud' : ''}"></span>${S.modo === 'nube' ? (S.sincronizando ? 'Poniéndose al día…' : 'Sincronizado en la nube') : 'Guardado en este dispositivo'} · v${VERSION}</div>
     </aside>
     <button class="saltar" data-act="saltar">Saltar al contenido</button>
     <main class="main" id="contenido" tabindex="-1"><div class="wrap">
@@ -2138,8 +2193,15 @@ function menuMas() {
 
 /* ---------- ventana emergente y avisos ---------- */
 let _onSubmit = null;
+// en el celular, el fondo queda quieto mientras hay una hoja abierta (en iPhone se movía detrás)
+const tactil = () => matchMedia('(pointer: coarse)').matches;
+function fondoQuieto(on) {
+  const b = document.body;
+  if (on) { if (b.dataset.lock || !tactil()) return; const y = window.scrollY; b.dataset.lock = String(y); Object.assign(b.style, { position: 'fixed', top: -y + 'px', left: '0', right: '0', width: '100%' }); }
+  else { if (!b.dataset.lock) return; const y = +b.dataset.lock; delete b.dataset.lock; Object.assign(b.style, { position: '', top: '', left: '', right: '', width: '' }); window.scrollTo(0, y); }
+}
 function abrirSheet(titulo, cuerpo, { submit, pie } = {}) {
-  cerrarSheet(false);
+  cerrarSheet(false, true); fondoQuieto(true);
   _onSubmit = submit || null;
   const el = document.createElement('div');
   el.className = 'scrim'; el.id = 'scrim';
@@ -2152,8 +2214,8 @@ function abrirSheet(titulo, cuerpo, { submit, pie } = {}) {
   el.addEventListener('mousedown', (e) => { if (e.target === el) cerrarSheet(); });
   const first = el.querySelector('input:not([type=hidden]),select,textarea'); if (first && window.innerWidth > 600) first.focus();
 }
-function cerrarSheet(animar = true) {
-  const el = $('#scrim'); _onSubmit = null; if (!el) return;
+function cerrarSheet(animar = true, seguir = false) {
+  const el = $('#scrim'); _onSubmit = null; if (!seguir) fondoQuieto(false); if (!el) return;
   // se va con una animación corta; pierde su id al tiro para no confundirse con la próxima ventana
   el.id = ''; el.querySelectorAll('[id]').forEach((x) => x.removeAttribute('id'));
   if (!animar || matchMedia('(prefers-reduced-motion: reduce)').matches) return el.remove();
@@ -2207,11 +2269,11 @@ function vistaBienvenida() {
   const nube = !!(CONFIG.supabaseUrl && CONFIG.supabaseAnonKey); const empezar = nube ? 'registro' : 'crear';
   return `<div class="portada">
     <header class="por-top">${LOGO(true)}
-      <nav class="por-nav"><button data-act="ejemplos">Ejemplos</button>${nube ? '<button data-act="entrar">Entrar</button>' : ''}<button class="btn sm sol" data-act="empezar">Empezar gratis</button></nav></header>
+      <nav class="por-nav"><button data-act="ejemplos">Ejemplos</button>${nube ? '<button class="btn sm claro" data-act="entrar">Entrar</button>' : ''}</nav></header>
     <section class="por-hero">
       <div class="por-txt">
-        <h1>Anota.<br>MiDerno <em>suma</em>.</h1>
-        <p>Ventas, egresos, agenda y stock en un solo lugar. Desde el celular o el computador.</p>
+        <h1>Tu negocio,<br><em>en orden.</em></h1>
+        <p>Ventas, agenda y clientes en un solo lugar, desde el celular o el computador.</p>
         <div class="por-btns"><button class="btn sol" data-act="${empezar}">Empezar gratis</button><button class="btn claro" data-act="ver-ejemplos">Ver un ejemplo</button></div>
       </div>
       ${IMG_PORTADA.d ? `<figure class="por-vis">
@@ -2221,20 +2283,15 @@ function vistaBienvenida() {
     </section>
     <section class="por-sec" aria-labelledby="por-que">
       <div class="por-sec-in">
-        <h2 id="por-que">Todo lo que pasa en tu negocio, en un solo lugar.</h2>
+        <h2 id="por-que">Lo que hace por ti.</h2>
         <dl class="por-filas">
-          <div><dt>Registra.</dt><dd><p>Cada venta, servicio y egreso en segundos, con el cliente y el medio de pago. El resultado del mes se calcula solo.</p><small>Movimientos · Ticket promedio · Metas</small></dd></div>
-          <div><dt>Agenda.</dt><dd><p>Tus clientas reservan en tu página, con tu logo y tus horarios. Tú confirmas, bloqueas horas y ves todo en tu calendario.</p><small>Página de reservas · Recordatorios por WhatsApp · Google Calendar</small></dd></div>
-          <div><dt>Crece.</dt><dd><p>Cada día te dice a quién escribir y por qué: quién está por volver, a quién le toca su mantención y qué publicar en redes.</p><small>Acciones de hoy · Retención · Ideas para Instagram</small></dd></div>
-          <div><dt>Controla.</dt><dd><p>Stock que se descuenta solo, costo de cada producto según su receta y pedidos a proveedores listos para enviar.</p><small>Inventario · Producción · Proveedores</small></dd></div>
+          <div><dt>Registra.</dt><dd><p>Cada venta y egreso en segundos. El resultado del mes se calcula solo.</p></dd></div>
+          <div><dt>Agenda.</dt><dd><p>Tus clientas reservan en tu página y tú confirmas con un toque.</p></dd></div>
+          <div><dt>Crece.</dt><dd><p>Cada día te dice a quién escribir para que vuelva.</p></dd></div>
+          <div><dt>Controla.</dt><dd><p>Stock, costos y pedidos a proveedores, siempre al día.</p></dd></div>
         </dl>
         <p class="por-para">Pensado para salones de uñas, peluquerías, barberías, centros de estética, tiendas y emprendimientos que producen lo que venden.</p>
       </div>
-    </section>
-    <section class="por-fin">
-      <h2>Empieza hoy con lo que ya tienes.</h2>
-      <p>Importa tu Excel o parte desde cero. Funciona en el celular y en el computador.</p>
-      <div class="por-btns"><button class="btn sol" data-act="${empezar}">Empezar gratis</button><button class="btn claro" data-act="ver-ejemplos">Ver un ejemplo</button></div>
     </section>
     ${locales.length ? `<section class="por-locales"><h2>Tus negocios en este dispositivo</h2>
       <div class="card list">${locales.map((n) => `<button class="row click" data-act="abrir" data-id="${esc(n.id)}" style="border-left:0;border-right:0;border-bottom:0;background:none;width:100%;text-align:left"><div class="avatar">${esc(iniciales(n.nombre))}</div><div class="grow"><div class="t">${esc(n.nombre)}</div><div class="s">${esc(rubroTexto(n))}</div></div>${icon('right')}</button>`).join('')}</div></section>` : ''}
@@ -2318,7 +2375,7 @@ function formLogin() {
     <div class="o-sep">o con tu correo</div>
     ${field('Correo', input('email', '', 'type="email" autocomplete="email" required'))}${field('Contraseña', input('password', '', 'type="password" autocomplete="current-password" required'))}
     <a href="#" class="link-sm" data-act="olvide" style="align-self:flex-start">¿Olvidaste tu contraseña?</a>
-    <p class="small muted">¿No tienes cuenta? <a href="#" data-act="registro">Crea tu negocio</a></p>`, {
+    <p class="small muted login-alt">¿No tienes cuenta? <a href="#" data-act="registro">Crea tu negocio</a><br>¿Trabajas en un negocio que usa MiDerno? <a href="#" data-act="equipo-login">Entra con tu código</a></p>`, {
     pie: '<div class="sheet-foot"><button type="button" class="btn" data-close>Cancelar</button><button class="btn pri" type="submit">Ingresar</button></div>',
     submit: async (d) => {
       try { const sb = await cargarSupabase(); const { error } = await sb.auth.signInWithPassword({ email: d.email.trim(), password: d.password }); if (error) throw error; cerrarSheet(); await abrirNube(); }
@@ -2632,7 +2689,7 @@ function vistaVender() {
       ${tabs.length ? `<input class="in" id="q-vender" type="search" aria-label="Buscar en el catálogo" autocomplete="off" placeholder="Buscar…" value="${esc(S.ui.vender.q)}" autocomplete="off">` : ''}
       <div class="catalog" id="catalogo-grid">${gridCatalogo()}</div>
     </div>
-    <div class="card cart">
+    <div class="card cart" id="detalle-venta">
       <div class="card-head"><h2>Detalle</h2>${c.lineas.length ? '<button class="btn sm ghost" data-act="vaciar">Vaciar</button>' : ''}</div>
       <div>${c.lineas.length ? c.lineas.map((l, i) => `<div class="cart-line">
           <div><b>${esc(l.nombre)}</b><div class="small muted num cart-precio">${precioLinea(l, i, 'cart')}${l.cantidad > 1 ? ' c/u' : ''}${l.tipo_item === 'producto' && tiene('inventario') ? ` · quedan ${qtyFmt(stockDe('producto', l.item_id))}` : ''}</div></div>
@@ -2654,19 +2711,22 @@ function vistaVender() {
       </div>
     </div>
   </div>
-  ${c.lineas.length ? `<button class="cobro-barra" data-act="cobro-abrir"><span>${c.lineas.length === 1 ? esc(c.lineas[0].nombre) : `${c.lineas.length} cosas`}</span><b class="num">Cobrar ${money(total)}</b></button>` : ''}`;
+  ${c.lineas.length ? `<button class="cobro-barra" data-act="cobro-abrir"><span>${c.lineas.length === 1 ? esc(c.lineas[0].nombre) : `${sum(c.lineas, (l) => l.cantidad)} en la venta`}</span><b class="num">Continuar · ${money(total)}</b></button>` : ''}`;
 }
+// cuántas veces está en la venta actual: el botón queda marcado con ✓ o con el número
+const enVenta = (tipo, id) => sum((S.cart?.lineas || []).filter((l) => l.tipo_item === tipo && l.item_id === id), (l) => l.cantidad);
+const marcaVenta = (tipo, id) => { const n = enVenta(tipo, id); return n ? `<span class="item-n" aria-label="En la venta${n > 1 ? ': ' + n : ''}">${n > 1 ? '×' + qtyFmt(n) : icon('ok')}</span>` : ''; };
 function gridCatalogo() {
   const q = S.ui.vender.q.trim().toLowerCase(); const tab = S.ui.vender.tab;
   const match = (n) => !q || n.toLowerCase().includes(q);
   if (tab === 'servicios') {
     const s = db.all('servicios').filter((x) => x.activo !== false && match(x.nombre));
-    return s.length ? s.map((x) => `<button class="item-btn" data-act="add" data-tipo="servicio" data-id="${x.id}"><b>${esc(x.nombre)}</b><small>${money(x.precio)} · ${x.duracion_min} min</small></button>`).join('') : `<div class="empty">No hay servicios. <a href="#catalogo">Agrégalos en el catálogo</a>.</div>`;
+    return s.length ? s.map((x) => `<button class="item-btn ${enVenta('servicio', x.id) ? 'en-venta' : ''}" data-act="add" data-tipo="servicio" data-id="${x.id}"><b>${esc(x.nombre)}</b><small>${money(x.precio)} · ${x.duracion_min} min</small>${marcaVenta('servicio', x.id)}</button>`).join('') : `<div class="empty">No hay servicios. <a href="#catalogo">Agrégalos en el catálogo</a>.</div>`;
   }
   if (tab === 'productos') {
     const p = db.all('productos').filter((x) => x.activo !== false && match(x.nombre + ' ' + (x.sku || '')));
-    return p.length ? p.map((x) => { const st = stockDe('producto', x.id); if (!tiene('inventario')) return `<button class="item-btn" data-act="add" data-tipo="producto" data-id="${x.id}"><b>${esc(x.nombre)}</b><small>${money(x.precio_venta)}</small></button>`;
-      return `<button class="item-btn" data-act="add" data-tipo="producto" data-id="${x.id}" ${st <= 0 ? 'disabled' : ''}><b>${esc(x.nombre)}</b><small>${money(x.precio_venta)} · ${st <= 0 ? 'Agotado' : 'Stock ' + qtyFmt(st)}</small></button>`; }).join('') : `<div class="empty">No hay productos. <a href="#catalogo">Agrégalos en el catálogo</a>.</div>`;
+    return p.length ? p.map((x) => { const st = stockDe('producto', x.id); if (!tiene('inventario')) return `<button class="item-btn ${enVenta('producto', x.id) ? 'en-venta' : ''}" data-act="add" data-tipo="producto" data-id="${x.id}">${marcaVenta('producto', x.id)}<b>${esc(x.nombre)}</b><small>${money(x.precio_venta)}</small></button>`;
+      return `<button class="item-btn ${enVenta('producto', x.id) ? 'en-venta' : ''}" data-act="add" data-tipo="producto" data-id="${x.id}" ${st <= 0 ? 'disabled' : ''}>${marcaVenta('producto', x.id)}<b>${esc(x.nombre)}</b><small>${money(x.precio_venta)} · ${st <= 0 ? 'Agotado' : 'Stock ' + qtyFmt(st)}</small></button>`; }).join('') : `<div class="empty">No hay productos. <a href="#catalogo">Agrégalos en el catálogo</a>.</div>`;
   }
   return '<div class="empty">Usa “Otro monto” para registrar una venta.</div>';
 }
@@ -2771,18 +2831,24 @@ function formGasto(id) {
 }
 
 /* ---------- CLIENTES ---------- */
-// Próxima hora agendada del cliente (dentro de los próximos 30 días): si la tiene, no hace falta reactivarlo
-const CITA_VIVA = ['solicitada', 'agendada', 'confirmada'];
+// Próxima hora agendada del cliente: si la tiene, no hace falta reactivarlo.
+// Se busca por cliente y también por teléfono, porque la misma persona puede quedar
+// dos veces (una al reservar desde la página y otra al importar el Excel).
+const CITA_VIVA = ['solicitada', 'agendada', 'confirmada', 'asistio'];
+const telClave = (t) => telLimpio(t || '').slice(-8);
 function proximaCita(clienteId) {
-  const H = hoy(), lim = addDays(H, 30);
-  return indice('prox:' + H, 'citas', (arr) => {
+  const H = hoy();
+  const m = indice('prox:' + H, 'citas', (arr) => {
     const m = new Map();
+    const poner = (k, c) => { if (!k) return; const a = m.get(k); if (!a || (c.fecha + c.hora) < (a.fecha + a.hora)) m.set(k, c); };
     for (const c of arr) {
-      if (!CITA_VIVA.includes(c.estado) || c.fecha < H || c.fecha > lim) continue;
-      const a = m.get(c.cliente_id); if (!a || (c.fecha + c.hora) < (a.fecha + a.hora)) m.set(c.cliente_id, c);
+      if (!CITA_VIVA.includes(c.estado) || c.fecha < H) continue;
+      poner(c.cliente_id, c); const t = telClave(db.get('clientes', c.cliente_id)?.telefono); if (t.length === 8) poner('tel:' + t, c);
     }
     return m;
-  }).get(clienteId) || null;
+  });
+  const t = telClave(db.get('clientes', clienteId)?.telefono);
+  return m.get(clienteId) || (t.length === 8 ? m.get('tel:' + t) : null) || null;
 }
 const inactivo = (r) => r.dias != null && r.dias > DIAS_REACTIVAR;
 const porReactivar = (r) => inactivo(r) && !proximaCita(r.c.id);
@@ -2855,10 +2921,11 @@ function formCliente(id, alGuardar) {
   const c = id ? db.get('clientes', id) : { nombre: '', telefono: '', cumpleanos: '', notas: '' };
   abrirSheet(id ? 'Editar cliente' : 'Nuevo cliente', `<div class="form">
     ${field('Nombre', input('nombre', c.nombre, 'required autocomplete="off"'))}
-    <div class="form-row">${field('Teléfono (WhatsApp)', telInput('telefono', c.telefono))}${field('Fecha de nacimiento', input('cumpleanos', c.cumpleanos || '', 'type="date"'), 'Opcional')}</div>
+    <div class="form-row">${field('Teléfono (WhatsApp)', telInput('telefono', c.telefono))}${field('Fecha de nacimiento', input('cumpleanos', c.cumpleanos || '', `type="date" max="${hoy()}" min="1900-01-01"`), 'Opcional')}</div>
     ${usaObs() ? field('Observaciones', `<textarea class="in" name="notas" id="f-notas" rows="3" placeholder="Alergias, tipo de piel, tratamientos, preferencias…">${esc(partirNotas(c.notas).general)}</textarea>`, 'Solo las ve tu negocio. En la ficha del cliente puedes ir sumando observaciones con fecha.') : ''}</div>`, {
     submit: (d) => {
       if (!d.nombre.trim()) return toast('Escribe el nombre', true);
+      if (!cumpleValido(d.cumpleanos)) return errorCampo('#f-cumpleanos', 'Esa fecha de nacimiento no existe o es futura.');
       const row = { nombre: d.nombre.trim(), telefono: d.telefono.trim(), cumpleanos: d.cumpleanos || null, notas: d.notas == null ? c.notas || '' : unirNotas(d.notas.trim(), partirNotas(c.notas).fechadas) };
       const fin = (r, msg) => { cerrarSheet(); toast(msg); alGuardar ? alGuardar(r) : render(); };
       const guardar = () => fin(id ? db.update('clientes', id, row) : db.insert('clientes', { ...row, creado_en: hoy() }), id ? 'Cliente actualizado' : 'Cliente agregado');
@@ -3308,12 +3375,12 @@ const KIND = { cita: { label: 'Cita', cls: 'k-cita' }, entrega: { label: 'Entreg
 
 /* ---------- AGENDA ---------- */
 function vistaAgenda() {
-  const ui = S.ui.agenda; ui.fecha ||= hoy(); ui.vista ||= esMovil() ? 'dia' : 'semana';
+  const ui = S.ui.agenda; ui.fecha ||= hoy(); ui.vista ||= 'semana';
   const emps = db.all('empleados').filter((e) => e.activo !== false);
   const pend = db.all('citas').filter((c) => c.estado === 'solicitada' && c.fecha >= hoy()).sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora));
   let titulo, cuerpo, paso;
   if (ui.vista === 'mes') { titulo = nombreMes(mesDe(ui.fecha)); cuerpo = agendaMes(); paso = 'mes'; }
-  else if (ui.vista === 'semana') { titulo = tituloCalendario(); cuerpo = agendaCalendario(); paso = esMovil() ? 3 : 7; }
+  else if (ui.vista === 'semana') { titulo = tituloCalendario(); cuerpo = agendaCalendario(); paso = 7; }
   else { titulo = fechaLarga(ui.fecha); cuerpo = agendaDia(); paso = 1; }
   return `${head('Agenda', esc(titulo), `<button class="btn" data-act="cal-personal" title="Ver tu agenda en Google Calendar, iPhone u Outlook">${icon('upload')}<span class="solo-desk">Exportar</span></button><button class="btn" data-act="bloqueo-nuevo">${icon('lock')}<span class="solo-desk">Bloquear horario</span></button><button class="btn pri" data-act="agendar">${icon('plus')}Agendar</button>`)}
   ${pend.length ? `<div class="ag-pend-box ${ui.verPend ? 'on' : ''}"><button class="ag-pend" data-act="ag-pend" aria-expanded="${!!ui.verPend}"><span><b>${pend.length}</b> reserva${pend.length > 1 ? 's' : ''} por confirmar</span><span class="ag-pend-ver">${ui.verPend ? 'Ocultar' : 'Ver'}</span></button>
@@ -3323,7 +3390,7 @@ function vistaAgenda() {
     <div class="between">
       <div class="hstack"><button class="btn icon-btn" data-act="ag-mover" data-d="-1" data-p="${paso}" aria-label="Anterior">${icon('left')}</button><button class="btn sm" data-act="ag-hoy">Hoy</button><button class="btn icon-btn" data-act="ag-mover" data-d="1" data-p="${paso}" aria-label="Siguiente">${icon('right')}</button>
         <input type="date" class="in ag-fecha-in" style="width:auto;min-height:34px;padding:4px 8px" data-change="ag-fecha" value="${ui.fecha}" aria-label="Ir a una fecha"></div>
-      <div class="seg">${[['dia', 'Día'], ['semana', esMovil() ? '3 días' : 'Semana'], ['mes', 'Mes']].map(([k, v]) => `<button data-act="ag-vista" data-v="${k}" class="${ui.vista === k ? 'on' : ''}">${v}</button>`).join('')}</div>
+      <div class="seg">${[['semana', 'Semana'], ['dia', 'Día'], ['mes', 'Mes']].map(([k, v]) => `<button data-act="ag-vista" data-v="${k}" class="${ui.vista === k ? 'on' : ''}">${v}</button>`).join('')}</div>
     </div>
     ${emps.length > 1 ? `<div class="chips scroll"><button class="chip ${ui.emp === 'todos' ? 'on' : ''}" data-act="ag-emp" data-e="todos">Todo</button>${emps.map((e) => `<button class="chip ${ui.emp === e.id ? 'on' : ''}" data-act="ag-emp" data-e="${e.id}"><i class="emp-dot" style="background:${colorEmpleado(e.id)}"></i>${esc(e.nombre.split(' ')[0])}</button>`).join('')}</div>` : ''}
   </div>
@@ -4486,7 +4553,7 @@ function vistaReserva() {
   if (p.hora) pasos.push(`<section class="card stack"><h2><span class="pub-n">${info.empleados.length > 1 ? 4 : 3}</span>Tus datos</h2>
     <form class="form" id="form-reserva">
       <div class="form-row">${field('Nombre', `<input class="in" name="nombre" id="r-nombre" required autocomplete="name" value="${esc(p.datos?.nombre || '')}">`)}${field('WhatsApp', telInput('telefono', p.datos?.telefono || '', { id: 'r-telefono', req: true }))}</div>
-      <div class="form-row">${field('Fecha de nacimiento', `<input class="in" type="date" name="cumple" id="r-cumple" value="${esc(p.datos?.cumple || '')}">`, 'Opcional. Para saludarte en tu cumpleaños.')}<span></span></div>
+      <div class="form-row">${field('Fecha de nacimiento', `<input class="in" type="date" name="cumple" id="r-cumple" max="${hoy()}" min="1900-01-01" value="${esc(p.datos?.cumple || '')}">`, 'Opcional. Para saludarte en tu cumpleaños.')}<span></span></div>
       ${field('Comentario', '<input class="in" name="nota" id="r-nota" placeholder="Opcional">')}
       <div class="pub-resumen"><span>${esc(p.servicio.nombre)} · ${esc(fechaLarga(p.fecha))}, ${p.hora.hora}</span><b class="num">${fmtP(p.servicio.precio)}</b></div>
       <button class="btn pri block" ${p.enviando ? 'disabled' : ''}>${p.enviando ? 'Enviando…' : 'Reservar hora'}</button>
@@ -4496,6 +4563,7 @@ function vistaReserva() {
 async function pubEnviar(d) {
   const p = S.pub;
   if (!d.nombre.trim() || telLimpio(d.telefono).length < 8) return toast('Escribe tu nombre y un WhatsApp válido', true);
+  if (!cumpleValido(d.cumple)) return errorCampo('#r-cumple', 'Esa fecha de nacimiento no existe o es futura.');
   p.datos = { nombre: d.nombre.trim(), telefono: d.telefono.trim(), cumple: d.cumple || '' }; p.enviando = true; render();
   try {
     // vuelve a revisar que la hora siga libre justo antes de reservar
@@ -4532,7 +4600,8 @@ function tarjetaReservas() {
         <div class="dias-horario">${DIAS_SEMANA.map(([d, l]) => { const on = h.dias.includes(d); const hd = { desde: h.porDia?.[d]?.desde || h.desde, hasta: h.porDia?.[d]?.hasta || h.hasta };
           return `<div class="dh-row ${on ? '' : 'off'}"><label class="toggle" aria-label="Abierto el ${l}"><input type="checkbox" name="dia" value="${d}" ${on ? 'checked' : ''} data-change="dh-dia"><span></span></label><b>${l}</b>
             ${selHora('desde_' + d, hd.desde, { id: 'f-desde_' + d, desde: '05:00', hasta: '23:00', attrs: `aria-label="${l}: abre"` })}<span class="muted small">a</span>${selHora('hasta_' + d, hd.hasta, { id: 'f-hasta_' + d, desde: '06:00', hasta: '23:50', attrs: `aria-label="${l}: cierra"` })}<span class="dh-cerrado small muted">Cerrado</span></div>`; }).join('')}</div></div>
-      <div class="form-row">${field('Mostrar horas cada', `<select class="in" name="intervalo" id="f-intervalo">${[10, 15, 20, 30, 60].map((m) => opt(m, m + ' minutos', h.intervalo)).join('')}</select>`)}${field('WhatsApp del negocio', telInput('telefono', n.telefono || ''), n.telefono ? 'Después de reservar, tu clienta te avisa con un toque.' : '<b style="color:var(--warn)">Agrégalo:</b> sin él tus clientas no pueden avisarte por WhatsApp al reservar.')}</div>
+      <div class="form-row">${field('Mostrar horas cada', `<select class="in" name="intervalo" id="f-intervalo">${[10, 15, 20, 30, 45, 60, 90, 120, 180].map((m) => opt(m, m < 60 || m % 60 ? m + ' minutos' : m / 60 === 1 ? '1 hora' : m / 60 + ' horas', h.intervalo)).join('')}</select>`)}${field('WhatsApp del negocio', telInput('telefono', n.telefono || ''), n.telefono ? 'Después de reservar, tu clienta te avisa con un toque.' : '<b style="color:var(--warn)">Agrégalo:</b> sin él tus clientas no pueden avisarte por WhatsApp al reservar.')}</div>
+      ${on && S.modo === 'nube' ? filaAvisos() : ''}
       <p class="small"><a href="#" data-act="ir-perfil">${icon('upload')} Logo y fotos de tu página</a></p>
       ${field('Dirección de tu página', `<div class="hstack" style="flex-wrap:nowrap"><span class="muted small" style="white-space:nowrap">?reservar=</span>${input('slug', n.slug || slugDe(n.nombre), 'pattern="[a-z0-9-]+" placeholder="mi-negocio"')}</div>`, 'Solo minúsculas, números y guiones.')}
       <div class="hstack"><button class="btn pri">Guardar horario</button><button type="button" class="btn" data-act="pub-preview">Ver mi página</button></div>
@@ -5663,7 +5732,7 @@ const ACC_COBRO = {
   'cobro-canal': (el) => { S.cart.canal = el.dataset.c; pintarCobro(); },
   'cobro-mas': () => { cerrarSheet(); S.ui.vender.tab ||= 'servicios'; if (vistaActual() === 'vender') render(); else ir('vender'); },
   'cobro-ok': () => cobroConfirmar(),
-  'cobro-abrir': () => formCobro(),
+  'cobro-abrir': () => { if (vistaActual() === 'vender' && !S.cart?.cita_id) { const d = $('#detalle-venta'); d?.scrollIntoView({ behavior: quieto() ? 'auto' : 'smooth', block: 'start' }); d?.classList.remove('resalta'); void d?.offsetWidth; d?.classList.add('resalta'); return; } formCobro(); },
   'caja-hoy': () => { S.ui.caja = { ...(S.ui.caja || {}), rango: 'hoy' }; },
 };
 const CAMB_COBRO = {
@@ -5856,7 +5925,7 @@ function detalleIndicadores(ym) {
   const prim = primerasCompras(); const meses = Array.from({ length: 6 }, (_, k) => addMonths(ym, k - 5)); const datos = meses.map((m) => indicadoresMes(m, 31, prim));
   const a = datos[5]; const svc = tiene('servicios');
   const maxAt = Math.max(1, ...datos.map((d) => d.atenciones));
-  const pend = a.pendientes.map((id) => db.get('clientes', id)).filter(Boolean).map((c) => [c, proximaCita(c.id) ? 1 : 0]).sort((x, y) => x[1] - y[1]).map((x) => x[0]).slice(0, 20);
+  const pend = a.pendientes.map((id) => db.get('clientes', id)).filter((c) => c && !proximaCita(c.id)).slice(0, 20);
   abrirSheet(`Tu negocio en ${esc(nombreMes(ym))}`, `<div class="stack">
     <p class="muted small" style="margin:0">Cómo se calcula: <b>atenciones</b> son los servicios hechos; <b>ticket promedio</b>, lo que deja en promedio cada venta; <b>clientas nuevas</b>, las que compraron por primera vez ese mes; <b>retención</b>, cuántas de las que vinieron el mes anterior volvieron este mes.</p>
     <div class="tbl-wrap"><table class="ind-tabla"><thead><tr><th>Mes</th><th class="n">${svc ? 'Atenciones' : 'Ventas'}</th><th class="n">Ticket</th><th class="n">Nuevas</th><th class="n">Retención</th></tr></thead>
@@ -5976,7 +6045,6 @@ function carriles(items) {
 
 function diasCalendario() {
   const ui = S.ui.agenda;
-  if (esMovil()) return Array.from({ length: 3 }, (_, k) => addDays(ui.fecha, k));
   const l = lunesDe(ui.fecha); return Array.from({ length: 7 }, (_, k) => addDays(l, k));
 }
 function tituloCalendario() {
@@ -6012,8 +6080,8 @@ function agendaCalendario() {
       ${conHora.map(({ i, ini: a, fin: z, carril, de }) => {
         const [est] = (i.kind === 'cita' ? ESTADOS_CITA : ESTADOS_EV)[i.estado] || [''];
         const corto = (z - a) * MIN_PX < 52; const col = i.kind === 'cita' ? colorEmpleado(i.ref.empleado_id) : '';
-        const nom = de >= 3 ? iniciales(i.titulo) : de === 2 ? primerNombre(i.titulo) : i.titulo;
-        return `<button class="cal-ev ${KIND[i.kind].cls} ${i.kind === 'cita' ? 'e-' + i.estado : ''} ${i.estado === 'solicitada' ? 'req' : ''} ${['completada', 'entregada', 'hecha'].includes(i.estado) ? 'hecho' : ''} ${corto ? 'corto' : ''} ${de >= 2 ? 'estrecho' : ''} ${de >= 3 ? 'muy-estrecho' : ''}" data-act="ag-detalle" data-id="${i.id}" data-kind="${i.kind}"
+        const mov = esMovil(); const nom = de >= 3 || (mov && de >= 2) ? iniciales(i.titulo) : mov || de === 2 ? primerNombre(i.titulo) : i.titulo;
+        return `<button class="cal-ev ${KIND[i.kind].cls} ${i.kind === 'cita' ? 'e-' + i.estado : ''} ${i.estado === 'solicitada' ? 'req' : ''} ${['completada', 'entregada', 'hecha'].includes(i.estado) ? 'hecho' : ''} ${corto ? 'corto' : ''} ${de >= 2 || mov ? 'estrecho' : ''} ${de >= 3 || (mov && de >= 2) ? 'muy-estrecho' : ''}" data-act="ag-detalle" data-id="${i.id}" data-kind="${i.kind}"
           style="${col ? `--ev:${col};` : ''}top:${y(a)}px;height:${Math.max(22, (z - a) * MIN_PX - 2)}px;left:calc(${(carril / de) * 100}% + 2px);width:calc(${100 / de}% - 4px)" title="${esc(`${i.hora} ${i.titulo} · ${i.sub} · ${est}`)}">
           ${i.kind === 'cita' && i.estado !== 'solicitada' ? `<i class="cal-est e-${i.estado}" aria-hidden="true"></i>` : ''}<span class="cal-h num">${i.hora}${i.kind === 'cita' && i.estado !== 'solicitada' && !corto ? ` · <span class="cal-est-t">${est}</span>` : ''}</span><b>${esc(nom)}</b>${corto ? '' : `<small>${esc(i.kind === 'cita' ? i.s?.nombre || '' : i.sub)}</small>`}${i.estado === 'solicitada' ? '<em>Por confirmar</em>' : ''}</button>`;
       }).join('')}
@@ -6768,6 +6836,92 @@ Object.assign(CAMB_COBRO, {
 });
 
 /* =========================================================
+   v35: aviso de reservas nuevas
+   - Con MiDerno abierto (en cualquier dispositivo) la reserva aparece
+     al instante, con un aviso para confirmarla.
+   - Si diste permiso, también llega como notificación del sistema
+     (en iPhone, solo con MiDerno instalado en la pantalla de inicio).
+   - El correo al dueño lo manda la base de datos (actualización 12).
+   ========================================================= */
+
+let _canalReservas = null, _canalNegocio = null;
+const avisosPermitidos = () => 'Notification' in window && Notification.permission === 'granted';
+
+async function escucharReservas() {
+  if (S.modo !== 'nube' || !S.negocio || S.eq || S.pub || !tiene('servicios')) return;
+  if (_canalNegocio === S.negocio.id && _canalReservas) return;
+  try {
+    const sb = await cargarSupabase();
+    if (_canalReservas) { sb.removeChannel(_canalReservas); _canalReservas = null; }
+    const nid = S.negocio.id; _canalNegocio = nid;
+    _canalReservas = sb.channel('reservas-' + nid)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'citas', filter: `negocio_id=eq.${nid}` }, (p) => llegoReserva(p.new))
+      .subscribe();
+  } catch (e) { console.warn('avisos', e); }
+}
+async function llegoReserva(fila) {
+  if (!fila || fila.estado !== 'solicitada' || !S.negocio || fila.negocio_id !== S.negocio.id) return;
+  const { negocio_id, ...c } = fila;
+  if (!db.get('citas', c.id)) { S.t.citas.push(c); _ver++; }
+  // el cliente nuevo llega junto con la reserva: se trae para mostrar su nombre
+  let nombre = db.get('clientes', c.cliente_id)?.nombre;
+  if (!nombre && c.cliente_id) {
+    try { const sb = await cargarSupabase(); const { data } = await sb.from('clientes').select('*').eq('id', c.cliente_id).maybeSingle();
+      if (data) { const { negocio_id: _, ...cl } = data; if (!db.get('clientes', cl.id)) { S.t.clientes.push(cl); _ver++; } nombre = cl.nombre; } } catch {}
+  }
+  const serv = db.get('servicios', c.servicio_id)?.nombre || 'una hora';
+  const cuando = `${fechaCorta(c.fecha)}, ${hhmm(c.hora)}`;
+  guardarCacheNube();
+  if (!ocupado()) render();
+  avisoReserva(c, nombre || 'Una clienta', serv, cuando);
+  marcarPendientes();
+  if (document.hidden && avisosPermitidos()) {
+    try {
+      const reg = await navigator.serviceWorker?.getRegistration?.();
+      const titulo = 'Nueva reserva'; const cuerpo = `${nombre || 'Una clienta'} · ${serv} · ${cuando}`;
+      if (reg?.showNotification) reg.showNotification(titulo, { body: cuerpo, icon: 'icon-192.png', badge: 'icon-192.png', tag: 'reserva-' + c.id, data: { url: appUrl() + '#agenda' } });
+      else new Notification(titulo, { body: cuerpo, icon: 'icon-192.png', tag: 'reserva-' + c.id });
+    } catch {}
+  }
+}
+function avisoReserva(c, nombre, serv, cuando) {
+  document.querySelector('.aviso-reserva')?.remove();
+  const el = document.createElement('div'); el.className = 'aviso-reserva'; el.setAttribute('role', 'alert');
+  el.innerHTML = `<span class="ar-ico" aria-hidden="true">${icon('cal')}</span><span class="ar-txt"><b>Nueva reserva</b><small>${esc(nombre)} · ${esc(serv)} · ${esc(cuando)}</small></span>
+    <button type="button" class="btn sm pri" data-ar="ver">Confirmar</button><button type="button" class="ar-x" data-ar="x" aria-label="Cerrar">${icon('x')}</button>`;
+  el.querySelector('[data-ar=ver]').onclick = () => { el.remove(); S.ui.agenda = { ...(S.ui.agenda || {}), fecha: c.fecha, vista: 'dia' }; S._recien = c.id; ir('agenda'); setTimeout(() => detalleAgenda(c.id, 'cita'), 120); };
+  el.querySelector('[data-ar=x]').onclick = () => el.remove();
+  document.body.appendChild(el);
+  setTimeout(() => el.isConnected && el.classList.add('quieto'), 12000);
+}
+// número de reservas por confirmar en el ícono de la app instalada
+function marcarPendientes() {
+  if (!S.negocio || !navigator.setAppBadge) return;
+  const n = db.all('citas').filter((c) => c.estado === 'solicitada' && c.fecha >= hoy()).length;
+  try { n ? navigator.setAppBadge(n) : navigator.clearAppBadge(); } catch {}
+}
+
+/* ---------- permiso para avisar en este dispositivo ---------- */
+function filaAvisos() {
+  if (!('Notification' in window)) return esIOS() && !yaInstalada() ? `<div class="avisos-fila"><span>${icon('megafono')}<b>Avisos de reservas</b><small>En iPhone, primero instala MiDerno en tu pantalla de inicio y actívalos desde ahí.</small></span><button type="button" class="btn sm" data-act="instalar">Instalar</button></div>` : '';
+  const p = Notification.permission;
+  return `<div class="avisos-fila"><span>${icon('megafono')}<b>Avisos de reservas en este dispositivo</b><small>${p === 'granted' ? 'Activados. Te avisamos aunque MiDerno esté en segundo plano.' : p === 'denied' ? 'Bloqueados en el navegador. Actívalos en los permisos del sitio.' : 'Recibe una notificación cuando alguien reserve.'}</small></span>
+    ${p === 'default' ? '<button type="button" class="btn sm pri" data-act="avisos-on">Activar</button>' : ''}</div>`;
+}
+Object.assign(ACC_COBRO, {
+  'avisos-on': async () => {
+    try { const r = await Notification.requestPermission(); toast(r === 'granted' ? 'Listo: te avisaremos de cada reserva nueva' : 'Sin permiso no podemos avisarte en este dispositivo', r !== 'granted'); } catch {}
+    render();
+  },
+});
+
+// se engancha a la apertura en la nube (al entrar y cada vez que se pone al día)
+{
+  const original = abrirNubeCon;
+  abrirNubeCon = async (...a) => { const r = await original(...a); escucharReservas(); marcarPendientes(); return r; };
+}
+
+/* =========================================================
    v30: cuenta segura
    - Al crear la cuenta: repetir contraseña, aviso de fuerza y
      de correos mal escritos (gmial.com)
@@ -6950,6 +7104,39 @@ Object.assign(ACC_COBRO, {
 });
 
 /* =========================================================
+   v34: lo que cambias en otro dispositivo aparece solo
+   Antes la app traía todo desde la nube solo al abrirse. Si dejabas
+   MiDerno abierto en el computador y anotabas algo en el celular,
+   el computador no se enteraba hasta recargar la página.
+   Ahora se pone al día: al volver a la pestaña, cada 2 minutos
+   mientras está a la vista, y al tocar el estado de la nube.
+   ========================================================= */
+
+let _alDiaEn = Date.now(), _alDiaCorriendo = false, _ocultaAlDia = 0;
+// no se repinta encima de algo que la persona está haciendo
+const ocupado = () => !!document.querySelector('#scrim, dialog[open]') || document.activeElement?.matches?.('input, textarea, select') || vistaActual() === 'vender' || !!S.imp;
+async function ponerseAlDia({ forzar = false } = {}) {
+  if (S.modo !== 'nube' || !S.negocio || S.eq || S.pub || _alDiaCorriendo || !navigator.onLine) return;
+  if (!forzar && ocupado()) return;
+  _alDiaCorriendo = true;
+  try {
+    const sb = await cargarSupabase(); const { data: { session } } = await sb.auth.getSession(); if (!session?.user) return;
+    await NubeAdapter.cola; // primero sube lo pendiente de este dispositivo
+    S.sincronizando = true; const pill = $('.mode-pill'); if (pill) pill.lastChild.textContent = 'Poniéndose al día…';
+    await abrirNubeCon(sb, session.user, { fondo: true });
+    _alDiaEn = Date.now(); if (forzar) toast('Al día con la nube');
+  } catch (e) { console.warn('al día', e); if (forzar) toast('No pudimos ponernos al día: ' + (e.message || e), true); }
+  finally { _alDiaCorriendo = false; S.sincronizando = false; const pill = $('.mode-pill'); if (pill && /Poniéndose/.test(pill.textContent)) pill.lastChild.textContent = 'Sincronizado en la nube · v' + VERSION; }
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { _ocultaAlDia = Date.now(); return; }
+  if (_ocultaAlDia && Date.now() - _ocultaAlDia > 20 * 1000) ponerseAlDia();
+});
+addEventListener('online', () => ponerseAlDia());
+setInterval(() => { if (!document.hidden && Date.now() - _alDiaEn > 2 * 60 * 1000) ponerseAlDia(); }, 30 * 1000);
+Object.assign(ACC_COBRO, { 'al-dia': () => ponerseAlDia({ forzar: true }) });
+
+/* =========================================================
    v29: servicios repetidos y nombres sueltos del historial
    Al editar un servicio en Catálogo, todo lo que se llama igual
    (otros servicios repetidos y ventas sueltas del historial)
@@ -7024,7 +7211,7 @@ Object.assign(ACC_COBRO, {
    nadie está escribiendo nada).
    ========================================================= */
 
-const BUILD = 'ebe752f62a1e'; // build.py lo reemplaza por el código de cada publicación
+const BUILD = 'e6d056054425'; // build.py lo reemplaza por el código de cada publicación
 const VERSION_CADA = 5 * 60 * 1000;
 let versionNueva = null, ocultaDesde = 0;
 
@@ -7228,17 +7415,23 @@ Object.assign(ACC_COBRO, {
    ========================================================= */
 
 const RENDER = { crecer: vistaCrecer, proveedores: vistaProveedores, importar: vistaImportar, inicio: vistaInicio, vender: vistaVender, caja: vistaCaja, clientes: vistaClientes, agenda: vistaAgenda, equipo: vistaEquipo, inventario: vistaInventario, produccion: vistaProduccion, catalogo: vistaCatalogo, ajustes: vistaAjustes };
-let _ultimaVista = null;
+let _ultimaVista = null; let _vistaDetalle = null;
 function render() {
   const app = $('#app');
   if (S.eq) { app.innerHTML = vistaEquipoApp(); document.title = 'Mi agenda · MiDerno'; return; }
   if (S.pub) { app.innerHTML = vistaReserva(); document.title = `Agenda ${S.pub.info?.negocio?.nombre || ''} · MiDerno`; return; }
   if (!S.negocio) { app.innerHTML = vistaBienvenida(); _ultimaVista = null; document.title = 'MiDerno'; portadaViva(); return; }
-  const v = vistaActual(); const y = window.scrollY;
+  const v = vistaActual(); const bloq = document.body.dataset.lock; const y = bloq ? +bloq : window.scrollY;
+  // misma vista: se mantiene el alto mientras se repinta, así la página no salta (iPhone)
+  const misma = v === _ultimaVista; if (misma) app.style.minHeight = app.offsetHeight + 'px';
   app.innerHTML = shell(tipVista(v) + RENDER[v]());
   if (v !== _ultimaVista) { $('.main .wrap')?.classList.add('entra'); animarCifras($('.main')); }
   document.title = `${VISTAS.find((x) => x.id === v).label} · ${S.negocio.nombre} · MiDerno`;
-  window.scrollTo(0, v === _ultimaVista ? y : 0); _ultimaVista = v;
+  if (!bloq) window.scrollTo(0, misma ? y : 0); else if (!misma) document.body.dataset.lock = '0';
+  _ultimaVista = v; if (misma) requestAnimationFrame(() => { app.style.minHeight = ''; });
+  // Registrar en el celular: la barra se esconde cuando el detalle ya está a la vista
+  _vistaDetalle?.disconnect(); const det = $('#detalle-venta [data-act=cobrar]'), barra = $('.cobro-barra');
+  if (det && barra && 'IntersectionObserver' in window) { _vistaDetalle = new IntersectionObserver(([e]) => barra.classList.toggle('oculta', e.isIntersecting), { threshold: 0.5 }); _vistaDetalle.observe(det); }
   if (S._post) { const f = S._post; S._post = null; requestAnimationFrame(() => { try { f(); } catch (e) { console.error(e); } }); }
   if (S._recien) setTimeout(() => { S._recien = null; }, 50);
 }
@@ -7261,7 +7454,7 @@ const ACCIONES = {
   salir: () => { cerrarSheet(); salir(); },
   mas: () => menuMas(),
   login: () => formLogin(),
-  entrar: () => elegirEntrada(),
+  entrar: () => formLogin(),
   'caja-mes-actual': () => { S.ui.caja = { ...(S.ui.caja || {}), rango: 'mes' }; },
   ejemplos: () => elegirEjemplo(),
   empezar: () => formNegocio(CONFIG.supabaseUrl && CONFIG.supabaseAnonKey ? 'cuenta' : 'local'),
@@ -7291,7 +7484,8 @@ const ACCIONES = {
     const ya = S.cart.lineas.find((l) => l.tipo_item === tipo && l.item_id === x.id && tipo === 'producto');
     if (ya) ya.cantidad += 1; else S.cart.lineas.push({ tipo_item: tipo, item_id: x.id, nombre: x.nombre, cantidad: 1, precio_unitario: Number(tipo === 'servicio' ? x.precio : x.precio_venta), empleado_id: null });
     render();
-    if (esMovil()) formCobro();
+    // en el celular se queda en la lista: el servicio queda marcado y la barra de abajo muestra el total
+    if (esMovil()) { const b = $('.cobro-barra'); b?.classList.remove('late'); void b?.offsetWidth; b?.classList.add('late'); }
   },
   qty: (el) => { const l = S.cart.lineas[+el.dataset.i]; l.cantidad += +el.dataset.d; if (l.cantidad <= 0) S.cart.lineas.splice(+el.dataset.i, 1); render(); },
   vaciar: () => { S.cart = nuevoCarro(); render(); },
