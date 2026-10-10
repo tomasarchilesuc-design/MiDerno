@@ -1,7 +1,7 @@
 /* MiDerno: abre aunque no haya internet. La app se pide primero a la red
    (así cada versión nueva llega al tiro); si no hay conexión, usa la copia guardada. */
-const V = 'miderno-49d83484b8a4';
-const BASE = ['./', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
+const V = 'miderno-26f80b993136';
+const BASE = ['./', './manifest.webmanifest', './logo-192.png', './logo-512.png', './logo-apple.png'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(V).then((c) => c.addAll(BASE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k.startsWith('miderno-') && k !== V).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
@@ -29,4 +29,10 @@ self.addEventListener('notificationclick', (e) => {
     const w = ws.find((x) => x.url.startsWith(self.registration.scope)); if (w) { w.navigate?.(url); return w.focus(); }
     return self.clients.openWindow(url);
   }));
+});
+// aviso push del servidor (reserva nueva) aunque MiDerno esté cerrado
+self.addEventListener('push', (e) => {
+  let d = {}; try { d = e.data ? e.data.json() : {}; } catch { d = { cuerpo: e.data ? e.data.text() : '' }; }
+  const url = new URL(d.url || './#agenda', self.registration.scope).href;
+  e.waitUntil(self.registration.showNotification(d.titulo || 'MiDerno', { body: d.cuerpo || '', icon: 'logo-192.png', badge: 'logo-192.png', tag: d.tag || 'miderno', renotify: true, data: { url } }));
 });

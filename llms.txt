@@ -1,0 +1,30 @@
+# MiDerno
+
+> MiDerno es una app web para microempresas y pymes de Chile que reúne ventas, agenda, clientes e inventario en un solo lugar. Funciona en el celular y en el computador, se instala como app en Android y iPhone, y cada negocio tiene su propia página de reservas online. Se puede empezar gratis.
+
+## Qué hace
+- Registro de ventas y egresos, con el resultado del mes calculado solo.
+- Agenda con página de reservas: las clientas eligen servicio, día y hora libre; el negocio confirma o deja que se confirme sola, y la clienta recibe la confirmación por correo.
+- Clientes: fichas, cumpleaños, recordatorios y mensajes por WhatsApp para que vuelvan.
+- Inventario, costos y pedidos a proveedores.
+- Importación de ventas, clientes y agenda desde Excel.
+
+## Para quién
+Salones de uñas, peluquerías, barberías, centros de estética, tiendas y emprendimientos que producen lo que venden, en Chile.
+
+## Preguntas frecuentes
+- **¿Qué es MiDerno?** MiDerno es una app para microempresas y pymes de Chile que reúne ventas, agenda, clientes e inventario en un solo lugar. Funciona desde el celular o el computador, sin instalar programas.
+- **¿Para qué negocios sirve?** Para negocios de servicios y de productos: salones de uñas, peluquerías, barberías, centros de estética, tiendas y emprendimientos que producen lo que venden.
+- **¿Cuánto cuesta?** Puedes empezar gratis, sin tarjeta. Creas tu cuenta con tu correo o con Google y empiezas a registrar el mismo día.
+- **¿Mis clientas pueden reservar solas?** Sí. Cada negocio tiene su página de reservas, donde eligen servicio, día y hora libre. Tú decides si la confirmas o si se confirma sola, y si dejan su correo les llega la confirmación con un botón para agregarla a su calendario.
+- **¿Me avisa cuando alguien reserva?** Sí. Te llega un correo y, si activas los avisos, una notificación en tu celular o computador aunque MiDerno esté cerrado.
+- **¿Se puede usar en el celular como una app?** Sí. MiDerno se instala desde el navegador en Android y en iPhone, y queda con su ícono en la pantalla de inicio.
+- **¿Puedo traer lo que tengo en Excel?** Sí. Puedes importar tus ventas, clientes y agenda desde una planilla Excel y MiDerno las ordena por ti.
+- **¿Quién puede ver mis datos?** Solo tú y las personas de tu equipo a las que les des acceso. Tus datos se guardan en la nube y puedes entrar desde cualquier dispositivo.
+
+## Enlaces
+- [Inicio](https://miderno.cl/)
+- [Política de privacidad](https://miderno.cl/privacidad.html)
+- [Términos y condiciones](https://miderno.cl/terminos.html)
+- Contacto: hola@miderno.cl
+- [Reservas en Almar Studio](https://miderno.cl/agenda/almar-studio/)
